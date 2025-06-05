@@ -1,0 +1,30 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Creating a product page:
+
+1. create an astro page (READ [create-astro-page.mdc](mdc:.cursor/rules/create-astro-page.mdc)) with a "slug" path param. Commonly at src/pages/products/[slug].astro, but can be customized to user needs, as long as a "slug" path param exists. 
+2. get product information by the slug param and product not found:
+```astro
+---
+import { products } from "@wix/stores";
+
+const { slug } = Astro.params;
+
+const { items } = await products
+    .queryProducts()
+    .eq("slug", slug)
+    .limit(1)
+    .find();
+
+const product = items[0];
+
+if (!product) return new Response(null, { status: 404 });
+---
+```
+
+3. Use the wix:ReadFullDocsMethodSchema with https://dev.wix.com/docs/sdk/backend-modules/stores/products/query-products to get the type of the result, the Product type and what's available.
+
+4. Build the static parts of the page according to your task. 

@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isLoggedIn } from "@wix/astro/auth";
+
+const userIsLoggedIn = isLoggedIn();
+---
+
+<BaseLayout
+  bodyProps={{
+    class:
+      "min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900",
+  }}
+>
+  <Fragment slot="head">
+    <title>Member Login</title>
+    <meta name="description" content="Login to access member features" />
+  </Fragment>
+  <Fragment slot="body">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 w-full max-w-md"
+      >
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-bold text-white mb-2">Welcome</h1>
+          <p class="text-white/80 text-lg">
+            {userIsLoggedIn ? "You're signed in!" : "Sign in to continue"}
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          {
+            userIsLoggedIn ? (
+              <a
+                href="/api/auth/logout"
+                class="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+              >
+                <span class="absolute left-0 inset-y-0 flex items-center pl-6">
+                  <svg
+                    class="h-6 w-6 text-white/80 group-hover:text-white transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </span>
+                Sign Out
+              </a>
+            ) : (
+              <a
+                href="/api/auth/login?returnToUrl=/members"
+                class="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+              >
+                <span class="absolute left-0 inset-y-0 flex items-center pl-6">
+                  <svg
+                    class="h-6 w-6 text-white/80 group-hover:text-white transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </span>
+                Sign In
+              </a>
+            )
+          }
+
+          <div class="text-center">
+            <p class="text-white/60 text-sm">
+              Secure {userIsLoggedIn ? "logout" : "login"} powered by Wix
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/20">
+          <div class="text-center">
+            <p class="text-white/60 text-sm">
+              {
+                userIsLoggedIn
+                  ? "Thanks for being a member! Click above to sign out when you're done."
+                  : "Don't have an account? You'll be able to create one after clicking sign in."
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating elements for visual appeal -->
+    <div
+      class="absolute top-20 left-20 w-20 h-20 bg-white/5 rounded-full blur-xl animate-pulse"
+    >
+    </div>
+    <div
+      class="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse delay-700"
+    >
+    </div>
+    <div
+      class="absolute top-1/2 left-10 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-1000"
+    >
+    </div>
+  </Fragment>
+</BaseLayout>

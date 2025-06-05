@@ -3,20 +3,28 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "wix-one dev",
-    "build": "wix-one build",
-    "preview": "wix-one preview",
-    "astro": "astro",
-    "deploy:prod": "wix edge deploy --prod",
-    "deploy:preview": "wix edge deploy"
+    "dev": "wix dev",
+    "build": "wix build",
+    "preview": "wix preview",
+    "release": "wix release",
+    "astro": "astro"
   },
   "dependencies": {
-    "@wix/astro": "^1.0.4",
-    "astro": "^5.7.13"
+    "@astrojs/react": "^4.2.7",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@wix/astro":"https://cdn.dev.wixpress.com/@wix/astro/e0958fcaade990b073e5b1e5563abbc5de90e3130089bf21b12c9f8c.tar.gz",
+    "@wix/essentials": "^0.1.20",
+    "@wix/sdk": "^1.15.20",
+    "clsx": "^2.1.1",
+    "@wix/media": "^1.0.162",
+    "@wix/stores": "^1.0.447",
+    "astro": "^5.7.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.13",
-    "@wix/cli-one": "^2.0.4",
     "tailwindcss": "^4.1.7"
   }
 }

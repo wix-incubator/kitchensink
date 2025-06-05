@@ -1,0 +1,10 @@
+{
+    "compId": "2ea1a250-30dc-4d95-8a20-bfc0e7b9cc9c",
+    "compType": "BACK_OFFICE_PAGE",
+    "compData": {
+        "backOfficePage": {
+            "hostingPlatform": "BUSINESS_MANAGER",
+            "title": "Basic Page"
+        }
+    }
+}

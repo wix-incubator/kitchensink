@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Auth routes
+
+The @wix/astro integration injects the following routes to the application
+* `/api/auth/login` - Sends to the Wix Managed login page, accepts a `returnToUrl` for after login completion.
+* `/api/auth/logout` - Redirects to the Wix logout url and then back to the `Referer`.
+
+# Checking if logged in 
+
+```ts
+import { isLoggedIn } from "@wix/astro/auth";
+```
+
+```ts
+declare function isLoggedIn(): boolean;
+```
+
+

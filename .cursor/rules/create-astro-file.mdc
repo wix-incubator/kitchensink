@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You have a bug where you fail to generate astro files frontmatter, the files you write don't include the `---` of the frontmatter (This looks like a bug in Cursor, that is parsing your response, not in the model).
+
+<important>
+Create an astro file ONLY BY COPYING `.cursor/rules/fixtures/astro-syntax.astro` to the new file you 
+want to create and then edit the file as you please. 
+`cp .cursor/rules/fixtures/astro-syntax.astro '<your target path>'`
+(espacing the target path is important to handle dynamic routes with brackets)
+The content of the file is: 
+```astro
+---
+// Astro frontmatter here
+---
+
+<!-- Astro template here -->
+```
+When editing, override these comments, don't leave them there.
+</important>
