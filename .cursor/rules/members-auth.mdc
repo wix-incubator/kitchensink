@@ -60,3 +60,13 @@ export declare enum Set {
 export type SetWithLiterals = Set | 'PUBLIC' | 'EXTENDED' | 'FULL';
 ```
 Use the wix:ReadFullDocsMethodSchema with https://dev.wix.com/docs/sdk/backend-modules/members/members/get-current-member to get the type of the result, the Member type and what's available.
+
+# Updating the current member properties
+
+```ts
+import { members } from "@wix/members";
+const { member } = await members.getCurrentMember(/* ... */);
+const updatedMember = await members.updateMember(member._id, dataToUpdate);
+```
+Use the wix:ReadFullDocsMethodSchema with https://dev.wix.com/docs/sdk/backend-modules/members/members/update-member to get the type of the dataToUpdate, the Member type and what's available.
+<note>The member login email is not updateable</note>
