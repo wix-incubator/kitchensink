@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Client Side Services
+client side services provide a way to incapsulate client side state management and logic of common use cases, making it easy to build different user experiences based on the same common domain logic.
+

@@ -8,9 +8,10 @@ alwaysApply: true
 These files are guranteed to exist, not need to check their existence, you can just read them when needed.
 </important>
 the src folder has:
-* `pages` folder, containing astro pages.
+* `pages` folder, containing astro pages. <important>Do not place astro components here, they'll be treated as pages</important>
 * `layouts` folder, containing layout astro components used across the project pages.
     * `layouts/BaseLayout.astro` - The base layout shared BY ALL PAGES. Contains the most basic setup for importing global css and rendering the `html` element, has 2 slots: `head` and `body`. Also accepts optional `bodyProps` that will be applied to the body element. Use the layout like so:
+* `components` folder, containting astro components. 
 ```astro
 ---
 // import BaseLayout
