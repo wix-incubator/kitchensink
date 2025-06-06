@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+This project is the Wix Kitchensink, a website that showcases all the Wix features, implementations for different use cases etc. Developers building on top of the Wix platform will use this website to explore what we have to offer, learn about how to implement each part of this kitchensink project. The code is open source, and each part will contains references to the source code of the current page or feature.
+Every feature or page will have documentation attached to it. The user can enter "documentation" mode and the hover on different elements and features and explore the documentation of each part in place inside the website. A documentation panel showing markdown will explain each feature.
+The index page will be an index that acts as a navigation entry point to all the different implemented uses cases. The features will be split by wix business solutions (members, stores, bookings & services, events etc). 

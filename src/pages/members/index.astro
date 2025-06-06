@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import KitchensinkLayout from "../../layouts/KitchensinkLayout.astro";
 import { isLoggedIn } from "@wix/astro/auth";
 import { members } from "@wix/members";
 import UpdateProfileDialog from "./UpdateProfileDialog.astro";
@@ -19,17 +19,10 @@ const updated = url.searchParams.get('updated');
 const error = url.searchParams.get('error');
 ---
 
-<BaseLayout
-  bodyProps={{
-    class:
-      "min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900",
-  }}
+<KitchensinkLayout
+  title="Member Login"
+  description="Login to access member features"
 >
-  <Fragment slot="head">
-    <title>Member Login</title>
-    <meta name="description" content="Login to access member features" />
-  </Fragment>
-  <Fragment slot="body">
     <!-- Success/Error Messages -->
     {updated && (
       <div class="fixed top-4 right-4 z-50 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-xl shadow-lg border border-green-400/30 animate-pulse">
@@ -302,24 +295,9 @@ const error = url.searchParams.get('error');
       </div>
     </div>
 
-    <!-- Floating elements for visual appeal -->
-    <div
-      class="absolute top-20 left-20 w-20 h-20 bg-white/5 rounded-full blur-xl animate-pulse"
-    >
-    </div>
-    <div
-      class="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse delay-700"
-    >
-    </div>
-    <div
-      class="absolute top-1/2 left-10 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-1000"
-    >
-    </div>
-
     <!-- Update Profile Dialog -->
     {userIsLoggedIn && <UpdateProfileDialog member={member} />}
     
     <!-- Photo Upload Dialog -->
     {userIsLoggedIn && <PhotoUploadDialog member={member} />}
-  </Fragment>
-</BaseLayout>
+</KitchensinkLayout>

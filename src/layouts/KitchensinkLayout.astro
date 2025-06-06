@@ -1,0 +1,42 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Wix Kitchensink",
+  description = "Explore all Wix features and implementations",
+} = Astro.props;
+---
+
+<BaseLayout
+  bodyProps={{
+    class:
+      "min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900",
+  }}
+>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </Fragment>
+  <Fragment slot="body">
+    <slot />
+
+    <!-- Floating elements for visual appeal -->
+    <div
+      class="fixed top-20 left-20 w-20 h-20 bg-white/5 rounded-full blur-xl animate-pulse pointer-events-none"
+    >
+    </div>
+    <div
+      class="fixed bottom-20 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse delay-700 pointer-events-none"
+    >
+    </div>
+    <div
+      class="fixed top-1/2 left-10 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-1000 pointer-events-none"
+    >
+    </div>
+  </Fragment>
+</BaseLayout>
