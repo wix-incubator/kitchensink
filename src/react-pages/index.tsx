@@ -376,6 +376,206 @@ export default function HomePage(props: HomePageProps) {
               </div>
             </div>
           </div>
+
+          {/* Restaurants - Coming Soon */}
+          <div className="group block transform transition-all duration-300 hover:scale-105">
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-red-500/50 to-red-600/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white/70"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-400/30">
+                  <span className="text-orange-300 text-sm font-medium">
+                    Coming Soon
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white/70 mb-3">
+                Restaurants
+              </h3>
+              <p className="text-white/50 text-base leading-relaxed mb-4">
+                Restaurant management including menus, online ordering, table
+                reservations, and delivery systems.
+              </p>
+              <div className="flex items-center text-white/40 font-semibold">
+                <span>In Development</span>
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Search - Coming Soon */}
+          <div className="group block transform transition-all duration-300 hover:scale-105">
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-500/50 to-orange-600/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white/70"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-400/30">
+                  <span className="text-orange-300 text-sm font-medium">
+                    Coming Soon
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white/70 mb-3">Search</h3>
+              <p className="text-white/50 text-base leading-relaxed mb-4">
+                Advanced search functionality with filtering, autocomplete, and
+                intelligent search across your site content.
+              </p>
+              <div className="flex items-center text-white/40 font-semibold">
+                <span>In Development</span>
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* SEO - Coming Soon */}
+          <div className="group block transform transition-all duration-300 hover:scale-105">
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-teal-500/50 to-cyan-600/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white/70"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-400/30">
+                  <span className="text-orange-300 text-sm font-medium">
+                    Coming Soon
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white/70 mb-3">SEO</h3>
+              <p className="text-white/50 text-base leading-relaxed mb-4">
+                Search engine optimization tools including meta tags, sitemaps,
+                structured data, and performance optimization.
+              </p>
+              <div className="flex items-center text-white/40 font-semibold">
+                <span>In Development</span>
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* More Coming Soon */}
+          <div className="group block transform transition-all duration-300 hover:scale-105">
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500/50 to-indigo-600/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white/70"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-blue-500/20 backdrop-blur-sm rounded-full border border-blue-400/30">
+                  <span className="text-blue-300 text-sm font-medium">
+                    More Soon
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white/70 mb-3">
+                More Features
+              </h3>
+              <p className="text-white/50 text-base leading-relaxed mb-4">
+                Additional Wix platform features and integrations are being
+                added regularly. Stay tuned for updates!
+              </p>
+              <div className="flex items-center text-white/40 font-semibold">
+                <span>Expanding</span>
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
