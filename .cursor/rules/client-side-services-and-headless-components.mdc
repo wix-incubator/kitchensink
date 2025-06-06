@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+here's how the pattern should go. client side state and logic should all live in client side services. the client side services are placed in teh @/headless folder under the domain folder with a `<service-name>-service.ts`. you can see an example service at @current-member-service.ts . The services are encapsulating state using signals, and they expose an api that then allows mustating the state or exposed computed values, getters or any other logic, even if it doesn't affect state, but has logic closely related to the service. The services are client side services, meaning they are run on the client and don't have server-only logic in them (they may run in SSR, so they need to be isomorphoic anyway). but service factories acceot a config object. that config object is kind of the intial strate of the service. With each service implementation comes a function for loading the service config. This function is exported and can be used in astro pages frontmatter to load the service config on the server and pass it as a prop to the react page, where it will later be passed to the services manager when initializating the matching service.
+client side services go along headless components to allow for easily building UI on top of the logic inside the client side services. headless compoennts are componenets that recieve a children render prop, and return the result of the render prop, using the data of the client side services reactively (client side services use Signals to provide reactive values, which can later be easily used reactively in React). 
+headless components are kind of the logical building blocks of common use cases like a product page, a member profile page etc. When we have a product page for exmaple, it consists of a product gallery that shows the product media items, a variant selector which shows the different options of the product and allowing choosing them (size, color etc) and there is an add to cart button. All of these are affected by the currenltlky selected variant, even the price, the add to cart button is disabled if there is no stock, etc. To compose a product page of Headless compoennts, we then basically have headless components for ProductGallery, VariantSelector, CurrentCart which in turn have ProductGallery.SelectedImage, ProductGallery.NextImageTrigger, ProductGalleryPreviousImageTrigger, VariantSelecter.AddToCartTrigger, VariantSelector.ProductOptions etc. These all allow to easily compose a product page out of services and all that is left to connect the logic to the DOM and styles (whatever is returned by teh children render props).
+How does it work? 
+In order to use services we need to render a `ServicesManagerProvider` somewhere in out react tree, under which part we want to start using the headless components, that would be related to the state managed by that specific ServicesManager. We can have multiple `ServicesManagerProvider`s in the same page, they can be nested and repeated, and all headless components would be tied to the services manager by their location in the react tree (it uses react context).
+```tsx
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { CurrentMemberServiceDefinition, CurrentMemberService } from "/path/to/headless/members/current-member-service.ts";
+<ServicesManagerProvider
+      servicesManager={createServicesManager(
+        createServicesMap().addService(
+          CurrentMemberServiceDefinition,
+          CurrentMemberService,
+          currentMemberServiceConfig
+        )
+      )}
+    >
+    </>
+</ServiesManagerProvider>
+```
+The `currentMemberServiceConfig` is the result of calling `loadCurrentMemberServiceConfig` on the server and passing the result into the react pages and up to the `ServicesManagerProvider`. There might be some cases where the config isn't loaded on the server, that's ok too.
+writing a Headless component is simple, we place a file for the component in the headless domain folder, and we export headless components like;
+```tsx
+import type { ServiceAPI } from "@wix/services-definitions";
+import { useService } from "@wix/services-manager-react";
+import { CurrentMemberServiceDefinition } from "./current-member-service";
+
+export const FullName = (props: {
+  children: (props: { fullName: string }) => React.ReactNode;
+}) => {
+  const { currentMember } = useService(
+    CurrentMemberServiceDefinition
+  ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
+
+  const member = currentMember.get();
+
+  const fullName = `${member.contact!.firstName} ${member.contact!.lastName}`;
+  return props.children({ fullName });
+};
+```
+The headless components use the `useService` hook to get the active service, and then they get what they want to expose from the service, and pass it as props to the children render prop.
+
+Then, in our pages and components in the project, we can start using the headless components like
+```tsx
+<BuyNow>
+    {({
+        isLoading,
+        redirectToCheckout,
+        productName,
+        price,
+        currency,
+        error,
+    }) => (
+        <button
+        onClick={() => redirectToCheckout()}
+        disabled={isLoading || Boolean(error)}
+        >
+        {error
+            ? error
+            : isLoading
+            ? "Loading..."
+            : `Buy Now ${productName} ${price} ${currency}`}
+        </button>
+    )}
+</BuyNow>
+```
+We have full control of the DOM and how the actions and data from the service are getting bound to user interaction and interface.
