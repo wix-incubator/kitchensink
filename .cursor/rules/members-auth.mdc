@@ -19,4 +19,44 @@ import { isLoggedIn } from "@wix/astro/auth";
 declare function isLoggedIn(): boolean;
 ```
 
+# Get Current Member
 
+<important>Only call this method after checking `isLoggedIn`, otherwise this function will throw!</important>
+
+```ts
+import { members } from "@wix/members";
+const { member } = await members.getCurrentMember();
+interface GetCurrentMemberSignature {
+    /**
+     * Retrieves the current member.
+     *
+     * >**Note:**
+     * >This method requires [visitor or member authentication](https://dev.wix.com/docs/build-apps/develop-your-app/access/about-identities).
+     * @returns Member profile.
+     */
+    (options?: GetCurrentMemberOptions | undefined): Promise<GetMyMemberResponse>;
+}
+export interface GetCurrentMemberOptions {
+    /**
+     * Predefined set of fields to return.
+     *
+     * Default: `"PUBLIC"`.
+     * @maxSize 3
+     */
+    fieldsets?: SetWithLiterals[];
+}
+export declare enum Set {
+    /**
+     * Includes `id`, `contactId`, `createdDate`, `updatedDate` and the `profile` object.
+     * `status`, `privacyStatus`, and `activityStatus` are returned as `UNKNOWN`.
+     */
+    PUBLIC = "PUBLIC",
+    /** Includes `id`, `loginEmail`, `status`, `contactId`, `createdDate`, `updatedDate`, `privacyStatus`, `activityStatus` and the `profile` object. */
+    EXTENDED = "EXTENDED",
+    /** Includes all fields. */
+    FULL = "FULL"
+}
+/** @enumType */
+export type SetWithLiterals = Set | 'PUBLIC' | 'EXTENDED' | 'FULL';
+```
+Use the wix:ReadFullDocsMethodSchema with https://dev.wix.com/docs/sdk/backend-modules/members/members/get-current-member to get the type of the result, the Member type and what's available.

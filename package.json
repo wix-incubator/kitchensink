@@ -16,15 +16,19 @@
     "@wix/astro":"https://cdn.dev.wixpress.com/@wix/astro/e0958fcaade990b073e5b1e5563abbc5de90e3130089bf21b12c9f8c.tar.gz",
     "@wix/essentials": "^0.1.20",
     "@wix/sdk": "^1.15.20",
+    "@wix/dashboard": "^1.3.37",
+    "@wix/members": "^1.0.295",
     "clsx": "^2.1.1",
     "@wix/media": "^1.0.162",
     "@wix/stores": "^1.0.447",
-    "astro": "^5.7.13",
+    "astro": "^5.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.13",
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.7",
+    "@astrojs/cloudflare": "^12.5.4",
+    "@wix/cli": "^1.1.93"
   }
 }
