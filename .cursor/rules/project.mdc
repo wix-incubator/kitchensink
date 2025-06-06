@@ -9,41 +9,62 @@ These files are guranteed to exist, not need to check their existence, you can j
 </important>
 the src folder has:
 * `pages` folder, containing astro pages. <important>Do not place astro components here, they'll be treated as pages</important>
-* `layouts` folder, containing layout astro components used across the project pages.
-    * `layouts/BaseLayout.astro` - The base layout shared BY ALL PAGES. Contains the most basic setup for importing global css and rendering the `html` element, has 2 slots: `head` and `body`. Also accepts optional `bodyProps` that will be applied to the body element. Use the layout like so:
-* `components` folder, containting astro components. 
+* `components` folder, containting React components. 
+* `react-pages` folder, containg the React code for pages. Each astro page in the `pages` folder has a corresponding react page in the folder structure in the `react-pages` folder.
+
+## Enhanced React/Astro Architecture Pattern
+<important>
+When implementing pages, follow this enhanced pattern:
+1. The Astro page handles ONLY server-side loading logic (authentication, data fetching, etc.) AND tags that go into <head>
+2. BaseLayout.astro renders the full HTML structure (html, head, body) and accepts slots for head content and body content
+3. React components can ONLY render content within the body element - NO HTML structure
+4. React layouts (in `layouts/` folder) handle navigation, page styling, and content layout but NOT HTML structure
+5. The Astro page structure should be:
 ```astro
 ---
-// import BaseLayout
+// Server-side logic here
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageComponent from "../react-pages/page";
+
+const data = await fetchData();
 ---
-<BaseLayout bodyProps={{ class: "min-h-screen bg-gray-100" }}>
-    <Fragment slot="head">
-        <!-- head content here -->
-    </Fragment>
-    <Fragment slot="body">
-        <!-- body content here -->
-    </Fragment>
+<BaseLayout>
+  <title>Page Title</title>
+  <meta name="description" content="Page description" />
+  
+  <PageComponent client:load data={data} slot="body" />
 </BaseLayout>
 ```
-The contents of `BaseLayout.astro`:
+6. React page components use React layouts internally:
+```tsx
+import KitchensinkLayout from '../layouts/KitchensinkLayout';
+
+export default function PageComponent({ data }: Props) {
+  return (
+    <KitchensinkLayout>
+      {/* Page content */}
+    </KitchensinkLayout>
+  );
+}
+```
+7. React components for dialogs, forms, and UI elements go in the `components/` folder
+8. BaseLayout.astro handles ALL HTML structure, React layouts handle only content styling
+</important>
+* `layouts` folder, containing layout components:
+    * `layouts/BaseLayout.astro` - Handles HTML structure and accepts head content in default slot and body content in named "body" slot:
 ```astro
 ---
 import "../styles/global.css";
-type Props = {
-    bodyProps: astroHTML.JSX.HTMLAttributes;
-};
 ---
-
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <slot name="head" />
-    </head>
-    <body {...Astro.props.bodyProps}>
-        <slot name="body" />
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <slot />
+  </head>
+  <body>
+    <slot name="body" />
+  </body>
 </html>
 ```
 * `styles/global.css` - The global css that also imports tailwind.
