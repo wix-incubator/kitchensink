@@ -311,6 +311,152 @@ export const UploadTrigger = (props: {
 - Services can optimize state updates and API calls
 - Lazy loading and code splitting at service boundaries
 
+## Server-Side Integration with Astro Actions
+
+### Astro Actions for Client-Side Services
+
+When client-side services need to perform server-only operations (like using `auth.elevate` from `@wix/essentials`), they should use Astro Actions injected through their configuration instead of making direct API calls.
+
+#### Pattern Overview
+
+1. **Actions File**: Create actions in the headless domain folder alongside the service
+2. **Actions Registration**: Export actions from `src/actions/index.ts`
+3. **Service Configuration**: Inject actions into service config
+4. **Service Usage**: Services call injected actions instead of direct API calls
+
+#### Example: Photo Upload Actions
+
+```typescript
+// src/headless/members/photo-upload-service-actions.ts
+import { defineAction } from "astro:actions";
+import { z } from "astro:schema";
+import { auth } from "@wix/essentials";
+
+export const photoUploadAstroActions = {
+  uploadPhoto: defineAction({
+    accept: "form",
+    input: z.object({
+      photo: z.instanceof(File),
+    }),
+    handler: async ({ photo }) => {
+      // Server-only logic using auth.elevate
+      const { uploadUrl } = await auth.elevate(files.generateFileUploadUrl)(
+        photo.type,
+        { fileName: photo.name, parentFolderId: "visitor-uploads" }
+      );
+
+      // Additional server-side processing...
+      return { success: true, fileId, message: "Photo updated successfully" };
+    },
+  }),
+};
+```
+
+#### Actions Registration
+
+```typescript
+// src/actions/index.ts
+import { photoUploadAstroActions } from "../headless/members/photo-upload-service-actions";
+
+export const server = {
+  photoUploadAstroActions,
+};
+```
+
+#### Service Integration
+
+```typescript
+// Service accepts actions directly in config
+export const PhotoUploadService = implementService.withConfig<{
+  maxFileSize?: number;
+  allowedTypes?: string[];
+  photoUploadAstroActions: {
+    uploadPhoto: (formData: FormData) => Promise<any>;
+  };
+}>()(PhotoUploadServiceDefinition, ({ getService, config }) => {
+  // Service uses the action from config
+  const uploadPhoto = async (): Promise<void> => {
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    try {
+      const result = await config.photoUploadAstroActions.uploadPhoto(formData);
+      // Handle success
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  return { uploadPhoto /* ... other API methods */ };
+});
+
+// Config loader returns only serializable data
+export async function loadPhotoUploadServiceConfig(): Promise<
+  Omit<
+    ServiceFactoryConfig<typeof PhotoUploadService>,
+    "photoUploadAstroActions"
+  >
+> {
+  return {
+    maxFileSize: 10 * 1024 * 1024,
+    allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+  };
+}
+```
+
+#### Usage in React Components
+
+Since actions are non-serializable, they must be imported and added to the config in the React component that renders the `ServicesManagerProvider`:
+
+```typescript
+// In your React component (e.g., PhotoUploadDialog.tsx)
+import { photoUploadAstroActions } from "../headless/members/photo-upload-service-actions";
+import { loadPhotoUploadServiceConfig } from "../headless/members/photo-upload-service";
+
+export default function PhotoUploadDialog({ photoUploadConfig }) {
+  // Combine serializable config from server with non-serializable actions
+  const fullConfig = {
+    ...photoUploadConfig,
+    photoUploadAstroActions,
+  };
+
+  return (
+    <ServicesManagerProvider
+      servicesManager={createServicesManager(
+        createServicesMap().addService(
+          PhotoUploadServiceDefinition,
+          PhotoUploadService,
+          fullConfig
+        )
+      )}
+    >
+      {/* Your UI components */}
+    </ServicesManagerProvider>
+  );
+}
+```
+
+#### Usage in Astro Pages
+
+```astro
+---
+import { loadPhotoUploadServiceConfig } from '../headless/members/photo-upload-service';
+
+// Load only the serializable config on the server
+const photoUploadConfig = await loadPhotoUploadServiceConfig();
+---
+
+<PhotoUploadDialog client:load photoUploadConfig={photoUploadConfig} />
+```
+
+### Benefits of This Pattern
+
+1. **Server-Only Logic**: Enables use of server-only APIs like `auth.elevate`
+2. **Service Portability**: Services remain framework-agnostic and testable
+3. **Type Safety**: Full TypeScript support through Astro Actions
+4. **Performance**: Server-side processing reduces client-side workload
+5. **Security**: Sensitive operations stay on the server
+
 ## Best Practices
 
 ### Service Design
@@ -319,6 +465,7 @@ export const UploadTrigger = (props: {
 2. **Immutable Updates**: Always create new state objects rather than mutating
 3. **Error Handling**: Include error states in your service APIs
 4. **Configuration**: Make services configurable through their config objects
+5. **Action Injection**: Use dependency injection for server-side operations
 
 ### Headless Component Design
 

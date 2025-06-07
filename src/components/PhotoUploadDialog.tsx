@@ -8,6 +8,7 @@ import {
   PhotoUploadService,
   PhotoUploadServiceDefinition,
 } from "../headless/members/photo-upload-service";
+import { actions } from "astro:actions";
 import {
   FileSelector,
   PreviewImage,
@@ -39,6 +40,7 @@ export default function PhotoUploadDialog({
           {
             maxFileSize: 10 * 1024 * 1024,
             allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+            photoUploadAstroActions: actions.photoUploadAstroActions,
           }
         )
       )}

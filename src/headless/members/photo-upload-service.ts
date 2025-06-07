@@ -30,6 +30,9 @@ export const PhotoUploadServiceDefinition =
 export const PhotoUploadService = implementService.withConfig<{
   maxFileSize?: number;
   allowedTypes?: string[];
+  photoUploadAstroActions: {
+    uploadPhoto: (formData: FormData) => Promise<any>;
+  };
 }>()(PhotoUploadServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
@@ -105,28 +108,20 @@ export const PhotoUploadService = implementService.withConfig<{
       const formData = new FormData();
       formData.append("photo", file);
 
-      const response = await fetch("/api/upload-photo", {
-        method: "POST",
-        body: formData,
-      });
+      const result = await config.photoUploadAstroActions.uploadPhoto(formData);
 
-      if (response.ok) {
-        uploadState.set({
-          type: "success",
-          message: "Photo updated successfully!",
-        });
-        // Auto-reload after success
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else {
-        const error = await response.text();
-        uploadState.set({ type: "error", message: `Upload failed: ${error}` });
-      }
-    } catch (error) {
+      uploadState.set({
+        type: "success",
+        message: result.message || "Photo updated successfully!",
+      });
+      // Auto-reload after success
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error: any) {
       uploadState.set({
         type: "error",
-        message: "Upload failed. Please try again.",
+        message: error.message || "Upload failed. Please try again.",
       });
     }
   };
@@ -149,7 +144,10 @@ export const PhotoUploadService = implementService.withConfig<{
 });
 
 export async function loadPhotoUploadServiceConfig(): Promise<
-  ServiceFactoryConfig<typeof PhotoUploadService>
+  Omit<
+    ServiceFactoryConfig<typeof PhotoUploadService>,
+    "photoUploadAstroActions"
+  >
 > {
   return {
     maxFileSize: 10 * 1024 * 1024, // 10MB

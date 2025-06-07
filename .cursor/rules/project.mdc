@@ -69,6 +69,16 @@ import "../styles/global.css";
 ```
 * `styles/global.css` - The global css that also imports tailwind.
 
+# Astro actions
+<important>
+In React components and client side scripts, only import actions from "astro:actions" and take the actions from there.
+```ts
+import { actions } from "astro:actions";
+// structure of actions is the same as the server export in src/actions.index.ts
+actions.someNamespace.someAction();
+```
+</important>
+
 # Stack
 
 * Style with tailwind. version: 4.1.7
