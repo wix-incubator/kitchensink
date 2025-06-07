@@ -3,7 +3,7 @@ import {
   DocsProvider,
   DocsToggleButton,
   DocsDrawer,
-  DocsComponentsList,
+  DocsFloatingMenu,
 } from "../components/DocsMode";
 
 interface KitchensinkLayoutProps {
@@ -116,7 +116,7 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
 
         {/* Docs Mode Components */}
         <DocsToggleButton />
-        <DocsComponentsList />
+        <DocsFloatingMenu />
         <DocsDrawer />
 
         {/* Floating elements for visual appeal */}

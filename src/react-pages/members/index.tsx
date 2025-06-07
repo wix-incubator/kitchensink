@@ -21,7 +21,10 @@ import {
 } from "../../headless/members/photo-upload-service";
 import { CurrentMemberProfile } from "../../headless/members/CurrentMemberProfile";
 import { actions } from "astro:actions";
-import { withDocsWrapper } from "../../components/DocsMode";
+import {
+  withDocsWrapper,
+  PageDocsRegistration,
+} from "../../components/DocsMode";
 
 interface MembersPageProps {
   userIsLoggedIn: boolean;
@@ -298,6 +301,13 @@ export function MembersPage({
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
       <KitchensinkLayout>
+        {/* Register page documentation */}
+        <PageDocsRegistration
+          title="Members Profile Page"
+          description="A complete member profile interface showcasing CurrentMemberProfile, PhotoUpload, and ProfileUpdate headless components working together."
+          docsUrl="/docs/examples/members-page-overview"
+        />
+
         {/* Success/Error Messages */}
         {showSuccessMessage && (
           <div className="fixed top-4 right-4 z-50 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-xl shadow-lg border border-green-400/30 animate-pulse">

@@ -8,6 +8,11 @@ interface DocsContextType {
   selectedComponent: string | null;
   discoveredComponents: Map<string, string>; // componentName -> componentPath
   registerComponent: (componentName: string, componentPath: string) => void;
+  // Page docs properties
+  pageTitle: string | null;
+  pageDescription: string | null;
+  pageDocs: string | null;
+  registerPage: (title: string, description: string, docsUrl: string) => void;
 }
 
 const DocsContext = createContext<DocsContextType | null>(null);
@@ -39,6 +44,11 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
     Map<string, string>
   >(new Map());
 
+  // Page docs state
+  const [pageTitle, setPageTitle] = useState<string | null>(null);
+  const [pageDescription, setPageDescription] = useState<string | null>(null);
+  const [pageDocs, setPageDocs] = useState<string | null>(null);
+
   const toggleDocsMode = () => {
     setIsDocsMode(!isDocsMode);
     if (!isDocsMode) {
@@ -63,6 +73,16 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   };
 
+  const registerPage = (
+    title: string,
+    description: string,
+    docsUrl: string
+  ) => {
+    setPageTitle(title);
+    setPageDescription(description);
+    setPageDocs(docsUrl);
+  };
+
   // Close docs when clicking outside in docs mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -84,6 +104,10 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedComponent,
         discoveredComponents,
         registerComponent,
+        pageTitle,
+        pageDescription,
+        pageDocs,
+        registerPage,
       }}
     >
       {children}
@@ -108,9 +132,12 @@ export const withDocsWrapper = <T extends Record<string, any>>(
     const { isDocsMode, openDocs, registerComponent } = docsContext;
 
     // Register this component as discovered
-    React.useEffect(() => {
-      return registerComponent(componentName, componentPath);
-    }, []);
+    React.useEffect(
+      () => {
+        return registerComponent(componentName, componentPath);
+      },
+      [] /* don't rereun this logic on every render */
+    );
 
     // In docs mode, wrap with highlighting and click handler
     if (isDocsMode) {
@@ -275,125 +302,238 @@ export const DocsToggleButton: React.FC = () => {
   );
 };
 
-// Helper component for displaying discovered components
-export const DocsComponentsList: React.FC = () => {
-  const { isDocsMode, discoveredComponents, openDocs } = useDocsMode();
-  const [isExpanded, setIsExpanded] = useState(false);
+// Combined floating menu component that stacks page docs and components
+export const DocsFloatingMenu: React.FC = () => {
+  const {
+    isDocsMode,
+    pageTitle,
+    pageDescription,
+    pageDocs,
+    openDocs,
+    discoveredComponents,
+  } = useDocsMode();
+  const [isComponentsExpanded, setIsComponentsExpanded] = useState(false);
+  const [isPageDocsExpanded, setIsPageDocsExpanded] = useState(false);
 
   // Start expanded when entering docs mode, reset when leaving
   useEffect(() => {
     if (isDocsMode) {
-      setIsExpanded(true);
+      setIsComponentsExpanded(true);
+      setIsPageDocsExpanded(true);
     } else {
-      setIsExpanded(false);
+      setIsComponentsExpanded(false);
+      setIsPageDocsExpanded(false);
     }
   }, [isDocsMode]);
 
-  if (!isDocsMode || discoveredComponents.size === 0) {
+  if (!isDocsMode) {
     return null;
   }
 
-  // Collapsed state - small button below docs toggle
-  if (!isExpanded) {
-    return (
-      <div className="fixed left-6 top-36 z-40">
-        <button
-          onClick={() => setIsExpanded(true)}
-          className="w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 group"
-          title={`View ${discoveredComponents.size} discovered components`}
-        >
-          <div className="relative">
-            {/* Components icon */}
-            <svg
-              className="w-5 h-5 text-white/80 group-hover:text-white transition-colors"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              />
-            </svg>
-            {/* Count badge */}
-            <div className="absolute -top-2 -right-2 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
-              {discoveredComponents.size}
-            </div>
-          </div>
-        </button>
-      </div>
-    );
-  }
+  const hasPageDocs = pageTitle && pageDescription && pageDocs;
+  const hasComponents = discoveredComponents.size > 0;
 
-  // Expanded state - full menu
   return (
-    <div className="fixed left-6 top-36 z-40">
-      <div
-        className={`bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform ${
-          isExpanded
-            ? "scale-100 opacity-100 translate-y-0"
-            : "scale-95 opacity-0 translate-y-2"
-        }`}
-        style={{
-          maxWidth: "20rem",
-          minWidth: "16rem",
-        }}
-      >
-        {/* Header with collapse button */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h3 className="text-white text-sm font-medium">
-            Components ({discoveredComponents.size})
-          </h3>
-          <button
-            onClick={() => setIsExpanded(false)}
-            className="p-1 hover:bg-white/10 rounded-lg transition-colors group"
-            title="Collapse components list"
-          >
-            <svg
-              className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+    <div className="fixed left-6 top-36 z-40 flex flex-col gap-4 max-w-xs">
+      {/* Page Docs Section */}
+      {hasPageDocs && (
+        <>
+          {/* Collapsed state - small button */}
+          {!isPageDocsExpanded ? (
+            <button
+              onClick={() => setIsPageDocsExpanded(true)}
+              className="w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 group"
+              title="What's on this page"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Components list */}
-        <div className="p-3">
-          <div className="space-y-1 max-h-64 overflow-y-auto">
-            {Array.from(discoveredComponents.entries()).map(
-              ([componentName, componentPath], index) => {
-                return (
-                  <button
-                    key={componentName}
-                    onClick={() => openDocs(componentPath)}
-                    className={`block w-full text-left text-white/80 hover:text-white text-xs p-2 hover:bg-white/10 rounded-lg transition-all duration-200 transform hover:scale-105 ${
-                      isExpanded ? "animate-slideIn" : ""
-                    }`}
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                    }}
+              <svg
+                className="w-5 h-5 text-white/80 group-hover:text-white transition-colors"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </button>
+          ) : (
+            /* Expanded state - full page docs */
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0">
+              {/* Header with collapse button */}
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <h3 className="text-white text-sm font-semibold">
+                  What's on this page
+                </h3>
+                <button
+                  onClick={() => setIsPageDocsExpanded(false)}
+                  className="p-1 hover:bg-white/10 rounded-lg transition-colors group"
+                  title="Collapse page info"
+                >
+                  <svg
+                    className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></div>
-                      <span className="truncate">{componentName}</span>
-                    </div>
-                  </button>
-                );
-              }
-            )}
-          </div>
-        </div>
-      </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-4">
+                <p className="text-white/80 text-xs leading-relaxed mb-3">
+                  {pageDescription}
+                </p>
+
+                <button
+                  onClick={() => openDocs(pageDocs)}
+                  className="text-blue-300 hover:text-blue-200 text-xs font-medium transition-colors duration-200 flex items-center gap-1 group"
+                >
+                  <span>Read more</span>
+                  <svg
+                    className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Components Section */}
+      {hasComponents && (
+        <>
+          {/* Collapsed state - small button */}
+          {!isComponentsExpanded ? (
+            <button
+              onClick={() => setIsComponentsExpanded(true)}
+              className="w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 group"
+              title={`View ${discoveredComponents.size} discovered components`}
+            >
+              <div className="relative">
+                <svg
+                  className="w-5 h-5 text-white/80 group-hover:text-white transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
+                </svg>
+                <div className="absolute -top-2 -right-2 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                  {discoveredComponents.size}
+                </div>
+              </div>
+            </button>
+          ) : (
+            /* Expanded state - full menu */
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0 min-w-64">
+              {/* Header with collapse button */}
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <h3 className="text-white text-sm font-medium">
+                  Components ({discoveredComponents.size})
+                </h3>
+                <button
+                  onClick={() => setIsComponentsExpanded(false)}
+                  className="p-1 hover:bg-white/10 rounded-lg transition-colors group"
+                  title="Collapse components list"
+                >
+                  <svg
+                    className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Components list */}
+              <div className="p-3">
+                <div className="space-y-1 max-h-64 overflow-y-auto">
+                  {Array.from(discoveredComponents.entries()).map(
+                    ([componentName, componentPath], index) => (
+                      <button
+                        key={componentName}
+                        onClick={() => openDocs(componentPath)}
+                        className="block w-full text-left text-white/80 hover:text-white text-xs p-2 hover:bg-white/10 rounded-lg transition-all duration-200 transform hover:scale-105 animate-slideIn"
+                        style={{
+                          animationDelay: `${index * 50}ms`,
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></div>
+                          <span className="truncate">{componentName}</span>
+                        </div>
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
+};
+
+// Component for pages to register their documentation
+interface PageDocsRegistrationProps {
+  title: string;
+  description: string;
+  docsUrl: string;
+}
+
+export const PageDocsRegistration: React.FC<PageDocsRegistrationProps> = ({
+  title,
+  description,
+  docsUrl,
+}) => {
+  const docsContext = useContext(DocsContext);
+
+  useEffect(() => {
+    if (docsContext) {
+      docsContext.registerPage(title, description, docsUrl);
+    }
+
+    // Clean up when component unmounts or page changes
+    return () => {
+      if (docsContext) {
+        docsContext.registerPage("", "", "");
+      }
+    };
+  }, [title, description, docsUrl, docsContext]);
+
+  // This component renders nothing
+  return null;
 };
