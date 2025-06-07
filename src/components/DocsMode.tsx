@@ -292,9 +292,13 @@ export const DocsToggleButton: React.FC = () => {
         </svg>
       </button>
 
-      {/* Components count indicator */}
-      {isDocsMode && discoveredComponents.size > 0 && (
-        <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-medium">
+      {/* Components count indicator - shows when components are available */}
+      {discoveredComponents.size > 0 && (
+        <div
+          className={`absolute -bottom-1 -right-1 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium transition-all duration-300 ${
+            isDocsMode ? "bg-blue-600" : "bg-orange-500"
+          }`}
+        >
           {discoveredComponents.size}
         </div>
       )}
@@ -334,7 +338,7 @@ export const DocsFloatingMenu: React.FC = () => {
   const hasComponents = discoveredComponents.size > 0;
 
   return (
-    <div className="fixed left-6 top-36 z-40 flex flex-col gap-4 max-w-xs">
+    <div className="fixed left-6 top-36 z-[100] flex flex-col gap-4 max-w-xs">
       {/* Page Docs Section */}
       {hasPageDocs && (
         <>
