@@ -5,6 +5,7 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
+import { CurrentMemberServiceDefinition } from "./current-member-service";
 
 export interface UploadState {
   type: "idle" | "loading" | "success" | "error";
@@ -35,6 +36,7 @@ export const PhotoUploadService = implementService.withConfig<{
   };
 }>()(PhotoUploadServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
+  const currentMemberService = getService(CurrentMemberServiceDefinition);
 
   const selectedFile: Signal<File | null> = signalsService.signal(null as any);
   const uploadState: Signal<UploadState> = signalsService.signal({
@@ -114,10 +116,11 @@ export const PhotoUploadService = implementService.withConfig<{
         type: "success",
         message: result.message || "Photo updated successfully!",
       });
-      // Auto-reload after success
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Refresh current member data to update profile photo reactively
+      await currentMemberService.refreshCurrentMember();
     } catch (error: any) {
       uploadState.set({
         type: "error",

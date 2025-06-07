@@ -10,6 +10,7 @@ import type { Signal } from "../Signal";
 export const CurrentMemberServiceDefinition = defineService<{
   currentMember: Signal<members.Member>;
   updateMember: (member: members.UpdateMember) => Promise<void>;
+  refreshCurrentMember: () => Promise<void>;
 }>("currentMember");
 
 export const CurrentMemberService = implementService.withConfig<{
@@ -20,11 +21,23 @@ export const CurrentMemberService = implementService.withConfig<{
     config.member as any
   );
 
+  const refreshCurrentMember = async () => {
+    const { member } = await members.getCurrentMember({
+      fieldsets: ["FULL"],
+    });
+    if (member) {
+      currentMember.set(member);
+    }
+  };
+
   return {
     currentMember,
     updateMember: async (update) => {
       await members.updateMember(currentMember.get()._id!, update);
+      // Refresh the current member data after update
+      await refreshCurrentMember();
     },
+    refreshCurrentMember,
   };
 });
 

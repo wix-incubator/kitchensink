@@ -15,7 +15,12 @@ import {
   ProfileUpdateServiceDefinition,
   ProfileUpdateService,
 } from "../../headless/members/profile-update-service";
+import {
+  PhotoUploadServiceDefinition,
+  PhotoUploadService,
+} from "../../headless/members/photo-upload-service";
 import { CurrentMemberProfile } from "../../headless/members/CurrentMemberProfile";
+import { actions } from "astro:actions";
 
 interface MembersPageProps {
   userIsLoggedIn: boolean;
@@ -237,7 +242,7 @@ export function MembersPage({
     }
   }, [showErrorMessage]);
 
-  // Create services manager with both services
+  // Create services manager with all three services that depend on each other
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -250,6 +255,11 @@ export function MembersPage({
         ProfileUpdateService,
         profileUpdateServiceConfig || {}
       )
+      .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
+        maxFileSize: 10 * 1024 * 1024,
+        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+        photoUploadAstroActions: actions.photoUploadAstroActions,
+      })
   );
 
   return (
