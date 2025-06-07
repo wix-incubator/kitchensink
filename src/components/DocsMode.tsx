@@ -181,11 +181,13 @@ export const withDocsWrapper = <T extends Record<string, any>>(
 export const DocsDrawer: React.FC = () => {
   const { selectedComponent, isDocsMode, openDocs } = useDocsMode();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Open drawer when component is selected
   useEffect(() => {
     if (selectedComponent) {
       setIsOpen(true);
+      setIsLoading(true); // Start loading when new component is selected
     }
   }, [selectedComponent]);
 
@@ -241,7 +243,7 @@ export const DocsDrawer: React.FC = () => {
 
       {/* Drawer */}
       <div
-        className={`docs-drawer fixed right-0 top-0 h-full w-full sm:max-w-2xl bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`docs-drawer fixed right-0 top-0 h-full w-full sm:w-96 lg:w-[32rem] bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
@@ -283,12 +285,26 @@ export const DocsDrawer: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 relative">
+          {/* Loading indicator */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-50 flex items-center justify-center z-10">
+              <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p className="text-gray-600 text-sm">
+                  Loading documentation...
+                </p>
+              </div>
+            </div>
+          )}
+
           <iframe
             src={selectedComponent}
             className="w-full h-full border-0"
             title="Component Documentation"
             sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+            onLoad={() => setIsLoading(false)}
+            onError={() => setIsLoading(false)}
           />
         </div>
       </div>
