@@ -24,7 +24,7 @@ export default function HomePage(props: HomePageProps) {
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a
-              href="/members"
+              href="#available-features"
               className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-3xl"
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -212,7 +212,10 @@ export default function HomePage(props: HomePageProps) {
       {/* Features Grid */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2
+            id="available-features"
+            className="text-4xl md:text-5xl font-bold text-white mb-6"
+          >
             Available Features
           </h2>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">

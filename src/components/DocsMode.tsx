@@ -189,6 +189,36 @@ export const DocsDrawer: React.FC = () => {
     }
   }, [selectedComponent]);
 
+  // Prevent body scroll when drawer is open on mobile
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      // Prevent zoom on mobile when drawer opens
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute(
+          "content",
+          "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        );
+      }
+    } else {
+      document.body.style.overflow = "";
+      // Restore normal viewport behavior
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute("content", "width=device-width, initial-scale=1");
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute("content", "width=device-width, initial-scale=1");
+      }
+    };
+  }, [isOpen]);
+
   const closeDrawer = () => {
     setIsOpen(false);
     // Small delay to allow animation before clearing selected component
@@ -203,7 +233,7 @@ export const DocsDrawer: React.FC = () => {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[110] transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0"
         }`}
         onClick={closeDrawer}
@@ -211,9 +241,15 @@ export const DocsDrawer: React.FC = () => {
 
       {/* Drawer */}
       <div
-        className={`fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`docs-drawer fixed right-0 top-0 h-full w-full sm:max-w-2xl bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        style={{
+          // Prevent viewport scaling on mobile
+          maxWidth: "100vw",
+          // Ensure proper containment on mobile
+          touchAction: "manipulation",
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b bg-gray-50 flex-shrink-0">
@@ -319,11 +355,11 @@ export const DocsFloatingMenu: React.FC = () => {
   const [isComponentsExpanded, setIsComponentsExpanded] = useState(false);
   const [isPageDocsExpanded, setIsPageDocsExpanded] = useState(false);
 
-  // Start expanded when entering docs mode, reset when leaving
+  // Start with page docs expanded when entering docs mode, reset when leaving
   useEffect(() => {
     if (isDocsMode) {
-      setIsComponentsExpanded(true);
-      setIsPageDocsExpanded(true);
+      setIsComponentsExpanded(false); // Keep components collapsed
+      setIsPageDocsExpanded(true); // Open page docs immediately
     } else {
       setIsComponentsExpanded(false);
       setIsPageDocsExpanded(false);
@@ -346,7 +382,7 @@ export const DocsFloatingMenu: React.FC = () => {
           {!isPageDocsExpanded ? (
             <button
               onClick={() => setIsPageDocsExpanded(true)}
-              className="w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 group"
+              className="w-12 h-12 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/30 group"
               title="What's on this page"
             >
               <svg
@@ -365,19 +401,19 @@ export const DocsFloatingMenu: React.FC = () => {
             </button>
           ) : (
             /* Expanded state - full page docs */
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0">
+            <div className="bg-white/80 backdrop-blur-lg border border-white/90 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0">
               {/* Header with collapse button */}
-              <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <h3 className="text-white text-sm font-semibold">
+              <div className="flex items-center justify-between p-4 border-b border-white/40">
+                <h3 className="text-gray-800 text-sm font-semibold">
                   What's on this page
                 </h3>
                 <button
                   onClick={() => setIsPageDocsExpanded(false)}
-                  className="p-1 hover:bg-white/10 rounded-lg transition-colors group"
+                  className="p-1 hover:bg-gray-200 rounded-lg transition-colors group"
                   title="Collapse page info"
                 >
                   <svg
-                    className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
+                    className="w-4 h-4 text-gray-600 group-hover:text-gray-800 transition-colors"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -394,13 +430,13 @@ export const DocsFloatingMenu: React.FC = () => {
 
               {/* Content */}
               <div className="p-4">
-                <p className="text-white/80 text-xs leading-relaxed mb-3">
+                <p className="text-gray-700 text-xs leading-relaxed mb-3">
                   {pageDescription}
                 </p>
 
                 <button
                   onClick={() => openDocs(pageDocs)}
-                  className="text-blue-300 hover:text-blue-200 text-xs font-medium transition-colors duration-200 flex items-center gap-1 group"
+                  className="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors duration-200 flex items-center gap-1 group"
                 >
                   <span>Read more</span>
                   <svg
@@ -430,7 +466,7 @@ export const DocsFloatingMenu: React.FC = () => {
           {!isComponentsExpanded ? (
             <button
               onClick={() => setIsComponentsExpanded(true)}
-              className="w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 group"
+              className="w-12 h-12 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/30 group"
               title={`View ${discoveredComponents.size} discovered components`}
             >
               <div className="relative">
@@ -454,19 +490,19 @@ export const DocsFloatingMenu: React.FC = () => {
             </button>
           ) : (
             /* Expanded state - full menu */
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0 min-w-64">
+            <div className="bg-white/80 backdrop-blur-lg border border-white/90 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0 min-w-64">
               {/* Header with collapse button */}
-              <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <h3 className="text-white text-sm font-medium">
+              <div className="flex items-center justify-between p-4 border-b border-white/40">
+                <h3 className="text-gray-800 text-sm font-medium">
                   Components ({discoveredComponents.size})
                 </h3>
                 <button
                   onClick={() => setIsComponentsExpanded(false)}
-                  className="p-1 hover:bg-white/10 rounded-lg transition-colors group"
+                  className="p-1 hover:bg-gray-200 rounded-lg transition-colors group"
                   title="Collapse components list"
                 >
                   <svg
-                    className="w-4 h-4 text-white/60 group-hover:text-white transition-colors"
+                    className="w-4 h-4 text-gray-600 group-hover:text-gray-800 transition-colors"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -489,7 +525,7 @@ export const DocsFloatingMenu: React.FC = () => {
                       <button
                         key={componentName}
                         onClick={() => openDocs(componentPath)}
-                        className="block w-full text-left text-white/80 hover:text-white text-xs p-2 hover:bg-white/10 rounded-lg transition-all duration-200 transform hover:scale-105 animate-slideIn"
+                        className="block w-full text-left text-gray-700 hover:text-gray-900 text-xs p-2 hover:bg-gray-200 rounded-lg transition-all duration-200 transform hover:scale-105 animate-slideIn"
                         style={{
                           animationDelay: `${index * 50}ms`,
                         }}
