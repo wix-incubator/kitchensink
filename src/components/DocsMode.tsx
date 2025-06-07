@@ -24,7 +24,14 @@ export const useDocsMode = () => {
 export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isDocsMode, setIsDocsMode] = useState(false);
+  const [isDocsMode, setIsDocsMode] = useState(() => {
+    // Check for docsMode query parameter on initialization
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("docsMode") === "true";
+    }
+    return false;
+  });
   const [selectedComponent, setSelectedComponent] = useState<string | null>(
     null
   );
