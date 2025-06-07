@@ -1,0 +1,476 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+---
+
+# ProductMediaGallery Components
+
+The `ProductMediaGallery` namespace contains headless components for managing product image galleries. These components provide reactive media gallery state and navigation through render props, making them perfect building blocks for product image display and interaction UIs.
+
+## Overview
+
+```tsx
+import { ProductMediaGallery } from "../headless/store/ProductMediaGallery";
+
+// All available components
+const {
+  SelectedImage,
+  MediaItemThumbnail,
+  NextImageButton,
+  PrevImageButton,
+  MediaGalleryInfo,
+} = ProductMediaGallery;
+```
+
+## Components
+
+### SelectedImage
+
+Displays the currently selected product image with metadata.
+
+#### Props
+
+- `children`: Render prop function receiving `SelectedImageRenderProps`
+
+#### Render Props
+
+- `image: MediaItem | null` - Current selected image object
+- `imageUrl: string | null` - Image URL for display
+- `altText: string` - Alt text for accessibility
+- `isLoading: boolean` - Whether image is loading
+- `currentIndex: number` - Current image index (0-based)
+- `totalImages: number` - Total number of images
+
+#### Example
+
+```tsx
+<ProductMediaGallery.SelectedImage>
+  {({ imageUrl, altText, isLoading, currentIndex, totalImages }) => (
+    <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={altText}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-gray-400">No image available</div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+          <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full" />
+        </div>
+      )}
+
+      {totalImages > 1 && (
+        <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+          {currentIndex + 1} / {totalImages}
+        </div>
+      )}
+    </div>
+  )}
+</ProductMediaGallery.SelectedImage>
+```
+
+### MediaItemThumbnail
+
+Renders individual thumbnail images for gallery navigation.
+
+#### Props
+
+- `index: number` - Index of the media item
+- `children`: Render prop function receiving `MediaItemThumbnailRenderProps`
+
+#### Render Props
+
+- `mediaItem: MediaItem | null` - Media item data
+- `imageUrl: string | null` - Thumbnail image URL
+- `isActive: boolean` - Whether this thumbnail is currently selected
+- `selectImage: () => void` - Function to select this image
+- `index: number` - Index of this thumbnail
+- `altText: string` - Alt text for thumbnail
+
+#### Example
+
+```tsx
+<ProductMediaGallery.MediaItemThumbnail index={0}>
+  {({ imageUrl, isActive, selectImage, altText }) => (
+    <button
+      onClick={selectImage}
+      className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
+        isActive
+          ? "border-blue-500 ring-2 ring-blue-200"
+          : "border-gray-200 hover:border-gray-300"
+      }`}
+    >
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={altText}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+          <div className="text-gray-400 text-sm">No image</div>
+        </div>
+      )}
+    </button>
+  )}
+</ProductMediaGallery.MediaItemThumbnail>
+```
+
+### NextImageButton
+
+Provides navigation to the next image in the gallery.
+
+#### Props
+
+- `children`: Render prop function receiving `NextImageButtonRenderProps`
+
+#### Render Props
+
+- `nextImage: () => void` - Function to go to next image
+- `hasNext: boolean` - Whether there is a next image available
+- `currentIndex: number` - Current image index
+- `totalImages: number` - Total number of images
+
+#### Example
+
+```tsx
+<ProductMediaGallery.NextImageButton>
+  {({ nextImage, hasNext, currentIndex, totalImages }) => (
+    <button
+      onClick={nextImage}
+      disabled={!hasNext}
+      className="p-2 bg-white/80 hover:bg-white rounded-full shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      aria-label={`Next image (${currentIndex + 2} of ${totalImages})`}
+    >
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </button>
+  )}
+</ProductMediaGallery.NextImageButton>
+```
+
+### PrevImageButton
+
+Provides navigation to the previous image in the gallery.
+
+#### Props
+
+- `children`: Render prop function receiving `PrevImageButtonRenderProps`
+
+#### Render Props
+
+- `prevImage: () => void` - Function to go to previous image
+- `hasPrev: boolean` - Whether there is a previous image available
+- `currentIndex: number` - Current image index
+- `totalImages: number` - Total number of images
+
+#### Example
+
+```tsx
+<ProductMediaGallery.PrevImageButton>
+  {({ prevImage, hasPrev, currentIndex, totalImages }) => (
+    <button
+      onClick={prevImage}
+      disabled={!hasPrev}
+      className="p-2 bg-white/80 hover:bg-white rounded-full shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      aria-label={`Previous image (${currentIndex} of ${totalImages})`}
+    >
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+  )}
+</ProductMediaGallery.PrevImageButton>
+```
+
+### MediaGalleryInfo
+
+Provides information about the current gallery state.
+
+#### Props
+
+- `children`: Render prop function receiving `MediaGalleryInfoRenderProps`
+
+#### Render Props
+
+- `currentImage: number` - Current image index (1-based for display)
+- `totalImages: number` - Total number of images
+- `hasImages: boolean` - Whether gallery has images
+
+#### Example
+
+```tsx
+<ProductMediaGallery.MediaGalleryInfo>
+  {({ currentImage, totalImages, hasImages }) => (
+    <>
+      {hasImages && (
+        <div className="text-center text-sm text-gray-600">
+          Image {currentImage} of {totalImages}
+        </div>
+      )}
+    </>
+  )}
+</ProductMediaGallery.MediaGalleryInfo>
+```
+
+## Usage Patterns
+
+### Complete Image Gallery
+
+```tsx
+<div className="space-y-4">
+  {/* Main Image */}
+  <div className="relative">
+    <ProductMediaGallery.SelectedImage>
+      {({ imageUrl, altText, currentIndex, totalImages }) => (
+        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={altText}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-gray-400">No image available</div>
+            </div>
+          )}
+
+          {/* Navigation Arrows */}
+          {totalImages > 1 && (
+            <>
+              <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                <ProductMediaGallery.PrevImageButton>
+                  {({ prevImage, hasPrev }) => (
+                    <button
+                      onClick={prevImage}
+                      disabled={!hasPrev}
+                      className="p-2 bg-black/50 hover:bg-black/70 text-white rounded-full disabled:opacity-30"
+                    >
+                      <ChevronLeftIcon className="w-5 h-5" />
+                    </button>
+                  )}
+                </ProductMediaGallery.PrevImageButton>
+              </div>
+
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <ProductMediaGallery.NextImageButton>
+                  {({ nextImage, hasNext }) => (
+                    <button
+                      onClick={nextImage}
+                      disabled={!hasNext}
+                      className="p-2 bg-black/50 hover:bg-black/70 text-white rounded-full disabled:opacity-30"
+                    >
+                      <ChevronRightIcon className="w-5 h-5" />
+                    </button>
+                  )}
+                </ProductMediaGallery.NextImageButton>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </ProductMediaGallery.SelectedImage>
+  </div>
+
+  {/* Thumbnails */}
+  <ProductMediaGallery.MediaGalleryInfo>
+    {({ totalImages, hasImages }) => (
+      <>
+        {hasImages && totalImages > 1 && (
+          <div className="grid grid-cols-4 gap-2">
+            {Array.from({ length: totalImages }).map((_, index) => (
+              <ProductMediaGallery.MediaItemThumbnail key={index} index={index}>
+                {({ imageUrl, isActive, selectImage, altText }) => (
+                  <button
+                    onClick={selectImage}
+                    className={`aspect-square rounded-lg overflow-hidden border-2 ${
+                      isActive
+                        ? "border-blue-500"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={altText}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100" />
+                    )}
+                  </button>
+                )}
+              </ProductMediaGallery.MediaItemThumbnail>
+            ))}
+          </div>
+        )}
+      </>
+    )}
+  </ProductMediaGallery.MediaGalleryInfo>
+
+  {/* Gallery Info */}
+  <ProductMediaGallery.MediaGalleryInfo>
+    {({ currentImage, totalImages }) => (
+      <div className="text-center text-sm text-gray-500">
+        {currentImage} of {totalImages}
+      </div>
+    )}
+  </ProductMediaGallery.MediaGalleryInfo>
+</div>
+```
+
+### Carousel Style Gallery
+
+```tsx
+<div className="relative">
+  <ProductMediaGallery.SelectedImage>
+    {({ imageUrl, altText, currentIndex, totalImages }) => (
+      <div className="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden relative">
+        <img
+          src={imageUrl}
+          alt={altText}
+          className="w-full h-full object-cover"
+        />
+
+        {/* Image Counter */}
+        <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+          {currentIndex + 1} / {totalImages}
+        </div>
+
+        {/* Navigation */}
+        <div className="absolute inset-y-0 left-0 flex items-center">
+          <ProductMediaGallery.PrevImageButton>
+            {({ prevImage, hasPrev }) => (
+              <button
+                onClick={prevImage}
+                disabled={!hasPrev}
+                className="m-4 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg disabled:opacity-50"
+              >
+                <ChevronLeftIcon className="w-6 h-6" />
+              </button>
+            )}
+          </ProductMediaGallery.PrevImageButton>
+        </div>
+
+        <div className="absolute inset-y-0 right-0 flex items-center">
+          <ProductMediaGallery.NextImageButton>
+            {({ nextImage, hasNext }) => (
+              <button
+                onClick={nextImage}
+                disabled={!hasNext}
+                className="m-4 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg disabled:opacity-50"
+              >
+                <ChevronRightIcon className="w-6 h-6" />
+              </button>
+            )}
+          </ProductMediaGallery.NextImageButton>
+        </div>
+      </div>
+    )}
+  </ProductMediaGallery.SelectedImage>
+</div>
+```
+
+## Service Dependencies
+
+These components depend on the `ProductMediaGalleryService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `ProductMediaGalleryService`.
+
+```tsx
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+import {
+  ProductMediaGalleryServiceDefinition,
+  ProductMediaGalleryService,
+} from "../headless/store/product-media-gallery-service";
+
+<ServicesManagerProvider
+  servicesManager={createServicesManager(
+    createServicesMap().addService(
+      ProductMediaGalleryServiceDefinition,
+      ProductMediaGalleryService,
+      galleryConfig
+    )
+  )}
+>
+  {/* Your ProductMediaGallery components here */}
+</ServicesManagerProvider>;
+```
+
+## TypeScript Support
+
+All components export comprehensive TypeScript interfaces for both props and render props:
+
+```tsx
+import type {
+  SelectedImageProps,
+  SelectedImageRenderProps,
+  MediaItemThumbnailProps,
+  MediaItemThumbnailRenderProps,
+  NextImageButtonProps,
+  NextImageButtonRenderProps,
+  PrevImageButtonProps,
+  PrevImageButtonRenderProps,
+  MediaGalleryInfoProps,
+  MediaGalleryInfoRenderProps,
+} from "../headless/store/ProductMediaGallery";
+```
+
+## Testing
+
+These headless components are easy to test by providing mock render functions:
+
+```tsx
+import { render } from "@testing-library/react";
+import { ProductMediaGallery } from "../headless/store/ProductMediaGallery";
+
+test("SelectedImage renders correctly", () => {
+  const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
+
+  render(
+    <ServicesManagerProvider servicesManager={mockServicesManager}>
+      <ProductMediaGallery.SelectedImage>
+        {mockRenderProp}
+      </ProductMediaGallery.SelectedImage>
+    </ServicesManagerProvider>
+  );
+
+  expect(mockRenderProp).toHaveBeenCalledWith({
+    image: null,
+    imageUrl: null,
+    altText: "Product image",
+    isLoading: false,
+    currentIndex: 0,
+    totalImages: 0,
+  });
+});
+```

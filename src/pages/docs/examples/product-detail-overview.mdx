@@ -1,0 +1,238 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+---
+
+# Product Detail Page Overview
+
+The product detail page is a comprehensive example that demonstrates how multiple store headless components work together to create a complete product browsing and shopping experience.
+
+## Featured Components
+
+This page showcases the following headless component families:
+
+### Product Components
+
+- **Product.Name** - Displays the product title
+- **Product.Description** - Shows product description with HTML support
+- **Product.Details** - Displays SKU, weight, and other product specifications
+
+### ProductVariantSelector Components
+
+- **ProductVariantSelector.ProductPrice** - Shows current price with variant pricing
+- **ProductVariantSelector.ProductOptions** - Lists all available product options
+- **ProductVariantSelector.ProductOptionChoices** - Displays choices for each option
+- **ProductVariantSelector.ChoiceSelection** - Handles individual choice selection
+- **ProductVariantSelector.AddToCartTrigger** - Manages add to cart functionality
+- **ProductVariantSelector.StockStatus** - Shows current stock availability
+
+### ProductMediaGallery Components
+
+- **ProductMediaGallery.SelectedImage** - Main product image display
+- **ProductMediaGallery.MediaItemThumbnail** - Thumbnail navigation
+- **ProductMediaGallery.PrevImageButton** - Previous image navigation
+- **ProductMediaGallery.NextImageButton** - Next image navigation
+- **ProductMediaGallery.MediaGalleryInfo** - Gallery state information
+
+### CurrentCart Components
+
+- **CurrentCart.CartIcon** - Fixed cart icon with item count
+- **CurrentCart.CartModal** - Sliding cart drawer
+- **CurrentCart.CartLineItems** - Cart items list
+- **CurrentCart.CartLineItem** - Individual cart item management
+- **CurrentCart.CartSummary** - Cart totals and summary
+- **CurrentCart.CheckoutButton** - Checkout initiation
+
+## Page Layout
+
+The product detail page follows this structure:
+
+### Header Section
+
+- **Back to Store** navigation link
+- **Fixed Cart Icon** positioned in top-right corner
+
+### Main Content Grid
+
+```tsx
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+  {/* Left Column: Product Images */}
+  <ProductMediaGallery />
+
+  {/* Right Column: Product Information */}
+  <ProductInformation />
+</div>
+```
+
+### Left Column: Product Images
+
+- **Main Image Display** with navigation arrows and image counter
+- **Thumbnail Grid** for image selection
+- **Responsive Design** that stacks on mobile
+
+### Right Column: Product Information
+
+- **Product Name and Price** at the top
+- **Product Description** with HTML content support
+- **Product Options** for variant selection (size, color, etc.)
+- **Add to Cart Section** with quantity selector
+- **Stock Status** indicator
+- **Product Details** table with specifications
+
+## Key Interactions
+
+### Image Gallery Navigation
+
+- Click thumbnails to change main image
+- Use arrow buttons for sequential navigation
+- Keyboard navigation support
+- Mobile swipe gestures
+
+### Variant Selection
+
+- Select different options (size, color, etc.)
+- See real-time price updates
+- Stock availability changes
+- Add to cart state updates
+
+### Cart Integration
+
+- Add products with selected variants
+- View cart without leaving page
+- Modify quantities in cart
+- Remove items from cart
+- Proceed to checkout
+
+## State Management
+
+The page demonstrates how headless components manage state independently:
+
+### Product State
+
+- Current product data
+- Selected variant information
+- Product options and choices
+
+### Gallery State
+
+- Currently selected image
+- Image navigation position
+- Total image count
+
+### Cart State
+
+- Cart items and quantities
+- Cart totals and pricing
+- Cart open/closed state
+- Loading states for cart operations
+
+## Services Integration
+
+The page requires multiple services to function:
+
+```tsx
+const servicesManager = createServicesManager(
+  createServicesMap()
+    .addService(
+      SelectedVariantServiceDefinition,
+      SelectedVariantService,
+      productConfig
+    )
+    .addService(
+      ProductMediaGalleryServiceDefinition,
+      ProductMediaGalleryService,
+      productConfig
+    )
+    .addService(ProductServiceDefinition, ProductService, productConfig)
+    .addService(
+      CurrentCartServiceDefinition,
+      CurrentCartService,
+      currentCartConfig
+    )
+);
+```
+
+## User Experience Features
+
+### Visual Feedback
+
+- **Success messages** when items are added to cart
+- **Loading states** during async operations
+- **Error handling** for failed operations
+- **Hover effects** and smooth transitions
+
+### Accessibility
+
+- **Keyboard navigation** support
+- **Screen reader** friendly labels
+- **Focus management** for modals
+- **Color contrast** compliance
+
+### Mobile Optimization
+
+- **Responsive grid** layout
+- **Touch-friendly** controls
+- **Optimized image** loading
+- **Mobile cart** experience
+
+## Performance Considerations
+
+### Image Optimization
+
+- **Lazy loading** for product images
+- **Responsive images** for different screen sizes
+- **Thumbnail optimization** for quick loading
+
+### State Efficiency
+
+- **Reactive updates** only when needed
+- **Efficient re-rendering** with proper dependencies
+- **Optimistic updates** for better perceived performance
+
+## Customization Points
+
+This example page can be customized in several ways:
+
+### Layout Variations
+
+- Change grid proportions
+- Modify spacing and typography
+- Adjust color schemes
+- Add/remove sections
+
+### Feature Extensions
+
+- Add product reviews section
+- Include related products
+- Add wishlist functionality
+- Implement product comparison
+
+### Integration Options
+
+- Connect to different e-commerce backends
+- Add analytics tracking
+- Implement A/B testing
+- Add personalization features
+
+## Code Organization
+
+The page demonstrates clean code organization:
+
+### Component Structure
+
+- **Single-purpose components** with clear responsibilities
+- **Render prop pattern** for maximum flexibility
+- **Consistent prop interfaces** across components
+
+### Service Management
+
+- **Centralized state** management through services
+- **Clean separation** of concerns
+- **Testable architecture** with dependency injection
+
+### Error Handling
+
+- **Graceful degradation** when services fail
+- **User-friendly error** messages
+- **Recovery mechanisms** for transient failures
+
+This product detail page serves as a comprehensive example of how to build a modern, accessible, and performant e-commerce product page using headless component architecture.
