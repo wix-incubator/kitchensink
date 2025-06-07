@@ -354,12 +354,12 @@ export function MembersPage({
         )}
 
         {userIsLoggedIn ? (
-          // Logged in layout - two panels
-          <div className="flex min-h-screen p-6 gap-6">
+          // Logged in layout - responsive panels (stacked on mobile, side by side on desktop)
+          <div className="flex flex-col lg:flex-row min-h-screen p-4 lg:p-6 gap-4 lg:gap-6">
             {/* Left Panel - User Profile */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 w-full max-w-md flex flex-col">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 lg:p-8 w-full lg:max-w-md flex flex-col">
               {/* Profile Section */}
-              <div className="text-center mb-8">
+              <div className="text-center mb-6 lg:mb-8">
                 <ProfileContent setShowPhotoDialog={setShowPhotoDialog} />
               </div>
 
@@ -372,11 +372,11 @@ export function MembersPage({
               <div className="mb-6">
                 <button
                   onClick={() => setShowUpdateDialog(true)}
-                  className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl"
+                  className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold py-3 lg:py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl"
                 >
                   <span className="flex items-center justify-center gap-3">
                     <svg
-                      className="w-6 h-6"
+                      className="w-5 lg:w-6 h-5 lg:h-6"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -393,14 +393,14 @@ export function MembersPage({
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 lg:space-y-6">
                 <a
                   href="/api/auth/logout"
-                  className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                  className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-6">
                     <svg
-                      className="h-6 w-6 text-white/80 group-hover:text-white transition-colors"
+                      className="h-5 lg:h-6 w-5 lg:w-6 text-white/80 group-hover:text-white transition-colors"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -423,7 +423,7 @@ export function MembersPage({
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/20">
+              <div className="mt-6 lg:mt-8 pt-6 border-t border-white/20">
                 <div className="text-center">
                   <p className="text-white/60 text-sm">
                     Thanks for being a member! Click above to sign out when
@@ -434,12 +434,12 @@ export function MembersPage({
             </div>
 
             {/* Right Panel - Coming Soon */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 flex-1 flex flex-col">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 lg:p-8 flex-1 flex flex-col min-h-[400px] lg:min-h-0">
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 {/* Empty State Icon */}
-                <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
+                <div className="w-20 lg:w-24 h-20 lg:h-24 bg-white/10 rounded-full flex items-center justify-center mb-4 lg:mb-6 backdrop-blur-sm">
                   <svg
-                    className="w-12 h-12 text-white/60"
+                    className="w-10 lg:w-12 h-10 lg:h-12 text-white/60"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -454,17 +454,17 @@ export function MembersPage({
                 </div>
 
                 {/* Empty State Content */}
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
                   More Features Coming Soon
                 </h2>
-                <p className="text-white/70 text-lg mb-6 max-w-md">
+                <p className="text-white/70 text-base lg:text-lg mb-4 lg:mb-6 max-w-md px-4 lg:px-0">
                   We're working on exciting new features for our members. Stay
                   tuned for updates!
                 </p>
 
                 {/* Feature Cards Preview */}
-                <div className="grid grid-cols-1 gap-4 w-full max-w-sm">
-                  <div className="bg-white/5 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                <div className="grid grid-cols-1 gap-3 lg:gap-4 w-full max-w-sm">
+                  <div className="bg-white/5 rounded-xl p-3 lg:p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
                         <svg
@@ -482,17 +482,17 @@ export function MembersPage({
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-white font-medium">
+                        <h3 className="text-white font-medium text-sm lg:text-base">
                           Member Analytics
                         </h3>
-                        <p className="text-white/50 text-sm">
+                        <p className="text-white/50 text-xs lg:text-sm">
                           Activity insights
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white/5 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                  <div className="bg-white/5 rounded-xl p-3 lg:p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
                         <svg
@@ -510,17 +510,17 @@ export function MembersPage({
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-white font-medium">
+                        <h3 className="text-white font-medium text-sm lg:text-base">
                           Community Hub
                         </h3>
-                        <p className="text-white/50 text-sm">
+                        <p className="text-white/50 text-xs lg:text-sm">
                           Connect with others
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white/5 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                  <div className="bg-white/5 rounded-xl p-3 lg:p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
                         <svg
@@ -544,10 +544,10 @@ export function MembersPage({
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-white font-medium">
+                        <h3 className="text-white font-medium text-sm lg:text-base">
                           Member Rewards
                         </h3>
-                        <p className="text-white/50 text-sm">
+                        <p className="text-white/50 text-xs lg:text-sm">
                           Exclusive benefits
                         </p>
                       </div>
@@ -558,22 +558,26 @@ export function MembersPage({
             </div>
           </div>
         ) : (
-          // Not logged in layout - centered single panel
-          <div className="flex min-h-screen p-6 items-center justify-center">
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 w-full max-w-md flex flex-col">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-white mb-2">Welcome</h1>
-                <p className="text-white/80 text-lg">Sign in to continue</p>
+          // Not logged in layout - centered single panel (responsive)
+          <div className="flex min-h-screen p-4 lg:p-6 items-center justify-center">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 lg:p-8 w-full max-w-md flex flex-col">
+              <div className="text-center mb-6 lg:mb-8">
+                <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
+                  Welcome
+                </h1>
+                <p className="text-white/80 text-base lg:text-lg">
+                  Sign in to continue
+                </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 lg:space-y-6">
                 <a
                   href="/api/auth/login?returnToUrl=/members"
-                  className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                  className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-6">
                     <svg
-                      className="h-6 w-6 text-white/80 group-hover:text-white transition-colors"
+                      className="h-5 lg:h-6 w-5 lg:w-6 text-white/80 group-hover:text-white transition-colors"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -596,7 +600,7 @@ export function MembersPage({
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/20">
+              <div className="mt-6 lg:mt-8 pt-6 border-t border-white/20">
                 <div className="text-center">
                   <p className="text-white/60 text-sm">
                     Don't have an account? You'll be able to create one after
