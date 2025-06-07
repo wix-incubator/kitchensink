@@ -84,6 +84,29 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
                   </div>
                   <span className="font-medium">Members</span>
                 </a>
+
+                {/* Store Link */}
+                <a
+                  href="/store"
+                  className="flex items-center gap-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-2 transition-all duration-200 group/item"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg flex items-center justify-center group-hover/item:from-orange-500/30 group-hover/item:to-red-500/30 transition-all duration-200">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6m0 0h15M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Store</span>
+                </a>
               </nav>
             </div>
           </div>

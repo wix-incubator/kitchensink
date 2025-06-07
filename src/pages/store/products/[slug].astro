@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProductDetailPage from "../../../react-pages/store/products/[slug]";
+import { loadProductServiceConfig } from "../../../headless/store/product-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect("/store");
+}
+
+// Load initial data for services
+const productServiceConfig = await loadProductServiceConfig(slug);
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+
+const productName = productServiceConfig.product.name || "Product";
+---
+
+<BaseLayout>
+  <title>{productName} - Store - Kitchensink</title>
+  <meta name="description" content={`View details for ${productName}`} />
+
+  <ProductDetailPage
+    client:load
+    productServiceConfig={productServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

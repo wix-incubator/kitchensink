@@ -24,6 +24,8 @@
     "clsx": "^2.1.1",
     "@wix/media": "^1.0.169",
     "@wix/stores": "^1.0.447",
+    "@wix/ecom": "^1.0.1187",
+    "@wix/redirects": "^1.0.83",
     "astro": "^5.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
