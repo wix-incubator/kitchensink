@@ -136,7 +136,7 @@ export default function HomePage(props: HomePageProps) {
               </div>
 
               <a
-                href="/members?docsMode=true"
+                href="/store?docsMode=true"
                 className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
               >
                 <span>Try Docs Mode</span>
@@ -222,6 +222,59 @@ export default function HomePage(props: HomePageProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Wix Stores */}
+          <a
+            href="/store"
+            className="group block transform transition-all duration-300 hover:scale-105"
+          >
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500/50 to-teal-500/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-green-500/20 backdrop-blur-sm rounded-full border border-green-400/30">
+                  <span className="text-green-300 text-sm font-medium">
+                    Available
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Wix Stores</h3>
+              <p className="text-white/70 text-base leading-relaxed mb-4">
+                E-commerce functionality including product catalogs, shopping
+                cart, checkout process, inventory management, and order
+                processing.
+              </p>
+              <div className="flex items-center text-green-300 font-semibold group-hover:text-green-200 transition-colors duration-300">
+                <span>Explore Now</span>
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
           {/* Members Management */}
           <a
             href="/members"
@@ -275,58 +328,6 @@ export default function HomePage(props: HomePageProps) {
               </div>
             </div>
           </a>
-
-          {/* Wix Stores - Coming Soon */}
-          <div className="group block transform transition-all duration-300 hover:scale-105">
-            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500/50 to-teal-500/50 rounded-2xl flex items-center justify-center shadow-lg">
-                  <svg
-                    className="w-8 h-8 text-white/70"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                    />
-                  </svg>
-                </div>
-                <div className="px-3 py-1 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-400/30">
-                  <span className="text-orange-300 text-sm font-medium">
-                    Coming Soon
-                  </span>
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold text-white/70 mb-3">
-                Wix Stores
-              </h3>
-              <p className="text-white/50 text-base leading-relaxed mb-4">
-                E-commerce functionality including product catalogs, shopping
-                cart, checkout process, inventory management, and order
-                processing.
-              </p>
-              <div className="flex items-center text-white/40 font-semibold">
-                <span>In Development</span>
-                <svg
-                  className="w-5 h-5 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
 
           {/* Wix Forms - Coming Soon */}
           <div className="group block transform transition-all duration-300 hover:scale-105">
