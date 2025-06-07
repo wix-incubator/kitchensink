@@ -1,0 +1,397 @@
+# Client-Side Services and Headless Components Pattern
+
+## Overview
+
+This pattern separates client-side state management and business logic from UI presentation through a combination of **Client-Side Services** and **Headless Components**. This architecture enables better code reusability, testability, and maintainability by decoupling reactive state management from UI implementation.
+
+## Architecture Principles
+
+### 1. Separation of Concerns
+
+- **Services**: Manage state, business logic, and API interactions
+- **Headless Components**: Provide reactive data and actions through render props
+- **UI Components**: Handle only presentation and user interaction
+
+### 2. Reactive State Management
+
+- Services use **Signals** for reactive state that automatically updates consuming components
+- Headless components expose reactive data from services via render props
+- UI components receive data and actions through render prop patterns
+
+### 3. Composability
+
+- Headless components can be composed together to build complex UIs
+- Services can be combined and nested using `ServicesManagerProvider`
+- Each service is isolated and can be reused across different contexts
+
+## Client-Side Services
+
+### What are Client-Side Services?
+
+Client-side services are reactive state containers that:
+
+- Encapsulate related state and business logic
+- Use **Signals** for reactive state management
+- Provide APIs for state mutations and computed values
+- Handle side effects like API calls and data transformations
+- Are isomorphic (can run on both server and client)
+
+### Service Structure
+
+```typescript
+// Service Definition
+export const MyServiceDefinition = defineService<MyServiceAPI>("myService");
+
+// Service Implementation
+export const MyService = implementService.withConfig<ConfigType>()(
+  MyServiceDefinition,
+  ({ getService, config }) => {
+    const signalsService = getService(SignalsServiceDefinition);
+
+    // Reactive state using signals
+    const state: Signal<StateType> = signalsService.signal(initialState as any);
+
+    // Actions and computed values
+    const updateState = (newData: StateType) => {
+      state.set(newData);
+    };
+
+    return {
+      state,
+      updateState,
+      // ... other API methods
+    };
+  }
+);
+
+// Configuration loader (runs on server)
+export async function loadMyServiceConfig(): Promise<
+  ServiceFactoryConfig<typeof MyService>
+> {
+  // Load initial data on server
+  const data = await fetchInitialData();
+  return { initialData: data };
+}
+```
+
+### Key Patterns
+
+1. **Signal Usage**: Use `signalsService.signal(value as any)` to bypass Jsonifiable constraints
+2. **Configuration**: Services accept config objects with initial state and settings
+3. **API Design**: Expose clear, functional APIs with actions and reactive getters
+4. **Server Loading**: Provide async functions to load service configs on the server
+
+## Headless Components
+
+### What are Headless Components?
+
+Headless components are React components that:
+
+- Accept a `children` render prop function
+- Use `useService()` to access service data and actions
+- Expose reactive data and actions to their children
+- Handle no UI rendering themselves
+
+### Headless Component Structure
+
+```typescript
+export const MyHeadlessComponent = (props: {
+  children: (props: {
+    data: DataType;
+    actions: ActionsType;
+    computedValues: ComputedType;
+  }) => React.ReactNode;
+}) => {
+  const service = useService(MyServiceDefinition) as ServiceAPI<
+    typeof MyServiceDefinition
+  >;
+
+  // Get reactive data
+  const data = service.state.get();
+
+  // Compose data and actions for children
+  return props.children({
+    data,
+    actions: {
+      update: service.updateState,
+      // ... other actions
+    },
+    computedValues: {
+      isLoading: data.status === "loading",
+      // ... other computed values
+    },
+  });
+};
+```
+
+### Design Principles for Headless Components
+
+1. **Single Responsibility**: Each component should handle one logical concern
+2. **Atomic Design**: Break down complex UIs into smaller, composable pieces
+3. **Reactive Data**: Always expose reactive values, not static snapshots
+4. **Action Composition**: Group related actions together logically
+
+## Usage Pattern
+
+### 1. Setup Services Manager
+
+```tsx
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+
+<ServicesManagerProvider
+  servicesManager={createServicesManager(
+    createServicesMap()
+      .addService(ServiceDefinition, Service, serviceConfig)
+      .addService(AnotherServiceDefinition, AnotherService, anotherConfig)
+  )}
+>
+  {/* Your UI components */}
+</ServicesManagerProvider>;
+```
+
+### 2. Use Headless Components in UI
+
+```tsx
+<HeadlessComponent>
+  {({ data, actions, computedValues }) => (
+    <div>
+      <h1>{data.title}</h1>
+      <button
+        onClick={() => actions.update(newData)}
+        disabled={computedValues.isLoading}
+      >
+        {computedValues.isLoading ? "Loading..." : "Update"}
+      </button>
+    </div>
+  )}
+</HeadlessComponent>
+```
+
+### 3. Server-Side Integration
+
+```astro
+---
+import { loadMyServiceConfig } from '../headless/services/my-service';
+
+const serviceConfig = await loadMyServiceConfig();
+---
+
+<MyPage client:load serviceConfig={serviceConfig} />
+```
+
+## Example: Photo Upload Feature
+
+### Service Implementation
+
+```typescript
+// photo-upload-service.ts
+export interface PhotoUploadServiceAPI {
+  selectedFile: Signal<File | null>;
+  uploadState: Signal<UploadState>;
+  dragOver: Signal<boolean>;
+  previewUrl: Signal<string | null>;
+  selectFile: (file: File) => void;
+  clearFile: () => void;
+  uploadPhoto: () => Promise<void>;
+  setDragOver: (isDragOver: boolean) => void;
+}
+
+export const PhotoUploadService = implementService.withConfig<{
+  maxFileSize?: number;
+  allowedTypes?: string[];
+}>()(PhotoUploadServiceDefinition, ({ getService, config }) => {
+  // Implementation with reactive state and actions
+});
+```
+
+### Headless Components
+
+```typescript
+// FileSelector - Handles file selection and drag & drop
+export const FileSelector = (props: {
+  children: (props: {
+    selectedFile: File | null;
+    dragOver: boolean;
+    selectFile: (file: File) => void;
+    handleDragOver: (event: React.DragEvent) => void;
+    // ... other props
+  }) => React.ReactNode;
+}) => {
+  // Implementation
+};
+
+// UploadProgress - Shows upload status
+export const UploadProgress = (props: {
+  children: (props: {
+    uploadState: UploadState;
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+  }) => React.ReactNode;
+}) => {
+  // Implementation
+};
+
+// UploadTrigger - Handles upload action
+export const UploadTrigger = (props: {
+  children: (props: {
+    uploadPhoto: () => Promise<void>;
+    canUpload: boolean;
+    isUploading: boolean;
+  }) => React.ReactNode;
+}) => {
+  // Implementation
+};
+```
+
+### UI Composition
+
+```tsx
+<ServicesManagerProvider servicesManager={servicesManager}>
+  <FileSelector>
+    {({ dragOver, handleDragOver, handleDrop, selectFile }) => (
+      <div
+        className={dragOver ? "drag-active" : ""}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        <UploadProgress>
+          {({ isLoading, uploadState }) => (
+            <>
+              {uploadState.message && <div>{uploadState.message}</div>}
+              <UploadTrigger>
+                {({ uploadPhoto, canUpload }) => (
+                  <button onClick={uploadPhoto} disabled={!canUpload}>
+                    {isLoading ? "Uploading..." : "Upload"}
+                  </button>
+                )}
+              </UploadTrigger>
+            </>
+          )}
+        </UploadProgress>
+      </div>
+    )}
+  </FileSelector>
+</ServicesManagerProvider>
+```
+
+## Benefits
+
+### 1. **Reusability**
+
+- Services can be used across different UI implementations
+- Headless components provide flexible building blocks
+- Business logic is decoupled from presentation
+
+### 2. **Testability**
+
+- Services can be tested independently of UI
+- Headless components can be tested with mock render functions
+- Clear separation of concerns makes testing easier
+
+### 3. **Maintainability**
+
+- Changes to business logic only affect services
+- UI changes don't impact business logic
+- Clear interfaces between layers
+
+### 4. **Composability**
+
+- Mix and match headless components for different UIs
+- Combine multiple services for complex features
+- Build atomic UI components that can be composed
+
+### 5. **Performance**
+
+- Reactive updates only re-render affected components
+- Services can optimize state updates and API calls
+- Lazy loading and code splitting at service boundaries
+
+## Best Practices
+
+### Service Design
+
+1. **Single Responsibility**: Each service should handle one domain area
+2. **Immutable Updates**: Always create new state objects rather than mutating
+3. **Error Handling**: Include error states in your service APIs
+4. **Configuration**: Make services configurable through their config objects
+
+### Headless Component Design
+
+1. **Atomic Components**: Keep components small and focused
+2. **Consistent APIs**: Use consistent naming patterns across components
+3. **Reactive Data**: Always expose reactive values from signals
+4. **Action Grouping**: Group related actions logically
+
+### UI Integration
+
+1. **Service Boundaries**: Use `ServicesManagerProvider` to define service scopes
+2. **Lazy Loading**: Load service configs only when needed
+3. **Error Boundaries**: Wrap service providers with error boundaries
+4. **Performance**: Use React.memo and useMemo for expensive computations
+
+## CurrentMemberProfile Pattern
+
+For display-only headless components, use namespace exports for clean APIs:
+
+```tsx
+// CurrentMemberProfile.tsx - Display headless components
+export const CurrentMemberProfile = {
+  FullName,
+  Nickname,
+  Email,
+  LastLoginDate,
+  ActivityStatus,
+  DaysMember,
+  ProfilePhoto,
+} as const;
+
+// Usage
+<CurrentMemberProfile.FullName>
+  {({ fullName, hasFullName, firstName, lastName }) => (
+    <h1>{hasFullName ? fullName : `Welcome ${firstName}!`}</h1>
+  )}
+</CurrentMemberProfile.FullName>
+
+<CurrentMemberProfile.ActivityStatus>
+  {({ displayStatus, isActive, statusColor }) => (
+    <span className={`text-${statusColor}-400`}>
+      {displayStatus} {isActive && '🟢'}
+    </span>
+  )}
+</CurrentMemberProfile.ActivityStatus>
+```
+
+### TypeScript Patterns
+
+Each headless component should export both Props and RenderProps interfaces:
+
+```tsx
+/**
+ * Props for FullName headless component
+ */
+export interface FullNameProps {
+  /** Render prop function that receives full name data */
+  children: (props: FullNameRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for FullName component
+ */
+export interface FullNameRenderProps {
+  /** Full name combining first and last name */
+  fullName: string;
+  /** First name only */
+  firstName: string;
+  /** Last name only */
+  lastName: string;
+  /** Whether both first and last names are available */
+  hasFullName: boolean;
+}
+```
+
+This pattern provides a robust foundation for building complex, interactive UIs while maintaining clean separation of concerns and excellent developer experience.

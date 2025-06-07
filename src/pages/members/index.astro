@@ -3,16 +3,27 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { isLoggedIn } from "@wix/astro/auth";
 import { members } from "@wix/members";
 import { MembersPage } from "../../react-pages/members/index";
+import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
+import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
 
 // Server-side logic
 const userIsLoggedIn = isLoggedIn();
 let member;
+let currentMemberServiceConfig;
+let profileUpdateServiceConfig;
+
 if (userIsLoggedIn) {
   member = (
     await members.getCurrentMember({
       fieldsets: ["FULL"],
     })
   ).member;
+
+  // Load service configurations for headless components
+  if (member && member._id) {
+    currentMemberServiceConfig = await loadCurrentMemberServiceConfig();
+    profileUpdateServiceConfig = await loadProfileUpdateServiceConfig();
+  }
 }
 
 // Handle URL parameters for success/error messages
@@ -34,6 +45,8 @@ const error = url.searchParams.get("error");
     member={member}
     updated={updated}
     error={error}
+    currentMemberServiceConfig={currentMemberServiceConfig}
+    profileUpdateServiceConfig={profileUpdateServiceConfig}
     slot="body"
   />
 </BaseLayout>

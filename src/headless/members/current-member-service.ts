@@ -9,6 +9,7 @@ import type { Signal } from "../Signal";
 
 export const CurrentMemberServiceDefinition = defineService<{
   currentMember: Signal<members.Member>;
+  updateMember: (member: members.UpdateMember) => Promise<void>;
 }>("currentMember");
 
 export const CurrentMemberService = implementService.withConfig<{
@@ -21,13 +22,18 @@ export const CurrentMemberService = implementService.withConfig<{
 
   return {
     currentMember,
+    updateMember: async (update) => {
+      await members.updateMember(currentMember.get()._id!, update);
+    },
   };
 });
 
 export async function loadCurrentMemberServiceConfig(): Promise<
   ServiceFactoryConfig<typeof CurrentMemberService>
 > {
-  const { member } = await members.getCurrentMember();
+  const { member } = await members.getCurrentMember({
+    fieldsets: ["FULL"],
+  });
   return {
     member: member!,
   };

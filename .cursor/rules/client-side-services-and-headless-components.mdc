@@ -3,11 +3,46 @@ description:
 globs: 
 alwaysApply: false
 ---
-here's how the pattern should go. client side state and logic should all live in client side services. the client side services are placed in teh @/headless folder under the domain folder with a `<service-name>-service.ts`. you can see an example service at @current-member-service.ts . The services are encapsulating state using signals, and they expose an api that then allows mustating the state or exposed computed values, getters or any other logic, even if it doesn't affect state, but has logic closely related to the service. The services are client side services, meaning they are run on the client and don't have server-only logic in them (they may run in SSR, so they need to be isomorphoic anyway). but service factories acceot a config object. that config object is kind of the intial strate of the service. With each service implementation comes a function for loading the service config. This function is exported and can be used in astro pages frontmatter to load the service config on the server and pass it as a prop to the react page, where it will later be passed to the services manager when initializating the matching service.
-client side services go along headless components to allow for easily building UI on top of the logic inside the client side services. headless compoennts are componenets that recieve a children render prop, and return the result of the render prop, using the data of the client side services reactively (client side services use Signals to provide reactive values, which can later be easily used reactively in React). 
-headless components are kind of the logical building blocks of common use cases like a product page, a member profile page etc. When we have a product page for exmaple, it consists of a product gallery that shows the product media items, a variant selector which shows the different options of the product and allowing choosing them (size, color etc) and there is an add to cart button. All of these are affected by the currenltlky selected variant, even the price, the add to cart button is disabled if there is no stock, etc. To compose a product page of Headless compoennts, we then basically have headless components for ProductGallery, VariantSelector, CurrentCart which in turn have ProductGallery.SelectedImage, ProductGallery.NextImageTrigger, ProductGalleryPreviousImageTrigger, VariantSelecter.AddToCartTrigger, VariantSelector.ProductOptions etc. These all allow to easily compose a product page out of services and all that is left to connect the logic to the DOM and styles (whatever is returned by teh children render props).
+here's how the pattern should go. client side state and logic should all live in client 
+side services. the client side services are placed in teh @/headless folder under the 
+domain folder with a `<service-name>-service.ts`. you can see an example service at 
+@current-member-service.ts. The services are encapsulating state using signals, 
+and they expose an api that then allows mustating the state or exposed computed values, 
+getters or any other logic, even if it doesn't affect state, but has logic closely related 
+to the service. it's important to node that client side services do not include actual UI and specficailly, should not return UI messages or strings, as this should be all handled by the user of the service outside of this layer, so when authoring client side services, we need to ensure we expose structured data that isn't tied to a specific UI / language etc.
+ The services are client side services, meaning they are run on the client 
+and don't have server-only logic in them (they may run in SSR, so they need to be 
+isomorphoic anyway). but service factories acceot a config object. that config object is 
+kind of the intial strate of the service. With each service implementation comes a function 
+for loading the service config. This function is exported and can be used in astro pages 
+frontmatter to load the service config on the server and pass it as a prop to the react page, 
+where it will later be passed to the services manager when initializating the matching service.
+client side services go along headless components to allow for easily building UI on top of the 
+logic inside the client side services. headless compoennts are componenets that recieve a 
+children render prop, and return the result of the render prop, using the data of the 
+client side services reactively (client side services use Signals to provide reactive values, 
+which can later be easily used reactively in React). 
+headless components are kind of the logical building blocks of common use cases like a 
+product page, a member profile page etc. When we have a product page for exmaple, it consists 
+of a product gallery that shows the product media items, a variant selector which shows the 
+different options of the product and allowing choosing them (size, color etc) and there is an
+ add to cart button. All of these are affected by the currenltlky selected variant, even the price, 
+ the add to cart button is disabled if there is no stock, etc. To compose a product page of 
+ Headless compoennts, we then basically have headless components for ProductGallery, 
+ VariantSelector, CurrentCart which in turn have ProductGallery.SelectedImage, 
+ ProductGallery.NextImageTrigger, ProductGalleryPreviousImageTrigger, 
+ VariantSelecter.AddToCartTrigger, VariantSelector.ProductOptions etc. 
+ These all allow to easily compose a product page out of services and all that
+  is left to connect the logic to the DOM and styles (whatever is returned by teh 
+  children render props).
+
 How does it work? 
-In order to use services we need to render a `ServicesManagerProvider` somewhere in out react tree, under which part we want to start using the headless components, that would be related to the state managed by that specific ServicesManager. We can have multiple `ServicesManagerProvider`s in the same page, they can be nested and repeated, and all headless components would be tied to the services manager by their location in the react tree (it uses react context).
+In order to use services we need to render a `ServicesManagerProvider` somewhere in
+ out react tree, under which part we want to start using the headless components, 
+ that would be related to the state managed by that specific ServicesManager. 
+ We can have multiple `ServicesManagerProvider`s in the same page, they can be 
+ nested and repeated, and all headless components would be tied to the services 
+ manager by their location in the react tree (it uses react context).
 ```tsx
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import { CurrentMemberServiceDefinition, CurrentMemberService } from "/path/to/headless/members/current-member-service.ts";
@@ -23,8 +58,12 @@ import { CurrentMemberServiceDefinition, CurrentMemberService } from "/path/to/h
     </>
 </ServiesManagerProvider>
 ```
-The `currentMemberServiceConfig` is the result of calling `loadCurrentMemberServiceConfig` on the server and passing the result into the react pages and up to the `ServicesManagerProvider`. There might be some cases where the config isn't loaded on the server, that's ok too.
-writing a Headless component is simple, we place a file for the component in the headless domain folder, and we export headless components like;
+The `currentMemberServiceConfig` is the result of calling `loadCurrentMemberServiceConfig`
+ on the server and passing the result into the react pages and up to the
+  `ServicesManagerProvider`. There might be some cases where the config isn't loaded 
+  on the server, that's ok too.
+writing a Headless component is simple, we place a file for the component in the
+ headless domain folder, and we export headless components like;
 ```tsx
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
@@ -43,7 +82,9 @@ export const FullName = (props: {
   return props.children({ fullName });
 };
 ```
-The headless components use the `useService` hook to get the active service, and then they get what they want to expose from the service, and pass it as props to the children render prop.
+The headless components use the `useService` hook to get the active service, 
+and then they get what they want to expose from the service, and pass it as props to the children render prop.
+
 
 Then, in our pages and components in the project, we can start using the headless components like
 ```tsx
@@ -70,3 +111,123 @@ Then, in our pages and components in the project, we can start using the headles
 </BuyNow>
 ```
 We have full control of the DOM and how the actions and data from the service are getting bound to user interaction and interface.
+
+<note>
+There is a bug in the type of the `.signal` function from teh signals service, 
+so use `as any` when passing in the initial value and use `: Signal<TheType>` to 
+set the right type for the signal.
+```
+
+## Service Dependencies
+
+Client-side services can depend on other services using the `getService` function provided in the service factory. This allows services to compose functionality and maintain consistency across related services.
+
+### How Service Dependencies Work
+
+When implementing a service, the factory function receives a `getService` function that can be used to get instances of other services:
+
+```tsx
+export const ProfileUpdateService = implementService.withConfig<{
+  memberId: string;
+  initialData?: Partial<ProfileFormData>;
+}>()(ProfileUpdateServiceDefinition, ({ getService, config }) => {
+  // Get other services this service depends on
+  const signalsService = getService(SignalsServiceDefinition);
+  const currentMemberService = getService(CurrentMemberServiceDefinition);
+  
+  // Use the dependent services in your service logic
+  const updateProfile = async () => {
+    // Use currentMemberService.updateMember instead of direct API calls
+    await currentMemberService.updateMember(memberUpdate);
+  };
+  
+  return {
+    // Service API
+  };
+});
+```
+
+### Benefits of Service Dependencies
+
+1. **Consistency**: When one service updates data, dependent services automatically reflect the changes
+2. **Reusability**: Services can reuse logic from other services instead of duplicating code
+3. **Maintainability**: Changes to core service logic automatically propagate to dependent services
+4. **Client-side State Sync**: Updates through one service immediately update the client-side state in related services
+
+### Example: ProfileUpdate Depending on CurrentMember
+
+```tsx
+// ProfileUpdateService depends on CurrentMemberService
+const currentMemberService = getService(CurrentMemberServiceDefinition);
+
+// Get initial data from the current member service instead of config
+const currentMember = currentMemberService.currentMember.get();
+const initialData = extractFormDataFromMember(currentMember);
+
+const updateProfile = async () => {
+  const formData = formData.get();
+  
+  // Convert form data to member update format
+  const memberUpdate = {
+    contact: {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      // ... other fields
+    },
+    profile: {
+      nickname: formData.nickname,
+      title: formData.profileTitle
+    }
+  };
+  
+  // Use the currentMemberService to update, which will:
+  // 1. Make the API call
+  // 2. Update the client-side state immediately
+  await currentMemberService.updateMember(memberUpdate);
+};
+```
+
+This pattern shows how dependent services can:
+1. **Share data**: ProfileUpdate gets its initial form data from CurrentMember's state
+2. **Share operations**: ProfileUpdate uses CurrentMember's updateMember method
+3. **Maintain consistency**: Updates through one service immediately reflect in the other
+
+When the profile is updated, the current member state is immediately updated on the client side, and any UI components using the CurrentMember headless components will reactively update.
+
+### Critical Rule: Same ServicesManager for Dependent Services
+
+**IMPORTANT**: Services that depend on each other MUST be registered in the same `ServicesManager` to share state properly.
+
+If you have a service that depends on another service (using `getService`), both services must be added to the same `ServicesMap` when creating the `ServicesManager`:
+
+```tsx
+// ✅ CORRECT: Both services in the same ServicesManager
+const servicesManager = createServicesManager(
+  createServicesMap()
+    .addService(CurrentMemberServiceDefinition, CurrentMemberService, currentMemberConfig)
+    .addService(ProfileUpdateServiceDefinition, ProfileUpdateService, profileUpdateConfig)
+);
+
+<ServicesManagerProvider servicesManager={servicesManager}>
+  {/* Both CurrentMember and ProfileUpdate headless components work here */}
+  <UpdateProfileDialog />
+</ServicesManagerProvider>
+```
+
+```tsx
+// ❌ WRONG: Services in different ServicesManagers
+<ServicesManagerProvider servicesManager={currentMemberServicesManager}>
+  <ProfileSection />
+  
+  <ServicesManagerProvider servicesManager={profileUpdateServicesManager}>
+    {/* ProfileUpdate service cannot access CurrentMember service from parent */}
+    <UpdateProfileDialog />
+  </ServicesManagerProvider>
+</ServicesManagerProvider>
+```
+
+**Why this matters:**
+- Each `ServicesManager` creates its own isolated service container
+- Services can only access other services within the same container via `getService`
+- State is not shared between different `ServicesManager` instances
+- Dependent services in different managers will fail at runtime when trying to call `getService`
