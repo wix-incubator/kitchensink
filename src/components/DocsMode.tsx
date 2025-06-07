@@ -54,6 +54,13 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
     setDiscoveredComponents((prev) =>
       new Map(prev).set(componentName, componentPath)
     );
+    return () => {
+      setDiscoveredComponents((prev) => {
+        const newMap = new Map(prev);
+        newMap.delete(componentName);
+        return newMap;
+      });
+    };
   };
 
   // Close docs when clicking outside in docs mode
@@ -102,8 +109,8 @@ export const withDocsWrapper = <T extends Record<string, any>>(
 
     // Register this component as discovered
     React.useEffect(() => {
-      registerComponent(componentName, componentPath);
-    }, [componentName, componentPath, registerComponent]);
+      return registerComponent(componentName, componentPath);
+    }, []);
 
     // In docs mode, wrap with highlighting and click handler
     if (isDocsMode) {
