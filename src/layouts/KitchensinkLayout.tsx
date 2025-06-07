@@ -30,8 +30,8 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
           <div
             className={`absolute left-full top-0 ml-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transform transition-all duration-300 ease-out ${
               isMenuOpen
-                ? "translate-x-0 opacity-100"
-                : "-translate-x-full opacity-0"
+                ? "translate-x-0 opacity-100 pointer-events-auto"
+                : "-translate-x-full opacity-0 pointer-events-none"
             }`}
           >
             <div className="py-4 px-6 min-w-48">
