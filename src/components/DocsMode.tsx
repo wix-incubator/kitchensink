@@ -111,6 +111,7 @@ export const withDocsWrapper = <T extends Record<string, any>>(
         <div
           className="relative group cursor-pointer"
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             openDocs(componentPath);
           }}
@@ -123,8 +124,16 @@ export const withDocsWrapper = <T extends Record<string, any>>(
             {componentName}
           </div>
 
-          {/* Original content */}
-          <div className="relative z-0">{renderPropFn(props)}</div>
+          {/* Original content - prevent clicks from reaching underlying elements */}
+          <div
+            className="relative z-0 pointer-events-none"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            {renderPropFn(props)}
+          </div>
         </div>
       );
     }

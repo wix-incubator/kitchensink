@@ -3,6 +3,7 @@ import {
   ProfileUpdateProgress,
   ProfileUpdateTrigger,
 } from "../headless/members/ProfileUpdate";
+import { withDocsWrapper } from "./DocsMode";
 
 interface UpdateProfileDialogProps {
   isOpen: boolean;
@@ -83,70 +84,86 @@ export default function UpdateProfileDialog({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <ProfileFormField field="firstName">
-                  {({ value, onChange }) => (
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-2">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Enter your first name"
-                      />
-                    </div>
+                  {withDocsWrapper(
+                    ({ value, onChange }) => (
+                      <div>
+                        <label className="block text-white/80 text-sm font-medium mb-2">
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => onChange(e.target.value)}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Enter your first name"
+                        />
+                      </div>
+                    ),
+                    "ProfileUpdate.FormField.firstName",
+                    "/docs/components/profile-update#profileformfield"
                   )}
                 </ProfileFormField>
 
                 <ProfileFormField field="lastName">
-                  {({ value, onChange }) => (
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-2">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Enter your last name"
-                      />
-                    </div>
+                  {withDocsWrapper(
+                    ({ value, onChange }) => (
+                      <div>
+                        <label className="block text-white/80 text-sm font-medium mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => onChange(e.target.value)}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Enter your last name"
+                        />
+                      </div>
+                    ),
+                    "ProfileUpdate.FormField.lastName",
+                    "/docs/components/profile-update#profileformfield"
                   )}
                 </ProfileFormField>
 
                 <ProfileFormField field="nickname">
-                  {({ value, onChange }) => (
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-2">
-                        Nickname
-                      </label>
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Your display name"
-                      />
-                    </div>
+                  {withDocsWrapper(
+                    ({ value, onChange }) => (
+                      <div>
+                        <label className="block text-white/80 text-sm font-medium mb-2">
+                          Nickname
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => onChange(e.target.value)}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Your display name"
+                        />
+                      </div>
+                    ),
+                    "ProfileUpdate.FormField.nickname",
+                    "/docs/components/profile-update#profileformfield"
                   )}
                 </ProfileFormField>
 
                 <ProfileFormField field="profileTitle">
-                  {({ value, onChange }) => (
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-2">
-                        Profile Title
-                      </label>
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Your title or role"
-                      />
-                    </div>
+                  {withDocsWrapper(
+                    ({ value, onChange }) => (
+                      <div>
+                        <label className="block text-white/80 text-sm font-medium mb-2">
+                          Profile Title
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => onChange(e.target.value)}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Your title or role"
+                        />
+                      </div>
+                    ),
+                    "ProfileUpdate.FormField.profileTitle",
+                    "/docs/components/profile-update#profileformfield"
                   )}
                 </ProfileFormField>
 
@@ -441,103 +458,111 @@ export default function UpdateProfileDialog({
 
             {/* Update Status */}
             <ProfileUpdateProgress>
-              {({ updateState, hasMessage }) => (
-                <>
-                  {hasMessage && (
-                    <div className="mb-6">
-                      <div className="bg-white/5 rounded-xl p-4">
-                        <div className="flex items-center gap-3">
-                          <div>
-                            {updateState.type === "loading" && (
-                              <div className="animate-spin w-6 h-6 border-2 border-white/30 border-t-blue-500 rounded-full"></div>
-                            )}
-                            {updateState.type === "success" && (
-                              <svg
-                                className="w-6 h-6 text-green-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                            {updateState.type === "error" && (
-                              <svg
-                                className="w-6 h-6 text-red-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M6 18L18 6M6 6l12 12"
-                                />
-                              </svg>
-                            )}
+              {withDocsWrapper(
+                ({ updateState, hasMessage }) => (
+                  <>
+                    {hasMessage && (
+                      <div className="mb-6">
+                        <div className="bg-white/5 rounded-xl p-4">
+                          <div className="flex items-center gap-3">
+                            <div>
+                              {updateState.type === "loading" && (
+                                <div className="animate-spin w-6 h-6 border-2 border-white/30 border-t-blue-500 rounded-full"></div>
+                              )}
+                              {updateState.type === "success" && (
+                                <svg
+                                  className="w-6 h-6 text-green-400"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              )}
+                              {updateState.type === "error" && (
+                                <svg
+                                  className="w-6 h-6 text-red-400"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              )}
+                            </div>
+                            <p className="text-white font-medium">
+                              {updateState.message}
+                            </p>
                           </div>
-                          <p className="text-white font-medium">
-                            {updateState.message}
-                          </p>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </>
+                    )}
+                  </>
+                ),
+                "ProfileUpdate.UpdateProgress",
+                "/docs/components/profile-update#profileupdateprogress"
               )}
             </ProfileUpdateProgress>
 
             {/* Form Actions */}
             <ProfileUpdateTrigger>
-              {({ updateProfile, canUpdate, isUpdating }) => {
-                const handleUpdateProfile = async () => {
-                  await updateProfile();
-                  // Wait a moment for the success state to be visible to the user
-                  setTimeout(() => {
-                    onClose();
-                  }, 1500);
-                };
+              {withDocsWrapper(
+                ({ updateProfile, canUpdate, isUpdating }) => {
+                  const handleUpdateProfile = async () => {
+                    await updateProfile();
+                    // Wait a moment for the success state to be visible to the user
+                    setTimeout(() => {
+                      onClose();
+                    }, 1500);
+                  };
 
-                return (
-                  <div className="flex gap-4 pt-4">
-                    <button
-                      onClick={handleUpdateProfile}
-                      disabled={!canUpdate}
-                      className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
-                    >
-                      <span className="flex items-center justify-center gap-3">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        {isUpdating ? "Updating..." : "Update Profile"}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-200"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                );
-              }}
+                  return (
+                    <div className="flex gap-4 pt-4">
+                      <button
+                        onClick={handleUpdateProfile}
+                        disabled={!canUpdate}
+                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
+                      >
+                        <span className="flex items-center justify-center gap-3">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          {isUpdating ? "Updating..." : "Update Profile"}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-200"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  );
+                },
+                "ProfileUpdate.UpdateTrigger",
+                "/docs/components/profile-update#profileupdatetrigger"
+              )}
             </ProfileUpdateTrigger>
           </div>
         </div>
