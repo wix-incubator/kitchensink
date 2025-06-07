@@ -17,5 +17,13 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(),wix(),mdx()]
+  integrations: [
+    react(),
+    wix(),
+    mdx({
+      extendMarkdownConfig: false,
+      remarkPlugins: [],
+      rehypePlugins: [],
+    })
+  ]
 });
