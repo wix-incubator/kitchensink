@@ -1,0 +1,436 @@
+# PhotoUpload Components
+
+The PhotoUpload components provide a complete file upload experience with drag & drop, preview, progress tracking, and upload triggers. These headless components separate upload logic from UI presentation, making them highly reusable and testable.
+
+## Overview
+
+```tsx
+import {
+  FileSelector,
+  PreviewImage,
+  UploadProgress,
+  UploadTrigger,
+} from "../headless/members/PhotoUpload";
+```
+
+## Components
+
+### FileSelector
+
+Handles file selection with drag & drop support and file validation.
+
+#### Props
+
+- `children`: Render prop function receiving `FileSelectorRenderProps`
+
+#### Render Props
+
+- `selectedFile: File | null` - Currently selected file
+- `previewUrl: string | null` - Object URL for preview
+- `dragOver: boolean` - Whether drag is currently over the drop zone
+- `selectFile: (file: File) => void` - Programmatically select a file
+- `clearFile: () => void` - Clear the selected file
+- `handleDragOver: (event: React.DragEvent) => void` - Drag over handler
+- `handleDragLeave: (event: React.DragEvent) => void` - Drag leave handler
+- `handleDrop: (event: React.DragEvent) => void` - Drop handler
+- `handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void` - File input handler
+
+#### Example
+
+```tsx
+<FileSelector>
+  {({
+    dragOver,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleFileSelect,
+  }) => (
+    <div
+      className={`border-2 border-dashed p-8 rounded-lg transition-colors ${
+        dragOver ? "border-blue-500 bg-blue-50" : "border-gray-300"
+      }`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onClick={() => fileInputRef.current?.click()}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileSelect}
+      />
+      <p>Drag & drop your image here or click to browse</p>
+    </div>
+  )}
+</FileSelector>
+```
+
+### PreviewImage
+
+Displays a preview of the selected file before upload.
+
+#### Props
+
+- `children`: Render prop function receiving `PreviewImageRenderProps`
+
+#### Render Props
+
+- `selectedFile: File | null` - The selected file object
+- `previewUrl: string | null` - Object URL for displaying the preview
+- `hasPreview: boolean` - Whether a preview is available
+
+#### Example
+
+```tsx
+<PreviewImage>
+  {({ hasPreview, previewUrl, selectedFile }) => (
+    <div className="mt-4">
+      {hasPreview && previewUrl ? (
+        <div className="text-center">
+          <img
+            src={previewUrl}
+            alt="Preview"
+            className="max-w-xs mx-auto rounded-lg border"
+          />
+          <p className="mt-2 text-sm text-gray-600">{selectedFile?.name}</p>
+        </div>
+      ) : (
+        <p className="text-gray-500">No image selected</p>
+      )}
+    </div>
+  )}
+</PreviewImage>
+```
+
+### UploadProgress
+
+Shows upload status, progress, and messages.
+
+#### Props
+
+- `children`: Render prop function receiving `UploadProgressRenderProps`
+
+#### Render Props
+
+- `uploadState: UploadState` - Current upload state object
+  - `type: "idle" | "loading" | "success" | "error"` - Upload status
+  - `message: string` - Status message
+  - `progress?: number` - Upload progress (0-100)
+- `isLoading: boolean` - Whether upload is in progress
+- `isSuccess: boolean` - Whether upload succeeded
+- `isError: boolean` - Whether upload failed
+- `hasError: boolean` - Whether there's an error
+- `hasMessage: boolean` - Whether there's a status message
+
+#### Example
+
+```tsx
+<UploadProgress>
+  {({ uploadState, isLoading, isSuccess, isError, hasMessage }) => (
+    <div className="mt-4">
+      {hasMessage && (
+        <div
+          className={`p-3 rounded ${
+            isSuccess
+              ? "bg-green-100 text-green-800"
+              : isError
+              ? "bg-red-100 text-red-800"
+              : "bg-blue-100 text-blue-800"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            {isLoading && (
+              <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+            )}
+            {isSuccess && <CheckIcon className="w-4 h-4" />}
+            {isError && <XIcon className="w-4 h-4" />}
+            <span>{uploadState.message}</span>
+          </div>
+          {uploadState.progress !== undefined && (
+            <div className="mt-2 bg-white/50 rounded-full h-2">
+              <div
+                className="bg-current h-2 rounded-full transition-all duration-300"
+                style={{ width: `${uploadState.progress}%` }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )}
+</UploadProgress>
+```
+
+### UploadTrigger
+
+Provides upload functionality with smart enable/disable logic.
+
+#### Props
+
+- `children`: Render prop function receiving `UploadTriggerRenderProps`
+
+#### Render Props
+
+- `uploadPhoto: () => Promise<void>` - Function to trigger upload
+- `canUpload: boolean` - Whether upload is possible (file selected, not uploading)
+- `isUploading: boolean` - Whether upload is currently in progress
+
+#### Example
+
+```tsx
+<UploadTrigger>
+  {({ uploadPhoto, canUpload, isUploading }) => (
+    <button
+      onClick={uploadPhoto}
+      disabled={!canUpload}
+      className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+        canUpload
+          ? "bg-blue-600 hover:bg-blue-700 text-white"
+          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+      }`}
+    >
+      {isUploading ? "Uploading..." : "Upload Photo"}
+    </button>
+  )}
+</UploadTrigger>
+```
+
+## Complete Upload Flow Example
+
+Here's how to compose all components for a complete upload experience:
+
+```tsx
+import { useRef } from "react";
+import {
+  FileSelector,
+  PreviewImage,
+  UploadProgress,
+  UploadTrigger,
+} from "../headless/members/PhotoUpload";
+
+function PhotoUploadForm() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow">
+      <h2 className="text-xl font-semibold mb-4">Upload Profile Photo</h2>
+
+      {/* File Selection Area */}
+      <FileSelector>
+        {({
+          dragOver,
+          handleDragOver,
+          handleDragLeave,
+          handleDrop,
+          handleFileSelect,
+        }) => (
+          <div
+            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+              dragOver
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-300 hover:border-gray-400"
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+
+            <PreviewImage>
+              {({ hasPreview, previewUrl, selectedFile }) => (
+                <>
+                  {hasPreview && previewUrl ? (
+                    <div>
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-32 h-32 mx-auto rounded-lg object-cover mb-3"
+                      />
+                      <p className="text-sm font-medium">
+                        {selectedFile?.name}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Click to change or drag new image
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <UploadIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-600 font-medium">
+                        Drag & drop your image here
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        or click to browse files
+                      </p>
+                      <p className="text-xs text-gray-400 mt-2">
+                        Supports: JPG, PNG, GIF (Max 10MB)
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+            </PreviewImage>
+          </div>
+        )}
+      </FileSelector>
+
+      {/* Upload Status */}
+      <UploadProgress>
+        {({ uploadState, isLoading, isSuccess, isError, hasMessage }) => (
+          <>
+            {hasMessage && (
+              <div
+                className={`mt-4 p-3 rounded-lg ${
+                  isSuccess
+                    ? "bg-green-100 text-green-800"
+                    : isError
+                    ? "bg-red-100 text-red-800"
+                    : "bg-blue-100 text-blue-800"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {isLoading && (
+                    <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+                  )}
+                  {isSuccess && <CheckIcon className="w-4 h-4" />}
+                  {isError && <XIcon className="w-4 h-4" />}
+                  <span className="text-sm font-medium">
+                    {uploadState.message}
+                  </span>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </UploadProgress>
+
+      {/* Upload Button */}
+      <UploadTrigger>
+        {({ uploadPhoto, canUpload, isUploading }) => (
+          <div className="mt-6 flex gap-3">
+            <button
+              onClick={uploadPhoto}
+              disabled={!canUpload}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                canUpload
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              {isUploading ? "Uploading..." : "Upload Photo"}
+            </button>
+
+            <FileSelector>
+              {({ clearFile }) => (
+                <button
+                  onClick={clearFile}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                >
+                  Clear
+                </button>
+              )}
+            </FileSelector>
+          </div>
+        )}
+      </UploadTrigger>
+    </div>
+  );
+}
+```
+
+## Service Dependencies
+
+These components depend on the `PhotoUploadService` being available in the services context:
+
+```tsx
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+import {
+  PhotoUploadServiceDefinition,
+  PhotoUploadService,
+} from "../headless/members/photo-upload-service";
+import { actions } from "astro:actions";
+
+<ServicesManagerProvider
+  servicesManager={createServicesManager(
+    createServicesMap().addService(
+      PhotoUploadServiceDefinition,
+      PhotoUploadService,
+      {
+        maxFileSize: 10 * 1024 * 1024,
+        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+        photoUploadAstroActions: actions.photoUploadAstroActions,
+      }
+    )
+  )}
+>
+  {/* Your PhotoUpload components here */}
+</ServicesManagerProvider>;
+```
+
+## Configuration Options
+
+The PhotoUpload service accepts several configuration options:
+
+- `maxFileSize?: number` - Maximum file size in bytes (default: 10MB)
+- `allowedTypes?: string[]` - Allowed MIME types (default: image/jpeg, image/png, image/gif)
+- `photoUploadAstroActions` - Server actions for handling the upload
+
+## Error Handling
+
+The service automatically validates files and provides error states:
+
+- File type validation (must be an image)
+- File size validation (configurable limit)
+- Upload error handling with retry capability
+- Network error handling
+
+## Accessibility
+
+The components support accessibility features:
+
+- Proper ARIA labels for drag & drop areas
+- Keyboard navigation support
+- Screen reader announcements for status changes
+- Focus management during upload states
+
+## Testing
+
+Test these components by mocking the service and verifying render prop calls:
+
+```tsx
+import { render, fireEvent } from "@testing-library/react";
+import { FileSelector } from "../headless/members/PhotoUpload";
+
+test("FileSelector handles file selection", () => {
+  const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
+
+  render(
+    <ServicesManagerProvider servicesManager={mockServicesManager}>
+      <FileSelector>{mockRenderProp}</FileSelector>
+    </ServicesManagerProvider>
+  );
+
+  expect(mockRenderProp).toHaveBeenCalledWith(
+    expect.objectContaining({
+      selectedFile: null,
+      dragOver: false,
+      selectFile: expect.any(Function),
+      handleDrop: expect.any(Function),
+    })
+  );
+});
+```

@@ -54,6 +54,161 @@ export default function HomePage(props: HomePageProps) {
         </div>
       </div>
 
+      {/* Docs Mode Feature Section */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 md:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Content */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white">
+                  Interactive Documentation Mode
+                </h2>
+              </div>
+
+              <p className="text-xl text-white/80 mb-6 leading-relaxed">
+                Discover our innovative{" "}
+                <span className="text-blue-300 font-semibold">docs mode</span> -
+                click any page to highlight headless components and explore
+                their documentation in real-time.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-1">
+                      Headless Components Architecture
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Every component separates business logic from presentation
+                      using render props, making them reusable and testable.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-purple-500/20 rounded-full flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-1">
+                      Visual Component Discovery
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Components glow with blue borders in docs mode, showing
+                      you exactly what's interactive and documented.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-pink-500/20 rounded-full flex items-center justify-center mt-1">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-1">
+                      Inline Documentation
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      Click any highlighted component to open detailed docs with
+                      APIs, examples, and implementation guides.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="/members"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+              >
+                <span>Try Docs Mode</span>
+                <svg
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+
+            {/* Visual Demo */}
+            <div className="relative">
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  </div>
+                  <div className="text-white/60 text-xs">Interactive Demo</div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="h-4 bg-white/10 rounded"></div>
+
+                  {/* Simulated component with docs highlight */}
+                  <div className="relative">
+                    <div className="h-16 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border-2 border-blue-400/50 animate-pulse"></div>
+                    <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                      Click for docs
+                    </div>
+                  </div>
+
+                  <div className="h-4 bg-white/10 rounded w-3/4"></div>
+
+                  {/* Another simulated component */}
+                  <div className="relative">
+                    <div className="h-12 bg-gradient-to-r from-green-500/20 to-teal-500/20 rounded-lg border-2 border-green-400/50 animate-pulse delay-300"></div>
+                    <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                      Interactive
+                    </div>
+                  </div>
+
+                  <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                </div>
+
+                {/* Docs drawer simulation */}
+                <div className="absolute -right-4 top-8 w-48 h-32 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 p-3 transform rotate-2 shadow-xl">
+                  <div className="text-white/80 text-xs mb-2 font-medium">
+                    Component Docs
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-2 bg-white/20 rounded w-full"></div>
+                    <div className="h-2 bg-white/20 rounded w-3/4"></div>
+                    <div className="h-2 bg-white/20 rounded w-1/2"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Features Grid */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="text-center mb-16">
@@ -581,81 +736,123 @@ export default function HomePage(props: HomePageProps) {
 
       {/* Call to Action */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-xl border border-white/10 p-8 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Open Source & AI-Ready Development
-          </h2>
-          <p className="text-white/70 text-base leading-relaxed mb-6">
-            This kitchensink is open source and designed to help developers
-            learn and implement Wix features. Each feature includes
-            documentation, source code references, and best practices. Plus, it
-            contains AI-ready docs and instructions for the ultimate AI-assisted
-            building experience.
-          </p>
-          <div className="flex items-center justify-center gap-4 text-white/60">
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
-              <span className="text-sm">Documentation</span>
+        <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-xl border border-white/10 p-8 max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Learn by Exploring, Build with Confidence
+            </h2>
+            <p className="text-white/70 text-lg leading-relaxed">
+              This kitchensink showcases modern headless component architecture
+              with
+              <span className="text-blue-300 font-semibold">
+                {" "}
+                interactive documentation
+              </span>
+              . Activate docs mode on any page to discover components,
+              understand patterns, and see real implementations in action.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white/5 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Interactive Docs Mode
+              </h3>
+              <p className="text-white/60 text-sm">
+                Click the docs button to highlight components and explore their
+                APIs, props, and usage patterns directly on the page.
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                />
-              </svg>
-              <span className="text-sm">Source Code</span>
+
+            <div className="bg-white/5 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                  />
+                </svg>
+                Headless Architecture
+              </h3>
+              <p className="text-white/60 text-sm">
+                Components separate logic from UI using render props, making
+                them reusable, testable, and framework-agnostic.
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                />
-              </svg>
-              <span className="text-sm">Best Practices</span>
+
+            <div className="bg-white/5 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                  />
+                </svg>
+                Open Source
+              </h3>
+              <p className="text-white/60 text-sm">
+                All source code is available with comprehensive documentation,
+                best practices, and real-world implementation examples.
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="text-sm">AI Ready</span>
+
+            <div className="bg-white/5 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-pink-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                AI-Ready Development
+              </h3>
+              <p className="text-white/60 text-sm">
+                Structured documentation and patterns designed for AI-assisted
+                development and rapid prototyping workflows.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 px-6 py-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl border border-blue-400/30">
+              <span className="text-white/80 text-sm">
+                💡 <strong>Pro Tip:</strong> Look for the docs button (📋) in
+                the top-left corner of any page
+              </span>
             </div>
           </div>
         </div>

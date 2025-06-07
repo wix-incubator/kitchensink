@@ -21,6 +21,7 @@ import {
 } from "../../headless/members/photo-upload-service";
 import { CurrentMemberProfile } from "../../headless/members/CurrentMemberProfile";
 import { actions } from "astro:actions";
+import { withDocsWrapper } from "../../components/DocsMode";
 
 interface MembersPageProps {
   userIsLoggedIn: boolean;
@@ -39,121 +40,19 @@ const ProfileContent = ({
   return (
     <>
       <CurrentMemberProfile.ProfilePhoto>
-        {({ photoUrl, hasPhoto, altText }) => (
-          <div className="relative inline-block mb-6 group">
-            {hasPhoto ? (
-              <img
-                src={photoUrl}
-                alt={altText}
-                className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl object-cover"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-            )}
-            {/* Edit Photo Button */}
-            <button
-              onClick={() => setShowPhotoDialog(true)}
-              className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full border-3 border-white flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
-              title="Change profile photo"
-            >
-              <svg
-                className="w-4 h-4 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+        {withDocsWrapper(
+          ({ photoUrl, hasPhoto, altText }) => (
+            <div className="relative inline-block mb-6 group">
+              {hasPhoto ? (
+                <img
+                  src={photoUrl}
+                  alt={altText}
+                  className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl object-cover"
                 />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </button>
-            {/* Status Badge */}
-            <CurrentMemberProfile.ActivityStatus>
-              {({ isActive }) => (
-                <div className="absolute -bottom-1 -left-2 w-6 h-6 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
+              ) : (
+                <div className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
                   <svg
-                    className="w-3 h-3 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="3"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-              )}
-            </CurrentMemberProfile.ActivityStatus>
-          </div>
-        )}
-      </CurrentMemberProfile.ProfilePhoto>
-
-      <CurrentMemberProfile.Nickname>
-        {({ displayName }) => (
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Welcome back, {displayName}!
-          </h1>
-        )}
-      </CurrentMemberProfile.Nickname>
-
-      <CurrentMemberProfile.FullName>
-        {({ hasFullName, fullName }) => (
-          <>
-            {hasFullName && (
-              <p className="text-white/80 text-lg mb-2">{fullName}</p>
-            )}
-          </>
-        )}
-      </CurrentMemberProfile.FullName>
-
-      <CurrentMemberProfile.Email>
-        {({ hasEmail, email, isVerified }) => (
-          <>
-            {hasEmail && (
-              <p className="text-white/60 text-sm mb-4 flex items-center justify-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                {email}
-                {isVerified && (
-                  <svg
-                    className="w-4 h-4 text-green-400"
+                    className="w-12 h-12 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -162,25 +61,151 @@ const ProfileContent = ({
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     />
                   </svg>
+                </div>
+              )}
+              {/* Edit Photo Button */}
+              <button
+                onClick={() => setShowPhotoDialog(true)}
+                className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full border-3 border-white flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
+                title="Change profile photo"
+              >
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </button>
+              {/* Status Badge */}
+              <CurrentMemberProfile.ActivityStatus>
+                {withDocsWrapper(
+                  ({ isActive }) => (
+                    <div className="absolute -bottom-1 -left-2 w-6 h-6 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="3"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                  ),
+                  "CurrentMemberProfile.ActivityStatus",
+                  "/docs/components/current-member-profile#activitystatus"
                 )}
-              </p>
-            )}
-          </>
+              </CurrentMemberProfile.ActivityStatus>
+            </div>
+          ),
+          "CurrentMemberProfile.ProfilePhoto",
+          "/docs/components/current-member-profile#profilephoto"
+        )}
+      </CurrentMemberProfile.ProfilePhoto>
+
+      <CurrentMemberProfile.Nickname>
+        {withDocsWrapper(
+          ({ displayName }) => (
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Welcome back, {displayName}!
+            </h1>
+          ),
+          "CurrentMemberProfile.Nickname",
+          "/docs/components/current-member-profile#nickname"
+        )}
+      </CurrentMemberProfile.Nickname>
+
+      <CurrentMemberProfile.FullName>
+        {withDocsWrapper(
+          ({ hasFullName, fullName }) => (
+            <>
+              {hasFullName && (
+                <p className="text-white/80 text-lg mb-2">{fullName}</p>
+              )}
+            </>
+          ),
+          "CurrentMemberProfile.FullName",
+          "/docs/components/current-member-profile#fullname"
+        )}
+      </CurrentMemberProfile.FullName>
+
+      <CurrentMemberProfile.Email>
+        {withDocsWrapper(
+          ({ hasEmail, email, isVerified }) => (
+            <>
+              {hasEmail && (
+                <p className="text-white/60 text-sm mb-4 flex items-center justify-center gap-2">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  {email}
+                  {isVerified && (
+                    <svg
+                      className="w-4 h-4 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  )}
+                </p>
+              )}
+            </>
+          ),
+          "CurrentMemberProfile.Email",
+          "/docs/components/current-member-profile#email"
         )}
       </CurrentMemberProfile.Email>
 
       <CurrentMemberProfile.LastLoginDate>
-        {({ hasLastLogin, formattedDate }) => (
-          <>
-            {hasLastLogin && (
-              <p className="text-white/50 text-xs">
-                Last login: {formattedDate}
-              </p>
-            )}
-          </>
+        {withDocsWrapper(
+          ({ hasLastLogin, formattedDate }) => (
+            <>
+              {hasLastLogin && (
+                <p className="text-white/50 text-xs">
+                  Last login: {formattedDate}
+                </p>
+              )}
+            </>
+          ),
+          "CurrentMemberProfile.LastLoginDate",
+          "/docs/components/current-member-profile#lastlogindate"
         )}
       </CurrentMemberProfile.LastLoginDate>
     </>
@@ -191,23 +216,31 @@ const MemberStatsContent = () => {
   return (
     <>
       <CurrentMemberProfile.ActivityStatus>
-        {({ displayStatus }) => (
-          <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
-            <div className="text-2xl font-bold text-white mb-1">
-              {displayStatus}
+        {withDocsWrapper(
+          ({ displayStatus }) => (
+            <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
+              <div className="text-2xl font-bold text-white mb-1">
+                {displayStatus}
+              </div>
+              <div className="text-white/60 text-sm">Status</div>
             </div>
-            <div className="text-white/60 text-sm">Status</div>
-          </div>
+          ),
+          "CurrentMemberProfile.ActivityStatus",
+          "/docs/components/current-member-profile#activitystatus"
         )}
       </CurrentMemberProfile.ActivityStatus>
       <CurrentMemberProfile.DaysMember>
-        {({ daysMember }) => (
-          <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
-            <div className="text-2xl font-bold text-white mb-1">
-              {daysMember}
+        {withDocsWrapper(
+          ({ daysMember }) => (
+            <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
+              <div className="text-2xl font-bold text-white mb-1">
+                {daysMember}
+              </div>
+              <div className="text-white/60 text-sm">Days Member</div>
             </div>
-            <div className="text-white/60 text-sm">Days Member</div>
-          </div>
+          ),
+          "CurrentMemberProfile.DaysMember",
+          "/docs/components/current-member-profile#daysmember"
         )}
       </CurrentMemberProfile.DaysMember>
     </>

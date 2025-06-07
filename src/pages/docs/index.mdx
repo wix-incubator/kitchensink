@@ -1,0 +1,75 @@
+# Wix Kitchensink Documentation
+
+Welcome to the comprehensive documentation for the Wix Kitchensink project. This documentation covers our headless component architecture, client-side services, and implementation patterns.
+
+## Documentation Sections
+
+### Architecture & Patterns
+
+- [**Client-Side Services & Headless Components**](/docs/architecture/client-side-services) - Core architecture patterns
+- [**Service Dependencies**](/docs/architecture/service-dependencies) - How services work together
+- [**Server-Side Integration**](/docs/architecture/server-integration) - Astro Actions integration
+
+### Headless Components
+
+#### Member Management
+
+- [**CurrentMemberProfile**](/docs/components/current-member-profile) - Display member information
+- [**PhotoUpload Components**](/docs/components/photo-upload) - File upload functionality
+- [**ProfileUpdate Components**](/docs/components/profile-update) - Profile editing
+
+### Client-Side Services
+
+#### Core Services
+
+- [**CurrentMemberService**](/docs/services/current-member-service) - Member state management
+- [**PhotoUploadService**](/docs/services/photo-upload-service) - File upload state & logic
+- [**ProfileUpdateService**](/docs/services/profile-update-service) - Profile update state & logic
+
+### Examples & Use Cases
+
+- [**Members Page Implementation**](/docs/examples/members-page) - Complete page example
+- [**Composition Patterns**](/docs/examples/composition-patterns) - How to combine components
+- [**Testing Strategies**](/docs/examples/testing) - Testing headless components
+
+## Getting Started
+
+If you're new to this architecture, we recommend starting with:
+
+1. [**Client-Side Services & Headless Components**](/docs/architecture/client-side-services) - Understanding the core concepts
+2. [**CurrentMemberProfile**](/docs/components/current-member-profile) - Simple display components
+3. [**Members Page Implementation**](/docs/examples/members-page) - See it all working together
+
+## Key Principles
+
+### Separation of Concerns
+
+- **Services**: Handle state and business logic
+- **Headless Components**: Provide reactive data via render props
+- **UI Components**: Handle only presentation and user interaction
+
+### Reactive State Management
+
+- Uses **Signals** for automatic UI updates
+- Headless components expose reactive data from services
+- UI components receive data through render prop patterns
+
+### Composability
+
+- Mix and match headless components for different UIs
+- Services can be combined using `ServicesManagerProvider`
+- Build atomic UI components that can be composed together
+
+## Framework Design
+
+This architecture was designed to provide:
+
+1. **Reusability** - Services work across different UI implementations
+2. **Testability** - Clear boundaries between logic and presentation
+3. **Maintainability** - Changes to business logic don't affect UI
+4. **Performance** - Reactive updates only re-render affected components
+5. **Developer Experience** - Type-safe, predictable patterns
+
+---
+
+_This documentation is designed to be framework-agnostic and AI-friendly, providing clear examples and implementation patterns for building robust applications with Wix._

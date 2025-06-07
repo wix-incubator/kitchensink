@@ -1,0 +1,357 @@
+# Members Page Implementation
+
+The members page showcases a complete implementation using our headless components architecture. This page demonstrates member authentication, profile display, photo upload, and profile editing - all composed from reusable headless components.
+
+## Architecture Overview
+
+The members page is built using three main services:
+
+1. **CurrentMemberService** - Manages member state and basic operations
+2. **PhotoUploadService** - Handles profile photo uploads
+3. **ProfileUpdateService** - Manages profile editing
+
+These services work together through a single `ServicesManagerProvider`, allowing them to share state and coordinate updates.
+
+## Page Structure
+
+```astro
+---
+// src/pages/members/index.astro
+import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
+import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
+
+// Load service configurations on the server
+const currentMemberServiceConfig = await loadCurrentMemberServiceConfig();
+const profileUpdateServiceConfig = await loadProfileUpdateServiceConfig();
+---
+
+<MembersPage
+  client:load
+  currentMemberServiceConfig={currentMemberServiceConfig}
+  profileUpdateServiceConfig={profileUpdateServiceConfig}
+/>
+```
+
+The Astro page handles:
+
+- Server-side authentication checks
+- Loading initial member data
+- Preparing service configurations
+- Passing serializable data to React
+
+## React Page Component
+
+The main React component sets up the services manager and composes the UI:
+
+```tsx
+// src/react-pages/members/index.tsx
+export function MembersPage({
+  currentMemberServiceConfig,
+  profileUpdateServiceConfig,
+}) {
+  // Create services manager with all three interdependent services
+  const servicesManager = createServicesManager(
+    createServicesMap()
+      .addService(
+        CurrentMemberServiceDefinition,
+        CurrentMemberService,
+        currentMemberServiceConfig
+      )
+      .addService(
+        ProfileUpdateServiceDefinition,
+        ProfileUpdateService,
+        profileUpdateServiceConfig
+      )
+      .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
+        maxFileSize: 10 * 1024 * 1024,
+        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+        photoUploadAstroActions: actions.photoUploadAstroActions,
+      })
+  );
+
+  return (
+    <ServicesManagerProvider servicesManager={servicesManager}>
+      <KitchensinkLayout>
+        {/* Page content using headless components */}
+      </KitchensinkLayout>
+    </ServicesManagerProvider>
+  );
+}
+```
+
+## Key Implementation Patterns
+
+### 1. Profile Display Composition
+
+The profile section demonstrates composing multiple headless components:
+
+```tsx
+// Profile photo with edit functionality
+<CurrentMemberProfile.ProfilePhoto>
+  {({ photoUrl, hasPhoto, altText }) => (
+    <div className="relative">
+      {hasPhoto ? (
+        <img src={photoUrl} alt={altText} className="w-24 h-24 rounded-full" />
+      ) : (
+        <DefaultAvatar />
+      )}
+      <EditButton onClick={() => setShowPhotoDialog(true)} />
+    </div>
+  )}
+</CurrentMemberProfile.ProfilePhoto>
+
+// Member information
+<CurrentMemberProfile.Nickname>
+  {({ displayName }) => (
+    <h1>Welcome back, {displayName}!</h1>
+  )}
+</CurrentMemberProfile.Nickname>
+
+<CurrentMemberProfile.Email>
+  {({ email, isVerified }) => (
+    <div>
+      {email} {isVerified && <VerifiedBadge />}
+    </div>
+  )}
+</CurrentMemberProfile.Email>
+```
+
+### 2. Stats Dashboard Pattern
+
+Member statistics use multiple headless components for reactive data:
+
+```tsx
+<div className="grid grid-cols-2 gap-4">
+  <CurrentMemberProfile.ActivityStatus>
+    {({ displayStatus }) => <StatCard title="Status" value={displayStatus} />}
+  </CurrentMemberProfile.ActivityStatus>
+
+  <CurrentMemberProfile.DaysMember>
+    {({ daysMember, membershipDuration }) => (
+      <StatCard
+        title="Days Member"
+        value={daysMember}
+        subtitle={membershipDuration}
+      />
+    )}
+  </CurrentMemberProfile.DaysMember>
+</div>
+```
+
+### 3. Modal Integration
+
+Dialogs use their own service providers for isolated functionality:
+
+```tsx
+// Photo Upload Dialog
+{
+  showPhotoDialog && (
+    <PhotoUploadDialog onClose={() => setShowPhotoDialog(false)} />
+  );
+}
+
+// The dialog internally uses PhotoUpload headless components
+function PhotoUploadDialog() {
+  return (
+    <div className="modal">
+      <FileSelector>
+        {({ handleDrop, dragOver }) => (
+          <DropZone onDrop={handleDrop} isDragOver={dragOver} />
+        )}
+      </FileSelector>
+
+      <PreviewImage>
+        {({ previewUrl, hasPreview }) =>
+          hasPreview && <img src={previewUrl} alt="Preview" />
+        }
+      </PreviewImage>
+
+      <UploadTrigger>
+        {({ uploadPhoto, canUpload }) => (
+          <button onClick={uploadPhoto} disabled={!canUpload}>
+            Upload
+          </button>
+        )}
+      </UploadTrigger>
+    </div>
+  );
+}
+```
+
+## Service Coordination
+
+The three services coordinate through shared state and dependencies:
+
+### CurrentMemberService
+
+- Holds the primary member data
+- Provides `updateMember` and `refreshCurrentMember` methods
+- Used by other services for coordination
+
+### PhotoUploadService
+
+- Depends on `CurrentMemberService` through `getService`
+- Automatically refreshes member data after successful upload
+- Uses Astro Actions for server-side file handling
+
+### ProfileUpdateService
+
+- Also depends on `CurrentMemberService`
+- Updates member data through the shared service
+- Ensures immediate UI updates through reactive state
+
+```typescript
+// In PhotoUploadService
+const currentMemberService = getService(CurrentMemberServiceDefinition);
+
+const uploadPhoto = async () => {
+  // Upload file...
+
+  // Refresh member data reactively
+  await currentMemberService.refreshCurrentMember();
+};
+```
+
+## Server-Side Actions Integration
+
+Photo uploads require server-only functionality using Astro Actions:
+
+```typescript
+// src/headless/members/photo-upload-service-actions.ts
+export const photoUploadAstroActions = {
+  uploadPhoto: defineAction({
+    handler: async ({ photo }) => {
+      // Use auth.elevate for Wix API access
+      const { uploadUrl } = await auth.elevate(files.generateFileUploadUrl)(
+        photo.type,
+        { fileName: photo.name, parentFolderId: "visitor-uploads" }
+      );
+
+      // Upload to Wix Media and update member profile
+      // Return success/error status
+    },
+  }),
+};
+```
+
+Actions are injected into services through configuration:
+
+```tsx
+// In React component
+const photoUploadConfig = {
+  maxFileSize: 10 * 1024 * 1024,
+  allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+  photoUploadAstroActions: actions.photoUploadAstroActions,
+};
+```
+
+## Error Handling & User Feedback
+
+The page implements comprehensive error handling:
+
+```tsx
+// URL parameter handling for feedback
+const url = new URL(Astro.request.url);
+const updated = url.searchParams.get("updated");
+const error = url.searchParams.get("error");
+
+// React state for success/error messages
+const [showSuccessMessage, setShowSuccessMessage] = useState(!!updated);
+const [showErrorMessage, setShowErrorMessage] = useState(!!error);
+
+// Auto-hide messages after 5 seconds
+useEffect(() => {
+  if (showSuccessMessage) {
+    const timer = setTimeout(() => setShowSuccessMessage(false), 5000);
+    return () => clearTimeout(timer);
+  }
+}, [showSuccessMessage]);
+```
+
+## Responsive Design
+
+The layout adapts to different screen sizes:
+
+```tsx
+<div className="flex min-h-screen p-6 gap-6">
+  {/* Left Panel - Profile */}
+  <div className="w-full max-w-md">{/* Profile content */}</div>
+
+  {/* Right Panel - Additional features */}
+  <div className="flex-1">{/* Coming soon content */}</div>
+</div>
+```
+
+## Performance Considerations
+
+### Reactive Updates
+
+- Only components using specific headless components re-render when data changes
+- Profile photo updates immediately reflect across all `ProfilePhoto` components
+- Member data changes propagate through all dependent components
+
+### Code Splitting
+
+- Dialog components load only when needed
+- Service configurations are loaded on the server
+- Actions are kept separate from main bundle
+
+### Optimistic Updates
+
+- Profile updates show immediate feedback before server confirmation
+- Upload progress provides real-time status updates
+
+## Testing Strategy
+
+The members page can be tested at multiple levels:
+
+### Unit Tests - Headless Components
+
+```typescript
+test("CurrentMemberProfile.Nickname renders correctly", () => {
+  const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
+
+  render(
+    <ServicesManagerProvider servicesManager={mockServicesManager}>
+      <CurrentMemberProfile.Nickname>
+        {mockRenderProp}
+      </CurrentMemberProfile.Nickname>
+    </ServicesManagerProvider>
+  );
+
+  expect(mockRenderProp).toHaveBeenCalledWith({
+    nickname: "JohnDoe",
+    displayName: "JohnDoe",
+    hasNickname: true,
+  });
+});
+```
+
+### Integration Tests - Service Coordination
+
+```typescript
+test("photo upload updates profile photo display", async () => {
+  // Mock services and test service coordination
+});
+```
+
+### E2E Tests - Complete Flows
+
+```typescript
+test("user can upload profile photo", async () => {
+  // Test complete upload flow with Playwright
+});
+```
+
+## Key Takeaways
+
+The members page demonstrates:
+
+1. **Service Composition** - Multiple services working together seamlessly
+2. **Reactive Architecture** - Automatic UI updates through signal-based state
+3. **Server Integration** - Clean separation of client and server concerns
+4. **Component Reusability** - Same headless components used in different contexts
+5. **Type Safety** - Full TypeScript support throughout the stack
+6. **Performance** - Efficient rendering and optimal user experience
+
+This implementation serves as a blueprint for building complex, interactive pages using our headless components architecture.
