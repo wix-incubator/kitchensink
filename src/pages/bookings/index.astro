@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BookingsPage from "../../react-pages/bookings/index";
+import { loadBookingServicesServiceConfig } from "../../headless/bookings/booking-services-service";
+import { loadBookingSelectionServiceConfig } from "../../headless/bookings/booking-selection-service";
+
+// Load initial data for services
+const bookingServicesConfig = await loadBookingServicesServiceConfig();
+const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
+---
+
+<BaseLayout>
+  <title>Book a Service - Professional Services</title>
+  <meta
+    name="description"
+    content="Browse and book our professional services. Choose from consultations, sessions, and specialized services."
+  />
+
+  <BookingsPage
+    client:load
+    bookingServicesConfig={bookingServicesConfig}
+    bookingSelectionConfig={bookingSelectionConfig}
+    slot="body"
+  />
+</BaseLayout>
