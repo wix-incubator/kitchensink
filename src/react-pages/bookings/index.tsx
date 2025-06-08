@@ -92,12 +92,12 @@ export default function BookingsPage({
                       {[...Array(6)].map((_, i) => (
                         <div
                           key={i}
-                          className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse"
+                          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 animate-pulse"
                         >
-                          <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
-                          <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                          <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                          <div className="h-10 bg-gray-200 rounded"></div>
+                          <div className="h-48 bg-white/10 rounded-lg mb-4"></div>
+                          <div className="h-6 bg-white/10 rounded mb-2"></div>
+                          <div className="h-4 bg-white/10 rounded mb-4"></div>
+                          <div className="h-10 bg-white/10 rounded"></div>
                         </div>
                       ))}
                     </div>
@@ -107,14 +107,14 @@ export default function BookingsPage({
                 if (error) {
                   return (
                     <div className="text-center py-12">
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-                        <h3 className="text-lg font-medium text-red-800 mb-2">
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 max-w-md mx-auto">
+                        <h3 className="text-lg font-medium text-red-400 mb-2">
                           Error Loading Services
                         </h3>
-                        <p className="text-red-600 mb-4">{error}</p>
+                        <p className="text-red-300 mb-4">{error}</p>
                         <button
                           onClick={refreshServices}
-                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
                         >
                           Try Again
                         </button>
@@ -126,16 +126,16 @@ export default function BookingsPage({
                 if (isEmpty) {
                   return (
                     <div className="text-center py-12">
-                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 max-w-md mx-auto">
+                        <h3 className="text-lg font-medium text-white mb-2">
                           No Services Available
                         </h3>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-white/70 mb-4">
                           There are currently no services available for booking.
                         </p>
                         <button
                           onClick={refreshServices}
-                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all"
                         >
                           Refresh
                         </button>
@@ -165,17 +165,17 @@ export default function BookingsPage({
                           bookingUrl,
                           locations,
                         }) => (
-                          <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group">
                             {/* Service Image */}
-                            <div className="h-48 bg-gray-100 rounded-t-lg overflow-hidden">
+                            <div className="h-48 bg-white/10 rounded-t-xl overflow-hidden">
                               {imageUrl ? (
                                 <img
                                   src={imageUrl}
                                   alt={name}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                <div className="w-full h-full flex items-center justify-center text-white/40">
                                   <svg
                                     className="w-16 h-16"
                                     fill="currentColor"
@@ -196,30 +196,30 @@ export default function BookingsPage({
                               {/* Category & Type */}
                               <div className="flex items-center gap-2 mb-2">
                                 {category && (
-                                  <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                  <span className="text-xs font-medium text-blue-300 bg-blue-500/20 px-2 py-1 rounded">
                                     {category}
                                   </span>
                                 )}
-                                <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                                <span className="text-xs font-medium text-white/70 bg-white/10 px-2 py-1 rounded">
                                   {type.toLowerCase()}
                                 </span>
                               </div>
 
                               {/* Service Name */}
-                              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              <h3 className="text-lg font-semibold text-white mb-2">
                                 {name}
                               </h3>
 
                               {/* Tag Line */}
                               {tagLine && (
-                                <p className="text-sm text-gray-600 mb-2 font-medium">
+                                <p className="text-sm text-white/80 mb-2 font-medium">
                                   {tagLine}
                                 </p>
                               )}
 
                               {/* Description */}
                               {description && (
-                                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                                <p className="text-sm text-white/70 mb-4 line-clamp-2">
                                   {description}
                                 </p>
                               )}
@@ -227,7 +227,7 @@ export default function BookingsPage({
                               {/* Service Details */}
                               <div className="space-y-2 mb-4">
                                 {duration && (
-                                  <div className="flex items-center text-sm text-gray-600">
+                                  <div className="flex items-center text-sm text-white/70">
                                     <svg
                                       className="w-4 h-4 mr-2"
                                       fill="currentColor"
@@ -244,7 +244,7 @@ export default function BookingsPage({
                                 )}
 
                                 {locations.length > 0 && (
-                                  <div className="flex items-center text-sm text-gray-600">
+                                  <div className="flex items-center text-sm text-white/70">
                                     <svg
                                       className="w-4 h-4 mr-2"
                                       fill="currentColor"
@@ -260,7 +260,7 @@ export default function BookingsPage({
                                   </div>
                                 )}
 
-                                <div className="flex items-center text-sm font-medium text-green-600">
+                                <div className="flex items-center text-sm font-medium text-green-400">
                                   <svg
                                     className="w-4 h-4 mr-2"
                                     fill="currentColor"
@@ -287,10 +287,10 @@ export default function BookingsPage({
                                       window.location.href = `/bookings/${serviceId}`;
                                     }}
                                     disabled={!canBookOnline}
-                                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                                    className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
                                       canBookOnline
-                                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                        ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
+                                        : "bg-white/10 text-white/40 cursor-not-allowed"
                                     }`}
                                   >
                                     {canBookOnline

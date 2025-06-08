@@ -30,16 +30,16 @@ interface ServiceBookingPageProps {
 
 const CalendarSection = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
       <BookingAvailability.AvailabilityHeader>
         {({ selectedDateFormatted, summaryText }) => (
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
               Select Date
             </h3>
-            <p className="text-gray-600">{selectedDateFormatted}</p>
+            <p className="text-white/70">{selectedDateFormatted}</p>
             {summaryText && (
-              <p className="text-sm text-blue-600 mt-1">{summaryText}</p>
+              <p className="text-sm text-blue-300 mt-1">{summaryText}</p>
             )}
           </div>
         )}
@@ -104,7 +104,7 @@ const CalendarSection = () => {
               <div className="flex items-center justify-between mb-4">
                 <button
                   onClick={goToPreviousMonth}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
                 >
                   <svg
                     className="w-5 h-5"
@@ -119,7 +119,7 @@ const CalendarSection = () => {
                   </svg>
                 </button>
 
-                <h4 className="text-lg font-medium text-gray-900">
+                <h4 className="text-lg font-medium text-white">
                   {selectedDate.toLocaleDateString([], {
                     month: "long",
                     year: "numeric",
@@ -128,7 +128,7 @@ const CalendarSection = () => {
 
                 <button
                   onClick={goToNextMonth}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
                 >
                   <svg
                     className="w-5 h-5"
@@ -150,7 +150,7 @@ const CalendarSection = () => {
                   (day) => (
                     <div
                       key={day}
-                      className="p-2 text-center text-sm font-medium text-gray-500"
+                      className="p-2 text-center text-sm font-medium text-white/70"
                     >
                       {day}
                     </div>
@@ -177,17 +177,17 @@ const CalendarSection = () => {
                       disabled={isPast || !hasSlots}
                       className={`p-2 text-sm rounded-lg transition-colors ${
                         isPast
-                          ? "text-gray-300 cursor-not-allowed"
+                          ? "text-white/30 cursor-not-allowed"
                           : isSelected
-                          ? "bg-blue-600 text-white"
+                          ? "bg-blue-500 text-white"
                           : hasSlots
-                          ? "hover:bg-blue-50 text-gray-900"
-                          : "text-gray-400 cursor-not-allowed"
+                          ? "hover:bg-white/10 text-white"
+                          : "text-white/40 cursor-not-allowed"
                       } ${isToday ? "font-bold" : ""}`}
                     >
                       {date.getDate()}
                       {hasSlots && !isSelected && (
-                        <div className="w-1 h-1 bg-blue-600 rounded-full mx-auto mt-1"></div>
+                        <div className="w-1 h-1 bg-blue-400 rounded-full mx-auto mt-1"></div>
                       )}
                     </button>
                   );
@@ -196,7 +196,7 @@ const CalendarSection = () => {
 
               {isLoading && (
                 <div className="text-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400 mx-auto"></div>
                 </div>
               )}
             </div>
@@ -209,10 +209,8 @@ const CalendarSection = () => {
 
 const TimeSlotsSection = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Available Times
-      </h3>
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+      <h3 className="text-lg font-semibold text-white mb-4">Available Times</h3>
 
       <BookingAvailability.TimeSlots>
         {({ slots, isLoading, isEmpty, error }) => {
@@ -222,7 +220,7 @@ const TimeSlotsSection = () => {
                 {[...Array(6)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-12 bg-gray-200 rounded-lg animate-pulse"
+                    className="h-12 bg-white/10 rounded-lg animate-pulse"
                   ></div>
                 ))}
               </div>
@@ -232,7 +230,7 @@ const TimeSlotsSection = () => {
           if (error) {
             return (
               <div className="text-center py-8">
-                <p className="text-red-600">{error}</p>
+                <p className="text-red-400">{error}</p>
               </div>
             );
           }
@@ -240,7 +238,7 @@ const TimeSlotsSection = () => {
           if (isEmpty) {
             return (
               <div className="text-center py-8">
-                <p className="text-gray-500">
+                <p className="text-white/70">
                   No available times for this date
                 </p>
               </div>
@@ -271,10 +269,10 @@ const TimeSlotsSection = () => {
                           disabled={!isBookable}
                           className={`w-full p-3 rounded-lg border text-left transition-colors ${
                             isSlotSelected(slot)
-                              ? "border-blue-600 bg-blue-50 text-blue-900"
+                              ? "border-blue-400 bg-blue-500/20 text-blue-300"
                               : isBookable
-                              ? "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
-                              : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                              ? "border-white/20 hover:border-blue-400 hover:bg-white/10 text-white"
+                              : "border-white/10 bg-white/5 text-white/40 cursor-not-allowed"
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -297,10 +295,8 @@ const TimeSlotsSection = () => {
 
 const BookingSummarySection = () => {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Booking Summary
-      </h3>
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 sticky top-6">
+      <h3 className="text-lg font-semibold text-white mb-4">Booking Summary</h3>
 
       <BookingSelection.BookingSummary>
         {({
@@ -315,7 +311,7 @@ const BookingSummarySection = () => {
           if (!hasSelection) {
             return (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">
+                <p className="text-white/70 mb-4">
                   Select a service and time slot to see your booking summary
                 </p>
               </div>
@@ -325,7 +321,7 @@ const BookingSummarySection = () => {
           if (!summary) {
             return (
               <div className="text-center py-8">
-                <p className="text-gray-500">Loading summary...</p>
+                <p className="text-white/70">Loading summary...</p>
               </div>
             );
           }
@@ -335,18 +331,18 @@ const BookingSummarySection = () => {
               {/* Service Details */}
               <div className="space-y-3 mb-6">
                 <div>
-                  <h4 className="font-medium text-gray-900">
+                  <h4 className="font-medium text-white">
                     {summary.serviceName}
                   </h4>
                   {summary.serviceDescription && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-white/70 mt-1">
                       {summary.serviceDescription}
                     </p>
                   )}
                 </div>
 
-                <div className="border-t border-gray-200 pt-3">
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                <div className="border-t border-white/20 pt-3">
+                  <div className="flex items-center text-sm text-white/70 mb-2">
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="currentColor"
@@ -361,7 +357,7 @@ const BookingSummarySection = () => {
                     {summary.date}
                   </div>
 
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <div className="flex items-center text-sm text-white/70 mb-2">
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="currentColor"
@@ -378,7 +374,7 @@ const BookingSummarySection = () => {
                   </div>
 
                   {summary.location && (
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
+                    <div className="flex items-center text-sm text-white/70 mb-2">
                       <svg
                         className="w-4 h-4 mr-2"
                         fill="currentColor"
@@ -394,9 +390,9 @@ const BookingSummarySection = () => {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-                    <span className="font-medium text-gray-900">Total:</span>
-                    <span className="font-bold text-lg text-green-600">
+                  <div className="flex items-center justify-between pt-3 border-t border-white/20">
+                    <span className="font-medium text-white">Total:</span>
+                    <span className="font-bold text-lg text-green-400">
                       {summary.price}
                     </span>
                   </div>
@@ -405,8 +401,8 @@ const BookingSummarySection = () => {
 
               {/* Error Display */}
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                  <p className="text-red-600 text-sm">{error}</p>
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4">
+                  <p className="text-red-400 text-sm">{error}</p>
                 </div>
               )}
 
@@ -415,10 +411,10 @@ const BookingSummarySection = () => {
                 <button
                   onClick={proceedToCheckout}
                   disabled={!canBook || isBooking}
-                  className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+                  className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
                     canBook && !isBooking
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
+                      : "bg-white/10 text-white/40 cursor-not-allowed"
                   }`}
                 >
                   {isBooking ? (
@@ -451,7 +447,7 @@ const BookingSummarySection = () => {
 
                 <button
                   onClick={clearSelection}
-                  className="w-full py-2 px-4 rounded-lg font-medium text-gray-600 hover:text-gray-800 transition-colors"
+                  className="w-full py-2 px-4 rounded-lg font-medium text-white/70 hover:text-white transition-colors"
                 >
                   Clear Selection
                 </button>
@@ -493,14 +489,14 @@ export default function ServiceBookingPage({
   return (
     <KitchensinkLayout>
       <ServicesManagerProvider servicesManager={servicesManager}>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           {/* Header */}
-          <div className="bg-white border-b border-gray-200">
+          <div className="border-b border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-                    <a href="/bookings" className="hover:text-gray-700">
+                  <nav className="flex items-center space-x-2 text-sm text-white/70 mb-4">
+                    <a href="/bookings" className="hover:text-white">
                       Services
                     </a>
                     <svg
@@ -526,11 +522,11 @@ export default function ServiceBookingPage({
                         <BookingServices.ServiceCard service={currentService}>
                           {({ name, tagLine }) => (
                             <div>
-                              <h1 className="text-3xl font-bold text-gray-900">
+                              <h1 className="text-4xl font-bold text-white">
                                 {name}
                               </h1>
                               {tagLine && (
-                                <p className="text-xl text-gray-600 mt-2">
+                                <p className="text-xl text-white/80 mt-2">
                                   {tagLine}
                                 </p>
                               )}
@@ -539,10 +535,10 @@ export default function ServiceBookingPage({
                         </BookingServices.ServiceCard>
                       ) : (
                         <div>
-                          <h1 className="text-3xl font-bold text-gray-900">
+                          <h1 className="text-4xl font-bold text-white">
                             Book Service
                           </h1>
-                          <p className="text-xl text-gray-600 mt-2">
+                          <p className="text-xl text-white/80 mt-2">
                             Select your preferred date and time
                           </p>
                         </div>
@@ -560,10 +556,10 @@ export default function ServiceBookingPage({
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                                 index < currentStep
-                                  ? "bg-blue-600 text-white"
+                                  ? "bg-blue-500 text-white"
                                   : index === currentStep
-                                  ? "bg-blue-100 text-blue-600 border-2 border-blue-600"
-                                  : "bg-gray-100 text-gray-400"
+                                  ? "bg-blue-500/20 text-blue-300 border-2 border-blue-400"
+                                  : "bg-white/10 text-white/40"
                               }`}
                             >
                               {index + 1}
@@ -571,15 +567,15 @@ export default function ServiceBookingPage({
                             <span
                               className={`ml-2 text-sm font-medium ${
                                 index <= currentStep
-                                  ? "text-gray-900"
-                                  : "text-gray-400"
+                                  ? "text-white"
+                                  : "text-white/40"
                               }`}
                             >
                               {step}
                             </span>
                             {index < steps.length - 1 && (
                               <svg
-                                className="w-4 h-4 ml-4 text-gray-300"
+                                className="w-4 h-4 ml-4 text-white/30"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -593,9 +589,9 @@ export default function ServiceBookingPage({
                           </div>
                         ))}
                       </div>
-                      <div className="mt-2 bg-gray-200 rounded-full h-2">
+                      <div className="mt-2 bg-white/20 rounded-full h-2">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${progressPercentage}%` }}
                         ></div>
                       </div>
