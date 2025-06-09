@@ -172,7 +172,15 @@ export const BookingSelectionService = implementService.withConfig<{
       error.set(null);
 
       const timezone = config.timezone || "UTC";
-      const returnUrl = config.returnUrl || window.location.origin;
+
+      // Ensure we have a full URL for the callback
+      let returnUrl = config.returnUrl || "/bookings";
+      if (!returnUrl.startsWith("http")) {
+        // If it's a relative path, make it a full URL
+        returnUrl = `${window.location.origin}${
+          returnUrl.startsWith("/") ? "" : "/"
+        }${returnUrl}`;
+      }
 
       const response = await redirects.createRedirectSession({
         bookingsCheckout: {

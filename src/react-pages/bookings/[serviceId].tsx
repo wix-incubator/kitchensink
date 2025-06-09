@@ -28,6 +28,35 @@ interface ServiceBookingPageProps {
   bookingSelectionConfig: any;
 }
 
+// Component to automatically select the service when the page loads
+const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
+  return (
+    <BookingServices.ServiceGrid>
+      {({ services }) => {
+        const currentService = services.find((s) => s._id === serviceId);
+
+        return (
+          <BookingSelection.ServiceSelector services={services}>
+            {({ selectService, selectedService }) => {
+              // Auto-select service if it's not already selected
+              useEffect(() => {
+                if (
+                  currentService &&
+                  (!selectedService || selectedService._id !== serviceId)
+                ) {
+                  selectService(currentService);
+                }
+              }, [currentService, selectedService, selectService]);
+
+              return null; // This component doesn't render anything
+            }}
+          </BookingSelection.ServiceSelector>
+        );
+      }}
+    </BookingServices.ServiceGrid>
+  );
+};
+
 const CalendarSection = () => {
   return (
     <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -489,6 +518,9 @@ export default function ServiceBookingPage({
   return (
     <KitchensinkLayout>
       <ServicesManagerProvider servicesManager={servicesManager}>
+        {/* Auto-select the service on page load */}
+        <ServiceAutoSelector serviceId={serviceId} />
+
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           {/* Header */}
           <div className="border-b border-white/10">
