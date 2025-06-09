@@ -88,8 +88,8 @@ export interface ServiceCardRenderProps {
   price: string;
   /** Service category name */
   category?: string;
-  /** Service image URL */
-  imageUrl?: string;
+  /** Service image */
+  image?: services.MediaItem;
   /** Service booking URL */
   bookingUrl: string;
   /** Whether service is hidden */
@@ -132,9 +132,9 @@ export const ServiceCard = (props: ServiceCardProps) => {
   const duration =
     service.schedule?.availabilityConstraints?.sessionDurations?.[0];
 
-  // Get image URL
-  const imageUrl =
-    service.media?.mainMedia?.image || service.media?.coverMedia?.image;
+  // Get image
+  const image =
+    service.media?.mainMedia || service.media?.coverMedia;
 
   // Get booking URL
   const bookingUrl = `/bookings/${service._id}`;
@@ -159,7 +159,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
     duration,
     price,
     category: service.category?.name || undefined,
-    imageUrl,
+    image,
     bookingUrl,
     isHidden: service.hidden === true,
     locations,

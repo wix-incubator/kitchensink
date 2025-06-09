@@ -15,6 +15,7 @@ import {
 import { BookingServices } from "../../headless/bookings/BookingServices";
 import { BookingSelection } from "../../headless/bookings/BookingSelection";
 import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
+import WixMediaImage from "../../headless/media/Image";
 
 interface BookingsPageProps {
   bookingServicesConfig: any;
@@ -161,34 +162,17 @@ export default function BookingsPage({
                           duration,
                           price,
                           category,
-                          imageUrl,
+                          image,
                           bookingUrl,
                           locations,
                         }) => (
                           <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group">
                             {/* Service Image */}
                             <div className="h-48 bg-white/10 rounded-t-xl overflow-hidden">
-                              {imageUrl ? (
-                                <img
-                                  src={imageUrl}
-                                  alt={name}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-white/40">
-                                  <svg
-                                    className="w-16 h-16"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </div>
-                              )}
+                              <WixMediaImage
+                                media={image}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              />
                             </div>
 
                             {/* Service Content */}
