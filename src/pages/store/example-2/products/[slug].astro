@@ -1,0 +1,51 @@
+---
+import { products } from "@wix/stores";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProductPage from "../../../../react-pages/store/example-2/products/[slug]";
+import { loadVariantSelectorServiceConfig } from "../../../../headless/store/variant-selector-service";
+import { loadProductGalleryServiceConfig } from "../../../../headless/store/product-gallery-service";
+import { loadEnhancedCurrentCartServiceConfig } from "../../../../headless/store/enhanced-cart-service";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect("/store/example-2");
+}
+
+const { items } = await products
+  .queryProducts()
+  .eq("slug", slug)
+  .limit(1)
+  .find();
+
+const product = items[0];
+
+if (!product) return new Response(null, { status: 404 });
+
+// Load service configurations
+const variantSelectorConfig = await loadVariantSelectorServiceConfig(slug);
+const productGalleryConfig = await loadProductGalleryServiceConfig(slug);
+const enhancedCartConfig = await loadEnhancedCurrentCartServiceConfig();
+
+const productName = product.name || "Product";
+---
+
+<BaseLayout>
+  <title>{productName} - Advanced Store - Kitchensink</title>
+  <meta
+    name="description"
+    content={`View details for ${productName} with advanced variant selection, dynamic pricing, and wishlist functionality.`}
+  />
+  <meta
+    name="keywords"
+    content={`${productName}, product, buy, e-commerce, variants, wishlist`}
+  />
+
+  <ProductPage
+    client:load
+    variantSelectorConfig={variantSelectorConfig}
+    productGalleryConfig={productGalleryConfig}
+    enhancedCartConfig={enhancedCartConfig}
+    slot="body"
+  />
+</BaseLayout>
