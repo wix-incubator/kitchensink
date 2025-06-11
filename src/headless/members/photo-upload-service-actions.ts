@@ -2,8 +2,8 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { members } from "@wix/members";
 import { files } from "@wix/media";
-import { isLoggedIn } from "@wix/astro/auth";
 import { auth } from "@wix/essentials";
+import { type IOAuthStrategy } from "@wix/sdk";
 
 export const photoUploadAstroActions = {
   uploadPhoto: defineAction({
@@ -13,7 +13,7 @@ export const photoUploadAstroActions = {
     }),
     handler: async ({ photo }) => {
       // Check if user is logged in
-      if (!isLoggedIn()) {
+      if (!auth.getContextualAuth<IOAuthStrategy>().loggedIn()) {
         throw new Error("Unauthorized");
       }
 

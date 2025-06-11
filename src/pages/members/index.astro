@@ -1,13 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { isLoggedIn } from "@wix/astro/auth";
+import { auth } from "@wix/essentials";
 import { members } from "@wix/members";
+import { type IOAuthStrategy } from "@wix/sdk";
 import { MembersPage } from "../../react-pages/members/index";
 import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
 import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
 
 // Server-side logic
-const userIsLoggedIn = isLoggedIn();
+const userIsLoggedIn = auth.getContextualAuth<IOAuthStrategy>().loggedIn();
 let member;
 let currentMemberServiceConfig;
 let profileUpdateServiceConfig;
