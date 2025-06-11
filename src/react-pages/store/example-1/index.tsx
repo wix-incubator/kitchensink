@@ -141,7 +141,10 @@ const ProductGridContent = () => {
                           </div>
 
                           <a
-                            href={productUrl}
+                            href={productUrl.replace(
+                              "/store/products/",
+                              "/store/example-1/"
+                            )}
                             className="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                           >
                             View Product
