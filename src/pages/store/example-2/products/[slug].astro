@@ -5,6 +5,8 @@ import ProductPage from "../../../../react-pages/store/example-2/products/[slug]
 import { loadVariantSelectorServiceConfig } from "../../../../headless/store/variant-selector-service";
 import { loadProductGalleryServiceConfig } from "../../../../headless/store/product-gallery-service";
 import { loadEnhancedCurrentCartServiceConfig } from "../../../../headless/store/enhanced-cart-service";
+import { loadRelatedProductsServiceConfig } from "../../../../headless/store/related-products-service";
+import { loadSocialSharingServiceConfig } from "../../../../headless/store/social-sharing-service";
 
 const { slug } = Astro.params;
 
@@ -26,6 +28,15 @@ if (!product) return new Response(null, { status: 404 });
 const variantSelectorConfig = await loadVariantSelectorServiceConfig(slug);
 const productGalleryConfig = await loadProductGalleryServiceConfig(slug);
 const enhancedCartConfig = await loadEnhancedCurrentCartServiceConfig();
+const relatedProductsConfig = await loadRelatedProductsServiceConfig(
+  product._id || ""
+);
+const socialSharingConfig = await loadSocialSharingServiceConfig(
+  product.name || "Product",
+  `${Astro.url.origin}/store/example-2/products/${slug}`,
+  product.description || "",
+  product.media?.mainMedia?.image?.url
+);
 
 const productName = product.name || "Product";
 ---
@@ -46,6 +57,8 @@ const productName = product.name || "Product";
     variantSelectorConfig={variantSelectorConfig}
     productGalleryConfig={productGalleryConfig}
     enhancedCartConfig={enhancedCartConfig}
+    relatedProductsConfig={relatedProductsConfig}
+    socialSharingConfig={socialSharingConfig}
     slot="body"
   />
 </BaseLayout>
