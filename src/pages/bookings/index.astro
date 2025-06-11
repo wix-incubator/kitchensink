@@ -1,25 +1,26 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import BookingsPage from "../../react-pages/bookings/index";
+import BookingsIntroPage from "../../react-pages/bookings/index";
 import { loadBookingServicesServiceConfig } from "../../headless/bookings/booking-services-service";
-import { loadBookingSelectionServiceConfig } from "../../headless/bookings/booking-selection-service";
 
-// Load initial data for services
+// Load services to show preview data
 const bookingServicesConfig = await loadBookingServicesServiceConfig();
-const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
 ---
 
 <BaseLayout>
-  <title>Book a Service - Professional Services</title>
+  <title>Wix Bookings - Service Booking Solutions</title>
   <meta
     name="description"
-    content="Browse and book our professional services. Choose from consultations, sessions, and specialized services."
+    content="Explore Wix Bookings functionality with multiple implementation examples. Book appointments, manage services, and handle scheduling with our comprehensive booking system."
+  />
+  <meta
+    name="keywords"
+    content="Wix Bookings, appointment booking, service scheduling, online booking system"
   />
 
-  <BookingsPage
+  <BookingsIntroPage
     client:load
     bookingServicesConfig={bookingServicesConfig}
-    bookingSelectionConfig={bookingSelectionConfig}
     slot="body"
   />
 </BaseLayout>

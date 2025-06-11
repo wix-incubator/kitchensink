@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ServiceBookingPage from "../../react-pages/bookings/[serviceId]";
-import { loadBookingServicesServiceConfig } from "../../headless/bookings/booking-services-service";
-import { loadBookingAvailabilityServiceConfig } from "../../headless/bookings/booking-availability-service";
-import { loadBookingSelectionServiceConfig } from "../../headless/bookings/booking-selection-service";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ServiceBookingPage from "../../../react-pages/bookings/example-1/[serviceId]";
+import { loadBookingServicesServiceConfig } from "../../../headless/bookings/booking-services-service";
+import { loadBookingAvailabilityServiceConfig } from "../../../headless/bookings/booking-availability-service";
+import { loadBookingSelectionServiceConfig } from "../../../headless/bookings/booking-selection-service";
 
 const { serviceId } = Astro.params;
 

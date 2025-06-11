@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import BookNowPage from "../../../../react-pages/bookings/example-2/book/[serviceId]";
+import { loadBookingServicesServiceConfig } from "../../../../headless/bookings/booking-services-service";
+import { loadBookingAvailabilityServiceConfig } from "../../../../headless/bookings/booking-availability-service";
+import { loadBookingSelectionServiceConfig } from "../../../../headless/bookings/booking-selection-service";
+
+const { serviceId } = Astro.params;
+
+if (!serviceId) {
+  return Astro.redirect("/bookings/v2/services");
+}
+
+// Load service configurations on the server
+const bookingServicesConfig =
+  await loadBookingServicesServiceConfig("APPOINTMENT");
+const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(
+  serviceId,
+  "UTC"
+);
+const bookingSelectionConfig = await loadBookingSelectionServiceConfig(
+  "UTC",
+  `/bookings/v2/book/${serviceId}/success`
+);
+---
+
+<BaseLayout>
+  <title>Book Now - Service Booking</title>
+  <meta name="description" content="Book your appointment for this service" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <BookNowPage
+    client:load
+    serviceId={serviceId}
+    bookingServicesConfig={bookingServicesConfig}
+    bookingAvailabilityConfig={bookingAvailabilityConfig}
+    bookingSelectionConfig={bookingSelectionConfig}
+    slot="body"
+  />
+</BaseLayout>

@@ -28,3 +28,5 @@ pnpm-debug.log*
 .wix/
 
 .history/
+
+appointments-sub*

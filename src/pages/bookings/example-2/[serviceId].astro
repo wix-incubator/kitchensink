@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ServiceDetailPage from "../../../react-pages/bookings/example-2/[serviceId].tsx";
+import { loadBookingServicesServiceConfig } from "../../../headless/bookings/booking-services-service";
+
+const { serviceId } = Astro.params;
+
+// Load services to find the current service
+const bookingServicesConfig = await loadBookingServicesServiceConfig();
+---
+
+<BaseLayout>
+  <title>Service Details - Book Your Session</title>
+  <meta
+    name="description"
+    content="Learn more about this service and book your coaching session."
+  />
+
+  <ServiceDetailPage
+    client:load
+    serviceId={serviceId || ""}
+    bookingServicesConfig={bookingServicesConfig}
+    slot="body"
+  />
+</BaseLayout>
