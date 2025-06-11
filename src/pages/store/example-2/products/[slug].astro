@@ -1,12 +1,10 @@
 ---
-import { products } from "@wix/stores";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import ProductPage from "../../../../react-pages/store/example-2/products/[slug]";
-import { loadVariantSelectorServiceConfig } from "../../../../headless/store/variant-selector-service";
-import { loadProductGalleryServiceConfig } from "../../../../headless/store/product-gallery-service";
-import { loadEnhancedCurrentCartServiceConfig } from "../../../../headless/store/enhanced-cart-service";
-import { loadRelatedProductsServiceConfig } from "../../../../headless/store/related-products-service";
-import { loadSocialSharingServiceConfig } from "../../../../headless/store/social-sharing-service";
+import ProductDetailPage from "../../../../react-pages/store/example-2/products/[slug]";
+import { loadProductServiceConfig } from "../../../../headless/store/product-service";
+import { loadCurrentCartServiceConfig } from "../../../../headless/store/current-cart-service";
+import { loadProductMediaGalleryServiceConfig } from "../../../../headless/store/product-media-gallery-service";
+import { loadSelectedVariantServiceConfig } from "../../../../headless/store/selected-variant-service";
 
 const { slug } = Astro.params;
 
@@ -14,51 +12,34 @@ if (!slug) {
   return Astro.redirect("/store/example-2");
 }
 
-const { items } = await products
-  .queryProducts()
-  .eq("slug", slug)
-  .limit(1)
-  .find();
+// Load service configurations using the standard headless services
+const productServiceConfig = await loadProductServiceConfig(slug);
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+const productMediaGalleryServiceConfig =
+  await loadProductMediaGalleryServiceConfig(slug);
+const selectedVariantServiceConfig =
+  await loadSelectedVariantServiceConfig(slug);
 
-const product = items[0];
-
-if (!product) return new Response(null, { status: 404 });
-
-// Load service configurations
-const variantSelectorConfig = await loadVariantSelectorServiceConfig(slug);
-const productGalleryConfig = await loadProductGalleryServiceConfig(slug);
-const enhancedCartConfig = await loadEnhancedCurrentCartServiceConfig();
-const relatedProductsConfig = await loadRelatedProductsServiceConfig(
-  product._id || ""
-);
-const socialSharingConfig = await loadSocialSharingServiceConfig(
-  product.name || "Product",
-  `${Astro.url.origin}/store/example-2/products/${slug}`,
-  product.description || "",
-  product.media?.mainMedia?.image?.url
-);
-
-const productName = product.name || "Product";
+const productName = productServiceConfig.product.name || "Product";
 ---
 
 <BaseLayout>
   <title>{productName} - Advanced Store - Kitchensink</title>
   <meta
     name="description"
-    content={`View details for ${productName} with advanced variant selection, dynamic pricing, and wishlist functionality.`}
+    content={`View details for ${productName} with enhanced UI and modern design patterns.`}
   />
   <meta
     name="keywords"
-    content={`${productName}, product, buy, e-commerce, variants, wishlist`}
+    content={`${productName}, product, buy, e-commerce, store`}
   />
 
-  <ProductPage
+  <ProductDetailPage
     client:load
-    variantSelectorConfig={variantSelectorConfig}
-    productGalleryConfig={productGalleryConfig}
-    enhancedCartConfig={enhancedCartConfig}
-    relatedProductsConfig={relatedProductsConfig}
-    socialSharingConfig={socialSharingConfig}
+    productServiceConfig={productServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+    selectedVariantServiceConfig={selectedVariantServiceConfig}
     slot="body"
   />
 </BaseLayout>

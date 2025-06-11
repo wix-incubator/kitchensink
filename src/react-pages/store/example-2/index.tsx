@@ -288,7 +288,7 @@ export default function StoreExample2Page({
         {/* Register page documentation */}
         <PageDocsRegistration
           title="Advanced Store Collection"
-          description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns."
+          description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
           docsUrl="/docs/examples/advanced-store-collection"
         />
 
@@ -314,9 +314,8 @@ export default function StoreExample2Page({
                 </span>
               </h1>
               <p className="text-white/80 text-xl max-w-2xl mx-auto">
-                Experience our next-generation e-commerce platform with advanced
-                variant selection, dynamic pricing, and comprehensive product
-                interactions
+                Experience our next-generation e-commerce platform with enhanced
+                interactions and modern design patterns
               </p>
 
               <Collection.CollectionHeader>
@@ -357,9 +356,9 @@ export default function StoreExample2Page({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-white font-semibold mb-1">Wishlist</h3>
+                  <h3 className="text-white font-semibold mb-1">Enhanced UI</h3>
                   <p className="text-white/60 text-sm">
-                    Save favorites for later
+                    Modern design patterns
                   </p>
                 </div>
                 <div className="text-center">
@@ -379,9 +378,9 @@ export default function StoreExample2Page({
                     </svg>
                   </div>
                   <h3 className="text-white font-semibold mb-1">
-                    Dynamic Pricing
+                    Smart Interactions
                   </h3>
-                  <p className="text-white/60 text-sm">Real-time discounts</p>
+                  <p className="text-white/60 text-sm">Advanced user flows</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -400,10 +399,10 @@ export default function StoreExample2Page({
                     </svg>
                   </div>
                   <h3 className="text-white font-semibold mb-1">
-                    Advanced Variants
+                    Headless Components
                   </h3>
                   <p className="text-white/60 text-sm">
-                    Smart selection system
+                    Built with Collection & CurrentCart
                   </p>
                 </div>
               </div>
