@@ -36,9 +36,13 @@ export const ProductService = implementService.withConfig<{
   };
 });
 
+export type ProductServiceConfigResult =
+  | { type: "success"; config: ServiceFactoryConfig<typeof ProductService> }
+  | { type: "notFound" };
+
 export async function loadProductServiceConfig(
   productSlug: string
-): Promise<ServiceFactoryConfig<typeof ProductService>> {
+): Promise<ProductServiceConfigResult> {
   try {
     const storeProducts = await products
       .queryProducts()
@@ -46,14 +50,17 @@ export async function loadProductServiceConfig(
       .find();
 
     if (!storeProducts.items?.[0]) {
-      throw new Error("Product not found");
+      return { type: "notFound" };
     }
 
     return {
-      product: storeProducts.items[0],
+      type: "success",
+      config: {
+        product: storeProducts.items[0],
+      },
     };
   } catch (error) {
     console.error("Failed to load product:", error);
-    throw error;
+    return { type: "notFound" };
   }
 }

@@ -74,26 +74,43 @@ export const BookingServiceService = implementService.withConfig<{
   };
 });
 
+export type BookingServiceServiceConfigResult =
+  | {
+      type: "success";
+      config: ServiceFactoryConfig<typeof BookingServiceService>;
+    }
+  | { type: "notFound" };
+
 export async function loadBookingServiceServiceConfig(
   serviceId?: string
-): Promise<ServiceFactoryConfig<typeof BookingServiceService>> {
+): Promise<BookingServiceServiceConfigResult> {
   try {
     if (serviceId) {
       // Load the specific service on the server
       const result = await services.getService(serviceId);
+
+      if (!result || result._id !== serviceId) {
+        return { type: "notFound" };
+      }
+
       return {
-        initialService: result || undefined,
-        serviceId,
+        type: "success",
+        config: {
+          initialService: result,
+          serviceId,
+        },
       };
     }
 
+    // For cases without serviceId, always return success
     return {
-      serviceId,
+      type: "success",
+      config: {
+        serviceId,
+      },
     };
   } catch (error) {
     console.error("Failed to load initial service:", error);
-    return {
-      serviceId,
-    };
+    return { type: "notFound" };
   }
 }

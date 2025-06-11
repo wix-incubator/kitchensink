@@ -12,7 +12,15 @@ if (!serviceId) {
 }
 
 // Load initial data for the specific service
-const bookingServiceConfig = await loadBookingServiceServiceConfig(serviceId);
+const bookingServiceConfigResult =
+  await loadBookingServiceServiceConfig(serviceId);
+
+// Handle 404 case
+if (bookingServiceConfigResult.type === "notFound") {
+  return Astro.rewrite("/404");
+}
+
+const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingAvailabilityConfig =
   await loadBookingAvailabilityServiceConfig(serviceId);
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig();

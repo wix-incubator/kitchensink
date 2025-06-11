@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import BookNowPage from "../../../../react-pages/bookings/example-2/book/[serviceId]";
+import { loadBookingServiceServiceConfig } from "../../../../headless/bookings/booking-service-service";
 import { loadBookingServicesServiceConfig } from "../../../../headless/bookings/booking-services-service";
 import { loadBookingAvailabilityServiceConfig } from "../../../../headless/bookings/booking-availability-service";
 import { loadBookingSelectionServiceConfig } from "../../../../headless/bookings/booking-selection-service";
@@ -8,10 +9,20 @@ import { loadBookingSelectionServiceConfig } from "../../../../headless/bookings
 const { serviceId } = Astro.params;
 
 if (!serviceId) {
-  return Astro.redirect("/bookings/v2/services");
+  return Astro.redirect("/bookings/example-2/services");
+}
+
+// First validate that the specific service exists
+const bookingServiceConfigResult =
+  await loadBookingServiceServiceConfig(serviceId);
+
+// Handle 404 case
+if (bookingServiceConfigResult.type === "notFound") {
+  return Astro.rewrite("/404");
 }
 
 // Load service configurations on the server
+const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingServicesConfig =
   await loadBookingServicesServiceConfig("APPOINTMENT");
 const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(
@@ -20,7 +31,7 @@ const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(
 );
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig(
   "UTC",
-  `/bookings/v2/book/${serviceId}/success`
+  `/bookings/example-2/book/${serviceId}/success`
 );
 ---
 

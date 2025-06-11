@@ -11,7 +11,14 @@ if (!slug) {
 }
 
 // Load initial data for services
-const productServiceConfig = await loadProductServiceConfig(slug);
+const productServiceConfigResult = await loadProductServiceConfig(slug);
+
+// Handle 404 case
+if (productServiceConfigResult.type === "notFound") {
+  return Astro.rewrite("/404");
+}
+
+const productServiceConfig = productServiceConfigResult.config;
 const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 
 const productName = productServiceConfig.product.name || "Product";

@@ -234,6 +234,71 @@ When the profile is updated, the current member state is immediately updated on 
 
 **IMPORTANT**: Services that depend on each other MUST be registered in the same `ServicesManager` to share state properly.
 
+## 404 Handling Pattern for Entity Loading
+
+### Discriminated Union Results
+
+For services that load entities that may not exist (e.g., products by slug, services by ID), the load configuration functions should return a discriminated union instead of throwing errors. This allows proper 404 handling at the page level.
+
+```typescript
+// Define the result type as a discriminated union
+export type EntityServiceConfigResult = 
+  | { type: "success"; config: ServiceFactoryConfig<typeof EntityService> }
+  | { type: "notFound" };
+
+export async function loadEntityServiceConfig(
+  entityId: string
+): Promise<EntityServiceConfigResult> {
+  try {
+    const entity = await fetchEntity(entityId);
+
+    if (!entity) {
+      return { type: "notFound" };
+    }
+
+    return {
+      type: "success",
+      config: { entity },
+    };
+  } catch (error) {
+    console.error("Failed to load entity:", error);
+    return { type: "notFound" };
+  }
+}
+```
+
+#### Usage in Astro Pages
+
+```astro
+---
+const entityResult = await loadEntityServiceConfig(id);
+
+// Handle 404 case
+if (entityResult.type === "notFound") {
+  return Astro.rewrite("/404");
+}
+
+const entityConfig = entityResult.config;
+---
+```
+
+#### 404 Page Setup
+
+Ensure your `404.astro` page returns the proper HTTP status code:
+
+```astro
+---
+// Ensure proper 404 HTTP status code
+Astro.response.status = 404;
+---
+```
+
+### When to Use This Pattern
+
+- **Entity-based routes**: Pages with dynamic routes like `[slug].astro`, `[serviceId].astro`
+- **User-facing content**: When missing entities should show a 404 page
+- **SEO considerations**: When you want proper 404 HTTP status codes
+
 If you have a service that depends on another service (using `getService`), both services must be added to the same `ServicesMap` when creating the `ServicesManager`:
 
 ```tsx

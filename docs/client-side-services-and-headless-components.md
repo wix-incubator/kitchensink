@@ -457,6 +457,114 @@ const photoUploadConfig = await loadPhotoUploadServiceConfig();
 4. **Performance**: Server-side processing reduces client-side workload
 5. **Security**: Sensitive operations stay on the server
 
+## 404 Handling Pattern
+
+### Discriminated Union Results
+
+For services that load entities that may not exist (e.g., products by slug, services by ID), the load configuration functions should return a discriminated union instead of throwing errors. This allows proper 404 handling at the page level.
+
+#### Pattern Implementation
+
+```typescript
+// Define the result type as a discriminated union
+export type ProductServiceConfigResult =
+  | { type: "success"; config: ServiceFactoryConfig<typeof ProductService> }
+  | { type: "notFound" };
+
+export async function loadProductServiceConfig(
+  productSlug: string
+): Promise<ProductServiceConfigResult> {
+  try {
+    const storeProducts = await products
+      .queryProducts()
+      .eq("slug", productSlug)
+      .find();
+
+    if (!storeProducts.items?.[0]) {
+      return { type: "notFound" };
+    }
+
+    return {
+      type: "success",
+      config: {
+        product: storeProducts.items[0],
+      },
+    };
+  } catch (error) {
+    console.error("Failed to load product:", error);
+    return { type: "notFound" };
+  }
+}
+```
+
+#### Usage in Astro Pages
+
+```astro
+---
+import { loadProductServiceConfig } from "../../../headless/store/product-service";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect("/store");
+}
+
+// Load initial data for services
+const productServiceConfigResult = await loadProductServiceConfig(slug);
+
+// Handle 404 case
+if (productServiceConfigResult.type === "notFound") {
+  return Astro.rewrite("/404");
+}
+
+const productServiceConfig = productServiceConfigResult.config;
+---
+```
+
+#### 404 Page Setup
+
+Ensure your `404.astro` page returns the proper HTTP status code:
+
+```astro
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NotFoundPage from "../react-pages/404";
+
+// Ensure proper 404 HTTP status code
+Astro.response.status = 404;
+---
+
+<BaseLayout>
+  <title>Page Not Found - 404</title>
+  <meta name="description" content="The page you're looking for could not be found." />
+
+  <NotFoundPage client:load slot="body" />
+</BaseLayout>
+```
+
+#### When to Use This Pattern
+
+Use the discriminated union pattern for load functions when:
+
+1. **Entity-based routes**: Pages that load a specific entity by ID/slug (e.g., `[slug].astro`, `[serviceId].astro`)
+2. **User-facing content**: When the entity not existing should result in a user-friendly 404 page
+3. **SEO considerations**: When you want proper 404 HTTP status codes for missing content
+
+#### Why Use Rewrite Instead of Redirect?
+
+- **Preserves Original URL**: The failing URL stays in the address bar, helping users understand what went wrong
+- **Proper HTTP Status**: Returns actual 404 HTTP status code for search engines and analytics
+- **Better SEO**: Search engines don't index the 404 page as a valid page
+- **Debugging**: Shows which actual path caused the error for easier troubleshooting
+
+#### Benefits
+
+1. **Type Safety**: The discriminated union ensures you handle both success and not-found cases
+2. **User Experience**: Users get a proper 404 page while keeping the original URL
+3. **SEO**: Search engines receive proper 404 HTTP status codes for the original URL
+4. **Error Boundaries**: Separates "not found" from actual system errors
+5. **Analytics**: Preserves accurate data about which URLs are being requested
+
 ## Best Practices
 
 ### Service Design
@@ -466,6 +574,7 @@ const photoUploadConfig = await loadPhotoUploadServiceConfig();
 3. **Error Handling**: Include error states in your service APIs
 4. **Configuration**: Make services configurable through their config objects
 5. **Action Injection**: Use dependency injection for server-side operations
+6. **404 Handling**: Use discriminated unions for entity-loading functions that may return "not found"
 
 ### Headless Component Design
 
