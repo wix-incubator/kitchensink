@@ -4,6 +4,7 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../layouts/StoreLayout";
 import {
   withDocsWrapper,
   PageDocsRegistration,
@@ -13,14 +14,15 @@ import {
   CollectionService,
 } from "../../../headless/store/collection-service";
 import {
-  EnhancedCurrentCartServiceDefinition,
-  EnhancedCurrentCartService,
-} from "../../../headless/store/enhanced-cart-service";
+  CurrentCartServiceDefinition,
+  CurrentCartService,
+} from "../../../headless/store/current-cart-service";
 import { Collection } from "../../../headless/store/Collection";
+import { CurrentCart } from "../../../headless/store/CurrentCart";
 
 interface StoreExample2PageProps {
   collectionServiceConfig: any;
-  enhancedCartConfig: any;
+  currentCartServiceConfig: any;
 }
 
 const ProductGridContent = () => {
@@ -260,9 +262,9 @@ const LoadMoreSection = () => {
 
 export default function StoreExample2Page({
   collectionServiceConfig,
-  enhancedCartConfig,
+  currentCartServiceConfig,
 }: StoreExample2PageProps) {
-  // Create services manager with collection and enhanced cart services
+  // Create services manager with collection and current cart services
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -271,142 +273,150 @@ export default function StoreExample2Page({
         collectionServiceConfig
       )
       .addService(
-        EnhancedCurrentCartServiceDefinition,
-        EnhancedCurrentCartService,
-        enhancedCartConfig
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartServiceConfig
       )
   );
 
   return (
     <KitchensinkLayout>
-      {/* Register page documentation */}
-      <PageDocsRegistration
-        title="Advanced Store Collection"
-        description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns."
-        docsUrl="/docs/examples/advanced-store-collection"
-      />
+      <StoreLayout
+        currentCartServiceConfig={currentCartServiceConfig}
+        servicesManager={servicesManager}
+      >
+        {/* Register page documentation */}
+        <PageDocsRegistration
+          title="Advanced Store Collection"
+          description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns."
+          docsUrl="/docs/examples/advanced-store-collection"
+        />
 
-      {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Breadcrumb */}
-          <nav className="mb-8">
-            <div className="flex items-center gap-2 text-white/60">
-              <a href="/store" className="hover:text-white transition-colors">
-                Store
-              </a>
-              <span>/</span>
-              <span className="text-white">Example 2</span>
+        {/* Main Content */}
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Breadcrumb */}
+            <nav className="mb-8">
+              <div className="flex items-center gap-2 text-white/60">
+                <a href="/store" className="hover:text-white transition-colors">
+                  Store
+                </a>
+                <span>/</span>
+                <span className="text-white">Example 2</span>
+              </div>
+            </nav>
+
+            {/* Header */}
+            <div className="text-center mb-12">
+              <h1 className="text-5xl font-bold text-white mb-4">
+                <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                  Advanced Store
+                </span>
+              </h1>
+              <p className="text-white/80 text-xl max-w-2xl mx-auto">
+                Experience our next-generation e-commerce platform with advanced
+                variant selection, dynamic pricing, and comprehensive product
+                interactions
+              </p>
+
+              <Collection.CollectionHeader>
+                {withDocsWrapper(
+                  ({ totalProducts, isLoading, hasProducts }) => (
+                    <div className="mt-6">
+                      {!isLoading && hasProducts && (
+                        <p className="text-white/60">
+                          Showing {totalProducts} product
+                          {totalProducts !== 1 ? "s" : ""} with enhanced
+                          features
+                        </p>
+                      )}
+                    </div>
+                  ),
+                  "Collection.CollectionHeader",
+                  "/docs/components/collection#collectionheader"
+                )}
+              </Collection.CollectionHeader>
             </div>
-          </nav>
 
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-white mb-4">
-              <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-                Advanced Store
-              </span>
-            </h1>
-            <p className="text-white/80 text-xl max-w-2xl mx-auto">
-              Experience our next-generation e-commerce platform with advanced
-              variant selection, dynamic pricing, and comprehensive product
-              interactions
-            </p>
-
-            <Collection.CollectionHeader>
-              {withDocsWrapper(
-                ({ totalProducts, isLoading, hasProducts }) => (
-                  <div className="mt-6">
-                    {!isLoading && hasProducts && (
-                      <p className="text-white/60">
-                        Showing {totalProducts} product
-                        {totalProducts !== 1 ? "s" : ""} with enhanced features
-                      </p>
-                    )}
+            {/* Features Banner */}
+            <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl border border-white/10 p-6 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
                   </div>
-                ),
-                "Collection.CollectionHeader",
-                "/docs/components/collection#collectionheader"
-              )}
-            </Collection.CollectionHeader>
-          </div>
-
-          {/* Features Banner */}
-          <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl border border-white/10 p-6 mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    />
-                  </svg>
+                  <h3 className="text-white font-semibold mb-1">Wishlist</h3>
+                  <p className="text-white/60 text-sm">
+                    Save favorites for later
+                  </p>
                 </div>
-                <h3 className="text-white font-semibold mb-1">Wishlist</h3>
-                <p className="text-white/60 text-sm">
-                  Save favorites for later
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                    />
-                  </svg>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">
+                    Dynamic Pricing
+                  </h3>
+                  <p className="text-white/60 text-sm">Real-time discounts</p>
                 </div>
-                <h3 className="text-white font-semibold mb-1">
-                  Dynamic Pricing
-                </h3>
-                <p className="text-white/60 text-sm">Real-time discounts</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">
+                    Advanced Variants
+                  </h3>
+                  <p className="text-white/60 text-sm">
+                    Smart selection system
+                  </p>
                 </div>
-                <h3 className="text-white font-semibold mb-1">
-                  Advanced Variants
-                </h3>
-                <p className="text-white/60 text-sm">Smart selection system</p>
               </div>
             </div>
+
+            {/* Product Grid */}
+            <ProductGridContent />
+
+            {/* Load More */}
+            <LoadMoreSection />
           </div>
-
-          {/* Product Grid */}
-          <ProductGridContent />
-
-          {/* Load More */}
-          <LoadMoreSection />
         </div>
-      </div>
+      </StoreLayout>
     </KitchensinkLayout>
   );
 }
