@@ -93,7 +93,7 @@ export default function BookingsPage({
                   </div>
                 ),
                 "Services Header",
-                "/docs/components/bookings-services#services-header"
+                "/docs/components/bookings-services#servicesheader"
               )}
             </BookingServices.ServicesHeader>
 
@@ -299,14 +299,14 @@ export default function BookingsPage({
                                         </button>
                                       ),
                                       "Service Selector",
-                                      "/docs/components/booking-selection#service-selector"
+                                      "/docs/components/booking-selection#serviceselector"
                                     )}
                                   </BookingSelection.ServiceSelector>
                                 </div>
                               </div>
                             ),
                             "Service Card",
-                            "/docs/components/bookings-services#service-card"
+                            "/docs/components/bookings-services#servicecard"
                           )}
                         </BookingServices.ServiceCard>
                       ))}
@@ -314,7 +314,7 @@ export default function BookingsPage({
                   );
                 },
                 "Service Grid",
-                "/docs/components/bookings-services#service-grid"
+                "/docs/components/bookings-services#servicegrid"
               )}
             </BookingServices.ServiceGrid>
           </div>

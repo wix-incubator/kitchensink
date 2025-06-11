@@ -224,7 +224,7 @@ const ServicesListSection = () => {
                         </div>
                       ),
                       "Service List Card",
-                      "/docs/components/bookings-services#service-list-card"
+                      "/docs/components/bookings-services#servicecard"
                     )}
                   </BookingServices.ServiceCard>
                 ))}
@@ -232,7 +232,7 @@ const ServicesListSection = () => {
             );
           },
           "Services List",
-          "/docs/components/bookings-services#services-list"
+          "/docs/components/bookings-services#basic-service-listing"
         )}
       </BookingServices.ServiceGrid>
     </div>

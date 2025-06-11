@@ -1,0 +1,501 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+---
+
+# Wix Bookings Overview
+
+Wix Bookings is a comprehensive appointment scheduling and service management platform that enables businesses to handle bookings, staff management, customer interactions, and payment processing. The headless components provide complete control over the booking experience while leveraging Wix's powerful backend infrastructure.
+
+## Quick Start
+
+```tsx
+import { BookingServices } from "../headless/bookings/BookingServices";
+import { BookingAvailability } from "../headless/bookings/BookingAvailability";
+import { BookingSelection } from "../headless/bookings/BookingSelection";
+
+// Basic booking flow
+function BookingFlow() {
+  return (
+    <div>
+      {/* 1. Display available services */}
+      <BookingServices.ServiceGrid>
+        {({ services }) => <ServiceGrid services={services} />}
+      </BookingServices.ServiceGrid>
+
+      {/* 2. Show calendar and time slots */}
+      <BookingAvailability.Calendar>
+        {({ selectedDate, selectDate, hasAvailableSlots }) => (
+          <Calendar {...props} />
+        )}
+      </BookingAvailability.Calendar>
+
+      {/* 3. Handle booking selection and checkout */}
+      <BookingSelection.BookingSummary>
+        {({ summary, proceedToCheckout }) => (
+          <Summary summary={summary} onBook={proceedToCheckout} />
+        )}
+      </BookingSelection.BookingSummary>
+    </div>
+  );
+}
+```
+
+## Core Concepts
+
+### Services
+
+Services represent the bookable offerings of your business (appointments, classes, courses). Each service has:
+
+- **Basic Information**: Name, description, pricing, duration
+- **Availability Rules**: When the service can be booked
+- **Booking Settings**: Online booking enabled, payment requirements
+- **Media**: Images and rich content
+- **Locations**: Where the service takes place
+
+### Availability
+
+Availability represents the time slots when services can be booked:
+
+- **Time Slots**: Specific date/time combinations with capacity
+- **Booking Rules**: Advance booking requirements, cancellation policies
+- **Capacity Management**: Number of people per slot
+- **Real-time Updates**: Dynamic availability based on existing bookings
+
+### Booking Selection
+
+The booking selection process manages the customer's journey:
+
+- **Service Selection**: Choosing which service to book
+- **Time Selection**: Picking date and time slot
+- **Customer Information**: Contact details and preferences
+- **Payment Processing**: Checkout and confirmation
+
+## Component Architecture
+
+### BookingServices Components
+
+Handle service discovery and presentation:
+
+- **ServiceGrid**: Lists all available services with filtering and search
+- **ServiceCard**: Displays individual service information
+- **ServicesHeader**: Shows service counts and summary information
+
+[View BookingServices Documentation →](/docs/components/bookings-services)
+
+### BookingAvailability Components
+
+Manage calendar and time slot functionality:
+
+- **Calendar**: Interactive date picker with availability indicators
+- **TimeSlots**: List of available time slots for selected date
+- **TimeSlot**: Individual time slot with booking information
+- **AvailabilityHeader**: Summary of selected date and availability
+
+[View BookingAvailability Documentation →](/docs/components/booking-availability)
+
+### BookingSelection Components
+
+Handle the booking process and state management:
+
+- **BookingSummary**: Displays booking details and checkout functionality
+- **ServiceSelector**: Manages service selection state
+- **SlotSelector**: Handles time slot selection
+- **BookingProgress**: Shows booking flow progress
+- **BookingError**: Displays and manages error states
+
+[View BookingSelection Documentation →](/docs/components/booking-selection)
+
+## Implementation Patterns
+
+### Pattern 1: Service Grid with Direct Booking
+
+Perfect for businesses with simple services and quick booking needs:
+
+```tsx
+function SimpleBookingFlow() {
+  return (
+    <BookingServices.ServiceGrid>
+      {({ services }) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <BookingServices.ServiceCard key={service._id} service={service}>
+              {({ name, price, canBookOnline, serviceId }) => (
+                <div className="service-card">
+                  <h3>{name}</h3>
+                  <p>{price}</p>
+                  {canBookOnline && <a href={`/book/${serviceId}`}>Book Now</a>}
+                </div>
+              )}
+            </BookingServices.ServiceCard>
+          ))}
+        </div>
+      )}
+    </BookingServices.ServiceGrid>
+  );
+}
+```
+
+### Pattern 2: Detailed Service Pages
+
+Ideal for complex services requiring detailed information:
+
+```tsx
+function ServiceDetailPattern({ serviceId }) {
+  return (
+    <BookingServices.ServiceGrid>
+      {({ services }) => {
+        const service = services.find((s) => s._id === serviceId);
+        return (
+          <BookingServices.ServiceCard service={service}>
+            {({ name, description, image, price, duration, locations }) => (
+              <div className="service-detail">
+                <img src={image?.url} alt={name} />
+                <h1>{name}</h1>
+                <p>{description}</p>
+                <div className="service-info">
+                  <span>Duration: {duration} min</span>
+                  <span>Price: {price}</span>
+                  <span>Location: {locations.join(", ")}</span>
+                </div>
+                <a href={`/book/${serviceId}`}>Book This Service</a>
+              </div>
+            )}
+          </BookingServices.ServiceCard>
+        );
+      }}
+    </BookingServices.ServiceGrid>
+  );
+}
+```
+
+### Pattern 3: Integrated Booking Flow
+
+Complete booking experience on a single page:
+
+```tsx
+function IntegratedBookingFlow({ serviceId }) {
+  return (
+    <div className="booking-flow">
+      {/* Auto-select service */}
+      <BookingSelection.ServiceSelector services={[selectedService]}>
+        {({ selectService }) => {
+          useEffect(() => selectService(selectedService), []);
+          return null;
+        }}
+      </BookingSelection.ServiceSelector>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Calendar Section */}
+        <div className="lg:col-span-1">
+          <BookingAvailability.Calendar>
+            {(calendarProps) => <Calendar {...calendarProps} />}
+          </BookingAvailability.Calendar>
+        </div>
+
+        {/* Time Slots Section */}
+        <div className="lg:col-span-1">
+          <BookingAvailability.TimeSlots>
+            {(slotsProps) => <TimeSlots {...slotsProps} />}
+          </BookingAvailability.TimeSlots>
+        </div>
+
+        {/* Booking Summary */}
+        <div className="lg:col-span-1">
+          <BookingSelection.BookingSummary>
+            {(summaryProps) => <BookingSummary {...summaryProps} />}
+          </BookingSelection.BookingSummary>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### Pattern 4: Step-by-Step Wizard
+
+Guided booking process with clear progression:
+
+```tsx
+function StepByStepBooking() {
+  const [currentStep, setCurrentStep] = useState(1);
+
+  return (
+    <div className="booking-wizard">
+      <BookingSelection.BookingProgress>
+        {({ steps, currentStep: progressStep }) => (
+          <ProgressIndicator steps={steps} current={progressStep} />
+        )}
+      </BookingSelection.BookingProgress>
+
+      {currentStep === 1 && (
+        <BookingServices.ServiceGrid>
+          {({ services }) => (
+            <ServiceSelection
+              services={services}
+              onNext={() => setCurrentStep(2)}
+            />
+          )}
+        </BookingServices.ServiceGrid>
+      )}
+
+      {currentStep === 2 && (
+        <BookingAvailability.Calendar>
+          {(props) => (
+            <DateSelection {...props} onNext={() => setCurrentStep(3)} />
+          )}
+        </BookingAvailability.Calendar>
+      )}
+
+      {currentStep === 3 && (
+        <BookingSelection.BookingSummary>
+          {(props) => <FinalConfirmation {...props} />}
+        </BookingSelection.BookingSummary>
+      )}
+    </div>
+  );
+}
+```
+
+## Service Configuration
+
+Each component namespace requires service configuration:
+
+```tsx
+import {
+  loadBookingServicesServiceConfig,
+  loadBookingAvailabilityServiceConfig,
+  loadBookingSelectionServiceConfig,
+} from "../headless/bookings/services";
+
+// On the server (Astro page)
+export async function getStaticProps() {
+  const [
+    bookingServicesConfig,
+    bookingAvailabilityConfig,
+    bookingSelectionConfig,
+  ] = await Promise.all([
+    loadBookingServicesServiceConfig(),
+    loadBookingAvailabilityServiceConfig(serviceId, timezone),
+    loadBookingSelectionServiceConfig(timezone, returnUrl),
+  ]);
+
+  return {
+    props: {
+      bookingServicesConfig,
+      bookingAvailabilityConfig,
+      bookingSelectionConfig,
+    },
+  };
+}
+```
+
+## Services Manager Setup
+
+Use the Services Manager to provide consistent state across components:
+
+```tsx
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+
+function BookingApp({ configs }) {
+  const servicesManager = createServicesManager(
+    createServicesMap()
+      .addService(
+        BookingServicesServiceDefinition,
+        BookingServicesService,
+        configs.services
+      )
+      .addService(
+        BookingAvailabilityServiceDefinition,
+        BookingAvailabilityService,
+        configs.availability
+      )
+      .addService(
+        BookingSelectionServiceDefinition,
+        BookingSelectionService,
+        configs.selection
+      )
+  );
+
+  return (
+    <ServicesManagerProvider servicesManager={servicesManager}>
+      <YourBookingComponents />
+    </ServicesManagerProvider>
+  );
+}
+```
+
+## State Management
+
+The booking components maintain several types of state:
+
+### Service State
+
+- **Available Services**: List of bookable services
+- **Service Details**: Full service information
+- **Loading States**: Service data fetching status
+
+### Availability State
+
+- **Selected Date**: Currently chosen date
+- **Available Slots**: Time slots for the selected date
+- **Calendar Data**: Month view with availability indicators
+
+### Selection State
+
+- **Selected Service**: Chosen service for booking
+- **Selected Slot**: Chosen time slot
+- **Booking Progress**: Current step in the booking flow
+- **Error States**: Any errors in the booking process
+
+## Error Handling
+
+All components provide comprehensive error handling:
+
+```tsx
+// Service loading errors
+<BookingServices.ServiceGrid>
+  {({ error, refreshServices }) => {
+    if (error) {
+      return <ErrorComponent error={error} onRetry={refreshServices} />;
+    }
+    // Normal rendering
+  }}
+</BookingServices.ServiceGrid>
+
+// Availability errors
+<BookingAvailability.Calendar>
+  {({ error, loadSlots }) => {
+    if (error) {
+      return <AvailabilityError error={error} onRetry={loadSlots} />;
+    }
+    // Normal rendering
+  }}
+</BookingAvailability.Calendar>
+
+// Booking errors
+<BookingSelection.BookingError>
+  {({ error, hasError, clearError }) => (
+    hasError && <BookingErrorDisplay error={error} onClear={clearError} />
+  )}
+</BookingSelection.BookingError>
+```
+
+## Performance Optimization
+
+### Data Loading
+
+- Services are loaded once and cached
+- Availability is loaded incrementally (by month/week)
+- Only load detailed service data when needed
+
+### Component Optimization
+
+- Use React.memo for expensive renders
+- Implement virtual scrolling for large service lists
+- Lazy load service images and media
+
+### State Management
+
+- Minimize state updates during user interaction
+- Debounce search and filter operations
+- Use optimistic updates for better UX
+
+## Customization
+
+### Styling
+
+All components use render props, giving you complete control over styling:
+
+```tsx
+<BookingServices.ServiceCard service={service}>
+  {(props) => (
+    <YourCustomServiceCard
+      {...props}
+      className="your-custom-styles"
+      theme="dark"
+    />
+  )}
+</BookingServices.ServiceCard>
+```
+
+### Behavior
+
+Customize component behavior through configuration:
+
+```tsx
+const config = await loadBookingAvailabilityServiceConfig(
+  serviceId,
+  "America/New_York", // Custom timezone
+  { slotsPerDay: 10 } // Custom slot limits
+);
+```
+
+### Integration
+
+Components work with your existing systems:
+
+```tsx
+<BookingSelection.BookingSummary>
+  {({ proceedToCheckout, summary }) => (
+    <button
+      onClick={async () => {
+        // Custom analytics
+        trackBookingAttempt(summary);
+
+        // Proceed with Wix checkout
+        await proceedToCheckout();
+
+        // Custom post-booking actions
+        await syncWithCRM(summary);
+      }}
+    >
+      Complete Booking
+    </button>
+  )}
+</BookingSelection.BookingSummary>
+```
+
+## Business Use Cases
+
+### Health & Wellness
+
+- **Spa Treatments**: Individual appointments with staff assignment
+- **Fitness Classes**: Group bookings with capacity limits
+- **Therapy Sessions**: Recurring appointment scheduling
+
+### Professional Services
+
+- **Consulting**: One-on-one meetings with custom pricing
+- **Coaching**: Package bookings with payment plans
+- **Legal Services**: Complex scheduling with multiple staff
+
+### Education & Training
+
+- **Workshops**: Group classes with prerequisite checking
+- **Tutoring**: Individual or small group sessions
+- **Certification Courses**: Multi-session programs
+
+### Personal Care
+
+- **Hair Salons**: Service combinations and staff preferences
+- **Beauty Treatments**: Time-sensitive bookings with preparation
+- **Pet Grooming**: Special requirements and handling
+
+## Next Steps
+
+1. **Choose Your Pattern**: Select the implementation pattern that best fits your business needs
+2. **Configure Services**: Set up your service configuration and availability rules
+3. **Customize UI**: Design your booking interface using the render props
+4. **Test Booking Flow**: Ensure the complete customer journey works smoothly
+5. **Monitor Performance**: Track booking conversion and optimize accordingly
+
+## Additional Resources
+
+- [Example Implementations](/docs/examples)
+- [API Reference](/docs/api)
+- [Best Practices Guide](/docs/best-practices)
+- [Troubleshooting](/docs/troubleshooting)

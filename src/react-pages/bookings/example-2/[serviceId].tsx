@@ -274,13 +274,13 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                   </div>
                 ),
                 "Service Detail",
-                "/docs/components/bookings-services#service-detail"
+                "/docs/components/bookings-services#service-detail-page"
               )}
             </BookingServices.ServiceCard>
           );
         },
         "Service Detail Section",
-        "/docs/components/bookings-services#service-detail-section"
+        "/docs/components/bookings-services#service-detail-page"
       )}
     </BookingServices.ServiceGrid>
   );

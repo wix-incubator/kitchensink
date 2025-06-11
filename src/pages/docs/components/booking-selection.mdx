@@ -1,0 +1,497 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+---
+
+# BookingSelection Components
+
+The `BookingSelection` namespace contains headless components for managing the booking selection process, including service selection, time slot selection, booking progress, and checkout functionality. These components provide reactive booking state management through render props.
+
+## Overview
+
+```tsx
+import { BookingSelection } from "../headless/bookings/BookingSelection";
+
+// All available components
+const {
+  BookingSummary,
+  ServiceSelector,
+  SlotSelector,
+  BookingProgress,
+  BookingError,
+} = BookingSelection;
+```
+
+## Components
+
+### BookingSummary
+
+Displays booking summary information and provides checkout functionality.
+
+#### Props
+
+- `children`: Render prop function receiving `BookingSummaryRenderProps`
+
+#### Render Props
+
+- `summary: BookingSummary | null` - Booking summary data
+- `hasSelection: boolean` - Whether user has made a selection
+- `canBook: boolean` - Whether booking can proceed
+- `isBooking: boolean` - Whether booking is in progress
+- `error: string | null` - Error message if any
+- `proceedToCheckout: () => Promise<void>` - Function to proceed to checkout
+- `clearSelection: () => void` - Function to clear selection
+
+#### Example
+
+```tsx
+<BookingSelection.BookingSummary>
+  {({
+    summary,
+    hasSelection,
+    canBook,
+    isBooking,
+    error,
+    proceedToCheckout,
+    clearSelection,
+  }) => {
+    if (!hasSelection) {
+      return (
+        <div className="text-center py-8">
+          <p className="text-gray-500 mb-4">
+            Select a service and time slot to see your booking summary
+          </p>
+        </div>
+      );
+    }
+
+    if (!summary) {
+      return (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Loading summary...</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold mb-4">Booking Summary</h3>
+
+        {/* Service Details */}
+        <div className="space-y-3 mb-6">
+          <div>
+            <h4 className="font-medium text-gray-900">{summary.serviceName}</h4>
+            {summary.serviceDescription && (
+              <p className="text-sm text-gray-600 mt-1">
+                {summary.serviceDescription}
+              </p>
+            )}
+          </div>
+
+          <div className="border-t pt-3">
+            <div className="flex items-center text-sm text-gray-600 mb-2">
+              📅 {summary.date}
+            </div>
+            <div className="flex items-center text-sm text-gray-600 mb-2">
+              🕒 {summary.startTime} - {summary.endTime} ({summary.duration}{" "}
+              min)
+            </div>
+            {summary.location && (
+              <div className="flex items-center text-sm text-gray-600 mb-2">
+                📍 {summary.location}
+              </div>
+            )}
+            <div className="flex items-center justify-between pt-3 border-t">
+              <span className="font-medium">Total:</span>
+              <span className="font-bold text-lg text-green-600">
+                {summary.price}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="space-y-2">
+          <button
+            onClick={proceedToCheckout}
+            disabled={!canBook || isBooking}
+            className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
+              canBook && !isBooking
+                ? "bg-blue-500 hover:bg-blue-600 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {isBooking ? "Processing..." : "Book Now"}
+          </button>
+
+          <button
+            onClick={clearSelection}
+            className="w-full py-2 px-4 rounded-lg font-medium text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            Clear Selection
+          </button>
+        </div>
+      </div>
+    );
+  }}
+</BookingSelection.BookingSummary>
+```
+
+### ServiceSelector
+
+Handles service selection for booking with state management.
+
+#### Props
+
+- `services: Service[]` - Available services to select from
+- `children`: Render prop function receiving `ServiceSelectorRenderProps`
+
+#### Render Props
+
+- `selectedService: Service | null` - Currently selected service
+- `services: Service[]` - Available services
+- `hasSelectedService: boolean` - Whether a service is selected
+- `selectService: (service: Service) => void` - Function to select a service
+- `isServiceSelected: (serviceId: string) => boolean` - Function to check if a service is selected
+
+#### Example
+
+```tsx
+<BookingSelection.ServiceSelector services={availableServices}>
+  {({ selectedService, selectService, isServiceSelected }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {services.map((service) => (
+        <div
+          key={service._id}
+          className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+            isServiceSelected(service._id)
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-200 hover:border-gray-300"
+          }`}
+          onClick={() => selectService(service)}
+        >
+          <h3 className="font-semibold mb-2">{service.name}</h3>
+          {service.tagLine && (
+            <p className="text-gray-600 text-sm mb-2">{service.tagLine}</p>
+          )}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500">
+              {service.schedule?.availabilityConstraints?.sessionDurations?.[0]}{" "}
+              min
+            </span>
+            <span className="font-semibold text-green-600">
+              {/* Price formatting logic */}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</BookingSelection.ServiceSelector>
+```
+
+### SlotSelector
+
+Handles time slot selection with availability checking.
+
+#### Props
+
+- `slots: SlotAvailability[]` - Available slots to select from
+- `children`: Render prop function receiving `SlotSelectorRenderProps`
+
+#### Render Props
+
+- `selectedSlot: SlotAvailability | null` - Currently selected slot
+- `slots: SlotAvailability[]` - Available slots
+- `hasSelectedSlot: boolean` - Whether a slot is selected
+- `selectSlot: (slot: SlotAvailability) => void` - Function to select a slot
+- `isSlotSelected: (slot: SlotAvailability) => boolean` - Function to check if a slot is selected
+
+#### Example
+
+```tsx
+<BookingSelection.SlotSelector slots={timeSlots}>
+  {({ selectedSlot, selectSlot, isSlotSelected }) => (
+    <div className="space-y-2">
+      {slots.map((slot, index) => {
+        const startTime = new Date(slot.slot?.startDate || "");
+        const endTime = new Date(slot.slot?.endDate || "");
+        const timeRange = `${startTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${endTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+
+        return (
+          <button
+            key={index}
+            onClick={() => slot.bookable && selectSlot(slot)}
+            disabled={!slot.bookable}
+            className={`w-full p-3 text-left rounded-lg border transition-colors ${
+              isSlotSelected(slot)
+                ? "bg-blue-50 text-blue-700 border-blue-300"
+                : slot.bookable
+                ? "hover:bg-gray-50 border-gray-200"
+                : "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed"
+            }`}
+          >
+            <div className="flex justify-between items-center">
+              <span className="font-medium">{timeRange}</span>
+              <span className="text-sm">
+                {slot.openSpots > 1
+                  ? `${slot.openSpots} spots available`
+                  : slot.bookable
+                  ? "Available"
+                  : "Unavailable"}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  )}
+</BookingSelection.SlotSelector>
+```
+
+### BookingProgress
+
+Displays booking progress and current step information.
+
+#### Props
+
+- `children`: Render prop function receiving `BookingProgressRenderProps`
+
+#### Render Props
+
+- `currentStep: number` - Current step in the booking process
+- `totalSteps: number` - Total number of steps
+- `hasService: boolean` - Whether service is selected
+- `hasSlot: boolean` - Whether slot is selected
+- `canProceed: boolean` - Whether booking can proceed
+- `steps: string[]` - Step labels
+- `progressPercentage: number` - Progress percentage
+
+#### Example
+
+```tsx
+<BookingSelection.BookingProgress>
+  {({
+    currentStep,
+    steps,
+    progressPercentage,
+    hasService,
+    hasSlot,
+    canProceed,
+  }) => (
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-4">
+        {steps.map((step, index) => (
+          <div key={step} className="flex items-center">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                index < currentStep
+                  ? "bg-blue-500 text-white"
+                  : index === currentStep
+                  ? "bg-blue-100 text-blue-600 border-2 border-blue-500"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {index + 1}
+            </div>
+            <span
+              className={`ml-2 text-sm font-medium ${
+                index <= currentStep ? "text-gray-900" : "text-gray-400"
+              }`}
+            >
+              {step}
+            </span>
+            {index < steps.length - 1 && (
+              <div className="w-8 h-px bg-gray-300 mx-4" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-gray-200 rounded-full h-2">
+        <div
+          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+          style={{ width: `${progressPercentage}%` }}
+        />
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+        Step {currentStep} of {totalSteps}
+        {canProceed && " - Ready to book!"}
+      </div>
+    </div>
+  )}
+</BookingSelection.BookingProgress>
+```
+
+### BookingError
+
+Displays and manages booking error states.
+
+#### Props
+
+- `children`: Render prop function receiving `BookingErrorRenderProps`
+
+#### Render Props
+
+- `error: string | null` - Error message
+- `hasError: boolean` - Whether there is an error
+- `clearError: () => void` - Function to clear error
+
+#### Example
+
+```tsx
+<BookingSelection.BookingError>
+  {({ error, hasError, clearError }) => {
+    if (!hasError) return null;
+
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="text-red-400">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                Booking Error
+              </h3>
+              <p className="text-sm text-red-700 mt-1">{error}</p>
+            </div>
+          </div>
+          <button
+            onClick={clearError}
+            className="text-red-400 hover:text-red-600"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
+  }}
+</BookingSelection.BookingError>
+```
+
+## Integration Example
+
+Here's a complete example showing how to use multiple BookingSelection components together:
+
+```tsx
+import { BookingSelection } from "../headless/bookings/BookingSelection";
+
+function CompleteBookingFlow({ services, timeSlots }) {
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      {/* Progress Indicator */}
+      <BookingSelection.BookingProgress>
+        {({ currentStep, steps, progressPercentage }) => (
+          // Progress implementation
+        )}
+      </BookingSelection.BookingProgress>
+
+      {/* Error Display */}
+      <BookingSelection.BookingError>
+        {({ error, hasError, clearError }) => (
+          // Error handling implementation
+        )}
+      </BookingSelection.BookingError>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Service Selection */}
+        <div className="lg:col-span-2">
+          <h2 className="text-xl font-semibold mb-4">Select Service</h2>
+          <BookingSelection.ServiceSelector services={services}>
+            {({ selectService, isServiceSelected }) => (
+              // Service selection UI
+            )}
+          </BookingSelection.ServiceSelector>
+
+          <h2 className="text-xl font-semibold mb-4 mt-8">Select Time</h2>
+          <BookingSelection.SlotSelector slots={timeSlots}>
+            {({ selectSlot, isSlotSelected }) => (
+              // Time slot selection UI
+            )}
+          </BookingSelection.SlotSelector>
+        </div>
+
+        {/* Booking Summary */}
+        <div>
+          <BookingSelection.BookingSummary>
+            {({ summary, hasSelection, canBook, proceedToCheckout }) => (
+              // Booking summary UI
+            )}
+          </BookingSelection.BookingSummary>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Service Configuration
+
+The BookingSelection components work with a service that needs to be configured:
+
+```tsx
+import { BookingSelectionService } from "../headless/bookings/booking-selection-service";
+
+// Configure the service
+const bookingSelectionConfig = await loadBookingSelectionServiceConfig(
+  timezone, // Timezone for date/time calculations
+  returnUrl // URL to return to after checkout
+);
+```
+
+## Checkout Integration
+
+The `proceedToCheckout` function handles the Wix Bookings checkout flow:
+
+```tsx
+// The function automatically:
+// 1. Creates a redirect session with Wix Bookings
+// 2. Redirects to the Wix checkout page
+// 3. Returns to your specified return URL after completion
+
+<BookingSelection.BookingSummary>
+  {({ proceedToCheckout, canBook, isBooking }) => (
+    <button onClick={proceedToCheckout} disabled={!canBook || isBooking}>
+      {isBooking ? "Processing..." : "Complete Booking"}
+    </button>
+  )}
+</BookingSelection.BookingSummary>
+```
+
+## State Management
+
+The BookingSelection components maintain the following state:
+
+- **Selected Service**: The currently chosen service
+- **Selected Slot**: The currently chosen time slot
+- **Booking Status**: Whether a booking is in progress
+- **Error State**: Any errors that occur during the booking process
+
+State is automatically synchronized between components when using the same service instance.

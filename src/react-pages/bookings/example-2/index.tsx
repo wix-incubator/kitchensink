@@ -226,7 +226,7 @@ const ServicesPreviewSection = () => {
                           </div>
                         ),
                         "Service Preview Card",
-                        "/docs/components/bookings-services#service-preview-card"
+                        "/docs/components/bookings-services#servicecard"
                       )}
                     </BookingServices.ServiceCard>
                   ))}
@@ -244,7 +244,7 @@ const ServicesPreviewSection = () => {
             );
           },
           "Services Preview",
-          "/docs/components/bookings-services#services-preview"
+          "/docs/components/bookings-services#service-preview-section"
         )}
       </BookingServices.ServiceGrid>
     </div>

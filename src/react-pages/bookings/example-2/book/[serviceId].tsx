@@ -256,7 +256,7 @@ const CalendarView = ({
           );
         },
         "Calendar View",
-        "/docs/components/booking-availability#calendar-view"
+        "/docs/components/booking-availability#calendar"
       )}
     </BookingAvailability.Calendar>
   );
@@ -369,7 +369,7 @@ const TimeSlotSelector = ({
                               );
                             },
                             "Time Slot Button",
-                            "/docs/components/booking-availability#time-slot-button"
+                            "/docs/components/booking-availability#timeslot"
                           )}
                         </BookingAvailability.TimeSlot>
                       ))}
@@ -377,13 +377,13 @@ const TimeSlotSelector = ({
                   </div>
                 ),
                 "Time Slot Selector",
-                "/docs/components/booking-selection#time-slot-selector"
+                "/docs/components/booking-selection#slotselector"
               )}
             </BookingSelection.SlotSelector>
           );
         },
         "Time Slots List",
-        "/docs/components/booking-availability#time-slots-list"
+        "/docs/components/booking-availability#timeslots"
       )}
     </BookingAvailability.TimeSlots>
   );
@@ -480,7 +480,7 @@ const BookingSummaryView = ({ serviceId }: { serviceId: string }) => {
           );
         },
         "Booking Summary View",
-        "/docs/components/booking-selection#booking-summary-view"
+        "/docs/components/booking-selection#bookingsummary"
       )}
     </BookingSelection.BookingSummary>
   );
@@ -644,18 +644,18 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
                         );
                       },
                       "Service Auto-Selector",
-                      "/docs/components/booking-selection#service-auto-selector"
+                      "/docs/components/booking-selection#serviceselector"
                     )}
                   </BookingSelection.ServiceSelector>
                 ),
                 "Book Now Header",
-                "/docs/components/bookings-services#book-now-header"
+                "/docs/components/bookings-services#servicecard"
               )}
             </BookingServices.ServiceCard>
           );
         },
         "Book Now Content",
-        "/docs/components/bookings-services#book-now-content"
+        "/docs/components/bookings-services#servicegrid"
       )}
     </BookingServices.ServiceGrid>
   );

@@ -78,7 +78,7 @@ const CalendarSection = () => {
             </div>
           ),
           "Availability Header",
-          "/docs/components/booking-availability#availability-header"
+          "/docs/components/booking-availability#availabilityheader"
         )}
       </BookingAvailability.AvailabilityHeader>
 
@@ -331,12 +331,12 @@ const TimeSlotsSection = () => {
                               </button>
                             ),
                             "Slot Selector",
-                            "/docs/components/booking-selection#slot-selector"
+                            "/docs/components/booking-selection#slotselector"
                           )}
                         </BookingSelection.SlotSelector>
                       ),
                       "Time Slot",
-                      "/docs/components/booking-availability#time-slot"
+                      "/docs/components/booking-availability#timeslot"
                     )}
                   </BookingAvailability.TimeSlot>
                 ))}
@@ -344,7 +344,7 @@ const TimeSlotsSection = () => {
             );
           },
           "Time Slots",
-          "/docs/components/booking-availability#time-slots"
+          "/docs/components/booking-availability#timeslots"
         )}
       </BookingAvailability.TimeSlots>
     </div>
@@ -515,7 +515,7 @@ const BookingSummarySection = () => {
             );
           },
           "Booking Summary",
-          "/docs/components/booking-selection#booking-summary"
+          "/docs/components/booking-selection#bookingsummary"
         )}
       </BookingSelection.BookingSummary>
     </div>
@@ -605,7 +605,7 @@ export default function ServiceBookingPage({
                                 </div>
                               ),
                               "Service Header",
-                              "/docs/components/bookings-services#service-header"
+                              "/docs/components/bookings-services#servicesheader"
                             )}
                           </BookingServices.ServiceCard>
                         ) : (
@@ -620,7 +620,7 @@ export default function ServiceBookingPage({
                         );
                       },
                       "Service Information",
-                      "/docs/components/bookings-services#service-grid"
+                      "/docs/components/bookings-services#servicegrid"
                     )}
                   </BookingServices.ServiceGrid>
                 </div>
@@ -677,7 +677,7 @@ export default function ServiceBookingPage({
                       </div>
                     ),
                     "Booking Progress",
-                    "/docs/components/booking-selection#booking-progress"
+                    "/docs/components/booking-selection#bookingprogress"
                   )}
                 </BookingSelection.BookingProgress>
               </div>
