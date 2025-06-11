@@ -97,8 +97,8 @@ export default function BookingsPage({
               )}
             </BookingServices.ServicesHeader>
 
-            {/* Services Grid */}
-            <BookingServices.ServiceGrid>
+            {/* Services List */}
+            <BookingServices.ServicesList>
               {withDocsWrapper(
                 ({ services, isLoading, error, isEmpty, refreshServices }) => {
                   if (isLoading) {
@@ -163,7 +163,7 @@ export default function BookingsPage({
                   return (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {services.map((service) => (
-                        <BookingServices.ServiceCard
+                        <BookingServices.ServiceListItem
                           key={service._id}
                           service={service}
                         >
@@ -305,18 +305,18 @@ export default function BookingsPage({
                                 </div>
                               </div>
                             ),
-                            "Service Card",
-                            "/docs/components/bookings-services#servicecard"
+                            "Service List Item",
+                            "/docs/components/bookings-services#servicelistitem"
                           )}
-                        </BookingServices.ServiceCard>
+                        </BookingServices.ServiceListItem>
                       ))}
                     </div>
                   );
                 },
-                "Service Grid",
-                "/docs/components/bookings-services#servicegrid"
+                "Services List",
+                "/docs/components/bookings-services#serviceslist"
               )}
-            </BookingServices.ServiceGrid>
+            </BookingServices.ServicesList>
           </div>
         </div>
       </ServicesManagerProvider>

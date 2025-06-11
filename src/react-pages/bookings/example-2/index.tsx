@@ -109,7 +109,7 @@ const AboutSection = () => {
 const ServicesPreviewSection = () => {
   return (
     <div className="bg-gradient-to-br from-slate-100 to-blue-50 py-16">
-      <BookingServices.ServiceGrid>
+      <BookingServices.ServicesList>
         {withDocsWrapper(
           ({ services, isLoading, hasServices }) => {
             if (isLoading) {
@@ -154,7 +154,7 @@ const ServicesPreviewSection = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                   {featuredServices.map((service) => (
-                    <BookingServices.ServiceCard
+                    <BookingServices.ServiceListItem
                       key={service._id}
                       service={service}
                     >
@@ -226,9 +226,9 @@ const ServicesPreviewSection = () => {
                           </div>
                         ),
                         "Service Preview Card",
-                        "/docs/components/bookings-services#servicecard"
+                        "/docs/components/bookings-services#servicelistitem"
                       )}
-                    </BookingServices.ServiceCard>
+                    </BookingServices.ServiceListItem>
                   ))}
                 </div>
 
@@ -246,7 +246,7 @@ const ServicesPreviewSection = () => {
           "Services Preview",
           "/docs/components/bookings-services#service-preview-section"
         )}
-      </BookingServices.ServiceGrid>
+      </BookingServices.ServicesList>
     </div>
   );
 };

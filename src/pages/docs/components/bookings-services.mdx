@@ -12,18 +12,101 @@ The `BookingServices` namespace contains headless components for displaying and 
 import { BookingServices } from "../headless/bookings/BookingServices";
 
 // All available components
-const { ServiceGrid, ServiceCard, ServicesHeader } = BookingServices;
+const { ServicesList, ServiceListItem, ServicesHeader } = BookingServices;
 ```
 
 ## Components
 
-### ServiceGrid
+### Single Service Components
+
+For working with specific services by ID (recommended for service detail pages):
+
+```tsx
+import { BookingService } from "../headless/bookings/BookingService";
+
+// All available single-service components
+const { Service, ServiceDetail, ServiceStatus } = BookingService;
+```
+
+#### Service
+
+Loads and provides context for a specific service by ID. This is more efficient than loading all services to find one.
+
+**Props:**
+
+- `serviceId: string` - The ID of the service to load
+- `children`: Render prop function receiving `ServiceRenderProps`
+
+**Render Props:**
+
+- `service: Service | null` - The loaded service
+- `isLoading: boolean` - Loading state
+- `error: string | null` - Error message if any
+- `isServiceFound: boolean` - Whether the service was found
+- `refreshService: () => void` - Function to reload the service
+
+```tsx
+<BookingService.Service serviceId="service-123">
+  {({ service, isLoading, error, isServiceFound }) => {
+    if (isLoading) return <ServiceDetailSkeleton />;
+    if (error) return <ServiceDetailError error={error} />;
+    if (!isServiceFound) return <ServiceNotFound />;
+
+    return <ServiceDetailContent service={service} />;
+  }}
+</BookingService.Service>
+```
+
+#### ServiceDetail
+
+Renders formatted service information for a specific service.
+
+**Props:**
+
+- `service: Service` - The service to render
+- `children`: Render prop function receiving `ServiceDetailRenderProps`
+
+**Render Props:**
+Same as ServiceListItem but optimized for single service detail views.
+
+```tsx
+<BookingService.ServiceDetail service={service}>
+  {({
+    name,
+    description,
+    image,
+    price,
+    duration,
+    locations,
+    canBookOnline,
+  }) => (
+    <div className="service-detail-page">{/* Service detail content */}</div>
+  )}
+</BookingService.ServiceDetail>
+```
+
+#### ServiceStatus
+
+Handles loading, error, and not-found states for single service operations.
+
+**Props:**
+
+- `isLoading: boolean` - Loading state
+- `error: string | null` - Error message
+- `isServiceFound: boolean` - Whether service exists
+- `children`: Render prop function for custom state handling
+
+### Multiple Services Components
+
+For working with lists of services:
+
+### ServicesList
 
 Displays all available booking services with loading and error states.
 
 #### Props
 
-- `children`: Render prop function receiving `ServiceGridRenderProps`
+- `children`: Render prop function receiving `ServicesListRenderProps`
 
 #### Render Props
 
@@ -38,7 +121,7 @@ Displays all available booking services with loading and error states.
 #### Example
 
 ```tsx
-<BookingServices.ServiceGrid>
+<BookingServices.ServicesList>
   {({ services, isLoading, error, hasServices, isEmpty, refreshServices }) => {
     if (isLoading) {
       return (
@@ -98,27 +181,27 @@ Displays all available booking services with loading and error states.
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (
-          <BookingServices.ServiceCard key={service._id} service={service}>
+          <BookingServices.ServiceListItem key={service._id} service={service}>
             {(serviceProps) => (
               // Service card implementation using serviceProps
               <ServiceCardComponent {...serviceProps} />
             )}
-          </BookingServices.ServiceCard>
+          </BookingServices.ServiceListItem>
         ))}
       </div>
     );
   }}
-</BookingServices.ServiceGrid>
+</BookingServices.ServicesList>
 ```
 
-### ServiceCard
+### ServiceListItem
 
 Renders data for a single booking service with formatted information.
 
 #### Props
 
 - `service: Service` - The service to render
-- `children`: Render prop function receiving `ServiceCardRenderProps`
+- `children`: Render prop function receiving `ServiceListItemRenderProps`
 
 #### Render Props
 
@@ -138,7 +221,7 @@ Renders data for a single booking service with formatted information.
 #### Example
 
 ```tsx
-<BookingServices.ServiceCard service={serviceData}>
+<BookingServices.ServiceListItem service={serviceData}>
   {({
     serviceId,
     name,
@@ -260,7 +343,7 @@ Renders data for a single booking service with formatted information.
       </div>
     </div>
   )}
-</BookingServices.ServiceCard>
+</BookingServices.ServiceListItem>
 ```
 
 ### ServicesHeader
@@ -303,6 +386,145 @@ Displays summary information about services including total count and loading st
 
 ## Usage Patterns
 
+### Single Service Detail Page (Recommended)
+
+For service-specific pages, use the single-service components for better performance:
+
+```tsx
+import { BookingService } from "../headless/bookings/BookingService";
+
+function ServiceDetailPage({ serviceId }) {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <BookingService.Service serviceId={serviceId}>
+        {({ service, isLoading, error, isServiceFound, refreshService }) => {
+          // Handle loading state
+          if (isLoading) {
+            return <ServiceDetailSkeleton />;
+          }
+
+          // Handle error state
+          if (error) {
+            return (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-red-800 mb-2">
+                  Error Loading Service
+                </h3>
+                <p className="text-red-600 mb-4">{error}</p>
+                <button
+                  onClick={refreshService}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Try Again
+                </button>
+              </div>
+            );
+          }
+
+          // Handle service not found
+          if (!isServiceFound) {
+            return (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Service Not Found
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  The requested service could not be found.
+                </p>
+                <a
+                  href="/services"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+                >
+                  View All Services
+                </a>
+              </div>
+            );
+          }
+
+          // Render service details
+          return (
+            <BookingService.ServiceDetail service={service}>
+              {({
+                name,
+                description,
+                price,
+                duration,
+                image,
+                canBookOnline,
+                locations,
+                serviceId,
+              }) => (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Service Image */}
+                  <div>
+                    {image && (
+                      <WixMediaImage
+                        media={image}
+                        className="w-full h-96 object-cover rounded-lg"
+                      />
+                    )}
+                  </div>
+
+                  {/* Service Details */}
+                  <div>
+                    <h1 className="text-4xl font-bold mb-4">{name}</h1>
+                    {description && (
+                      <p className="text-gray-700 mb-6 leading-relaxed">
+                        {description}
+                      </p>
+                    )}
+
+                    <div className="space-y-4 mb-8">
+                      <div className="flex items-center">
+                        <span className="font-medium w-20">Duration:</span>
+                        <span>{duration} minutes</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="font-medium w-20">Price:</span>
+                        <span className="text-green-600 font-semibold">
+                          {price}
+                        </span>
+                      </div>
+                      {locations.length > 0 && (
+                        <div className="flex items-center">
+                          <span className="font-medium w-20">Location:</span>
+                          <span>{locations.join(", ")}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {canBookOnline ? (
+                      <a
+                        href={`/book/${serviceId}`}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium"
+                      >
+                        Book This Service
+                      </a>
+                    ) : (
+                      <div>
+                        <button
+                          disabled
+                          className="bg-gray-300 text-gray-500 px-8 py-3 rounded-lg font-medium cursor-not-allowed"
+                        >
+                          Online Booking Not Available
+                        </button>
+                        <p className="text-gray-600 text-sm mt-2">
+                          Please contact us to book this service
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </BookingService.ServiceDetail>
+          );
+        }}
+      </BookingService.Service>
+    </div>
+  );
+}
+```
+
 ### Basic Service Listing
 
 ```tsx
@@ -320,12 +542,12 @@ function ServicesPage() {
         )}
       </BookingServices.ServicesHeader>
 
-      <BookingServices.ServiceGrid>
+      <BookingServices.ServicesList>
         {({ services, isLoading, error, hasServices }) => {
           // Handle loading, error, and empty states
           // Then render service cards
         }}
-      </BookingServices.ServiceGrid>
+      </BookingServices.ServicesList>
     </div>
   );
 }
@@ -336,7 +558,7 @@ function ServicesPage() {
 ```tsx
 function ServicePreview() {
   return (
-    <BookingServices.ServiceGrid>
+    <BookingServices.ServicesList>
       {({ services, hasServices }) => {
         if (!hasServices) return null;
 
@@ -348,12 +570,12 @@ function ServicePreview() {
             <h2 className="text-2xl font-bold mb-6">Featured Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featuredServices.map((service) => (
-                <BookingServices.ServiceCard
+                <BookingServices.ServiceListItem
                   key={service._id}
                   service={service}
                 >
                   {(props) => <CompactServiceCard {...props} />}
-                </BookingServices.ServiceCard>
+                </BookingServices.ServiceListItem>
               ))}
             </div>
             <div className="text-center mt-8">
@@ -367,7 +589,7 @@ function ServicePreview() {
           </div>
         );
       }}
-    </BookingServices.ServiceGrid>
+    </BookingServices.ServicesList>
   );
 }
 ```
@@ -377,16 +599,31 @@ function ServicePreview() {
 ```tsx
 function ServiceDetailPage({ serviceId }) {
   return (
-    <BookingServices.ServiceGrid>
-      {({ services, isLoading, error }) => {
+    <BookingService.ServiceStatus>
+      {({ isLoading, hasService, error, notFound }) => {
         if (isLoading) return <ServiceDetailSkeleton />;
-        if (error) return <ServiceDetailError error={error} />;
 
-        const service = services.find((s) => s._id === serviceId);
-        if (!service) return <ServiceNotFound />;
+        if (error) {
+          return (
+            <div className="text-center py-12">
+              <h3 className="text-lg font-medium text-red-800 mb-2">
+                Error Loading Service
+              </h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+              >
+                Try Again
+              </button>
+            </div>
+          );
+        }
+
+        if (notFound) return <ServiceNotFound />;
 
         return (
-          <BookingServices.ServiceCard service={service}>
+          <BookingService.ServiceDetail>
             {({
               name,
               description,
@@ -395,6 +632,7 @@ function ServiceDetailPage({ serviceId }) {
               image,
               canBookOnline,
               locations,
+              serviceId,
             }) => (
               <div className="max-w-4xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -460,17 +698,19 @@ function ServiceDetailPage({ serviceId }) {
                 </div>
               </div>
             )}
-          </BookingServices.ServiceCard>
+          </BookingService.ServiceDetail>
         );
       }}
-    </BookingServices.ServiceGrid>
+    </BookingService.ServiceStatus>
   );
 }
 ```
 
 ## Service Configuration
 
-The BookingServices components work with a service that needs to be configured:
+### Multiple Services Configuration
+
+For components working with all services:
 
 ```tsx
 import { BookingServicesService } from "../headless/bookings/booking-services-service";
@@ -480,6 +720,19 @@ const bookingServicesConfig = await loadBookingServicesServiceConfig(
   serviceType // Optional: "APPOINTMENT" | "CLASS" | "COURSE"
 );
 ```
+
+### Single Service Configuration
+
+For components working with a specific service:
+
+```tsx
+import { BookingServiceService } from "../headless/bookings/booking-service-service";
+
+// Configure for a specific service by ID
+const bookingServiceConfig = await loadBookingServiceServiceConfig(serviceId);
+```
+
+**Performance Note**: Use single-service configuration when you only need one service (e.g., service detail pages). This is more efficient than loading all services just to find one.
 
 ## Service Data Structure
 
@@ -523,7 +776,7 @@ interface Service {
 All components provide comprehensive error handling:
 
 ```tsx
-<BookingServices.ServiceGrid>
+<BookingServices.ServicesList>
   {({ error, isLoading, refreshServices }) => {
     if (error) {
       return (
@@ -543,7 +796,7 @@ All components provide comprehensive error handling:
     }
     // Normal rendering...
   }}
-</BookingServices.ServiceGrid>
+</BookingServices.ServicesList>
 ```
 
 ## Performance Considerations
@@ -551,4 +804,4 @@ All components provide comprehensive error handling:
 - Services are loaded once and cached in the service state
 - Use `refreshServices()` sparingly to avoid unnecessary API calls
 - Consider implementing service filtering on the client side for better UX
-- The `ServiceCard` component efficiently formats price and location data
+- The `ServiceListItem` component efficiently formats price and location data

@@ -4,17 +4,17 @@ import { BookingServicesServiceDefinition } from "./booking-services-service";
 import { services } from "@wix/bookings";
 
 /**
- * Props for ServiceGrid headless component
+ * Props for ServicesList headless component
  */
-export interface ServiceGridProps {
+export interface ServicesListProps {
   /** Render prop function that receives services data */
-  children: (props: ServiceGridRenderProps) => React.ReactNode;
+  children: (props: ServicesListRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ServiceGrid component
+ * Render props for ServicesList component
  */
-export interface ServiceGridRenderProps {
+export interface ServicesListRenderProps {
   /** Array of booking services */
   services: services.Service[];
   /** Whether services are currently loading */
@@ -32,9 +32,9 @@ export interface ServiceGridRenderProps {
 }
 
 /**
- * ServiceGrid - Displays all available booking services
+ * ServicesList - Displays all available booking services
  */
-export const ServiceGrid = (props: ServiceGridProps) => {
+export const ServicesList = (props: ServicesListProps) => {
   const service = useService(BookingServicesServiceDefinition) as ServiceAPI<
     typeof BookingServicesServiceDefinition
   >;
@@ -57,19 +57,19 @@ export const ServiceGrid = (props: ServiceGridProps) => {
 };
 
 /**
- * Props for ServiceCard headless component
+ * Props for ServiceListItem headless component
  */
-export interface ServiceCardProps {
+export interface ServiceListItemProps {
   /** The service to render */
   service: services.Service;
   /** Render prop function that receives service data */
-  children: (props: ServiceCardRenderProps) => React.ReactNode;
+  children: (props: ServiceListItemRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ServiceCard component
+ * Render props for ServiceListItem component
  */
-export interface ServiceCardRenderProps {
+export interface ServiceListItemRenderProps {
   /** Service ID */
   serviceId: string;
   /** Service name */
@@ -97,9 +97,9 @@ export interface ServiceCardRenderProps {
 }
 
 /**
- * ServiceCard - Renders data for a single booking service
+ * ServiceListItem - Renders data for a single booking service
  */
-export const ServiceCard = (props: ServiceCardProps) => {
+export const ServiceListItem = (props: ServiceListItemProps) => {
   const { service } = props;
 
   // Format price
@@ -210,7 +210,7 @@ export const ServicesHeader = (props: ServicesHeaderProps) => {
  * BookingServices namespace containing all booking service headless components
  */
 export const BookingServices = {
-  ServiceGrid,
-  ServiceCard,
+  ServicesList,
+  ServiceListItem,
   ServicesHeader,
 } as const;

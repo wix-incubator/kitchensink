@@ -5,9 +5,9 @@ import {
 } from "@wix/services-manager";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
-  BookingServicesService,
-  BookingServicesServiceDefinition,
-} from "../../../headless/bookings/booking-services-service";
+  BookingServiceService,
+  BookingServiceServiceDefinition,
+} from "../../../headless/bookings/booking-service-service";
 import {
   BookingAvailabilityService,
   BookingAvailabilityServiceDefinition,
@@ -16,7 +16,7 @@ import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/booking-selection-service";
-import { BookingServices } from "../../../headless/bookings/BookingServices";
+import { BookingService } from "../../../headless/bookings/BookingService";
 import { BookingAvailability } from "../../../headless/bookings/BookingAvailability";
 import { BookingSelection } from "../../../headless/bookings/BookingSelection";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
@@ -27,7 +27,7 @@ import {
 
 interface ServiceBookingPageProps {
   serviceId: string;
-  bookingServicesConfig: any;
+  bookingServiceConfig: any;
   bookingAvailabilityConfig: any;
   bookingSelectionConfig: any;
 }
@@ -35,14 +35,16 @@ interface ServiceBookingPageProps {
 // Component to automatically select the service when the page loads
 const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
   return (
-    <BookingServices.ServiceGrid>
-      {({ services }) => {
-        const currentService = services.find((s) => s._id === serviceId);
+    <BookingService.Service>
+      {({ service, loadService }) => {
+        const currentService = service;
 
         return (
-          <BookingSelection.ServiceSelector services={services}>
+          <BookingSelection.ServiceSelector
+            services={currentService ? [currentService] : []}
+          >
             {({ selectService, selectedService }) => {
-              // Auto-select service if it's not already selected
+              // Auto-select service if it's loaded and not already selected
               useEffect(() => {
                 if (
                   currentService &&
@@ -57,7 +59,7 @@ const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
           </BookingSelection.ServiceSelector>
         );
       }}
-    </BookingServices.ServiceGrid>
+    </BookingService.Service>
   );
 };
 
@@ -524,7 +526,7 @@ const BookingSummarySection = () => {
 
 export default function ServiceBookingPage({
   serviceId,
-  bookingServicesConfig,
+  bookingServiceConfig,
   bookingAvailabilityConfig,
   bookingSelectionConfig,
 }: ServiceBookingPageProps) {
@@ -532,9 +534,9 @@ export default function ServiceBookingPage({
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        bookingServicesConfig
+        BookingServiceServiceDefinition,
+        BookingServiceService,
+        bookingServiceConfig
       )
       .addService(
         BookingAvailabilityServiceDefinition,
@@ -583,46 +585,24 @@ export default function ServiceBookingPage({
                     <span>Book Service</span>
                   </nav>
 
-                  <BookingServices.ServiceGrid>
+                  <BookingService.ServiceDetail>
                     {withDocsWrapper(
-                      ({ services }) => {
-                        const currentService = services.find(
-                          (s) => s._id === serviceId
-                        );
-                        return currentService ? (
-                          <BookingServices.ServiceCard service={currentService}>
-                            {withDocsWrapper(
-                              ({ name, tagLine }) => (
-                                <div>
-                                  <h1 className="text-4xl font-bold text-white">
-                                    {name}
-                                  </h1>
-                                  {tagLine && (
-                                    <p className="text-xl text-white/80 mt-2">
-                                      {tagLine}
-                                    </p>
-                                  )}
-                                </div>
-                              ),
-                              "Service Header",
-                              "/docs/components/bookings-services#servicesheader"
-                            )}
-                          </BookingServices.ServiceCard>
-                        ) : (
-                          <div>
-                            <h1 className="text-4xl font-bold text-white">
-                              Book Service
-                            </h1>
+                      ({ name, tagLine }) => (
+                        <div>
+                          <h1 className="text-4xl font-bold text-white">
+                            {name}
+                          </h1>
+                          {tagLine && (
                             <p className="text-xl text-white/80 mt-2">
-                              Select your preferred date and time
+                              {tagLine}
                             </p>
-                          </div>
-                        );
-                      },
-                      "Service Information",
-                      "/docs/components/bookings-services#servicegrid"
+                          )}
+                        </div>
+                      ),
+                      "Service Header",
+                      "/docs/components/bookings-services#service-detail"
                     )}
-                  </BookingServices.ServiceGrid>
+                  </BookingService.ServiceDetail>
                 </div>
 
                 <BookingSelection.BookingProgress>

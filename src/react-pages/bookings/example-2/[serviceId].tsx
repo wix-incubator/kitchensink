@@ -5,10 +5,10 @@ import {
 } from "@wix/services-manager";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
-  BookingServicesService,
-  BookingServicesServiceDefinition,
-} from "../../../headless/bookings/booking-services-service";
-import { BookingServices } from "../../../headless/bookings/BookingServices";
+  BookingServiceService,
+  BookingServiceServiceDefinition,
+} from "../../../headless/bookings/booking-service-service";
+import { BookingService } from "../../../headless/bookings/BookingService";
 import WixMediaImage from "../../../headless/media/Image";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import {
@@ -17,8 +17,7 @@ import {
 } from "../../../components/DocsMode";
 
 interface ServiceDetailPageProps {
-  serviceId: string;
-  bookingServicesConfig: any;
+  bookingServiceConfig: any;
 }
 
 const ServiceNotFound = () => (
@@ -42,11 +41,11 @@ const ServiceNotFound = () => (
   </div>
 );
 
-const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
+const ServiceDetailSection = () => {
   return (
-    <BookingServices.ServiceGrid>
+    <BookingService.ServiceStatus>
       {withDocsWrapper(
-        ({ services, isLoading, error }) => {
+        ({ isLoading, hasService, error, notFound }) => {
           if (isLoading) {
             return (
               <div className="max-w-7xl mx-auto px-6 py-12">
@@ -96,27 +95,17 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
             );
           }
 
-          const service = services.find((s) => s._id === serviceId);
-          if (!service) {
+          if (notFound) {
             return <ServiceNotFound />;
           }
 
           return (
-            <BookingServices.ServiceCard service={service}>
-              {withDocsWrapper(
-                ({
-                  name,
-                  tagLine,
-                  description,
-                  price,
-                  duration,
-                  image,
-                  canBookOnline,
-                  locations,
-                }) => (
-                  <div className="max-w-7xl mx-auto px-6 py-12">
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8">
-                      {/* Header */}
+            <div className="max-w-7xl mx-auto px-6 py-12">
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8">
+                {/* Header */}
+                <BookingService.ServiceHeader>
+                  {withDocsWrapper(
+                    ({ name, tagLine }) => (
                       <div className="mb-8 pb-8 border-b border-white/20">
                         <h1 className="font-bold text-4xl mb-2 text-white">
                           {name}
@@ -127,9 +116,19 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                           </p>
                         )}
                       </div>
+                    ),
+                    "Service Header",
+                    "/docs/components/bookings-services#service-header"
+                  )}
+                </BookingService.ServiceHeader>
 
-                      {/* Description */}
-                      {description && (
+                {/* Description */}
+                <BookingService.ServiceDescription>
+                  {withDocsWrapper(
+                    ({ description, hasDescription }) => {
+                      if (!hasDescription) return null;
+
+                      return (
                         <div className="mb-8">
                           <h2 className="font-bold text-2xl mb-4 text-white">
                             Service Description
@@ -138,10 +137,20 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                             {description}
                           </p>
                         </div>
-                      )}
+                      );
+                    },
+                    "Service Description",
+                    "/docs/components/bookings-services#service-description"
+                  )}
+                </BookingService.ServiceDescription>
 
-                      {/* Image Gallery */}
-                      {image && (
+                {/* Image Gallery */}
+                <BookingService.ServiceMedia>
+                  {withDocsWrapper(
+                    ({ image, hasImage }) => {
+                      if (!hasImage) return null;
+
+                      return (
                         <section className="mb-10">
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
@@ -154,11 +163,19 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                             </div>
                           </div>
                         </section>
-                      )}
+                      );
+                    },
+                    "Service Media",
+                    "/docs/components/bookings-services#service-media"
+                  )}
+                </BookingService.ServiceMedia>
 
-                      {/* Service Details Cards */}
+                {/* Service Details Cards */}
+                <BookingService.ServiceDetails>
+                  {withDocsWrapper(
+                    ({ duration, hasDuration, price, canBookOnline }) => (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                        {duration && (
+                        {hasDuration && (
                           <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4 text-center">
                             <div className="flex items-center justify-center mb-2">
                               <svg
@@ -224,9 +241,19 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                           </p>
                         </div>
                       </div>
+                    ),
+                    "Service Details",
+                    "/docs/components/bookings-services#service-details"
+                  )}
+                </BookingService.ServiceDetails>
 
-                      {/* Locations */}
-                      {locations && locations.length > 0 && (
+                {/* Locations */}
+                <BookingService.ServiceLocations>
+                  {withDocsWrapper(
+                    ({ locations, hasLocations }) => {
+                      if (!hasLocations) return null;
+
+                      return (
                         <div className="mb-10">
                           <h3 className="font-semibold mb-4 text-white flex items-center">
                             <svg
@@ -248,13 +275,21 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                             </p>
                           </div>
                         </div>
-                      )}
+                      );
+                    },
+                    "Service Locations",
+                    "/docs/components/bookings-services#service-locations"
+                  )}
+                </BookingService.ServiceLocations>
 
-                      {/* Book Now Button */}
+                {/* Book Now Button */}
+                <BookingService.ServiceActions>
+                  {withDocsWrapper(
+                    ({ canBookOnline, isAvailable, bookingUrl }) => (
                       <div className="text-center">
                         {canBookOnline ? (
                           <a
-                            href={`/bookings/example-2/book/${serviceId}`}
+                            href={bookingUrl}
                             className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-medium transition-all transform hover:scale-105"
                           >
                             Book Now
@@ -270,32 +305,31 @@ const ServiceDetailSection = ({ serviceId }: { serviceId: string }) => {
                           </div>
                         )}
                       </div>
-                    </div>
-                  </div>
-                ),
-                "Service Detail",
-                "/docs/components/bookings-services#service-detail-page"
-              )}
-            </BookingServices.ServiceCard>
+                    ),
+                    "Service Actions",
+                    "/docs/components/bookings-services#service-actions"
+                  )}
+                </BookingService.ServiceActions>
+              </div>
+            </div>
           );
         },
         "Service Detail Section",
         "/docs/components/bookings-services#service-detail-page"
       )}
-    </BookingServices.ServiceGrid>
+    </BookingService.ServiceStatus>
   );
 };
 
 export default function ServiceDetailPage({
-  serviceId,
-  bookingServicesConfig,
+  bookingServiceConfig,
 }: ServiceDetailPageProps) {
   // Create services manager
   const servicesManager = createServicesManager(
     createServicesMap().addService(
-      BookingServicesServiceDefinition,
-      BookingServicesService,
-      bookingServicesConfig
+      BookingServiceServiceDefinition,
+      BookingServiceService,
+      bookingServiceConfig
     )
   );
 
@@ -308,7 +342,7 @@ export default function ServiceDetailPage({
       />
       <ServicesManagerProvider servicesManager={servicesManager}>
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-          <ServiceDetailSection serviceId={serviceId} />
+          <ServiceDetailSection />
         </div>
       </ServicesManagerProvider>
     </KitchensinkLayout>

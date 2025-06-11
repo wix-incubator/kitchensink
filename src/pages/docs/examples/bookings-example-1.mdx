@@ -57,8 +57,8 @@ const servicesManager = createServicesManager(
 
 **Components Used**:
 
-- `BookingServices.ServiceGrid` - Main service listing
-- `BookingServices.ServiceCard` - Individual service display
+- `BookingServices.ServicesList` - Main service listing
+- `BookingServices.ServiceListItem` - Individual service display
 - `BookingServices.ServicesHeader` - Page header with service count
 - `BookingSelection.ServiceSelector` - Service selection handling
 
@@ -71,7 +71,7 @@ const servicesManager = createServicesManager(
 - Direct "Book Now" buttons
 
 ```tsx
-<BookingServices.ServiceGrid>
+<BookingServices.ServicesList>
   {({ services, isLoading, error, isEmpty, refreshServices }) => {
     // Loading state with skeleton cards
     if (isLoading) {
@@ -97,7 +97,7 @@ const servicesManager = createServicesManager(
       </div>
     );
   }}
-</BookingServices.ServiceGrid>
+</BookingServices.ServicesList>
 ```
 
 #### Service Booking Page
@@ -144,7 +144,7 @@ const servicesManager = createServicesManager(
 Rich service cards with comprehensive information:
 
 ```tsx
-<BookingServices.ServiceCard service={service}>
+<BookingServices.ServiceListItem service={service}>
   {({
     serviceId,
     name,
@@ -197,7 +197,7 @@ Rich service cards with comprehensive information:
       </div>
     </div>
   )}
-</BookingServices.ServiceCard>
+</BookingServices.ServiceListItem>
 ```
 
 ### Calendar Integration Pattern
@@ -286,7 +286,7 @@ Automatic service selection when accessing service-specific pages:
 ```tsx
 const ServiceAutoSelector = ({ serviceId }) => {
   return (
-    <BookingServices.ServiceGrid>
+    <BookingServices.ServicesList>
       {({ services }) => {
         const currentService = services.find((s) => s._id === serviceId);
 
@@ -307,7 +307,7 @@ const ServiceAutoSelector = ({ serviceId }) => {
           </BookingSelection.ServiceSelector>
         );
       }}
-    </BookingServices.ServiceGrid>
+    </BookingServices.ServicesList>
   );
 };
 ```

@@ -18,9 +18,9 @@ function BookingFlow() {
   return (
     <div>
       {/* 1. Display available services */}
-      <BookingServices.ServiceGrid>
+      <BookingServices.ServicesList>
         {({ services }) => <ServiceGrid services={services} />}
-      </BookingServices.ServiceGrid>
+      </BookingServices.ServicesList>
 
       {/* 2. Show calendar and time slots */}
       <BookingAvailability.Calendar>
@@ -76,8 +76,8 @@ The booking selection process manages the customer's journey:
 
 Handle service discovery and presentation:
 
-- **ServiceGrid**: Lists all available services with filtering and search
-- **ServiceCard**: Displays individual service information
+- **ServicesList**: Lists all available services with filtering and search
+- **ServiceListItem**: Displays individual service information
 - **ServicesHeader**: Shows service counts and summary information
 
 [View BookingServices Documentation →](/docs/components/bookings-services)
@@ -114,11 +114,14 @@ Perfect for businesses with simple services and quick booking needs:
 ```tsx
 function SimpleBookingFlow() {
   return (
-    <BookingServices.ServiceGrid>
+    <BookingServices.ServicesList>
       {({ services }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <BookingServices.ServiceCard key={service._id} service={service}>
+            <BookingServices.ServiceListItem
+              key={service._id}
+              service={service}
+            >
               {({ name, price, canBookOnline, serviceId }) => (
                 <div className="service-card">
                   <h3>{name}</h3>
@@ -126,11 +129,11 @@ function SimpleBookingFlow() {
                   {canBookOnline && <a href={`/book/${serviceId}`}>Book Now</a>}
                 </div>
               )}
-            </BookingServices.ServiceCard>
+            </BookingServices.ServiceListItem>
           ))}
         </div>
       )}
-    </BookingServices.ServiceGrid>
+    </BookingServices.ServicesList>
   );
 }
 ```
@@ -142,11 +145,11 @@ Ideal for complex services requiring detailed information:
 ```tsx
 function ServiceDetailPattern({ serviceId }) {
   return (
-    <BookingServices.ServiceGrid>
+    <BookingServices.ServicesList>
       {({ services }) => {
         const service = services.find((s) => s._id === serviceId);
         return (
-          <BookingServices.ServiceCard service={service}>
+          <BookingServices.ServiceListItem service={service}>
             {({ name, description, image, price, duration, locations }) => (
               <div className="service-detail">
                 <img src={image?.url} alt={name} />
@@ -160,10 +163,10 @@ function ServiceDetailPattern({ serviceId }) {
                 <a href={`/book/${serviceId}`}>Book This Service</a>
               </div>
             )}
-          </BookingServices.ServiceCard>
+          </BookingServices.ServiceListItem>
         );
       }}
-    </BookingServices.ServiceGrid>
+    </BookingServices.ServicesList>
   );
 }
 ```
@@ -228,14 +231,14 @@ function StepByStepBooking() {
       </BookingSelection.BookingProgress>
 
       {currentStep === 1 && (
-        <BookingServices.ServiceGrid>
+        <BookingServices.ServicesList>
           {({ services }) => (
             <ServiceSelection
               services={services}
               onNext={() => setCurrentStep(2)}
             />
           )}
-        </BookingServices.ServiceGrid>
+        </BookingServices.ServicesList>
       )}
 
       {currentStep === 2 && (
@@ -357,14 +360,14 @@ All components provide comprehensive error handling:
 
 ```tsx
 // Service loading errors
-<BookingServices.ServiceGrid>
+<BookingServices.ServicesList>
   {({ error, refreshServices }) => {
     if (error) {
       return <ErrorComponent error={error} onRetry={refreshServices} />;
     }
     // Normal rendering
   }}
-</BookingServices.ServiceGrid>
+</BookingServices.ServicesList>
 
 // Availability errors
 <BookingAvailability.Calendar>
@@ -411,7 +414,7 @@ All components provide comprehensive error handling:
 All components use render props, giving you complete control over styling:
 
 ```tsx
-<BookingServices.ServiceCard service={service}>
+<BookingServices.ServiceListItem service={service}>
   {(props) => (
     <YourCustomServiceCard
       {...props}
@@ -419,7 +422,7 @@ All components use render props, giving you complete control over styling:
       theme="dark"
     />
   )}
-</BookingServices.ServiceCard>
+</BookingServices.ServiceListItem>
 ```
 
 ### Behavior

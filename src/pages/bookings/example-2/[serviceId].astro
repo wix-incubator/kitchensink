@@ -1,25 +1,28 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import ServiceDetailPage from "../../../react-pages/bookings/example-2/[serviceId].tsx";
-import { loadBookingServicesServiceConfig } from "../../../headless/bookings/booking-services-service";
+import ServiceDetailPage from "../../../react-pages/bookings/example-2/[serviceId]";
+import { loadBookingServiceServiceConfig } from "../../../headless/bookings/booking-service-service";
 
 const { serviceId } = Astro.params;
 
-// Load services to find the current service
-const bookingServicesConfig = await loadBookingServicesServiceConfig();
+if (!serviceId) {
+  return Astro.redirect("/bookings/example-2/services");
+}
+
+// Load initial data for the specific service
+const bookingServiceConfig = await loadBookingServiceServiceConfig(serviceId);
 ---
 
 <BaseLayout>
-  <title>Service Details - Book Your Session</title>
+  <title>Service Details - Professional Services</title>
   <meta
     name="description"
-    content="Learn more about this service and book your coaching session."
+    content="Learn more about this service and book your appointment."
   />
 
   <ServiceDetailPage
     client:load
-    serviceId={serviceId || ""}
-    bookingServicesConfig={bookingServicesConfig}
+    bookingServiceConfig={bookingServiceConfig}
     slot="body"
   />
 </BaseLayout>

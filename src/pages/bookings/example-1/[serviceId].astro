@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ServiceBookingPage from "../../../react-pages/bookings/example-1/[serviceId]";
-import { loadBookingServicesServiceConfig } from "../../../headless/bookings/booking-services-service";
+import { loadBookingServiceServiceConfig } from "../../../headless/bookings/booking-service-service";
 import { loadBookingAvailabilityServiceConfig } from "../../../headless/bookings/booking-availability-service";
 import { loadBookingSelectionServiceConfig } from "../../../headless/bookings/booking-selection-service";
 
@@ -12,7 +12,7 @@ if (!serviceId) {
 }
 
 // Load initial data for the specific service
-const bookingServicesConfig = await loadBookingServicesServiceConfig();
+const bookingServiceConfig = await loadBookingServiceServiceConfig(serviceId);
 const bookingAvailabilityConfig =
   await loadBookingAvailabilityServiceConfig(serviceId);
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
@@ -28,7 +28,7 @@ const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
   <ServiceBookingPage
     client:load
     serviceId={serviceId}
-    bookingServicesConfig={bookingServicesConfig}
+    bookingServiceConfig={bookingServiceConfig}
     bookingAvailabilityConfig={bookingAvailabilityConfig}
     bookingSelectionConfig={bookingSelectionConfig}
     slot="body"
