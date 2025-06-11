@@ -7,8 +7,12 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
+  site: "https://kitchensink-netanelg4.wix-host.com",
+
   output: 'server',
 
   adapter: cloudflare(),
@@ -17,13 +21,9 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [
-    react(),
-    wix(),
-    mdx({
-      extendMarkdownConfig: false,
-      remarkPlugins: [],
-      rehypePlugins: [],
-    })
-  ]
+  integrations: [react(), wix(), mdx({
+    extendMarkdownConfig: false,
+    remarkPlugins: [],
+    rehypePlugins: [],
+  }), sitemap()]
 });
