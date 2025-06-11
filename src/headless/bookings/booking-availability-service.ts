@@ -5,7 +5,7 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
-import { availabilityCalendar, services } from "@wix/bookings";
+import { availabilityCalendar } from "@wix/bookings";
 
 export interface BookingAvailabilityServiceAPI {
   slots: Signal<availabilityCalendar.SlotAvailability[]>;
