@@ -3,6 +3,8 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductDetailPage from "../../../react-pages/store/example-1/products/[slug]";
 import { loadProductServiceConfig } from "../../../headless/store/product-service";
 import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/product-media-gallery-service";
+import { loadSelectedVariantServiceConfig } from "../../../headless/store/selected-variant-service";
 
 const { slug } = Astro.params;
 
@@ -13,6 +15,10 @@ if (!slug) {
 // Load initial data for services
 const productServiceConfig = await loadProductServiceConfig(slug);
 const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+const productMediaGalleryServiceConfig =
+  await loadProductMediaGalleryServiceConfig(slug);
+const selectedVariantServiceConfig =
+  await loadSelectedVariantServiceConfig(slug);
 
 const productName = productServiceConfig.product.name || "Product";
 ---
@@ -25,6 +31,8 @@ const productName = productServiceConfig.product.name || "Product";
     client:load
     productServiceConfig={productServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
+    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+    selectedVariantServiceConfig={selectedVariantServiceConfig}
     slot="body"
   />
 </BaseLayout>
