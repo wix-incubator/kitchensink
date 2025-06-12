@@ -6,6 +6,7 @@ import { loadCurrentCartServiceConfig } from "../../../../headless/store/current
 import { loadProductMediaGalleryServiceConfig } from "../../../../headless/store/product-media-gallery-service";
 import { loadSelectedVariantServiceConfig } from "../../../../headless/store/selected-variant-service";
 import { loadSocialSharingServiceConfig } from "../../../../headless/store/social-sharing-service";
+import { loadRelatedProductsServiceConfig } from "../../../../headless/store/related-products-service";
 
 const { slug } = Astro.params;
 
@@ -32,6 +33,12 @@ const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
   productUrl,
   productDescription
 );
+
+// Load related products service configuration
+const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
+  productServiceConfig.product._id || "",
+  4 // limit to 4 related products
+);
 ---
 
 <BaseLayout>
@@ -52,6 +59,7 @@ const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
     socialSharingServiceConfig={socialSharingServiceConfig}
+    relatedProductsServiceConfig={relatedProductsServiceConfig}
     slot="body"
   />
 </BaseLayout>

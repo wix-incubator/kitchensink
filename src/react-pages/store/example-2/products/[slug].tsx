@@ -30,11 +30,17 @@ import {
   SocialSharingService,
   loadSocialSharingServiceConfig,
 } from "../../../../headless/store/social-sharing-service";
+import {
+  RelatedProductsServiceDefinition,
+  RelatedProductsService,
+  loadRelatedProductsServiceConfig,
+} from "../../../../headless/store/related-products-service";
 import { Product } from "../../../../headless/store/Product";
 import { ProductVariantSelector } from "../../../../headless/store/ProductVariantSelector";
 import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGallery";
 import { CurrentCart } from "../../../../headless/store/CurrentCart";
 import { SocialSharing } from "../../../../headless/store/SocialSharing";
+import { RelatedProducts } from "../../../../headless/store/RelatedProducts";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -42,6 +48,7 @@ interface ProductDetailPageProps {
   productMediaGalleryServiceConfig: any;
   selectedVariantServiceConfig: any;
   socialSharingServiceConfig: any;
+  relatedProductsServiceConfig: any;
 }
 
 const ProductImageGallery = () => {
@@ -788,41 +795,138 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Details>
 
-      {/* Related Products (Stubbed) */}
-      <div className="border-t border-white/10 pt-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          You might also like
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          {[1, 2].map((item) => (
-            <div
-              key={item}
-              className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-colors cursor-pointer"
-            >
-              <div className="aspect-square bg-white/10 rounded-lg mb-3 flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-white/40"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <h4 className="text-white font-medium text-sm mb-1">
-                Related Product {item}
-              </h4>
-              <p className="text-white/60 text-xs mb-2">Sample description</p>
-              <p className="text-white font-semibold">$49.99</p>
+      {/* Related Products */}
+      <RelatedProducts.List>
+        {withDocsWrapper(
+          ({ relatedProducts, isLoading, error, hasRelatedProducts }) => (
+            <div className="border-t border-white/10 pt-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
+                You might also like
+              </h3>
+
+              {isLoading && (
+                <div className="grid grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div
+                      key={item}
+                      className="bg-white/5 rounded-lg p-4 border border-white/10 animate-pulse"
+                    >
+                      <div className="aspect-square bg-white/10 rounded-lg mb-3"></div>
+                      <div className="h-4 bg-white/10 rounded mb-2"></div>
+                      <div className="h-3 bg-white/10 rounded mb-2 w-3/4"></div>
+                      <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                  <p className="text-red-400 text-sm">
+                    Failed to load related products: {error}
+                  </p>
+                </div>
+              )}
+
+              {!isLoading && hasRelatedProducts && (
+                <div className="grid grid-cols-2 gap-4">
+                  {relatedProducts.map((product) => (
+                    <RelatedProducts.ProductCard
+                      key={product._id}
+                      product={product}
+                    >
+                      {withDocsWrapper(
+                        ({
+                          name,
+                          imageUrl,
+                          price,
+                          inStock,
+                          productUrl,
+                          description,
+                        }) => (
+                          <a
+                            href={productUrl}
+                            className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
+                          >
+                            <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                              {imageUrl ? (
+                                <img
+                                  src={imageUrl}
+                                  alt={name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <svg
+                                    className="w-8 h-8 text-white/40"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                            <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
+                              {name}
+                            </h4>
+                            {description && (
+                              <p className="text-white/60 text-xs mb-2 line-clamp-2">
+                                {description}
+                              </p>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <p className="text-white font-semibold">
+                                {price}
+                              </p>
+                              {!inStock && (
+                                <span className="text-red-400 text-xs">
+                                  Out of Stock
+                                </span>
+                              )}
+                            </div>
+                          </a>
+                        ),
+                        "RelatedProducts.ProductCard",
+                        "/docs/components/related-products#productcard"
+                      )}
+                    </RelatedProducts.ProductCard>
+                  ))}
+                </div>
+              )}
+
+              {!isLoading && !hasRelatedProducts && !error && (
+                <div className="text-center py-8">
+                  <svg
+                    className="w-12 h-12 text-white/20 mx-auto mb-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
+                  </svg>
+                  <p className="text-white/60 text-sm">
+                    No related products found
+                  </p>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      </div>
+          ),
+          "RelatedProducts.List",
+          "/docs/components/related-products#list"
+        )}
+      </RelatedProducts.List>
     </div>
   );
 };
@@ -833,6 +937,7 @@ export default function ProductDetailPage({
   productMediaGalleryServiceConfig,
   selectedVariantServiceConfig,
   socialSharingServiceConfig,
+  relatedProductsServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -863,6 +968,11 @@ export default function ProductDetailPage({
         SocialSharingServiceDefinition,
         SocialSharingService,
         socialSharingServiceConfig
+      )
+      .addService(
+        RelatedProductsServiceDefinition,
+        RelatedProductsService,
+        relatedProductsServiceConfig
       )
   );
 
