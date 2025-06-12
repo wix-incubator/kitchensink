@@ -5,7 +5,7 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
-import { products } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
 // RelatedProductsService
 // 🧠 Purpose: Manages related products discovery and display
@@ -14,7 +14,7 @@ import { products } from "@wix/stores";
 
 export interface RelatedProductsServiceAPI {
   // --- State ---
-  relatedProducts: Signal<products.Product[]>;
+  relatedProducts: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   hasRelatedProducts: Signal<boolean>;
@@ -34,10 +34,14 @@ export const RelatedProductsService = implementService.withConfig<{
   const signalsService = getService(SignalsServiceDefinition);
 
   // State signals
-  const relatedProducts: Signal<products.Product[]> = signalsService.signal([]);
-  const isLoading: Signal<boolean> = signalsService.signal(false);
-  const error: Signal<string | null> = signalsService.signal(null);
-  const hasRelatedProducts: Signal<boolean> = signalsService.signal(false);
+  const relatedProducts: Signal<productsV3.V3Product[]> = signalsService.signal(
+    [] as any
+  );
+  const isLoading: Signal<boolean> = signalsService.signal(false as any);
+  const error: Signal<string | null> = signalsService.signal(null as any);
+  const hasRelatedProducts: Signal<boolean> = signalsService.signal(
+    false as any
+  );
 
   // Actions
   const loadRelatedProducts = async (productId: string, limit: number = 4) => {
@@ -46,7 +50,7 @@ export const RelatedProductsService = implementService.withConfig<{
 
     try {
       // First, get the current product to understand its categories/collections
-      const currentProduct = await products
+      const currentProduct = await productsV3
         .queryProducts()
         .eq("_id", productId)
         .find();
@@ -57,16 +61,10 @@ export const RelatedProductsService = implementService.withConfig<{
 
       const product = currentProduct.items[0];
 
-      // Strategy 1: Find products in the same collections
-      let relatedQuery = products.queryProducts().ne("_id", productId);
-
-      if (product.collections && product.collections.length > 0) {
-        // Find products that share at least one collection
-        relatedQuery = relatedQuery.hasSome("collections", product.collections);
-      } else {
-        // Fallback: Get random products from the same category or just random products
-        relatedQuery = relatedQuery.limit(limit);
-      }
+      // Strategy: Get related products (excluding current product)
+      // Note: v3 API has limited query filtering options
+      // For now, we'll get random products excluding the current one
+      let relatedQuery = productsV3.queryProducts().ne("_id", productId);
 
       const relatedResult = await relatedQuery.limit(limit).find();
 

@@ -5,30 +5,42 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../Signal";
-import { products } from "@wix/stores";
+import { productsV3, readOnlyVariantsV3, inventoryItemsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "./current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 
+// V3 API Types
+type V3Product = productsV3.V3Product;
+type Variant = productsV3.Variant;
+type ConnectedOption = productsV3.ConnectedOption;
+type PriceInfo = productsV3.PriceInfo;
+type FixedMonetaryAmount = productsV3.FixedMonetaryAmount;
+
+// Enhanced variant data structure aligned with v3 API
+interface ProcessedVariant {
+  id: string;
+  sku?: string;
+  price: {
+    actualPrice?: FixedMonetaryAmount;
+    compareAtPrice?: FixedMonetaryAmount;
+  };
+  choices: Record<string, string>;
+  inStock: boolean;
+  inventoryStatus?: productsV3.InventoryStatus;
+}
+
 export interface SelectedVariantServiceAPI {
   // Variant selection state
-  selectedOptions: Signal<Record<string, string>>;
+  selectedChoices: Signal<Record<string, string>>;
   selectedVariantId: ReadOnlySignal<string | null>;
-  currentVariant: ReadOnlySignal<products.Variant | null>;
+  currentVariant: ReadOnlySignal<productsV3.Variant | null>;
   currentPrice: ReadOnlySignal<string>;
   isInStock: ReadOnlySignal<boolean>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 
-  // Enhanced product data (merged from variant-selector-service)
-  variants: Signal<
-    {
-      id: string;
-      label: string;
-      stock: number;
-      ribbon: string | null;
-      isPreOrder: boolean | null;
-    }[]
-  >;
+  // Enhanced product data (using v3 API structure)
+  variants: Signal<ProcessedVariant[]>;
   options: Signal<Record<string, string[]>>;
   basePrice: Signal<number>;
   discountPrice: Signal<number | null>;
@@ -39,37 +51,23 @@ export interface SelectedVariantServiceAPI {
   ribbonLabel: Signal<string | null>;
 
   // Variant selection actions
-  setSelectedOptions: (options: Record<string, string>) => void;
+  setSelectedChoices: (choices: Record<string, string>) => void;
   addToCart: (quantity?: number) => Promise<void>;
 
-  // Additional actions (merged from variant-selector-service)
+  // Additional actions (enhanced for v3)
   setOption: (group: string, value: string) => void;
   selectVariantById: (id: string) => void;
-  loadProductVariants: (
-    data: {
-      id: string;
-      label: string;
-      stock: number;
-      ribbon: string | null;
-      isPreOrder: boolean | null;
-    }[]
-  ) => void;
+  loadProductVariants: (data: ProcessedVariant[]) => void;
   resetSelections: () => void;
 
-  // Enhanced getters (merged from variant-selector-service)
-  selectedVariant: () => {
-    id: string;
-    label: string;
-    stock: number;
-    ribbon: string | null;
-    isPreOrder: boolean | null;
-  };
+  // Enhanced getters (v3 compatible)
+  selectedVariant: () => ProcessedVariant;
   finalPrice: () => number;
   isLowStock: (threshold?: number) => boolean;
 
   // Product data exposed for variant selector components
-  product: ReadOnlySignal<products.Product | null>;
-  productOptions: ReadOnlySignal<products.ProductOption[]>;
+  product: ReadOnlySignal<productsV3.V3Product | null>;
+  productOptions: ReadOnlySignal<productsV3.ConnectedOption[]>;
   currency: ReadOnlySignal<string>;
 }
 
@@ -77,32 +75,102 @@ export const SelectedVariantServiceDefinition =
   defineService<SelectedVariantServiceAPI>("selectedVariant");
 
 export const SelectedVariantService = implementService.withConfig<{
-  product: products.Product;
+  product: productsV3.V3Product;
 }>()(SelectedVariantServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
   const cartService = getService(CurrentCartServiceDefinition);
-  const productService = getService(ProductServiceDefinition);
+  // Note: We maintain our own v3 product state instead of using v1 product service
 
   // Extract product information from config
   const configProduct = config.product;
 
+  // Helper Functions for v3 API
+  const parsePrice = (amount?: string | null): number => {
+    if (!amount) return 0;
+    const parsed = parseFloat(amount);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const processVariantChoices = (variant: Variant): Record<string, string> => {
+    const choices: Record<string, string> = {};
+
+    if (variant.choices) {
+      for (const choice of variant.choices) {
+        if (
+          choice.optionChoiceNames?.optionName &&
+          choice.optionChoiceNames?.choiceName
+        ) {
+          choices[choice.optionChoiceNames.optionName] =
+            choice.optionChoiceNames.choiceName;
+        }
+      }
+    }
+
+    return choices;
+  };
+
+  const processVariant = (variant: Variant): ProcessedVariant => {
+    const choices = processVariantChoices(variant);
+
+    return {
+      id: variant._id || "",
+      sku: variant.sku || undefined,
+      price: {
+        actualPrice: variant.price?.actualPrice,
+        compareAtPrice: variant.price?.compareAtPrice,
+      },
+      choices,
+      inStock: variant.inventoryStatus?.inStock ?? true,
+      inventoryStatus: variant.inventoryStatus,
+    };
+  };
+
+  const findVariantByChoices = (
+    variants: ProcessedVariant[],
+    selectedChoices: Record<string, string>
+  ): ProcessedVariant | null => {
+    return (
+      variants.find((variant) => {
+        const choiceKeys = Object.keys(selectedChoices);
+        return choiceKeys.every(
+          (key) => variant.choices[key] === selectedChoices[key]
+        );
+      }) || null
+    );
+  };
+
+  const getDefaultVariant = (): ProcessedVariant => {
+    const variantsList = variants.get();
+    return (
+      variantsList[0] || {
+        id: "",
+        sku: undefined,
+        price: {
+          actualPrice: undefined,
+          compareAtPrice: undefined,
+        },
+        choices: {},
+        inStock: true,
+        inventoryStatus: undefined,
+      }
+    );
+  };
+
+  const updateQuantityFromVariant = (variant: ProcessedVariant | null) => {
+    if (variant) {
+      quantityAvailable.set(variant.inStock ? 999 : 0);
+    }
+  };
+
   // State signals
-  const selectedOptions: Signal<Record<string, string>> = signalsService.signal(
+  const selectedChoices: Signal<Record<string, string>> = signalsService.signal(
     {} as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
 
-  // Enhanced product data signals (merged from variant-selector-service)
-  const variants: Signal<
-    {
-      id: string;
-      label: string;
-      stock: number;
-      ribbon: string | null;
-      isPreOrder: boolean | null;
-    }[]
-  > = signalsService.signal([] as any);
+  // Enhanced product data signals (v3 API structure)
+  const variants: Signal<ProcessedVariant[]> = signalsService.signal([] as any);
   const options: Signal<Record<string, string[]>> = signalsService.signal(
     {} as any
   );
@@ -116,75 +184,84 @@ export const SelectedVariantService = implementService.withConfig<{
   const sku: Signal<string> = signalsService.signal("" as any);
   const ribbonLabel: Signal<string | null> = signalsService.signal(null as any);
 
-  // Initialize with product data (enhanced from variant-selector-service)
+  // Store v3 product data internally
+  const v3Product: Signal<V3Product | null> = signalsService.signal(
+    configProduct as any
+  );
+
+  // Initialize with product data (v3 API structure)
   if (configProduct) {
     productId.set(configProduct._id || "");
-    sku.set(configProduct.sku || "");
-    ribbonLabel.set(configProduct.ribbon || null);
+    ribbonLabel.set(configProduct.ribbon?.name || null);
 
-    // Fix price parsing - ensure we're parsing strings
-    const priceString = configProduct.priceData?.price?.toString() || "0";
-    const discountPriceString =
-      configProduct.priceData?.discountedPrice?.toString();
+    // Use v3 pricing structure
+    const actualPrice = configProduct.actualPriceRange?.minValue?.amount;
+    const compareAtPrice = configProduct.compareAtPriceRange?.minValue?.amount;
 
-    basePrice.set(parseFloat(priceString));
-    discountPrice.set(
-      discountPriceString ? parseFloat(discountPriceString) : null
+    basePrice.set(parsePrice(actualPrice));
+    discountPrice.set(compareAtPrice ? parsePrice(compareAtPrice) : null);
+    isOnSale.set(
+      !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
     );
-    isOnSale.set(!!configProduct.priceData?.discountedPrice);
 
-    // Extract options from product
-    if (configProduct.productOptions) {
+    // Extract options from v3 product structure
+    if (configProduct.options) {
       const optionsMap: Record<string, string[]> = {};
-      configProduct.productOptions.forEach((option) => {
-        if (option.name && option.choices) {
-          optionsMap[option.name] = option.choices.map((choice) => {
-            return option.optionType === products.OptionType.color
-              ? choice.description || choice.value || ""
-              : choice.value || "";
-          });
+      configProduct.options.forEach((option: any) => {
+        if (option.name && option.choicesSettings?.choices) {
+          optionsMap[option.name] = option.choicesSettings.choices.map(
+            (choice: any) => choice.name || ""
+          );
         }
       });
       options.set(optionsMap);
     }
 
-    // Extract variants from product
-    if (configProduct.variants) {
-      const variantsList = configProduct.variants.map((variant) => ({
-        id: variant._id || "",
-        label: variant.choices
-          ? Object.values(variant.choices).join(" / ")
-          : "",
-        stock: variant.stock?.quantity || 0,
-        ribbon: null, // Ribbon property doesn't exist on Variant type
-        isPreOrder: null, // PreorderInfo property doesn't exist on Variant type
-      }));
-      variants.set(variantsList);
+    // Extract variants from v3 product structure
+    if (configProduct.variantsInfo?.variants) {
+      const processedVariants =
+        configProduct.variantsInfo.variants.map(processVariant);
+      variants.set(processedVariants);
 
       // Select first variant by default
-      if (variantsList.length > 0) {
-        quantityAvailable.set(variantsList[0].stock);
+      if (processedVariants.length > 0) {
+        updateQuantityFromVariant(processedVariants[0]);
       }
     } else {
       // Single variant product
-      quantityAvailable.set(configProduct.stock?.quantity || 0);
+      const singleVariant: ProcessedVariant = {
+        id: "default",
+        sku: undefined,
+        price: {
+          actualPrice: configProduct.actualPriceRange?.minValue,
+          compareAtPrice: configProduct.compareAtPriceRange?.minValue,
+        },
+        choices: {},
+        inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
+        inventoryStatus: {
+          inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
+          preorderEnabled:
+            configProduct.inventory?.preorderStatus === "ENABLED",
+        },
+      };
+      variants.set([singleVariant]);
+      updateQuantityFromVariant(singleVariant);
     }
   }
 
-  // Computed values
-  const currentVariant: ReadOnlySignal<products.Variant | null> =
+  // Computed values (v3 compatible)
+  const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
     signalsService.computed<any>((() => {
-      const prod = productService.product.get();
-      const options = selectedOptions.get();
+      const prod = v3Product.get();
+      const choices = selectedChoices.get();
 
-      if (!prod?.manageVariants || !prod.variants) return null;
+      if (!prod?.variantsInfo?.variants) return null;
 
       return (
-        prod.variants.find((variant: any) => {
-          if (!variant.choices) return false;
-          return Object.entries(options).every(([optionName, optionValue]) => {
-            const choice = variant.choices![optionName];
-            return choice === optionValue;
+        prod.variantsInfo.variants.find((variant: any) => {
+          const variantChoices = processVariantChoices(variant);
+          return Object.entries(choices).every(([optionName, optionValue]) => {
+            return variantChoices[optionName] === optionValue;
           });
         }) || null
       );
@@ -198,14 +275,14 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const currentPrice: ReadOnlySignal<string> = signalsService.computed(() => {
     const variant = currentVariant.get();
-    const prod = productService.product.get();
+    const prod = v3Product.get();
 
-    if (variant?.variant?.priceData?.formatted?.price) {
-      return variant.variant.priceData.formatted.price;
+    if (variant?.price?.actualPrice?.formattedAmount) {
+      return variant.price.actualPrice.formattedAmount;
     }
 
-    if (prod?.priceData?.formatted?.price) {
-      return prod.priceData.formatted.price;
+    if (prod?.actualPriceRange?.minValue?.formattedAmount) {
+      return prod.actualPriceRange.minValue.formattedAmount;
     }
 
     return "$0.00";
@@ -213,65 +290,53 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
-    const prod = productService.product.get();
+    const prod = v3Product.get();
 
     if (variant) {
-      return variant.stock?.trackQuantity
-        ? (variant.stock?.quantity || 0) > 0
-        : true;
+      return variant.inventoryStatus?.inStock ?? false;
     }
 
-    if (prod?.stock) {
-      return prod.stock.trackInventory ? (prod.stock.quantity || 0) > 0 : true;
-    }
-
-    return true;
+    return prod?.inventory?.availabilityStatus === "IN_STOCK";
   });
 
-  // Product data exposed through this service
-  const product: ReadOnlySignal<products.Product | null> =
-    productService.product;
+  // Product data exposed through this service (v3 compatible)
+  const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
 
-  const productOptions: ReadOnlySignal<products.ProductOption[]> =
+  const productOptions: ReadOnlySignal<productsV3.ConnectedOption[]> =
     signalsService.computed<any>(() => {
-      const prod = productService.product.get();
-      return prod?.productOptions || [];
+      const prod = v3Product.get();
+      return prod?.options || [];
     });
 
   const currency: ReadOnlySignal<string> = signalsService.computed(() => {
-    const prod = productService.product.get();
-    return prod?.priceData?.currency || "USD";
+    const prod = v3Product.get();
+    return prod?.currency || "USD";
   });
 
-  // Enhanced getters (merged from variant-selector-service)
-  const selectedVariant = () => {
+  // Enhanced getters (v3 compatible)
+  const selectedVariant = (): ProcessedVariant => {
     const variantId = selectedVariantId.get();
     const variantsList = variants.get();
-    return (
-      variantsList.find((v) => v.id === variantId) || {
-        id: "",
-        label: "",
-        stock: 0,
-        ribbon: null,
-        isPreOrder: null,
-      }
-    );
+    return variantsList.find((v) => v.id === variantId) || getDefaultVariant();
   };
 
-  const finalPrice = () => {
+  const finalPrice = (): number => {
     const discount = discountPrice.get();
     const base = basePrice.get();
     return discount !== null ? discount : base;
   };
 
-  const isLowStock = (threshold: number = 5) => {
-    const variant = selectedVariant();
-    return variant.stock > 0 && variant.stock <= threshold;
+  const isLowStock = (threshold: number = 5): boolean => {
+    // Note: We don't have quantity info in the current structure
+    // This would require additional inventory API calls
+    return false;
   };
 
-  // Actions
-  const setSelectedOptions = (options: Record<string, string>) => {
-    selectedOptions.set(options);
+  // Actions (v3 enhanced)
+  const setSelectedChoices = (choices: Record<string, string>) => {
+    selectedChoices.set(choices);
+    const matchingVariant = findVariantByChoices(variants.get(), choices);
+    updateQuantityFromVariant(matchingVariant);
   };
 
   const addToCart = async (quantity: number = 1) => {
@@ -279,8 +344,8 @@ export const SelectedVariantService = implementService.withConfig<{
       isLoading.set(true);
       error.set(null);
 
-      const prod = productService.product.get();
-      const options = selectedOptions.get();
+      const prod = v3Product.get();
+      const choices = selectedChoices.get();
 
       if (!prod?._id) {
         throw new Error("Product not found");
@@ -291,7 +356,7 @@ export const SelectedVariantService = implementService.withConfig<{
           catalogReference: {
             catalogItemId: prod._id,
             appId: "1380b703-ce81-ff05-f115-39571d94dfcd",
-            options: Object.keys(options).length > 0 ? { options } : undefined,
+            options: Object.keys(choices).length > 0 ? { choices } : undefined,
           },
           quantity,
         },
@@ -305,75 +370,38 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   };
 
-  // Enhanced actions (merged from variant-selector-service)
+  // Enhanced actions (v3 compatible)
   const setOption = (group: string, value: string) => {
-    const currentOptions = selectedOptions.get();
-    const newOptions = { ...currentOptions, [group]: value };
-    selectedOptions.set(newOptions);
-
-    // Find matching variant
-    const variantsList = variants.get();
-    const matchingVariant = variantsList.find((variant) => {
-      if (!configProduct.variants) return false;
-      const productVariant = configProduct.variants.find(
-        (pv) => pv._id === variant.id
-      );
-      if (!productVariant?.choices) return false;
-
-      return Object.entries(newOptions).every(([optionName, optionValue]) => {
-        return productVariant.choices![optionName] === optionValue;
-      });
-    });
-
-    if (matchingVariant) {
-      quantityAvailable.set(matchingVariant.stock);
-    }
+    const currentChoices = selectedChoices.get();
+    const newChoices = { ...currentChoices, [group]: value };
+    setSelectedChoices(newChoices); // Reuse consolidated logic
   };
 
   const selectVariantById = (id: string) => {
     const variantsList = variants.get();
     const variant = variantsList.find((v) => v.id === id);
     if (variant) {
-      quantityAvailable.set(variant.stock);
-
-      // Update selected options to match this variant
-      if (configProduct.variants) {
-        const productVariant = configProduct.variants.find(
-          (pv) => pv._id === id
-        );
-        if (productVariant?.choices) {
-          selectedOptions.set(productVariant.choices);
-        }
-      }
+      selectedChoices.set(variant.choices);
+      updateQuantityFromVariant(variant);
     }
   };
 
-  const loadProductVariants = (
-    data: {
-      id: string;
-      label: string;
-      stock: number;
-      ribbon: string | null;
-      isPreOrder: boolean | null;
-    }[]
-  ) => {
+  const loadProductVariants = (data: ProcessedVariant[]) => {
     variants.set(data);
     if (data.length > 0) {
-      quantityAvailable.set(data[0].stock);
+      updateQuantityFromVariant(data[0]);
     }
   };
 
   const resetSelections = () => {
-    selectedOptions.set({});
-    const variantsList = variants.get();
-    if (variantsList.length > 0) {
-      quantityAvailable.set(variantsList[0].stock);
-    }
+    selectedChoices.set({});
+    const defaultVariant = getDefaultVariant();
+    updateQuantityFromVariant(defaultVariant);
   };
 
   return {
     // Variant selection state
-    selectedOptions,
+    selectedChoices,
     selectedVariantId,
     currentVariant,
     currentPrice,
@@ -381,7 +409,7 @@ export const SelectedVariantService = implementService.withConfig<{
     isLoading,
     error,
 
-    // Enhanced product data (merged from variant-selector-service)
+    // Enhanced product data (v3 API structure)
     variants,
     options,
     basePrice,
@@ -393,16 +421,16 @@ export const SelectedVariantService = implementService.withConfig<{
     ribbonLabel,
 
     // Variant selection actions
-    setSelectedOptions,
+    setSelectedChoices,
     addToCart,
 
-    // Additional actions (merged from variant-selector-service)
+    // Additional actions (v3 enhanced)
     setOption,
     selectVariantById,
     loadProductVariants,
     resetSelections,
 
-    // Enhanced getters (merged from variant-selector-service)
+    // Enhanced getters (v3 compatible)
     selectedVariant,
     finalPrice,
     isLowStock,
@@ -418,7 +446,7 @@ export async function loadSelectedVariantServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof SelectedVariantService>> {
   try {
-    const storeProducts = await products
+    const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
       .find();

@@ -5,7 +5,7 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../Signal";
-import { products } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
 // ProductGalleryService
 // 🧠 Purpose: Manages dynamic image gallery behavior, including syncing selected product variant with specific images and allowing user-driven image navigation.
@@ -33,7 +33,7 @@ export const ProductGalleryServiceDefinition =
   defineService<ProductGalleryServiceAPI>("productGallery");
 
 export const ProductGalleryService = implementService.withConfig<{
-  product: products.Product;
+  product: productsV3.V3Product;
 }>()(ProductGalleryServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
@@ -49,58 +49,66 @@ export const ProductGalleryService = implementService.withConfig<{
 
   // Initialize with product data
   if (product) {
-    // Extract images from product media
+    // Extract images from product media (v3 API structure)
     const imageUrls: string[] = [];
-    if (product.media?.items) {
-      product.media.items.forEach((item) => {
-        if (item.image?.url) {
-          imageUrls.push(item.image.url);
-        } else if (item.video?.thumbnailUrl) {
-          imageUrls.push(item.video.thumbnailUrl);
+    if (product.media?.itemsInfo?.items) {
+      product.media.itemsInfo.items.forEach((item) => {
+        // Simplified: just try to get any available URL from the media item
+        if (typeof item === "string") {
+          imageUrls.push(item);
+        } else if (item && typeof item === "object") {
+          // Handle various media item structures
+          const anyItem = item as any;
+          if (anyItem.url) {
+            imageUrls.push(anyItem.url);
+          } else if (anyItem.image?.url) {
+            imageUrls.push(anyItem.image.url);
+          }
         }
       });
     }
     images.set(imageUrls);
 
-    // Create variant to image mapping
+    // Create variant to image mapping (v3 API structure)
     const variantImageMapping: Record<string, number> = {};
-    if (product.variants && product.productOptions) {
-      product.variants.forEach((variant) => {
+    if (product.variantsInfo?.variants && product.options) {
+      product.variantsInfo.variants.forEach((variant) => {
         if (variant.choices && variant._id) {
           // Try to find matching media for this variant
-          Object.entries(variant.choices).forEach(
-            ([optionName, optionValue]) => {
-              const productOption = product.productOptions?.find(
-                (opt) => opt.name === optionName
+          variant.choices.forEach((choice) => {
+            if (choice.optionChoiceNames) {
+              const productOption = product.options?.find(
+                (opt) => opt.name === choice.optionChoiceNames?.optionName
               );
 
-              if (productOption) {
-                const optionChoice = productOption.choices?.find((choice) => {
-                  const choiceValue =
-                    productOption.optionType === products.OptionType.color
-                      ? choice.description
-                      : choice.value;
-                  return choiceValue === optionValue;
-                });
+              if (productOption?.choicesSettings?.choices) {
+                const optionChoice = productOption.choicesSettings.choices.find(
+                  (optChoice) =>
+                    optChoice.name === choice.optionChoiceNames?.choiceName
+                );
 
                 // Check if this choice has associated media
                 if (
                   optionChoice &&
-                  (optionChoice as any).media?.mainMedia?._id
+                  (optionChoice as any).linkedMedia?.[0]?._id
                 ) {
-                  const imageIndex = product.media?.items?.findIndex(
+                  const imageIndex = product.media?.itemsInfo?.items?.findIndex(
                     (mediaItem) =>
                       mediaItem._id ===
-                      (optionChoice as any).media?.mainMedia?._id
+                      (optionChoice as any).linkedMedia?.[0]?._id
                   );
 
-                  if (imageIndex !== undefined && imageIndex !== -1) {
+                  if (
+                    imageIndex !== undefined &&
+                    imageIndex !== -1 &&
+                    variant._id
+                  ) {
                     variantImageMapping[variant._id] = imageIndex;
                   }
                 }
               }
             }
-          );
+          });
         }
       });
     }
@@ -172,7 +180,7 @@ export async function loadProductGalleryServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof ProductGalleryService>> {
   try {
-    const storeProducts = await products
+    const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
       .find();
