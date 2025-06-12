@@ -100,9 +100,11 @@ export const RelatedProductCard = (props: RelatedProductCardProps) => {
   const { product } = props;
 
   const name = product.name || "Unknown Product";
-  const imageUrl = product.media?.itemsInfo?.items?.[0]?.url || null;
-  const price =
-    product.actualPriceRange?.minValue?.formattedAmount || "Price unavailable";
+  // Use actual v3 media structure - image is directly a string URL
+  const imageUrl = product.media?.main?.image || null;
+  // Create formatted price from raw amount since formattedAmount may not be available
+  const rawPrice = product.actualPriceRange?.minValue?.amount;
+  const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
   const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
   const productUrl = `/store/example-2/products/${product.slug}`;
   const description =

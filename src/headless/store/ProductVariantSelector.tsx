@@ -19,8 +19,8 @@ export interface ProductOptionsRenderProps {
   options: productsV3.ConnectedOption[];
   /** Whether product has options */
   hasOptions: boolean;
-  /** Currently selected options */
-  selectedOptions: Record<string, string>;
+  /** Currently selected choices (V3 terminology) */
+  selectedChoices: Record<string, string>;
 }
 
 /**
@@ -31,13 +31,13 @@ export const ProductOptions = (props: ProductOptionsProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedChoices.get();
+  const selectedChoices = variantService.selectedChoices.get();
   const options = variantService.productOptions.get();
 
   return props.children({
     options,
     hasOptions: options.length > 0,
-    selectedOptions,
+    selectedChoices,
   });
 };
 
@@ -75,12 +75,12 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedChoices.get();
+  const selectedChoices = variantService.selectedChoices.get();
   const { option } = props;
 
   const optionName = option.name || "";
   const choices = option.choicesSettings?.choices || [];
-  const selectedValue = selectedOptions[optionName] || null;
+  const selectedValue = selectedChoices[optionName] || null;
 
   return props.children({
     optionName,
@@ -131,17 +131,17 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedChoices.get();
+  const selectedChoices = variantService.selectedChoices.get();
   const { option, choice } = props;
 
   const optionName = option.name || "";
   const choiceValue = choice.name || "";
 
-  const isSelected = selectedOptions[optionName] === choiceValue;
+  const isSelected = selectedChoices[optionName] === choiceValue;
 
   // Check if this choice would result in an available variant
-  const testOptions = {
-    ...selectedOptions,
+  const testChoices = {
+    ...selectedChoices,
     [optionName]: choiceValue,
   };
 
@@ -151,7 +151,7 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
   const displayValue = choiceValue;
 
   const selectChoice = () => {
-    variantService.setSelectedChoices(testOptions);
+    variantService.setSelectedChoices(testChoices);
   };
 
   return props.children({
