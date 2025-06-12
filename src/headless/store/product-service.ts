@@ -7,6 +7,12 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../Signal";
 import { productsV3 } from "@wix/stores";
 
+/**
+ * V3 Product Service API
+ *
+ * Aligned with Wix Stores Catalog V3 APIs
+ * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
+ */
 export interface ProductServiceAPI {
   product: Signal<productsV3.V3Product | null>;
   isLoading: Signal<boolean>;
@@ -40,11 +46,17 @@ export type ProductServiceConfigResult =
   | { type: "success"; config: ServiceFactoryConfig<typeof ProductService> }
   | { type: "notFound" };
 
+/**
+ * Load product service configuration using Catalog V3 APIs
+ *
+ * @param productSlug - Product slug to load
+ * @returns Service factory configuration with complete v3 product data
+ */
 export async function loadProductServiceConfig(
   productSlug: string
 ): Promise<ProductServiceConfigResult> {
   try {
-    // First, find the product ID by slug using queryProducts
+    // First, find the product ID by slug using v3 queryProducts
     const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
@@ -59,16 +71,10 @@ export async function loadProductServiceConfig(
       throw new Error("Product ID not found");
     }
 
-    // Then get the full product data including variants and media using getProduct
-    const fullProduct = await productsV3.getProduct(productId, {
-      fields: [
-        "MEDIA_ITEMS_INFO" as any, // Required for product media gallery
-        "CURRENCY" as any, // Required for formatted pricing (formattedAmount)
-        "DESCRIPTION" as any, // For product descriptions
-        "PLAIN_DESCRIPTION" as any, // Fallback for descriptions
-        "VARIANT_OPTION_CHOICE_NAMES" as any, // For variant option names
-      ],
-    });
+    // Get complete product data using v3 getProduct
+    // Note: The fields parameter may not be fully working in early preview
+    // The v3 API currently returns basic product structure with media.main
+    const fullProduct = await productsV3.getProduct(productId);
 
     return {
       type: "success",

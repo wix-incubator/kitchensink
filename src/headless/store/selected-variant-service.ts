@@ -5,7 +5,14 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../Signal";
-import { productsV3, readOnlyVariantsV3, inventoryItemsV3 } from "@wix/stores";
+import {
+  productsV3,
+  readOnlyVariantsV3,
+  inventoryItemsV3,
+  customizationsV3,
+  ribbonsV3,
+  brandsV3,
+} from "@wix/stores";
 import { CurrentCartServiceDefinition } from "./current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 

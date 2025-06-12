@@ -1,7 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { SelectedVariantServiceDefinition } from "./selected-variant-service";
-import { products } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
 /**
  * Props for ProductOptions headless component
@@ -16,7 +16,7 @@ export interface ProductOptionsProps {
  */
 export interface ProductOptionsRenderProps {
   /** Array of product options */
-  options: products.ProductOption[];
+  options: productsV3.ConnectedOption[];
   /** Whether product has options */
   hasOptions: boolean;
   /** Currently selected options */
@@ -35,7 +35,7 @@ export const ProductOptions = (props: ProductOptionsProps) => {
   const options = variantService.productOptions.get();
 
   return props.children({
-    options: options as products.ProductOption[],
+    options,
     hasOptions: options.length > 0,
     selectedOptions,
   });
@@ -46,7 +46,7 @@ export const ProductOptions = (props: ProductOptionsProps) => {
  */
 export interface ProductOptionChoicesProps {
   /** Product option data */
-  option: products.ProductOption;
+  option: productsV3.ConnectedOption;
   /** Render prop function that receives option choices data */
   children: (props: ProductOptionChoicesRenderProps) => React.ReactNode;
 }
@@ -58,9 +58,9 @@ export interface ProductOptionChoicesRenderProps {
   /** Option name */
   optionName: string;
   /** Option type */
-  optionType: products.OptionType | undefined;
+  optionType: productsV3.ProductOptionRenderType | undefined;
   /** Array of choices for this option */
-  choices: products.Choice[];
+  choices: productsV3.ConnectedOptionChoice[];
   /** Currently selected value for this option */
   selectedValue: string | null;
   /** Whether this option has choices */
@@ -79,12 +79,12 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
   const { option } = props;
 
   const optionName = option.name || "";
-  const choices = option.choices || [];
+  const choices = option.choicesSettings?.choices || [];
   const selectedValue = selectedOptions[optionName] || null;
 
   return props.children({
     optionName,
-    optionType: option.optionType,
+    optionType: option.optionRenderType,
     choices,
     selectedValue,
     hasChoices: choices.length > 0,
@@ -96,9 +96,9 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
  */
 export interface ChoiceSelectionProps {
   /** Product option data */
-  option: products.ProductOption;
+  option: productsV3.ConnectedOption;
   /** Choice data */
-  choice: products.Choice;
+  choice: productsV3.ConnectedOptionChoice;
   /** Render prop function that receives choice selection data */
   children: (props: ChoiceSelectionRenderProps) => React.ReactNode;
 }
@@ -135,10 +135,7 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
   const { option, choice } = props;
 
   const optionName = option.name || "";
-  const choiceValue =
-    option.optionType === products.OptionType.color
-      ? choice.description || ""
-      : choice.value || "";
+  const choiceValue = choice.name || "";
 
   const isSelected = selectedOptions[optionName] === choiceValue;
 
@@ -159,7 +156,7 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
 
   return props.children({
     displayValue,
-    description: choice.description,
+    description: undefined, // v3 choices don't have separate description field
     isSelected,
     isAvailable,
     selectChoice,

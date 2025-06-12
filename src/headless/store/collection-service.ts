@@ -7,17 +7,22 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../Signal";
 import { productsV3 } from "@wix/stores";
 
+/**
+ * V3 Collection Service API
+ *
+ * Manages product collections using Wix Stores Catalog V3 APIs
+ * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
+ */
 export interface CollectionServiceAPI {
   products: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
-  currentPage: Signal<number>;
-  totalPages: Signal<number>;
-  hasMore: Signal<boolean>;
+  totalProducts: Signal<number>;
+  hasProducts: Signal<boolean>;
 
-  loadProducts: () => Promise<void>;
+  // Actions
   loadMore: () => Promise<void>;
-  goToPage: (page: number) => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 export const CollectionServiceDefinition =
@@ -30,20 +35,52 @@ export const CollectionService = implementService.withConfig<{
 }>()(CollectionServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
+  const initialProducts = config.initialProducts || [];
+
   // State signals
   const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
-    config.initialProducts || ([] as any)
+    initialProducts as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
-  const currentPage: Signal<number> = signalsService.signal(1 as any);
-  const totalPages: Signal<number> = signalsService.signal(1 as any);
-  const hasMore: Signal<boolean> = signalsService.signal(false as any);
+  const totalProducts: Signal<number> = signalsService.signal(
+    initialProducts.length as any
+  );
+  const hasProducts: Signal<boolean> = signalsService.signal(
+    (initialProducts.length > 0) as any
+  );
 
   const pageSize = config.pageSize || 12;
 
   // Actions
-  const loadProducts = async (page: number = 1) => {
+  const loadMore = async () => {
+    try {
+      isLoading.set(true);
+      error.set(null);
+
+      let query = productsV3.queryProducts();
+
+      // Note: v3 API has limited filtering options
+      // Collection filtering by collectionId is not available in the current query builder
+      // For now, we'll load more products and append to existing list
+
+      const currentProducts = productsList.get();
+      const productResults = await query.limit(pageSize).find();
+
+      const newProducts = [...currentProducts, ...(productResults.items || [])];
+      productsList.set(newProducts);
+      totalProducts.set(newProducts.length);
+      hasProducts.set(newProducts.length > 0);
+    } catch (err) {
+      error.set(
+        err instanceof Error ? err.message : "Failed to load more products"
+      );
+    } finally {
+      isLoading.set(false);
+    }
+  };
+
+  const refresh = async () => {
     try {
       isLoading.set(true);
       error.set(null);
@@ -56,44 +93,26 @@ export const CollectionService = implementService.withConfig<{
 
       const productResults = await query.limit(pageSize).find();
 
-      if (page === 1) {
-        productsList.set(productResults.items || []);
-      } else {
-        const currentProducts = productsList.get();
-        productsList.set([...currentProducts, ...(productResults.items || [])]);
-      }
-
-      currentPage.set(page);
-      // v3 API uses cursor-based pagination, simplified for now
-      const hasMoreItems = (productResults.items || []).length === pageSize;
-      totalPages.set(page + (hasMoreItems ? 1 : 0));
-      hasMore.set(hasMoreItems);
+      productsList.set(productResults.items || []);
+      totalProducts.set((productResults.items || []).length);
+      hasProducts.set((productResults.items || []).length > 0);
     } catch (err) {
-      error.set(err instanceof Error ? err.message : "Failed to load products");
+      error.set(
+        err instanceof Error ? err.message : "Failed to refresh products"
+      );
     } finally {
       isLoading.set(false);
     }
-  };
-
-  const loadMore = async () => {
-    if (!hasMore.get() || isLoading.get()) return;
-    await loadProducts(currentPage.get() + 1);
-  };
-
-  const goToPage = async (page: number) => {
-    await loadProducts(page);
   };
 
   return {
     products: productsList,
     isLoading,
     error,
-    currentPage,
-    totalPages,
-    hasMore,
-    loadProducts: () => loadProducts(1),
+    totalProducts,
+    hasProducts,
     loadMore,
-    goToPage,
+    refresh,
   };
 });
 

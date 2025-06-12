@@ -1,7 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "./product-media-gallery-service";
-import { products, productsV3 } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
 /**
  * Props for SelectedImage headless component

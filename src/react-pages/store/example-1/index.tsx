@@ -184,42 +184,56 @@ const LoadMoreSection = () => {
   return (
     <Collection.LoadMoreProducts>
       {withDocsWrapper(
-        ({ loadMore, hasMore, isLoading }) => (
+        ({ loadMore, refresh, isLoading, hasProducts, totalProducts }) => (
           <>
-            {hasMore && (
+            {hasProducts && totalProducts > 0 && (
               <div className="text-center mt-12">
-                <button
-                  onClick={loadMore}
-                  disabled={isLoading}
-                  className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center gap-2">
-                      <svg
-                        className="animate-spin w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Loading...
-                    </span>
-                  ) : (
-                    "Load More Products"
-                  )}
-                </button>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={loadMore}
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <svg
+                          className="animate-spin w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Loading...
+                      </span>
+                    ) : (
+                      "Load More Products"
+                    )}
+                  </button>
+
+                  <button
+                    onClick={refresh}
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                  >
+                    Refresh Products
+                  </button>
+                </div>
+
+                <p className="text-white/60 text-sm mt-4">
+                  Currently showing {totalProducts} products
+                </p>
               </div>
             )}
           </>

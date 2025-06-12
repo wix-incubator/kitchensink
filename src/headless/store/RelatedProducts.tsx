@@ -1,11 +1,8 @@
 import React from "react";
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
-import {
-  RelatedProductsServiceDefinition,
-  type RelatedProductsServiceAPI,
-} from "./related-products-service";
-import { products, productsV3 } from "@wix/stores";
+import { RelatedProductsServiceDefinition } from "./related-products-service";
+import { productsV3 } from "@wix/stores";
 
 /**
  * Props for RelatedProductsList headless component
