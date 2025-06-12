@@ -189,6 +189,7 @@ export const BookingSelectionService = implementService.withConfig<{
         },
         callbacks: {
           postFlowUrl: returnUrl,
+          cartPageUrl: window.location.origin + '/cart',
         },
       });
 
