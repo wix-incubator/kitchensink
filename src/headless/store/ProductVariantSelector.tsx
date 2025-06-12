@@ -31,11 +31,11 @@ export const ProductOptions = (props: ProductOptionsProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedOptions.get();
+  const selectedOptions = variantService.selectedChoices.get();
   const options = variantService.productOptions.get();
 
   return props.children({
-    options,
+    options: options as products.ProductOption[],
     hasOptions: options.length > 0,
     selectedOptions,
   });
@@ -75,7 +75,7 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedOptions.get();
+  const selectedOptions = variantService.selectedChoices.get();
   const { option } = props;
 
   const optionName = option.name || "";
@@ -131,7 +131,7 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
-  const selectedOptions = variantService.selectedOptions.get();
+  const selectedOptions = variantService.selectedChoices.get();
   const { option, choice } = props;
 
   const optionName = option.name || "";
@@ -154,7 +154,7 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
   const displayValue = choiceValue;
 
   const selectChoice = () => {
-    variantService.setSelectedOptions(testOptions);
+    variantService.setSelectedChoices(testOptions);
   };
 
   return props.children({
@@ -301,9 +301,8 @@ export const StockStatus = (props: StockStatusProps) => {
   const currentVariant = variantService.currentVariant.get();
   const product = variantService.product.get();
 
-  const stock = currentVariant?.stock || product?.stock;
-  const trackInventory = (stock as any)?.trackQuantity || false;
-  const quantity = stock?.quantity || null;
+  const trackInventory = false; // V3 API has different inventory structure
+  const quantity = null; // Not directly available in v3 API
 
   const status = inStock ? "In Stock" : "Out of Stock";
 

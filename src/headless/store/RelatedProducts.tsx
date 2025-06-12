@@ -5,7 +5,7 @@ import {
   RelatedProductsServiceDefinition,
   type RelatedProductsServiceAPI,
 } from "./related-products-service";
-import { products } from "@wix/stores";
+import { products, productsV3 } from "@wix/stores";
 
 /**
  * Props for RelatedProductsList headless component
@@ -20,7 +20,7 @@ export interface RelatedProductsListProps {
  */
 export interface RelatedProductsListRenderProps {
   /** Array of related products */
-  relatedProducts: products.Product[];
+  relatedProducts: productsV3.V3Product[];
   /** Whether products are loading */
   isLoading: boolean;
   /** Error message if any */
@@ -40,7 +40,7 @@ export const RelatedProductsList = (props: RelatedProductsListProps) => {
   >;
 
   const [relatedProducts, setRelatedProducts] = React.useState<
-    products.Product[]
+    productsV3.V3Product[]
   >([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -71,7 +71,7 @@ export const RelatedProductsList = (props: RelatedProductsListProps) => {
  */
 export interface RelatedProductCardProps {
   /** Product data */
-  product: products.Product;
+  product: productsV3.V3Product;
   /** Render prop function that receives product card data */
   children: (props: RelatedProductCardRenderProps) => React.ReactNode;
 }
@@ -103,15 +103,13 @@ export const RelatedProductCard = (props: RelatedProductCardProps) => {
   const { product } = props;
 
   const name = product.name || "Unknown Product";
-  const imageUrl = product.media?.mainMedia?.image?.url || null;
-  const price = product.priceData?.discountedPrice
-    ? `$${product.priceData.discountedPrice}`
-    : product.priceData?.price
-    ? `$${product.priceData.price}`
-    : "Price unavailable";
-  const inStock = (product.stock?.quantity || 0) > 0;
+  const imageUrl = product.media?.itemsInfo?.items?.[0]?.url || null;
+  const price =
+    product.actualPriceRange?.minValue?.formattedAmount || "Price unavailable";
+  const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
   const productUrl = `/store/example-2/products/${product.slug}`;
-  const description = product.description || "";
+  const description =
+    typeof product.description === "string" ? product.description : "";
 
   const handleQuickAdd = () => {
     // This would typically add the product to cart
