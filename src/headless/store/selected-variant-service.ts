@@ -322,19 +322,22 @@ export const SelectedVariantService = implementService.withConfig<{
       error.set(null);
 
       const prod = v3Product.get();
-      const choices = selectedChoices.get();
+      const variant = currentVariant.get();
 
       if (!prod?._id) {
         throw new Error("Product not found");
       }
 
+      // Create catalogReference with correct format for Wix Stores
+      const catalogReference = {
+        catalogItemId: prod._id,
+        appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e", // Correct Wix Stores app ID
+        options: variant?._id ? { variantId: variant._id } : undefined,
+      };
+
       const lineItems = [
         {
-          catalogReference: {
-            catalogItemId: prod._id,
-            appId: "1380b703-ce81-ff05-f115-39571d94dfcd",
-            options: Object.keys(choices).length > 0 ? { choices } : undefined,
-          },
+          catalogReference,
           quantity,
         },
       ];

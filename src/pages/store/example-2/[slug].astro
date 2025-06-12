@@ -32,7 +32,7 @@ const selectedVariantServiceConfig =
 const productName = productServiceConfig.product.name || "Product";
 const productDescription =
   productServiceConfig.product.description || "An amazing product";
-const productUrl = `${Astro.url.origin}/store/example-2/products/${slug}`;
+const productUrl = `${Astro.url.origin}/store/example-2/${slug}`;
 
 // Load social sharing service configuration
 const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
