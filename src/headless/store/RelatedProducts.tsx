@@ -106,7 +106,7 @@ export const RelatedProductCard = (props: RelatedProductCardProps) => {
   const rawPrice = product.actualPriceRange?.minValue?.amount;
   const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
   const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
-  const productUrl = `/store/example-2/products/${product.slug}`;
+  const productUrl = `/store/example-2/${product.slug}`;
   const description =
     typeof product.description === "string" ? product.description : "";
 

@@ -152,7 +152,7 @@ const ProductGridContent = () => {
                           <div className="flex gap-2">
                             <a
                               href={productUrl.replace(
-                                "/store/",
+                                "/store/products/",
                                 "/store/example-2/"
                               )}
                               className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
