@@ -5,6 +5,7 @@ import { loadProductServiceConfig } from "../../../../headless/store/product-ser
 import { loadCurrentCartServiceConfig } from "../../../../headless/store/current-cart-service";
 import { loadProductMediaGalleryServiceConfig } from "../../../../headless/store/product-media-gallery-service";
 import { loadSelectedVariantServiceConfig } from "../../../../headless/store/selected-variant-service";
+import { loadSocialSharingServiceConfig } from "../../../../headless/store/social-sharing-service";
 
 const { slug } = Astro.params;
 
@@ -21,6 +22,16 @@ const selectedVariantServiceConfig =
   await loadSelectedVariantServiceConfig(slug);
 
 const productName = productServiceConfig.product.name || "Product";
+const productDescription =
+  productServiceConfig.product.description || "An amazing product";
+const productUrl = `${Astro.url.origin}/store/example-2/products/${slug}`;
+
+// Load social sharing service configuration
+const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
+  productName,
+  productUrl,
+  productDescription
+);
 ---
 
 <BaseLayout>
@@ -40,6 +51,7 @@ const productName = productServiceConfig.product.name || "Product";
     currentCartServiceConfig={currentCartServiceConfig}
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
+    socialSharingServiceConfig={socialSharingServiceConfig}
     slot="body"
   />
 </BaseLayout>
