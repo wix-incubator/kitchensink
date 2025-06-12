@@ -832,7 +832,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
               {!isLoading && hasRelatedProducts && (
                 <div className="grid grid-cols-2 gap-4">
                   {relatedProducts.map((product) => {
-                    console.log({ product });
                     return (
                       <RelatedProducts.ProductCard
                         key={product._id}
