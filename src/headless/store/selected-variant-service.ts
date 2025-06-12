@@ -16,19 +16,6 @@ type ConnectedOption = productsV3.ConnectedOption;
 type PriceInfo = productsV3.PriceInfo;
 type FixedMonetaryAmount = productsV3.FixedMonetaryAmount;
 
-// Enhanced variant data structure aligned with v3 API
-interface ProcessedVariant {
-  id: string;
-  sku?: string;
-  price: {
-    actualPrice?: FixedMonetaryAmount;
-    compareAtPrice?: FixedMonetaryAmount;
-  };
-  choices: Record<string, string>;
-  inStock: boolean;
-  inventoryStatus?: productsV3.InventoryStatus;
-}
-
 export interface SelectedVariantServiceAPI {
   // Variant selection state
   selectedChoices: Signal<Record<string, string>>;
@@ -40,7 +27,7 @@ export interface SelectedVariantServiceAPI {
   error: Signal<string | null>;
 
   // Enhanced product data (using v3 API structure)
-  variants: Signal<ProcessedVariant[]>;
+  variants: Signal<productsV3.Variant[]>;
   options: Signal<Record<string, string[]>>;
   basePrice: Signal<number>;
   discountPrice: Signal<number | null>;
@@ -57,11 +44,11 @@ export interface SelectedVariantServiceAPI {
   // Additional actions (enhanced for v3)
   setOption: (group: string, value: string) => void;
   selectVariantById: (id: string) => void;
-  loadProductVariants: (data: ProcessedVariant[]) => void;
+  loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
 
   // Enhanced getters (v3 compatible)
-  selectedVariant: () => ProcessedVariant;
+  selectedVariant: () => productsV3.Variant | null;
   finalPrice: () => number;
   isLowStock: (threshold?: number) => boolean;
 
@@ -109,56 +96,30 @@ export const SelectedVariantService = implementService.withConfig<{
     return choices;
   };
 
-  const processVariant = (variant: Variant): ProcessedVariant => {
-    const choices = processVariantChoices(variant);
-
-    return {
-      id: variant._id || "",
-      sku: variant.sku || undefined,
-      price: {
-        actualPrice: variant.price?.actualPrice,
-        compareAtPrice: variant.price?.compareAtPrice,
-      },
-      choices,
-      inStock: variant.inventoryStatus?.inStock ?? true,
-      inventoryStatus: variant.inventoryStatus,
-    };
-  };
-
   const findVariantByChoices = (
-    variants: ProcessedVariant[],
+    variants: productsV3.Variant[],
     selectedChoices: Record<string, string>
-  ): ProcessedVariant | null => {
+  ): productsV3.Variant | null => {
     return (
       variants.find((variant) => {
+        const variantChoices = processVariantChoices(variant);
         const choiceKeys = Object.keys(selectedChoices);
         return choiceKeys.every(
-          (key) => variant.choices[key] === selectedChoices[key]
+          (key) => variantChoices[key] === selectedChoices[key]
         );
       }) || null
     );
   };
 
-  const getDefaultVariant = (): ProcessedVariant => {
+  const getDefaultVariant = (): productsV3.Variant | null => {
     const variantsList = variants.get();
-    return (
-      variantsList[0] || {
-        id: "",
-        sku: undefined,
-        price: {
-          actualPrice: undefined,
-          compareAtPrice: undefined,
-        },
-        choices: {},
-        inStock: true,
-        inventoryStatus: undefined,
-      }
-    );
+    return variantsList[0] || null;
   };
 
-  const updateQuantityFromVariant = (variant: ProcessedVariant | null) => {
+  const updateQuantityFromVariant = (variant: productsV3.Variant | null) => {
     if (variant) {
-      quantityAvailable.set(variant.inStock ? 999 : 0);
+      const inStock = variant.inventoryStatus?.inStock ?? true;
+      quantityAvailable.set(inStock ? 999 : 0);
     }
   };
 
@@ -170,7 +131,9 @@ export const SelectedVariantService = implementService.withConfig<{
   const error: Signal<string | null> = signalsService.signal(null as any);
 
   // Enhanced product data signals (v3 API structure)
-  const variants: Signal<ProcessedVariant[]> = signalsService.signal([] as any);
+  const variants: Signal<productsV3.Variant[]> = signalsService.signal(
+    [] as any
+  );
   const options: Signal<Record<string, string[]>> = signalsService.signal(
     {} as any
   );
@@ -219,25 +182,22 @@ export const SelectedVariantService = implementService.withConfig<{
 
     // Extract variants from v3 product structure
     if (configProduct.variantsInfo?.variants) {
-      const processedVariants =
-        configProduct.variantsInfo.variants.map(processVariant);
-      variants.set(processedVariants);
+      variants.set(configProduct.variantsInfo.variants);
 
       // Select first variant by default
-      if (processedVariants.length > 0) {
-        updateQuantityFromVariant(processedVariants[0]);
+      if (configProduct.variantsInfo.variants.length > 0) {
+        updateQuantityFromVariant(configProduct.variantsInfo.variants[0]);
       }
     } else {
-      // Single variant product
-      const singleVariant: ProcessedVariant = {
-        id: "default",
-        sku: undefined,
+      // Single variant product - create a default variant
+      const singleVariant: productsV3.Variant = {
+        _id: "default",
+        visible: true,
+        choices: [],
         price: {
           actualPrice: configProduct.actualPriceRange?.minValue,
           compareAtPrice: configProduct.compareAtPriceRange?.minValue,
         },
-        choices: {},
-        inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
         inventoryStatus: {
           inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
           preorderEnabled:
@@ -314,10 +274,10 @@ export const SelectedVariantService = implementService.withConfig<{
   });
 
   // Enhanced getters (v3 compatible)
-  const selectedVariant = (): ProcessedVariant => {
+  const selectedVariant = (): productsV3.Variant | null => {
     const variantId = selectedVariantId.get();
     const variantsList = variants.get();
-    return variantsList.find((v) => v.id === variantId) || getDefaultVariant();
+    return variantsList.find((v) => v._id === variantId) || getDefaultVariant();
   };
 
   const finalPrice = (): number => {
@@ -379,14 +339,15 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const selectVariantById = (id: string) => {
     const variantsList = variants.get();
-    const variant = variantsList.find((v) => v.id === id);
+    const variant = variantsList.find((v) => v._id === id);
     if (variant) {
-      selectedChoices.set(variant.choices);
+      const variantChoices = processVariantChoices(variant);
+      selectedChoices.set(variantChoices);
       updateQuantityFromVariant(variant);
     }
   };
 
-  const loadProductVariants = (data: ProcessedVariant[]) => {
+  const loadProductVariants = (data: productsV3.Variant[]) => {
     variants.set(data);
     if (data.length > 0) {
       updateQuantityFromVariant(data[0]);
