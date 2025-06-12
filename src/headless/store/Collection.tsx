@@ -1,7 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { CollectionServiceDefinition } from "./collection-service";
-import { products } from "@wix/stores";
+import { products, productsV3 } from "@wix/stores";
 
 /**
  * Props for ProductGrid headless component
@@ -16,7 +16,7 @@ export interface ProductGridProps {
  */
 export interface ProductGridRenderProps {
   /** Array of products */
-  products: products.Product[];
+  products: productsV3.V3Product[];
   /** Whether products are loading */
   isLoading: boolean;
   /** Error message if any */
@@ -53,7 +53,7 @@ export const ProductGrid = (props: ProductGridProps) => {
  */
 export interface ProductCardProps {
   /** Product data */
-  product: products.Product;
+  product: productsV3.V3Product;
   /** Render prop function that receives product card data */
   children: (props: ProductCardRenderProps) => React.ReactNode;
 }
@@ -86,11 +86,17 @@ export interface ProductCardRenderProps {
 export const ProductCard = (props: ProductCardProps) => {
   const { product } = props;
 
-  const imageUrl = product.media?.items?.[0]?.image?.url || null;
-  const price = product.priceData?.formatted?.price || "$0.00";
-  const inStock =
-    product.stock?.inventoryStatus === "IN_STOCK" ||
-    !product.stock?.trackInventory;
+  // Use actual v3 API structure based on real data
+  // Images are in media.main.image, not media.itemsInfo.items
+  const imageUrl = product?.media?.main?.image || null;
+
+  // Create formatted price since formattedAmount is not available
+  const rawAmount = product.actualPriceRange?.minValue?.amount;
+  const price = rawAmount ? `$${rawAmount}` : "$0.00";
+
+  const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
+  const description =
+    typeof product.description === "string" ? product.description : "";
 
   return props.children({
     productId: product._id || "",
@@ -98,7 +104,7 @@ export const ProductCard = (props: ProductCardProps) => {
     slug: product.slug || "",
     imageUrl,
     price,
-    description: product.description || "",
+    description,
     inStock,
     productUrl: `/store/products/${product.slug}`,
   });

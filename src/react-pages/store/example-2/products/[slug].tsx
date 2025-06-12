@@ -830,74 +830,77 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
               {!isLoading && hasRelatedProducts && (
                 <div className="grid grid-cols-2 gap-4">
-                  {relatedProducts.map((product) => (
-                    <RelatedProducts.ProductCard
-                      key={product._id}
-                      product={product}
-                    >
-                      {withDocsWrapper(
-                        ({
-                          name,
-                          imageUrl,
-                          price,
-                          inStock,
-                          productUrl,
-                          description,
-                        }) => (
-                          <a
-                            href={productUrl}
-                            className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
-                          >
-                            <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
-                              {imageUrl ? (
-                                <img
-                                  src={imageUrl}
-                                  alt={name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center">
-                                  <svg
-                                    className="w-8 h-8 text-white/40"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth="2"
-                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                  </svg>
-                                </div>
+                  {relatedProducts.map((product) => {
+                    console.log({ product });
+                    return (
+                      <RelatedProducts.ProductCard
+                        key={product._id}
+                        product={product}
+                      >
+                        {withDocsWrapper(
+                          ({
+                            name,
+                            imageUrl,
+                            price,
+                            inStock,
+                            productUrl,
+                            description,
+                          }) => (
+                            <a
+                              href={productUrl}
+                              className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
+                            >
+                              <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                                {imageUrl ? (
+                                  <img
+                                    src={imageUrl}
+                                    alt={name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <svg
+                                      className="w-8 h-8 text-white/40"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
+                                {name}
+                              </h4>
+                              {description && (
+                                <p className="text-white/60 text-xs mb-2 line-clamp-2">
+                                  {description}
+                                </p>
                               )}
-                            </div>
-                            <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
-                              {name}
-                            </h4>
-                            {description && (
-                              <p className="text-white/60 text-xs mb-2 line-clamp-2">
-                                {description}
-                              </p>
-                            )}
-                            <div className="flex items-center justify-between">
-                              <p className="text-white font-semibold">
-                                {price}
-                              </p>
-                              {!inStock && (
-                                <span className="text-red-400 text-xs">
-                                  Out of Stock
-                                </span>
-                              )}
-                            </div>
-                          </a>
-                        ),
-                        "RelatedProducts.ProductCard",
-                        "/docs/components/related-products#productcard"
-                      )}
-                    </RelatedProducts.ProductCard>
-                  ))}
+                              <div className="flex items-center justify-between">
+                                <p className="text-white font-semibold">
+                                  {price}
+                                </p>
+                                {!inStock && (
+                                  <span className="text-red-400 text-xs">
+                                    Out of Stock
+                                  </span>
+                                )}
+                              </div>
+                            </a>
+                          ),
+                          "RelatedProducts.ProductCard",
+                          "/docs/components/related-products#productcard"
+                        )}
+                      </RelatedProducts.ProductCard>
+                    );
+                  })}
                 </div>
               )}
 

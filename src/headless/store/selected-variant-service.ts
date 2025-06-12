@@ -237,6 +237,7 @@ export const SelectedVariantService = implementService.withConfig<{
     const variant = currentVariant.get();
     const prod = v3Product.get();
 
+    // Try to get formatted amount first (if fields worked)
     if (variant?.price?.actualPrice?.formattedAmount) {
       return variant.price.actualPrice.formattedAmount;
     }
@@ -245,7 +246,16 @@ export const SelectedVariantService = implementService.withConfig<{
       return prod.actualPriceRange.minValue.formattedAmount;
     }
 
-    return "$0.00";
+    // Fallback: create our own formatted price from amount
+    let rawAmount = null;
+
+    if (variant?.price?.actualPrice?.amount) {
+      rawAmount = variant.price.actualPrice.amount;
+    } else if (prod?.actualPriceRange?.minValue?.amount) {
+      rawAmount = prod.actualPriceRange.minValue.amount;
+    }
+
+    return rawAmount ? `$${rawAmount}` : "$0.00";
   });
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
@@ -407,6 +417,7 @@ export async function loadSelectedVariantServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof SelectedVariantService>> {
   try {
+    // First, find the product ID by slug using queryProducts
     const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
@@ -416,8 +427,24 @@ export async function loadSelectedVariantServiceConfig(
       throw new Error("Product not found");
     }
 
+    const productId = storeProducts.items[0]._id;
+    if (!productId) {
+      throw new Error("Product ID not found");
+    }
+
+    // Then get the full product data including variants and media using getProduct
+    const fullProduct = await productsV3.getProduct(productId, {
+      fields: [
+        "MEDIA_ITEMS_INFO" as any, // Required for product media gallery
+        "CURRENCY" as any, // Required for formatted pricing (formattedAmount)
+        "DESCRIPTION" as any, // For product descriptions
+        "PLAIN_DESCRIPTION" as any, // Fallback for descriptions
+        "VARIANT_OPTION_CHOICE_NAMES" as any, // For variant option names
+      ],
+    });
+
     return {
-      product: storeProducts.items[0],
+      product: fullProduct,
     };
   } catch (error) {
     console.error("Failed to load product:", error);
