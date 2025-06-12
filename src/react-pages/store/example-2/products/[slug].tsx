@@ -41,6 +41,7 @@ import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGall
 import { CurrentCart } from "../../../../headless/store/CurrentCart";
 import { SocialSharing } from "../../../../headless/store/SocialSharing";
 import { RelatedProducts } from "../../../../headless/store/RelatedProducts";
+import WixMediaImage from "../../../../headless/media/Image";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -57,121 +58,122 @@ const ProductImageGallery = () => {
       {/* Main Image */}
       <ProductMediaGallery.SelectedImage>
         {withDocsWrapper(
-          ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => (
-            <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
-              {isLoading ? (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                </div>
-              ) : imageUrl ? (
-                <img
-                  src={imageUrl}
-                  alt={altText}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <svg
-                    className="w-24 h-24 text-white/40"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-              )}
-
-              {/* Navigation Arrows */}
-              {totalImages > 1 && (
-                <>
-                  <ProductMediaGallery.PrevImageButton>
-                    {withDocsWrapper(
-                      ({ prevImage, hasPrev }) => (
-                        <>
-                          {hasPrev && (
-                            <button
-                              onClick={prevImage}
-                              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <svg
-                                className="w-6 h-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M15 19l-7-7 7-7"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                        </>
-                      ),
-                      "ProductMediaGallery.PrevImageButton",
-                      "/docs/components/product-media-gallery#previmagebutton"
-                    )}
-                  </ProductMediaGallery.PrevImageButton>
-
-                  <ProductMediaGallery.NextImageButton>
-                    {withDocsWrapper(
-                      ({ nextImage, hasNext }) => (
-                        <>
-                          {hasNext && (
-                            <button
-                              onClick={nextImage}
-                              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <svg
-                                className="w-6 h-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M9 5l7 7-7 7"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                        </>
-                      ),
-                      "ProductMediaGallery.NextImageButton",
-                      "/docs/components/product-media-gallery#nextimagebutton"
-                    )}
-                  </ProductMediaGallery.NextImageButton>
-                </>
-              )}
-
-              {/* Image Counter */}
-              <ProductMediaGallery.MediaGalleryInfo>
-                {withDocsWrapper(
-                  ({ currentImage, totalImages, hasImages }) => (
-                    <>
-                      {hasImages && totalImages > 1 && (
-                        <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
-                          {currentImage} / {totalImages}
-                        </div>
-                      )}
-                    </>
-                  ),
-                  "ProductMediaGallery.MediaGalleryInfo",
-                  "/docs/components/product-media-gallery#mediagalleryinfo"
+          ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => {
+            return (
+              <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
+                {isLoading ? (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                  </div>
+                ) : imageUrl ? (
+                  <WixMediaImage
+                    media={{ image: imageUrl }}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg
+                      className="w-24 h-24 text-white/40"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
                 )}
-              </ProductMediaGallery.MediaGalleryInfo>
-            </div>
-          ),
+
+                {/* Navigation Arrows */}
+                {totalImages > 1 && (
+                  <>
+                    <ProductMediaGallery.PrevImageButton>
+                      {withDocsWrapper(
+                        ({ prevImage, hasPrev }) => (
+                          <>
+                            {hasPrev && (
+                              <button
+                                onClick={prevImage}
+                                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <svg
+                                  className="w-6 h-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M15 19l-7-7 7-7"
+                                  />
+                                </svg>
+                              </button>
+                            )}
+                          </>
+                        ),
+                        "ProductMediaGallery.PrevImageButton",
+                        "/docs/components/product-media-gallery#previmagebutton"
+                      )}
+                    </ProductMediaGallery.PrevImageButton>
+
+                    <ProductMediaGallery.NextImageButton>
+                      {withDocsWrapper(
+                        ({ nextImage, hasNext }) => (
+                          <>
+                            {hasNext && (
+                              <button
+                                onClick={nextImage}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <svg
+                                  className="w-6 h-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M9 5l7 7-7 7"
+                                  />
+                                </svg>
+                              </button>
+                            )}
+                          </>
+                        ),
+                        "ProductMediaGallery.NextImageButton",
+                        "/docs/components/product-media-gallery#nextimagebutton"
+                      )}
+                    </ProductMediaGallery.NextImageButton>
+                  </>
+                )}
+
+                {/* Image Counter */}
+                <ProductMediaGallery.MediaGalleryInfo>
+                  {withDocsWrapper(
+                    ({ currentImage, totalImages, hasImages }) => (
+                      <>
+                        {hasImages && totalImages > 1 && (
+                          <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                            {currentImage} / {totalImages}
+                          </div>
+                        )}
+                      </>
+                    ),
+                    "ProductMediaGallery.MediaGalleryInfo",
+                    "/docs/components/product-media-gallery#mediagalleryinfo"
+                  )}
+                </ProductMediaGallery.MediaGalleryInfo>
+              </div>
+            );
+          },
           "ProductMediaGallery.SelectedImage",
           "/docs/components/product-media-gallery#selectedimage"
         )}
@@ -200,9 +202,8 @@ const ProductImageGallery = () => {
                             }`}
                           >
                             {imageUrl && (
-                              <img
-                                src={imageUrl}
-                                alt={altText}
+                              <WixMediaImage
+                                media={{ image: imageUrl }}
                                 className="w-full h-full object-cover"
                               />
                             )}
@@ -852,9 +853,8 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             >
                               <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                                 {imageUrl ? (
-                                  <img
-                                    src={imageUrl}
-                                    alt={name}
+                                  <WixMediaImage
+                                    media={{ image: imageUrl }}
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (

@@ -1,7 +1,6 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "./product-media-gallery-service";
-import { media } from "@wix/sdk";
 
 /**
  * Props for SelectedImage headless component
@@ -45,7 +44,7 @@ export const SelectedImage = (props: SelectedImageProps) => {
 
   // Use actual v3 media structure - images are in media.main.image
   const product = mediaService.product.get();
-  const { url: imageUrl } = media.getImageUrl(product?.media?.main?.image);
+  const imageUrl = product?.media?.main?.image || null;
   const altText = productName || "Product image";
 
   return props.children({

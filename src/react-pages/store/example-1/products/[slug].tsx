@@ -29,6 +29,7 @@ import {
   withDocsWrapper,
   PageDocsRegistration,
 } from "../../../../components/DocsMode";
+import WixMediaImage from "../../../../headless/media/Image";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -129,9 +130,8 @@ export default function ProductDetailPage({
                       }) => (
                         <>
                           {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={altText}
+                            <WixMediaImage
+                              media={{ image: imageUrl }}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -262,9 +262,8 @@ export default function ProductDetailPage({
                                     }`}
                                   >
                                     {imageUrl ? (
-                                      <img
-                                        src={imageUrl}
-                                        alt={altText}
+                                      <WixMediaImage
+                                        media={{ image: imageUrl }}
                                         className="w-full h-full object-cover rounded-lg"
                                       />
                                     ) : (

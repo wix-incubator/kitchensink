@@ -18,7 +18,7 @@ import {
   CurrentCartService,
 } from "../../../headless/store/current-cart-service";
 import { Collection } from "../../../headless/store/Collection";
-import { CurrentCart } from "../../../headless/store/CurrentCart";
+import WixMediaImage from "../../../headless/media/Image";
 
 interface StoreExample2PageProps {
   collectionServiceConfig: any;
@@ -90,9 +90,8 @@ const ProductGridContent = () => {
                         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group">
                           <div className="aspect-square bg-white/10 rounded-lg mb-4 overflow-hidden relative">
                             {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt={name}
+                              <WixMediaImage
+                                media={{ image: imageUrl }}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                             ) : (

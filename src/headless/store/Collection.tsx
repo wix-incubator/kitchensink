@@ -2,7 +2,6 @@ import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { CollectionServiceDefinition } from "./collection-service";
 import { productsV3 } from "@wix/stores";
-import { media } from "@wix/sdk";
 
 /**
  * Props for ProductGrid headless component
@@ -120,7 +119,7 @@ export const ProductCard = (props: ProductCardProps) => {
 
   // Use actual v3 API structure based on real data
   // Images are in media.main.image, not media.itemsInfo.items
-  const { url: imageUrl } = media.getImageUrl(product?.media?.main?.image);
+  const imageUrl = product?.media?.main?.image || null;
 
   // Create formatted price since formattedAmount is not available
   const rawAmount = product.actualPriceRange?.minValue?.amount;
