@@ -3,6 +3,7 @@ import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { RelatedProductsServiceDefinition } from "./related-products-service";
 import { productsV3 } from "@wix/stores";
+import { media } from "@wix/sdk";
 
 /**
  * Props for RelatedProductsList headless component
@@ -101,7 +102,7 @@ export const RelatedProductCard = (props: RelatedProductCardProps) => {
 
   const name = product.name || "Unknown Product";
   // Use actual v3 media structure - image is directly a string URL
-  const imageUrl = product.media?.main?.image || null;
+  const { url: imageUrl } = media.getImageUrl(product?.media?.main?.image);
   // Create formatted price from raw amount since formattedAmount may not be available
   const rawPrice = product.actualPriceRange?.minValue?.amount;
   const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
