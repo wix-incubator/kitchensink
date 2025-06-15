@@ -1,55 +1,34 @@
 import type { services } from "@wix/bookings";
 import { media as wixMedia } from "@wix/sdk";
-import { Image } from "@wix/image";
+import { Image, type FittingType } from "@wix/image";
 
 type MediaItem = services.MediaItem;
 
-export const parseWixImageUrl = (url: string) => {
-  if (!url) {
+export const parseMediaFromUrl = (url: string) => {
+  if (!url)
     return { uri: url, originalWidth: undefined, originalHeight: undefined };
-  }
 
-  // Extract the hash parameters part
-  const hashIndex = url.indexOf("#");
-  let baseUrl = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+  const uri = url.replace("wix:image://v1/", "").split("#")[0].split("/")[0];
 
-  // Extract URI by removing wix:image://v1/ prefix if present
-  let uri = baseUrl;
-  if (baseUrl.startsWith("wix:image://v1/")) {
-    uri = baseUrl.substring("wix:image://v1/".length);
-  }
-
-  // Extract just the image file part (before the first "/")
-  const slashIndex = uri.indexOf("/");
-  if (slashIndex !== -1) {
-    uri = uri.substring(0, slashIndex);
-  }
-
-  if (hashIndex === -1) {
-    return { uri, originalWidth: undefined, originalHeight: undefined };
-  }
-
-  // Parse the hash parameters
-  const params = url.substring(hashIndex + 1);
-  const searchParams = new URLSearchParams(params);
-
-  const originWidth = searchParams.get("originWidth");
-  const originHeight = searchParams.get("originHeight");
+  const params = new URLSearchParams(url.split("#")[1] || "");
+  const originalWidth = params.get("originWidth");
+  const originalHeight = params.get("originHeight");
 
   return {
     uri,
-    originalWidth: originWidth ? parseInt(originWidth, 10) : undefined,
-    originalHeight: originHeight ? parseInt(originHeight, 10) : undefined,
+    originalWidth: originalWidth ? parseInt(originalWidth, 10) : undefined,
+    originalHeight: originalHeight ? parseInt(originalHeight, 10) : undefined,
   };
 };
 
 export default function WixMediaImage({
   media,
-  width = 640,
-  height = 320,
+  width,
+  height,
   className,
   alt = "",
   showPlaceholder = true,
+  displayMode = "fit",
 }: {
   media?: MediaItem;
   width?: number;
@@ -57,19 +36,22 @@ export default function WixMediaImage({
   className?: string;
   alt?: string;
   showPlaceholder?: boolean;
+  displayMode?: FittingType;
 }) {
-  const { uri, originalWidth, originalHeight } = parseWixImageUrl(
-    media?.image!
-  );
-
-  console.log({ uri, originalWidth, originalHeight });
+  const {
+    uri,
+    originalWidth = 640,
+    originalHeight = 320,
+  } = parseMediaFromUrl(media?.image!);
 
   return (
     <Image
       uri={uri}
-      width={originalWidth || width}
-      height={originalHeight || height}
-      displayMode="fit"
+      width={originalWidth}
+      height={originalHeight}
+      containerWidth={width}
+      containerHeight={height}
+      displayMode={displayMode}
       isInFirstFold={true}
       isSEOBot={false}
       shouldUseLQIP={showPlaceholder}

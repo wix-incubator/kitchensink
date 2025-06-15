@@ -631,6 +631,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
                                       media={image}
                                       width={400}
                                       height={200}
+                                      displayMode="fill"
                                       className="w-full h-48 object-cover"
                                     />
                                   </div>
