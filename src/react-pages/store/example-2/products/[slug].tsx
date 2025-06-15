@@ -947,23 +947,28 @@ export default function ProductDetailPage({
 
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="mb-8">
-              <div className="flex items-center gap-2 text-white/60">
-                <a href="/store" className="hover:text-white transition-colors">
-                  Store
-                </a>
-                <span>/</span>
-                <a
-                  href="/store/example-2"
-                  className="hover:text-white transition-colors"
+            {/* Back to Store */}
+            <div className="mb-8">
+              <a
+                href="/store/example-2"
+                className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  Example 2
-                </a>
-                <span>/</span>
-                <span className="text-white">Product</span>
-              </div>
-            </nav>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+                Back to Store
+              </a>
+            </div>
 
             {/* Product Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

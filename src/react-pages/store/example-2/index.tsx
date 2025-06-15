@@ -291,17 +291,6 @@ export default function StoreExample2Page({
         {/* Main Content */}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="mb-8">
-              <div className="flex items-center gap-2 text-white/60">
-                <a href="/store" className="hover:text-white transition-colors">
-                  Store
-                </a>
-                <span>/</span>
-                <span className="text-white">Example 2</span>
-              </div>
-            </nav>
-
             {/* Header */}
             <div className="text-center mb-12">
               <h1 className="text-5xl font-bold text-white mb-4">
