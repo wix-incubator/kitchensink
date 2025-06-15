@@ -7,19 +7,12 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../Signal";
 import { productsV3 } from "@wix/stores";
 
-// RelatedProductsService
-// 🧠 Purpose: Manages related products discovery and display
-// Fetches products that are related to the current product based on categories, tags, or collections
-// Supports loading state, error handling, and configurable display limits
-
 export interface RelatedProductsServiceAPI {
-  // --- State ---
   relatedProducts: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   hasRelatedProducts: Signal<boolean>;
 
-  // --- Actions ---
   loadRelatedProducts: (productId: string, limit?: number) => Promise<void>;
   refreshRelatedProducts: () => Promise<void>;
 }
@@ -33,7 +26,6 @@ export const RelatedProductsService = implementService.withConfig<{
 }>()(RelatedProductsServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  // State signals
   const relatedProducts: Signal<productsV3.V3Product[]> = signalsService.signal(
     [] as any
   );
@@ -43,13 +35,11 @@ export const RelatedProductsService = implementService.withConfig<{
     false as any
   );
 
-  // Actions
   const loadRelatedProducts = async (productId: string, limit: number = 4) => {
     isLoading.set(true);
     error.set(null);
 
     try {
-      // First, get the current product to understand its categories/collections
       const currentProduct = await productsV3
         .queryProducts()
         .eq("_id", productId)
@@ -61,9 +51,6 @@ export const RelatedProductsService = implementService.withConfig<{
 
       const product = currentProduct.items[0];
 
-      // Strategy: Get related products (excluding current product)
-      // Note: v3 API has limited query filtering options
-      // For now, we'll get random products excluding the current one
       let relatedQuery = productsV3.queryProducts().ne("_id", productId);
 
       const relatedResult = await relatedQuery.limit(limit).find();
@@ -85,19 +72,16 @@ export const RelatedProductsService = implementService.withConfig<{
     await loadRelatedProducts(config.productId, config.limit);
   };
 
-  // Initialize with config
   if (config.productId) {
     loadRelatedProducts(config.productId, config.limit);
   }
 
   return {
-    // State
     relatedProducts,
     isLoading,
     error,
     hasRelatedProducts,
 
-    // Actions
     loadRelatedProducts,
     refreshRelatedProducts,
   };

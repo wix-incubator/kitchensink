@@ -6,11 +6,6 @@ import {
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
 
-// SocialSharingService
-// 🧠 Purpose: Manages social media sharing functionality
-// Provides methods to share product information across various social platforms
-// Supports dynamic URL generation, tracking, and platform-specific formatting
-
 export interface SharingPlatform {
   name: string;
   icon: string;
@@ -19,12 +14,10 @@ export interface SharingPlatform {
 }
 
 export interface SocialSharingServiceAPI {
-  // --- State ---
   availablePlatforms: Signal<SharingPlatform[]>;
   shareCount: Signal<number>;
   lastSharedPlatform: Signal<string | null>;
 
-  // --- Actions ---
   shareToFacebook: (url: string, title: string, description?: string) => void;
   shareToTwitter: (url: string, text: string, hashtags?: string[]) => void;
   shareToLinkedIn: (url: string, title: string, summary?: string) => void;
@@ -50,7 +43,6 @@ export const SocialSharingService = implementService.withConfig<{
 }>()(SocialSharingServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  // State signals
   const availablePlatforms: Signal<SharingPlatform[]> = signalsService.signal([
     {
       name: "Facebook",
@@ -84,10 +76,11 @@ export const SocialSharingService = implementService.withConfig<{
     },
   ]);
 
-  const shareCount: Signal<number> = signalsService.signal(0);
-  const lastSharedPlatform: Signal<string | null> = signalsService.signal(null);
+  const shareCount: Signal<number> = signalsService.signal(0 as any);
+  const lastSharedPlatform: Signal<string | null> = signalsService.signal(
+    null as any
+  );
 
-  // Helper function to open share window
   const openShareWindow = (url: string, platform: string) => {
     const width = 600;
     const height = 400;
@@ -103,7 +96,6 @@ export const SocialSharingService = implementService.withConfig<{
     trackShare(platform);
   };
 
-  // Actions
   const shareToFacebook = (
     url: string,
     title: string,
@@ -165,7 +157,6 @@ export const SocialSharingService = implementService.withConfig<{
         trackShare("clipboard");
         return true;
       } else {
-        // Fallback for older browsers
         const textArea = document.createElement("textarea");
         textArea.value = url;
         textArea.style.position = "fixed";
@@ -211,17 +202,14 @@ export const SocialSharingService = implementService.withConfig<{
     shareCount.set(currentCount + 1);
     lastSharedPlatform.set(platform);
 
-    // You could also send analytics events here
     console.log(`Shared to ${platform} - Total shares: ${currentCount + 1}`);
   };
 
   return {
-    // State
     availablePlatforms,
     shareCount,
     lastSharedPlatform,
 
-    // Actions
     shareToFacebook,
     shareToTwitter,
     shareToLinkedIn,

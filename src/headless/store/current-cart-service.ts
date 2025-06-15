@@ -10,14 +10,12 @@ import { currentCart, checkout } from "@wix/ecom";
 import { redirects } from "@wix/redirects";
 
 export interface CurrentCartServiceAPI {
-  // --- State ---
   cart: Signal<currentCart.Cart | null>;
   isOpen: Signal<boolean>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   cartCount: ReadOnlySignal<number>;
 
-  // --- Actions ---
   addToCart: (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
   ) => Promise<void>;
@@ -42,7 +40,6 @@ export const CurrentCartService = implementService.withConfig<{
 }>()(CurrentCartServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  // State signals
   const cart: Signal<currentCart.Cart | null> = signalsService.signal(
     config.initialCart || (null as any)
   );
@@ -50,7 +47,6 @@ export const CurrentCartService = implementService.withConfig<{
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
 
-  // Computed values
   const cartCount: ReadOnlySignal<number> = signalsService.computed(() => {
     const currentCart = cart.get();
     if (!currentCart?.lineItems) return 0;
@@ -60,7 +56,6 @@ export const CurrentCartService = implementService.withConfig<{
     );
   });
 
-  // Actions
   const addToCart = async (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
   ) => {
@@ -185,7 +180,7 @@ export const CurrentCartService = implementService.withConfig<{
         ecomCheckout: { checkoutId: checkoutResult.checkoutId },
         callbacks: {
           postFlowUrl: window.location.href,
-          cartPageUrl: window.location.origin + '/cart',
+          cartPageUrl: window.location.origin + "/cart",
         },
       });
 

@@ -55,7 +55,6 @@ interface ProductDetailPageProps {
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
-      {/* Main Image */}
       <ProductMediaGallery.SelectedImage>
         {withDocsWrapper(
           ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => {
@@ -88,7 +87,6 @@ const ProductImageGallery = () => {
                   </div>
                 )}
 
-                {/* Navigation Arrows */}
                 {totalImages > 1 && (
                   <>
                     <ProductMediaGallery.PrevImageButton>
@@ -155,7 +153,6 @@ const ProductImageGallery = () => {
                   </>
                 )}
 
-                {/* Image Counter */}
                 <ProductMediaGallery.MediaGalleryInfo>
                   {withDocsWrapper(
                     ({ currentImage, totalImages, hasImages }) => (
@@ -179,7 +176,6 @@ const ProductImageGallery = () => {
         )}
       </ProductMediaGallery.SelectedImage>
 
-      {/* Thumbnails */}
       <ProductMediaGallery.MediaGalleryInfo>
         {withDocsWrapper(
           ({ totalImages, hasImages }) => (
@@ -228,12 +224,10 @@ const ProductImageGallery = () => {
 
 const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
   const [quantity, setQuantity] = useState(1);
-  const [isWishlist, setIsWishlist] = useState(false);
 
   return (
     <div className="space-y-6">
-      {/* Product Name & Wishlist */}
-      <div className="flex items-start justify-between gap-4">
+      <div>
         <Product.Name>
           {withDocsWrapper(
             ({ name, hasName }) => (
@@ -247,32 +241,8 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
             "/docs/components/product#name"
           )}
         </Product.Name>
-
-        {/* Wishlist Toggle */}
-        <button
-          onClick={() => setIsWishlist(!isWishlist)}
-          className="flex-shrink-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          title={isWishlist ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <svg
-            className={`w-6 h-6 ${
-              isWishlist ? "text-red-400 fill-current" : "text-white/60"
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </button>
       </div>
 
-      {/* Product Description */}
       <Product.Description>
         {withDocsWrapper(
           ({ description, hasDescription, isHtml }) => (
@@ -296,30 +266,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Description>
 
-      {/* Ratings & Reviews (Stubbed) */}
-      <div className="border-y border-white/10 py-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <svg
-                key={star}
-                className={`w-5 h-5 ${
-                  star <= 4 ? "text-yellow-400 fill-current" : "text-white/20"
-                }`}
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
-          </div>
-          <span className="text-white/80">4.0 (247 reviews)</span>
-          <button className="text-teal-400 hover:text-teal-300 text-sm transition-colors">
-            Read Reviews
-          </button>
-        </div>
-      </div>
-
-      {/* Product Price */}
       <ProductVariantSelector.ProductPrice>
         {withDocsWrapper(
           ({ price, isVariantPrice, currency }) => (
@@ -342,7 +288,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.ProductPrice>
 
-      {/* Enhanced Stock Status with Low Stock Warning & Pre-order */}
       <ProductVariantSelector.StockStatus>
         {withDocsWrapper(
           ({ inStock, status, quantity, trackInventory }) => {
@@ -387,7 +332,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </span>
                 </div>
 
-                {/* Pre-order Badge */}
                 {isPreorder && (
                   <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-2">
                     <p className="text-orange-300 text-xs">
@@ -397,7 +341,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </div>
                 )}
 
-                {/* Low Stock Warning */}
                 {isLowStock && (
                   <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
                     <p className="text-yellow-300 text-xs">
@@ -413,10 +356,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.StockStatus>
 
-      {/* Product Options with Reset */}
       <ProductVariantSelector.ProductOptions>
         {withDocsWrapper(
-          ({ options, hasOptions, selectedOptions }) => (
+          ({ options, hasOptions }) => (
             <>
               {hasOptions && (
                 <div className="space-y-4">
@@ -424,7 +366,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                     <h3 className="text-lg font-semibold text-white">
                       Product Options
                     </h3>
-                    {/* Reset Quantity Button */}
                     <button
                       onClick={() => setQuantity(1)}
                       className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
@@ -457,9 +398,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                   )}
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
-                                  {choices.map((choice) => (
+                                  {choices.map((choice, choiceIndex) => (
                                     <ProductVariantSelector.ChoiceSelection
-                                      key={choice.value}
+                                      key={choiceIndex}
                                       option={option}
                                       choice={choice}
                                     >
@@ -513,7 +454,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.ProductOptions>
 
-      {/* Quantity Selector */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-white">Quantity</h3>
         <div className="flex items-center gap-3">
@@ -539,7 +479,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         </div>
       </div>
 
-      {/* Add to Cart & Buy Now */}
       <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
         {withDocsWrapper(
           ({ addToCart, canAddToCart, isLoading, inStock, error }) => (
@@ -591,12 +530,10 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                     )}
                   </button>
 
-                  {/* Buy Now Button */}
                   <button
                     onClick={async () => {
                       await addToCart();
                       onAddToCart();
-                      // Simulate redirect to checkout
                       setTimeout(() => {
                         window.location.href = "/checkout";
                       }, 1000);
@@ -635,7 +572,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </button>
                 </div>
 
-                {/* Social Sharing */}
                 <SocialSharing.ShareButtons
                   url={
                     typeof window !== "undefined" ? window.location.href : ""
@@ -665,7 +601,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                         <div className="flex items-center gap-2 pt-2 border-t border-white/10">
                           <span className="text-white/60 text-sm">Share:</span>
 
-                          {/* Twitter */}
                           <button
                             onClick={shareTwitter}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
@@ -680,7 +615,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* Facebook */}
                           <button
                             onClick={shareFacebook}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-600/20 hover:text-blue-500 transition-all"
@@ -695,7 +629,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* LinkedIn */}
                           <button
                             onClick={shareLinkedIn}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-700/20 hover:text-blue-600 transition-all"
@@ -710,7 +643,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* Copy Link */}
                           <button
                             onClick={handleCopyLink}
                             className="p-2 rounded-full bg-white/10 hover:bg-teal-500/20 hover:text-teal-400 transition-all relative"
@@ -767,7 +699,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.AddToCartTrigger>
 
-      {/* Product Details */}
       <Product.Details>
         {withDocsWrapper(
           ({ sku, weight, hasSku, hasWeight }) => (
@@ -796,7 +727,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Details>
 
-      {/* Related Products */}
       <RelatedProducts.List>
         {withDocsWrapper(
           ({ relatedProducts, isLoading, error, hasRelatedProducts }) => (
@@ -943,7 +873,6 @@ export default function ProductDetailPage({
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Create services manager with all required services
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -994,32 +923,33 @@ export default function ProductDetailPage({
 
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="mb-8">
-              <div className="flex items-center gap-2 text-white/60">
-                <a href="/store" className="hover:text-white transition-colors">
-                  Store
-                </a>
-                <span>/</span>
-                <a
-                  href="/store/example-2"
-                  className="hover:text-white transition-colors"
+            <div className="mb-8">
+              <a
+                href="/store/example-2"
+                className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  Example 2
-                </a>
-                <span>/</span>
-                <span className="text-white">Product</span>
-              </div>
-            </nav>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+                Back to Store
+              </a>
+            </div>
 
-            {/* Product Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Product Images */}
               <div>
                 <ProductImageGallery />
               </div>
 
-              {/* Product Information */}
               <div>
                 <ProductInfo
                   onAddToCart={() => {
@@ -1030,7 +960,6 @@ export default function ProductDetailPage({
               </div>
             </div>
 
-            {/* Current Cart Summary */}
             <div className="mt-12 pt-8 border-t border-white/10">
               <CurrentCart.CartSummary>
                 {withDocsWrapper(
