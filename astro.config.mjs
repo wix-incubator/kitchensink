@@ -19,6 +19,7 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    // Bundle @wix/image for SSR compatibility to fix module loading issues
     ssr: {
       noExternal: ["@wix/image"],
     },
