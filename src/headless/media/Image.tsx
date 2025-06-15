@@ -1,46 +1,80 @@
-import type { services } from '@wix/bookings';
-import { media as wixMedia } from '@wix/sdk';
+import type { services } from "@wix/bookings";
+import { media as wixMedia } from "@wix/sdk";
+import { Image } from "@wix/image";
 
 type MediaItem = services.MediaItem;
 
-export const getImageUrlForMedia = (
-    media: MediaItem,
-    width: number = 640,
-    height: number = 320
-) =>
-    wixMedia.getScaledToFillImageUrl(media.image!, width, height, {});
+export const parseWixImageUrl = (url: string) => {
+  if (!url) {
+    return { uri: url, originalWidth: undefined, originalHeight: undefined };
+  }
+
+  // Extract the hash parameters part
+  const hashIndex = url.indexOf("#");
+  let baseUrl = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+
+  // Extract URI by removing wix:image://v1/ prefix if present
+  let uri = baseUrl;
+  if (baseUrl.startsWith("wix:image://v1/")) {
+    uri = baseUrl.substring("wix:image://v1/".length);
+  }
+
+  // Extract just the image file part (before the first "/")
+  const slashIndex = uri.indexOf("/");
+  if (slashIndex !== -1) {
+    uri = uri.substring(0, slashIndex);
+  }
+
+  if (hashIndex === -1) {
+    return { uri, originalWidth: undefined, originalHeight: undefined };
+  }
+
+  // Parse the hash parameters
+  const params = url.substring(hashIndex + 1);
+  const searchParams = new URLSearchParams(params);
+
+  const originWidth = searchParams.get("originWidth");
+  const originHeight = searchParams.get("originHeight");
+
+  return {
+    uri,
+    originalWidth: originWidth ? parseInt(originWidth, 10) : undefined,
+    originalHeight: originHeight ? parseInt(originHeight, 10) : undefined,
+  };
+};
 
 export default function WixMediaImage({
-    media,
-    width = 640,
-    height = 320,
-    className,
-    showPlaceholder = true,
+  media,
+  width = 640,
+  height = 320,
+  className,
+  alt = "",
+  showPlaceholder = true,
 }: {
-    media?: MediaItem;
-    width?: number;
-    height?: number;
-    className?: string;
-    showPlaceholder?: boolean;
+  media?: MediaItem;
+  width?: number;
+  height?: number;
+  className?: string;
+  alt?: string;
+  showPlaceholder?: boolean;
 }) {
-    return media?.image ? (<img
-        className={className}
-        src={getImageUrlForMedia(media!, width, height)}
-        alt={''}
-    />) :
-        showPlaceholder ? <div className={className}>
-            <div className="w-full h-full flex items-center justify-center text-white/40">
-                <svg
-                    className="w-16 h-16"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                        clipRule="evenodd"
-                    />
-                </svg>
-            </div>
-        </div> : null;
+  const { uri, originalWidth, originalHeight } = parseWixImageUrl(
+    media?.image!
+  );
+
+  console.log({ uri, originalWidth, originalHeight });
+
+  return (
+    <Image
+      uri={uri}
+      width={originalWidth || width}
+      height={originalHeight || height}
+      displayMode="fit"
+      isInFirstFold={true}
+      isSEOBot={false}
+      shouldUseLQIP={showPlaceholder}
+      alt={alt}
+      className={className}
+    />
+  );
 }
