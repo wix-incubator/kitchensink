@@ -228,12 +228,11 @@ const ProductImageGallery = () => {
 
 const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
   const [quantity, setQuantity] = useState(1);
-  const [isWishlist, setIsWishlist] = useState(false);
 
   return (
     <div className="space-y-6">
-      {/* Product Name & Wishlist */}
-      <div className="flex items-start justify-between gap-4">
+      {/* Product Name */}
+      <div>
         <Product.Name>
           {withDocsWrapper(
             ({ name, hasName }) => (
@@ -247,29 +246,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
             "/docs/components/product#name"
           )}
         </Product.Name>
-
-        {/* Wishlist Toggle */}
-        <button
-          onClick={() => setIsWishlist(!isWishlist)}
-          className="flex-shrink-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          title={isWishlist ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <svg
-            className={`w-6 h-6 ${
-              isWishlist ? "text-red-400 fill-current" : "text-white/60"
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </button>
       </div>
 
       {/* Product Description */}
@@ -295,29 +271,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
           "/docs/components/product#description"
         )}
       </Product.Description>
-
-      {/* Ratings & Reviews (Stubbed) */}
-      <div className="border-y border-white/10 py-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <svg
-                key={star}
-                className={`w-5 h-5 ${
-                  star <= 4 ? "text-yellow-400 fill-current" : "text-white/20"
-                }`}
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
-          </div>
-          <span className="text-white/80">4.0 (247 reviews)</span>
-          <button className="text-teal-400 hover:text-teal-300 text-sm transition-colors">
-            Read Reviews
-          </button>
-        </div>
-      </div>
 
       {/* Product Price */}
       <ProductVariantSelector.ProductPrice>
@@ -416,7 +369,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
       {/* Product Options with Reset */}
       <ProductVariantSelector.ProductOptions>
         {withDocsWrapper(
-          ({ options, hasOptions, selectedOptions }) => (
+          ({ options, hasOptions }) => (
             <>
               {hasOptions && (
                 <div className="space-y-4">
@@ -457,9 +410,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                   )}
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
-                                  {choices.map((choice) => (
+                                  {choices.map((choice, choiceIndex) => (
                                     <ProductVariantSelector.ChoiceSelection
-                                      key={choice.value}
+                                      key={choiceIndex}
                                       option={option}
                                       choice={choice}
                                     >

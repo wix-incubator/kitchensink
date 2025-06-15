@@ -155,7 +155,7 @@ const ProductGridContent = () => {
                                 "/store/products/",
                                 "/store/example-2/"
                               )}
-                              className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
+                              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
                             >
                               View Product
                               <svg
@@ -172,23 +172,6 @@ const ProductGridContent = () => {
                                 />
                               </svg>
                             </a>
-
-                            {/* Quick wishlist button */}
-                            <button className="p-2 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg transition-all">
-                              <svg
-                                className="w-5 h-5 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                                />
-                              </svg>
-                            </button>
                           </div>
                         </div>
                       ),
