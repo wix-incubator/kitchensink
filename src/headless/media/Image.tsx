@@ -47,8 +47,8 @@ export default function WixMediaImage({
   return (
     <Image
       uri={uri}
-      width={originalWidth}
-      height={originalHeight}
+      width={width || originalWidth}
+      height={height || originalHeight}
       containerWidth={width}
       containerHeight={height}
       displayMode={displayMode}

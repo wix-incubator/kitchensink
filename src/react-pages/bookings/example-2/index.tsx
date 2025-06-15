@@ -172,9 +172,7 @@ const ServicesPreviewSection = () => {
                               {image ? (
                                 <WixMediaImage
                                   media={image}
-                                  width={640}
-                                  height={320}
-                                  displayMode="fill"
+                                  displayMode="fit"
                                   className="w-full h-48 object-cover"
                                 />
                               ) : (
