@@ -7,21 +7,13 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../Signal";
 import { productsV3 } from "@wix/stores";
 
-/**
- * V3 Collection Service API
- *
- * Manages product collections using Wix Stores Catalog V3 APIs
- * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
- */
 export interface CollectionServiceAPI {
-  // --- State ---
   products: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   totalProducts: Signal<number>;
   hasProducts: Signal<boolean>;
 
-  // --- Actions ---
   loadMore: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -38,7 +30,6 @@ export const CollectionService = implementService.withConfig<{
 
   const initialProducts = config.initialProducts || [];
 
-  // State signals
   const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
     initialProducts as any
   );
@@ -53,17 +44,12 @@ export const CollectionService = implementService.withConfig<{
 
   const pageSize = config.pageSize || 12;
 
-  // Actions
   const loadMore = async () => {
     try {
       isLoading.set(true);
       error.set(null);
 
       let query = productsV3.queryProducts();
-
-      // Note: v3 API has limited filtering options
-      // Collection filtering by collectionId is not available in the current query builder
-      // For now, we'll load more products and append to existing list
 
       const currentProducts = productsList.get();
       const productResults = await query.limit(pageSize).find();
@@ -87,10 +73,6 @@ export const CollectionService = implementService.withConfig<{
       error.set(null);
 
       let query = productsV3.queryProducts();
-
-      // Note: v3 API has limited filtering options
-      // Collection filtering by collectionId is not available in the current query builder
-      // For now, we'll load all visible products
 
       const productResults = await query.limit(pageSize).find();
 
@@ -122,10 +104,6 @@ export async function loadCollectionServiceConfig(
 ): Promise<ServiceFactoryConfig<typeof CollectionService>> {
   try {
     let query = productsV3.queryProducts();
-
-    // Note: v3 API has limited filtering options
-    // Collection filtering is not available in the current query builder
-    // For now, we'll load all visible products
 
     const productResults = await query.limit(12).find();
 

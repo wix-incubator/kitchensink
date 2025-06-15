@@ -16,7 +16,6 @@ import {
 import { CurrentCartServiceDefinition } from "./current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 
-// V3 API Types
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
 type ConnectedOption = productsV3.ConnectedOption;
@@ -24,7 +23,6 @@ type PriceInfo = productsV3.PriceInfo;
 type FixedMonetaryAmount = productsV3.FixedMonetaryAmount;
 
 export interface SelectedVariantServiceAPI {
-  // --- State ---
   selectedChoices: Signal<Record<string, string>>;
   selectedVariantId: ReadOnlySignal<string | null>;
   currentVariant: ReadOnlySignal<productsV3.Variant | null>;
@@ -33,7 +31,6 @@ export interface SelectedVariantServiceAPI {
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 
-  // Enhanced product data (using v3 API structure)
   variants: Signal<productsV3.Variant[]>;
   options: Signal<Record<string, string[]>>;
   basePrice: Signal<number>;
@@ -44,17 +41,14 @@ export interface SelectedVariantServiceAPI {
   sku: Signal<string>;
   ribbonLabel: Signal<string | null>;
 
-  // Product data exposed for variant selector components
   product: ReadOnlySignal<productsV3.V3Product | null>;
   productOptions: ReadOnlySignal<productsV3.ConnectedOption[]>;
   currency: ReadOnlySignal<string>;
 
-  // --- Getters ---
   selectedVariant: () => productsV3.Variant | null;
   finalPrice: () => number;
   isLowStock: (threshold?: number) => boolean;
 
-  // --- Actions ---
   setSelectedChoices: (choices: Record<string, string>) => void;
   addToCart: (quantity?: number) => Promise<void>;
   setOption: (group: string, value: string) => void;
@@ -71,12 +65,9 @@ export const SelectedVariantService = implementService.withConfig<{
 }>()(SelectedVariantServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
   const cartService = getService(CurrentCartServiceDefinition);
-  // Note: We maintain our own v3 product state instead of using v1 product service
 
-  // Extract product information from config
   const configProduct = config.product;
 
-  // Helper Functions for v3 API
   const parsePrice = (amount?: string | null): number => {
     if (!amount) return 0;
     const parsed = parseFloat(amount);
@@ -128,14 +119,12 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   };
 
-  // State signals
   const selectedChoices: Signal<Record<string, string>> = signalsService.signal(
     {} as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
 
-  // Enhanced product data signals (v3 API structure)
   const variants: Signal<productsV3.Variant[]> = signalsService.signal(
     [] as any
   );
@@ -152,17 +141,14 @@ export const SelectedVariantService = implementService.withConfig<{
   const sku: Signal<string> = signalsService.signal("" as any);
   const ribbonLabel: Signal<string | null> = signalsService.signal(null as any);
 
-  // Store v3 product data internally
   const v3Product: Signal<V3Product | null> = signalsService.signal(
     configProduct as any
   );
 
-  // Initialize with product data (v3 API structure)
   if (configProduct) {
     productId.set(configProduct._id || "");
     ribbonLabel.set(configProduct.ribbon?.name || null);
 
-    // Use v3 pricing structure
     const actualPrice = configProduct.actualPriceRange?.minValue?.amount;
     const compareAtPrice = configProduct.compareAtPriceRange?.minValue?.amount;
 
@@ -172,7 +158,6 @@ export const SelectedVariantService = implementService.withConfig<{
       !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
     );
 
-    // Extract options from v3 product structure
     if (configProduct.options) {
       const optionsMap: Record<string, string[]> = {};
       configProduct.options.forEach((option: any) => {
@@ -185,16 +170,13 @@ export const SelectedVariantService = implementService.withConfig<{
       options.set(optionsMap);
     }
 
-    // Extract variants from v3 product structure
     if (configProduct.variantsInfo?.variants) {
       variants.set(configProduct.variantsInfo.variants);
 
-      // Select first variant by default
       if (configProduct.variantsInfo.variants.length > 0) {
         updateQuantityFromVariant(configProduct.variantsInfo.variants[0]);
       }
     } else {
-      // Single variant product - create a default variant
       const singleVariant: productsV3.Variant = {
         _id: "default",
         visible: true,
@@ -214,7 +196,6 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   }
 
-  // Computed values (v3 compatible)
   const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
     signalsService.computed<any>((() => {
       const prod = v3Product.get();
@@ -274,7 +255,6 @@ export const SelectedVariantService = implementService.withConfig<{
     return prod?.inventory?.availabilityStatus === "IN_STOCK";
   });
 
-  // Product data exposed through this service (v3 compatible)
   const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
 
   const productOptions: ReadOnlySignal<productsV3.ConnectedOption[]> =
@@ -288,7 +268,6 @@ export const SelectedVariantService = implementService.withConfig<{
     return prod?.currency || "USD";
   });
 
-  // Enhanced getters (v3 compatible)
   const selectedVariant = (): productsV3.Variant | null => {
     const variantId = selectedVariantId.get();
     const variantsList = variants.get();
@@ -302,12 +281,9 @@ export const SelectedVariantService = implementService.withConfig<{
   };
 
   const isLowStock = (threshold: number = 5): boolean => {
-    // Note: We don't have quantity info in the current structure
-    // This would require additional inventory API calls
     return false;
   };
 
-  // Actions (v3 enhanced)
   const setSelectedChoices = (choices: Record<string, string>) => {
     selectedChoices.set(choices);
     const matchingVariant = findVariantByChoices(variants.get(), choices);
@@ -326,10 +302,9 @@ export const SelectedVariantService = implementService.withConfig<{
         throw new Error("Product not found");
       }
 
-      // Create catalogReference with correct format for Wix Stores
       const catalogReference = {
         catalogItemId: prod._id,
-        appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e", // Correct Wix Stores app ID
+        appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
         options: variant?._id ? { variantId: variant._id } : undefined,
       };
 
@@ -348,11 +323,10 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   };
 
-  // Enhanced actions (v3 compatible)
   const setOption = (group: string, value: string) => {
     const currentChoices = selectedChoices.get();
     const newChoices = { ...currentChoices, [group]: value };
-    setSelectedChoices(newChoices); // Reuse consolidated logic
+    setSelectedChoices(newChoices);
   };
 
   const selectVariantById = (id: string) => {
@@ -379,7 +353,6 @@ export const SelectedVariantService = implementService.withConfig<{
   };
 
   return {
-    // Variant selection state
     selectedChoices,
     selectedVariantId,
     currentVariant,
@@ -388,7 +361,6 @@ export const SelectedVariantService = implementService.withConfig<{
     isLoading,
     error,
 
-    // Enhanced product data (v3 API structure)
     variants,
     options,
     basePrice,
@@ -399,22 +371,18 @@ export const SelectedVariantService = implementService.withConfig<{
     sku,
     ribbonLabel,
 
-    // Variant selection actions
     setSelectedChoices,
     addToCart,
 
-    // Additional actions (v3 enhanced)
     setOption,
     selectVariantById,
     loadProductVariants,
     resetSelections,
 
-    // Enhanced getters (v3 compatible)
     selectedVariant,
     finalPrice,
     isLowStock,
 
-    // Product data exposed for variant selector components
     product,
     productOptions,
     currency,
@@ -425,7 +393,6 @@ export async function loadSelectedVariantServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof SelectedVariantService>> {
   try {
-    // First, find the product ID by slug using queryProducts
     const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
@@ -440,14 +407,13 @@ export async function loadSelectedVariantServiceConfig(
       throw new Error("Product ID not found");
     }
 
-    // Then get the full product data including variants and media using getProduct
     const fullProduct = await productsV3.getProduct(productId, {
       fields: [
-        "MEDIA_ITEMS_INFO" as any, // Required for product media gallery
-        "CURRENCY" as any, // Required for formatted pricing (formattedAmount)
-        "DESCRIPTION" as any, // For product descriptions
-        "PLAIN_DESCRIPTION" as any, // Fallback for descriptions
-        "VARIANT_OPTION_CHOICE_NAMES" as any, // For variant option names
+        "MEDIA_ITEMS_INFO" as any,
+        "CURRENCY" as any,
+        "DESCRIPTION" as any,
+        "PLAIN_DESCRIPTION" as any,
+        "VARIANT_OPTION_CHOICE_NAMES" as any,
       ],
     });
 
