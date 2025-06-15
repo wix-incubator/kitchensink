@@ -14,6 +14,7 @@ import { productsV3 } from "@wix/stores";
  * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
  */
 export interface ProductServiceAPI {
+  // --- State ---
   product: Signal<productsV3.V3Product | null>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;

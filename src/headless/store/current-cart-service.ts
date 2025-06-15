@@ -10,12 +10,14 @@ import { currentCart, checkout } from "@wix/ecom";
 import { redirects } from "@wix/redirects";
 
 export interface CurrentCartServiceAPI {
+  // --- State ---
   cart: Signal<currentCart.Cart | null>;
   isOpen: Signal<boolean>;
-  cartCount: ReadOnlySignal<number>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
+  cartCount: ReadOnlySignal<number>;
 
+  // --- Actions ---
   addToCart: (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
   ) => Promise<void>;

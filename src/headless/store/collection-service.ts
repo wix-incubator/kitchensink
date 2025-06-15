@@ -14,13 +14,14 @@ import { productsV3 } from "@wix/stores";
  * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
  */
 export interface CollectionServiceAPI {
+  // --- State ---
   products: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   totalProducts: Signal<number>;
   hasProducts: Signal<boolean>;
 
-  // Actions
+  // --- Actions ---
   loadMore: () => Promise<void>;
   refresh: () => Promise<void>;
 }

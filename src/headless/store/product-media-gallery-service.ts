@@ -10,20 +10,20 @@ import { SelectedVariantServiceDefinition } from "./selected-variant-service";
 import { ProductServiceDefinition } from "./product-service";
 
 export interface ProductMediaGalleryServiceAPI {
-  // Media gallery state
+  // --- State ---
   selectedImageIndex: Signal<number>;
   selectedImage: ReadOnlySignal<any | null>; // Simplified type for v3 compatibility
-
-  // Media gallery actions
-  setSelectedImageIndex: (index: number) => void;
-  nextImage: () => void;
-  previousImage: () => void;
 
   // Product data exposed for media gallery components
   product: ReadOnlySignal<productsV3.V3Product | null>;
   isLoading: ReadOnlySignal<boolean>;
   totalImages: ReadOnlySignal<number>;
   productName: ReadOnlySignal<string>;
+
+  // --- Actions ---
+  setSelectedImageIndex: (index: number) => void;
+  nextImage: () => void;
+  previousImage: () => void;
 }
 
 export const ProductMediaGalleryServiceDefinition =

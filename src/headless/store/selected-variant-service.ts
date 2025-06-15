@@ -24,7 +24,7 @@ type PriceInfo = productsV3.PriceInfo;
 type FixedMonetaryAmount = productsV3.FixedMonetaryAmount;
 
 export interface SelectedVariantServiceAPI {
-  // Variant selection state
+  // --- State ---
   selectedChoices: Signal<Record<string, string>>;
   selectedVariantId: ReadOnlySignal<string | null>;
   currentVariant: ReadOnlySignal<productsV3.Variant | null>;
@@ -44,25 +44,23 @@ export interface SelectedVariantServiceAPI {
   sku: Signal<string>;
   ribbonLabel: Signal<string | null>;
 
-  // Variant selection actions
-  setSelectedChoices: (choices: Record<string, string>) => void;
-  addToCart: (quantity?: number) => Promise<void>;
-
-  // Additional actions (enhanced for v3)
-  setOption: (group: string, value: string) => void;
-  selectVariantById: (id: string) => void;
-  loadProductVariants: (data: productsV3.Variant[]) => void;
-  resetSelections: () => void;
-
-  // Enhanced getters (v3 compatible)
-  selectedVariant: () => productsV3.Variant | null;
-  finalPrice: () => number;
-  isLowStock: (threshold?: number) => boolean;
-
   // Product data exposed for variant selector components
   product: ReadOnlySignal<productsV3.V3Product | null>;
   productOptions: ReadOnlySignal<productsV3.ConnectedOption[]>;
   currency: ReadOnlySignal<string>;
+
+  // --- Getters ---
+  selectedVariant: () => productsV3.Variant | null;
+  finalPrice: () => number;
+  isLowStock: (threshold?: number) => boolean;
+
+  // --- Actions ---
+  setSelectedChoices: (choices: Record<string, string>) => void;
+  addToCart: (quantity?: number) => Promise<void>;
+  setOption: (group: string, value: string) => void;
+  selectVariantById: (id: string) => void;
+  loadProductVariants: (data: productsV3.Variant[]) => void;
+  resetSelections: () => void;
 }
 
 export const SelectedVariantServiceDefinition =
