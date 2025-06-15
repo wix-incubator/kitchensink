@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 import wix from "@wix/astro";
 import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
@@ -13,17 +13,26 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://kitchensink-netanelg4.wix-host.com",
 
-  output: 'server',
+  output: "server",
 
   adapter: cloudflare(),
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    // Bundle @wix/image for SSR compatibility to fix module loading issues
+    ssr: {
+      noExternal: ["@wix/image"],
+    },
   },
 
-  integrations: [react(), wix(), mdx({
-    extendMarkdownConfig: false,
-    remarkPlugins: [],
-    rehypePlugins: [],
-  }), sitemap()]
+  integrations: [
+    react(),
+    wix(),
+    mdx({
+      extendMarkdownConfig: false,
+      remarkPlugins: [],
+      rehypePlugins: [],
+    }),
+    sitemap(),
+  ],
 });

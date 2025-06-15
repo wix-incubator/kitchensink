@@ -1,46 +1,62 @@
-import type { services } from '@wix/bookings';
-import { media as wixMedia } from '@wix/sdk';
+import type { services } from "@wix/bookings";
+import { media as wixMedia } from "@wix/sdk";
+import { Image, type FittingType } from "@wix/image";
 
 type MediaItem = services.MediaItem;
 
-export const getImageUrlForMedia = (
-    media: MediaItem,
-    width: number = 640,
-    height: number = 320
-) =>
-    wixMedia.getScaledToFillImageUrl(media.image!, width, height, {});
+export const parseMediaFromUrl = (url: string) => {
+  if (!url)
+    return { uri: url, originalWidth: undefined, originalHeight: undefined };
+
+  const uri = url.replace("wix:image://v1/", "").split("#")[0].split("/")[0];
+
+  const params = new URLSearchParams(url.split("#")[1] || "");
+  const originalWidth = params.get("originWidth");
+  const originalHeight = params.get("originHeight");
+
+  return {
+    uri,
+    originalWidth: originalWidth ? parseInt(originalWidth, 10) : undefined,
+    originalHeight: originalHeight ? parseInt(originalHeight, 10) : undefined,
+  };
+};
 
 export default function WixMediaImage({
-    media,
-    width = 640,
-    height = 320,
-    className,
-    showPlaceholder = true,
+  media,
+  width,
+  height,
+  className,
+  alt = "",
+  showPlaceholder = true,
+  displayMode = "fit",
 }: {
-    media?: MediaItem;
-    width?: number;
-    height?: number;
-    className?: string;
-    showPlaceholder?: boolean;
+  media?: MediaItem;
+  width?: number;
+  height?: number;
+  className?: string;
+  alt?: string;
+  showPlaceholder?: boolean;
+  displayMode?: FittingType;
 }) {
-    return media?.image ? (<img
-        className={className}
-        src={getImageUrlForMedia(media!, width, height)}
-        alt={''}
-    />) :
-        showPlaceholder ? <div className={className}>
-            <div className="w-full h-full flex items-center justify-center text-white/40">
-                <svg
-                    className="w-16 h-16"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                        clipRule="evenodd"
-                    />
-                </svg>
-            </div>
-        </div> : null;
+  const {
+    uri,
+    originalWidth = 640,
+    originalHeight = 320,
+  } = parseMediaFromUrl(media?.image!);
+
+  return (
+    <Image
+      uri={uri}
+      width={width || originalWidth}
+      height={height || originalHeight}
+      containerWidth={width}
+      containerHeight={height}
+      displayMode={displayMode}
+      isInFirstFold={true}
+      isSEOBot={false}
+      shouldUseLQIP={showPlaceholder}
+      alt={alt}
+      className={className}
+    />
+  );
 }
