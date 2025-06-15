@@ -1,0 +1,1086 @@
+import React, { useState } from "react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../../layouts/StoreLayout";
+import {
+  withDocsWrapper,
+  PageDocsRegistration,
+} from "../../../../components/DocsMode";
+import {
+  ProductServiceDefinition,
+  ProductService,
+} from "../../../../headless/store/product-service";
+import {
+  CurrentCartServiceDefinition,
+  CurrentCartService,
+} from "../../../../headless/store/current-cart-service";
+import {
+  ProductMediaGalleryServiceDefinition,
+  ProductMediaGalleryService,
+} from "../../../../headless/store/product-media-gallery-service";
+import {
+  SelectedVariantServiceDefinition,
+  SelectedVariantService,
+} from "../../../../headless/store/selected-variant-service";
+import {
+  SocialSharingServiceDefinition,
+  SocialSharingService,
+  loadSocialSharingServiceConfig,
+} from "../../../../headless/store/social-sharing-service";
+import {
+  RelatedProductsServiceDefinition,
+  RelatedProductsService,
+  loadRelatedProductsServiceConfig,
+} from "../../../../headless/store/related-products-service";
+import { Product } from "../../../../headless/store/Product";
+import { ProductVariantSelector } from "../../../../headless/store/ProductVariantSelector";
+import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGallery";
+import { CurrentCart } from "../../../../headless/store/CurrentCart";
+import { SocialSharing } from "../../../../headless/store/SocialSharing";
+import { RelatedProducts } from "../../../../headless/store/RelatedProducts";
+import WixMediaImage from "../../../../headless/media/Image";
+
+interface ProductDetailPageProps {
+  productServiceConfig: any;
+  currentCartServiceConfig: any;
+  productMediaGalleryServiceConfig: any;
+  selectedVariantServiceConfig: any;
+  socialSharingServiceConfig: any;
+  relatedProductsServiceConfig: any;
+}
+
+const ProductImageGallery = () => {
+  return (
+    <div className="space-y-4">
+      {/* Main Image */}
+      <ProductMediaGallery.SelectedImage>
+        {withDocsWrapper(
+          ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => {
+            return (
+              <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
+                {isLoading ? (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                  </div>
+                ) : imageUrl ? (
+                  <WixMediaImage
+                    media={{ image: imageUrl }}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg
+                      className="w-24 h-24 text-white/40"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+
+                {/* Navigation Arrows */}
+                {totalImages > 1 && (
+                  <>
+                    <ProductMediaGallery.PrevImageButton>
+                      {withDocsWrapper(
+                        ({ prevImage, hasPrev }) => (
+                          <>
+                            {hasPrev && (
+                              <button
+                                onClick={prevImage}
+                                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <svg
+                                  className="w-6 h-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M15 19l-7-7 7-7"
+                                  />
+                                </svg>
+                              </button>
+                            )}
+                          </>
+                        ),
+                        "ProductMediaGallery.PrevImageButton",
+                        "/docs/components/product-media-gallery#previmagebutton"
+                      )}
+                    </ProductMediaGallery.PrevImageButton>
+
+                    <ProductMediaGallery.NextImageButton>
+                      {withDocsWrapper(
+                        ({ nextImage, hasNext }) => (
+                          <>
+                            {hasNext && (
+                              <button
+                                onClick={nextImage}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <svg
+                                  className="w-6 h-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M9 5l7 7-7 7"
+                                  />
+                                </svg>
+                              </button>
+                            )}
+                          </>
+                        ),
+                        "ProductMediaGallery.NextImageButton",
+                        "/docs/components/product-media-gallery#nextimagebutton"
+                      )}
+                    </ProductMediaGallery.NextImageButton>
+                  </>
+                )}
+
+                {/* Image Counter */}
+                <ProductMediaGallery.MediaGalleryInfo>
+                  {withDocsWrapper(
+                    ({ currentImage, totalImages, hasImages }) => (
+                      <>
+                        {hasImages && totalImages > 1 && (
+                          <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                            {currentImage} / {totalImages}
+                          </div>
+                        )}
+                      </>
+                    ),
+                    "ProductMediaGallery.MediaGalleryInfo",
+                    "/docs/components/product-media-gallery#mediagalleryinfo"
+                  )}
+                </ProductMediaGallery.MediaGalleryInfo>
+              </div>
+            );
+          },
+          "ProductMediaGallery.SelectedImage",
+          "/docs/components/product-media-gallery#selectedimage"
+        )}
+      </ProductMediaGallery.SelectedImage>
+
+      {/* Thumbnails */}
+      <ProductMediaGallery.MediaGalleryInfo>
+        {withDocsWrapper(
+          ({ totalImages, hasImages }) => (
+            <>
+              {hasImages && totalImages > 1 && (
+                <div className="flex gap-2 overflow-x-auto">
+                  {Array.from({ length: totalImages }).map((_, index) => (
+                    <ProductMediaGallery.MediaItemThumbnail
+                      key={index}
+                      index={index}
+                    >
+                      {withDocsWrapper(
+                        ({ imageUrl, isActive, selectImage, altText }) => (
+                          <button
+                            onClick={selectImage}
+                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                              isActive
+                                ? "border-teal-500 ring-2 ring-teal-500/30"
+                                : "border-white/20 hover:border-white/40"
+                            }`}
+                          >
+                            {imageUrl && (
+                              <WixMediaImage
+                                media={{ image: imageUrl }}
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </button>
+                        ),
+                        "ProductMediaGallery.MediaItemThumbnail",
+                        "/docs/components/product-media-gallery#mediaitemthumbnail"
+                      )}
+                    </ProductMediaGallery.MediaItemThumbnail>
+                  ))}
+                </div>
+              )}
+            </>
+          ),
+          "ProductMediaGallery.MediaGalleryInfo",
+          "/docs/components/product-media-gallery#mediagalleryinfo"
+        )}
+      </ProductMediaGallery.MediaGalleryInfo>
+    </div>
+  );
+};
+
+const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
+  const [quantity, setQuantity] = useState(1);
+  const [isWishlist, setIsWishlist] = useState(false);
+
+  return (
+    <div className="space-y-6">
+      {/* Product Name & Wishlist */}
+      <div className="flex items-start justify-between gap-4">
+        <Product.Name>
+          {withDocsWrapper(
+            ({ name, hasName }) => (
+              <>
+                {hasName && (
+                  <h1 className="text-4xl font-bold text-white mb-2">{name}</h1>
+                )}
+              </>
+            ),
+            "Product.Name",
+            "/docs/components/product#name"
+          )}
+        </Product.Name>
+
+        {/* Wishlist Toggle */}
+        <button
+          onClick={() => setIsWishlist(!isWishlist)}
+          className="flex-shrink-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          title={isWishlist ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <svg
+            className={`w-6 h-6 ${
+              isWishlist ? "text-red-400 fill-current" : "text-white/60"
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Product Description */}
+      <Product.Description>
+        {withDocsWrapper(
+          ({ description, hasDescription, isHtml }) => (
+            <>
+              {hasDescription && (
+                <div className="text-white/80 text-lg">
+                  {isHtml ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: description }}
+                      className="prose prose-invert max-w-none"
+                    />
+                  ) : (
+                    <p>{description}</p>
+                  )}
+                </div>
+              )}
+            </>
+          ),
+          "Product.Description",
+          "/docs/components/product#description"
+        )}
+      </Product.Description>
+
+      {/* Ratings & Reviews (Stubbed) */}
+      <div className="border-y border-white/10 py-4">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                className={`w-5 h-5 ${
+                  star <= 4 ? "text-yellow-400 fill-current" : "text-white/20"
+                }`}
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+          <span className="text-white/80">4.0 (247 reviews)</span>
+          <button className="text-teal-400 hover:text-teal-300 text-sm transition-colors">
+            Read Reviews
+          </button>
+        </div>
+      </div>
+
+      {/* Product Price */}
+      <ProductVariantSelector.ProductPrice>
+        {withDocsWrapper(
+          ({ price, isVariantPrice, currency }) => (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl font-bold text-white">{price}</span>
+                {isVariantPrice && (
+                  <span className="bg-teal-500/20 text-teal-300 text-sm px-2 py-1 rounded-full">
+                    Variant Price
+                  </span>
+                )}
+              </div>
+              {currency && (
+                <p className="text-white/60 text-sm">Currency: {currency}</p>
+              )}
+            </div>
+          ),
+          "ProductVariantSelector.ProductPrice",
+          "/docs/components/product-variant-selector#productprice"
+        )}
+      </ProductVariantSelector.ProductPrice>
+
+      {/* Enhanced Stock Status with Low Stock Warning & Pre-order */}
+      <ProductVariantSelector.StockStatus>
+        {withDocsWrapper(
+          ({ inStock, status, quantity, trackInventory }) => {
+            const isLowStock =
+              trackInventory &&
+              quantity !== null &&
+              quantity <= 5 &&
+              quantity > 0;
+
+            // Simulate pre-order logic based on status
+            const isPreorder = status && status.toLowerCase().includes("pre");
+
+            return (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      isPreorder
+                        ? "bg-orange-500"
+                        : inStock
+                        ? isLowStock
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  ></div>
+                  <span
+                    className={`text-sm ${
+                      isPreorder
+                        ? "text-orange-400"
+                        : inStock
+                        ? isLowStock
+                          ? "text-yellow-400"
+                          : "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {status}
+                    {trackInventory && quantity !== null && (
+                      <span className="ml-1">({quantity} available)</span>
+                    )}
+                  </span>
+                </div>
+
+                {/* Pre-order Badge */}
+                {isPreorder && (
+                  <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-2">
+                    <p className="text-orange-300 text-xs">
+                      🚀 This item is available for pre-order and will ship when
+                      available
+                    </p>
+                  </div>
+                )}
+
+                {/* Low Stock Warning */}
+                {isLowStock && (
+                  <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
+                    <p className="text-yellow-300 text-xs">
+                      ⚡ Only {quantity} left in stock - order soon!
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          },
+          "ProductVariantSelector.StockStatus",
+          "/docs/components/product-variant-selector#stockstatus"
+        )}
+      </ProductVariantSelector.StockStatus>
+
+      {/* Product Options with Reset */}
+      <ProductVariantSelector.ProductOptions>
+        {withDocsWrapper(
+          ({ options, hasOptions, selectedOptions }) => (
+            <>
+              {hasOptions && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white">
+                      Product Options
+                    </h3>
+                    {/* Reset Quantity Button */}
+                    <button
+                      onClick={() => setQuantity(1)}
+                      className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+                    >
+                      Reset Quantity
+                    </button>
+                  </div>
+
+                  {options.map((option) => (
+                    <ProductVariantSelector.ProductOptionChoices
+                      key={option.name}
+                      option={option}
+                    >
+                      {withDocsWrapper(
+                        ({
+                          optionName,
+                          choices,
+                          selectedValue,
+                          hasChoices,
+                        }) => (
+                          <>
+                            {hasChoices && (
+                              <div className="space-y-3">
+                                <h4 className="text-md font-medium text-white/90">
+                                  {optionName}
+                                  {selectedValue && (
+                                    <span className="ml-2 text-sm text-teal-400">
+                                      ({selectedValue})
+                                    </span>
+                                  )}
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {choices.map((choice) => (
+                                    <ProductVariantSelector.ChoiceSelection
+                                      key={choice.value}
+                                      option={option}
+                                      choice={choice}
+                                    >
+                                      {withDocsWrapper(
+                                        ({
+                                          displayValue,
+                                          isSelected,
+                                          isAvailable,
+                                          selectChoice,
+                                        }) => (
+                                          <button
+                                            onClick={selectChoice}
+                                            disabled={!isAvailable}
+                                            className={`px-4 py-2 rounded-lg border transition-all ${
+                                              isSelected
+                                                ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                                : isAvailable
+                                                ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                                : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
+                                            }`}
+                                          >
+                                            {displayValue}
+                                            {!isAvailable && (
+                                              <span className="ml-1 text-xs">
+                                                (unavailable)
+                                              </span>
+                                            )}
+                                          </button>
+                                        ),
+                                        "ProductVariantSelector.ChoiceSelection",
+                                        "/docs/components/product-variant-selector#choiceselection"
+                                      )}
+                                    </ProductVariantSelector.ChoiceSelection>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ),
+                        "ProductVariantSelector.ProductOptionChoices",
+                        "/docs/components/product-variant-selector#productoptionchoices"
+                      )}
+                    </ProductVariantSelector.ProductOptionChoices>
+                  ))}
+                </div>
+              )}
+            </>
+          ),
+          "ProductVariantSelector.ProductOptions",
+          "/docs/components/product-variant-selector#productoptions"
+        )}
+      </ProductVariantSelector.ProductOptions>
+
+      {/* Quantity Selector */}
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-white">Quantity</h3>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center border border-white/20 rounded-lg">
+            <button
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              disabled={quantity <= 1}
+              className="px-3 py-2 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              -
+            </button>
+            <span className="px-4 py-2 text-white border-x border-white/20 min-w-[3rem] text-center">
+              {quantity}
+            </span>
+            <button
+              onClick={() => setQuantity(quantity + 1)}
+              className="px-3 py-2 text-white hover:bg-white/10 transition-colors"
+            >
+              +
+            </button>
+          </div>
+          <span className="text-white/60 text-sm">Max: 10 per order</span>
+        </div>
+      </div>
+
+      {/* Add to Cart & Buy Now */}
+      <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
+        {withDocsWrapper(
+          ({ addToCart, canAddToCart, isLoading, inStock, error }) => (
+            <div className="space-y-4">
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                  <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-3">
+                  {/* Add to Cart Button */}
+                  <button
+                    onClick={async () => {
+                      await addToCart();
+                      onAddToCart();
+                    }}
+                    disabled={!canAddToCart || isLoading}
+                    className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg
+                          className="animate-spin w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Adding...
+                      </span>
+                    ) : !inStock ? (
+                      "Out of Stock"
+                    ) : (
+                      "Add to Cart"
+                    )}
+                  </button>
+
+                  {/* Buy Now Button */}
+                  <button
+                    onClick={async () => {
+                      await addToCart();
+                      onAddToCart();
+                      // Simulate redirect to checkout
+                      setTimeout(() => {
+                        window.location.href = "/checkout";
+                      }, 1000);
+                    }}
+                    disabled={!canAddToCart || isLoading}
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg
+                          className="animate-spin w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : !inStock ? (
+                      "Out of Stock"
+                    ) : (
+                      "Buy Now"
+                    )}
+                  </button>
+                </div>
+
+                {/* Social Sharing */}
+                <SocialSharing.ShareButtons
+                  url={
+                    typeof window !== "undefined" ? window.location.href : ""
+                  }
+                  title="Check out this amazing product"
+                  description="An amazing product you'll love"
+                  hashtags={["product", "shop", "amazing"]}
+                >
+                  {withDocsWrapper(
+                    ({
+                      shareTwitter,
+                      shareFacebook,
+                      shareLinkedIn,
+                      copyLink,
+                    }) => {
+                      const [copySuccess, setCopySuccess] = useState(false);
+
+                      const handleCopyLink = async () => {
+                        const success = await copyLink();
+                        if (success) {
+                          setCopySuccess(true);
+                          setTimeout(() => setCopySuccess(false), 2000);
+                        }
+                      };
+
+                      return (
+                        <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+                          <span className="text-white/60 text-sm">Share:</span>
+
+                          {/* Twitter */}
+                          <button
+                            onClick={shareTwitter}
+                            className="p-2 rounded-full bg-white/10 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
+                            title="Share on Twitter"
+                          >
+                            <svg
+                              className="w-4 h-4 text-white/60 hover:text-blue-400 transition-colors"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                            </svg>
+                          </button>
+
+                          {/* Facebook */}
+                          <button
+                            onClick={shareFacebook}
+                            className="p-2 rounded-full bg-white/10 hover:bg-blue-600/20 hover:text-blue-500 transition-all"
+                            title="Share on Facebook"
+                          >
+                            <svg
+                              className="w-4 h-4 text-white/60 hover:text-blue-500 transition-colors"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                          </button>
+
+                          {/* LinkedIn */}
+                          <button
+                            onClick={shareLinkedIn}
+                            className="p-2 rounded-full bg-white/10 hover:bg-blue-700/20 hover:text-blue-600 transition-all"
+                            title="Share on LinkedIn"
+                          >
+                            <svg
+                              className="w-4 h-4 text-white/60 hover:text-blue-600 transition-colors"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg>
+                          </button>
+
+                          {/* Copy Link */}
+                          <button
+                            onClick={handleCopyLink}
+                            className="p-2 rounded-full bg-white/10 hover:bg-teal-500/20 hover:text-teal-400 transition-all relative"
+                            title="Copy link"
+                          >
+                            {copySuccess ? (
+                              <svg
+                                className="w-4 h-4 text-teal-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                className="w-4 h-4 text-white/60 hover:text-teal-400 transition-colors"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                                />
+                              </svg>
+                            )}
+                          </button>
+
+                          {copySuccess && (
+                            <span className="text-teal-400 text-xs ml-2 animate-fade-in">
+                              Copied!
+                            </span>
+                          )}
+                        </div>
+                      );
+                    },
+                    "SocialSharing.ShareButtons",
+                    "/docs/components/social-sharing#sharebuttons"
+                  )}
+                </SocialSharing.ShareButtons>
+              </div>
+            </div>
+          ),
+          "ProductVariantSelector.AddToCartTrigger",
+          "/docs/components/product-variant-selector#addtocarttrigger"
+        )}
+      </ProductVariantSelector.AddToCartTrigger>
+
+      {/* Product Details */}
+      <Product.Details>
+        {withDocsWrapper(
+          ({ sku, weight, hasSku, hasWeight }) => (
+            <>
+              {(hasSku || hasWeight) && (
+                <div className="border-t border-white/10 pt-6 space-y-2">
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    Product Details
+                  </h3>
+                  {hasSku && (
+                    <p className="text-white/60 text-sm">
+                      <span className="font-medium">SKU:</span> {sku}
+                    </p>
+                  )}
+                  {hasWeight && (
+                    <p className="text-white/60 text-sm">
+                      <span className="font-medium">Weight:</span> {weight}
+                    </p>
+                  )}
+                </div>
+              )}
+            </>
+          ),
+          "Product.Details",
+          "/docs/components/product#details"
+        )}
+      </Product.Details>
+
+      {/* Related Products */}
+      <RelatedProducts.List>
+        {withDocsWrapper(
+          ({ relatedProducts, isLoading, error, hasRelatedProducts }) => (
+            <div className="border-t border-white/10 pt-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
+                You might also like
+              </h3>
+
+              {isLoading && (
+                <div className="grid grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div
+                      key={item}
+                      className="bg-white/5 rounded-lg p-4 border border-white/10 animate-pulse"
+                    >
+                      <div className="aspect-square bg-white/10 rounded-lg mb-3"></div>
+                      <div className="h-4 bg-white/10 rounded mb-2"></div>
+                      <div className="h-3 bg-white/10 rounded mb-2 w-3/4"></div>
+                      <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                  <p className="text-red-400 text-sm">
+                    Failed to load related products: {error}
+                  </p>
+                </div>
+              )}
+
+              {!isLoading && hasRelatedProducts && (
+                <div className="grid grid-cols-2 gap-4">
+                  {relatedProducts.map((product) => {
+                    return (
+                      <RelatedProducts.ProductCard
+                        key={product._id}
+                        product={product}
+                      >
+                        {withDocsWrapper(
+                          ({
+                            name,
+                            imageUrl,
+                            price,
+                            inStock,
+                            productUrl,
+                            description,
+                          }) => (
+                            <a
+                              href={productUrl}
+                              className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
+                            >
+                              <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                                {imageUrl ? (
+                                  <WixMediaImage
+                                    media={{ image: imageUrl }}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <svg
+                                      className="w-8 h-8 text-white/40"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
+                                {name}
+                              </h4>
+                              {description && (
+                                <p className="text-white/60 text-xs mb-2 line-clamp-2">
+                                  {description}
+                                </p>
+                              )}
+                              <div className="flex items-center justify-between">
+                                <p className="text-white font-semibold">
+                                  {price}
+                                </p>
+                                {!inStock && (
+                                  <span className="text-red-400 text-xs">
+                                    Out of Stock
+                                  </span>
+                                )}
+                              </div>
+                            </a>
+                          ),
+                          "RelatedProducts.ProductCard",
+                          "/docs/components/related-products#productcard"
+                        )}
+                      </RelatedProducts.ProductCard>
+                    );
+                  })}
+                </div>
+              )}
+
+              {!isLoading && !hasRelatedProducts && !error && (
+                <div className="text-center py-8">
+                  <svg
+                    className="w-12 h-12 text-white/20 mx-auto mb-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
+                  </svg>
+                  <p className="text-white/60 text-sm">
+                    No related products found
+                  </p>
+                </div>
+              )}
+            </div>
+          ),
+          "RelatedProducts.List",
+          "/docs/components/related-products#list"
+        )}
+      </RelatedProducts.List>
+    </div>
+  );
+};
+
+export default function ProductDetailPage({
+  productServiceConfig,
+  currentCartServiceConfig,
+  productMediaGalleryServiceConfig,
+  selectedVariantServiceConfig,
+  socialSharingServiceConfig,
+  relatedProductsServiceConfig,
+}: ProductDetailPageProps) {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // Create services manager with all required services
+  const servicesManager = createServicesManager(
+    createServicesMap()
+      .addService(
+        ProductServiceDefinition,
+        ProductService,
+        productServiceConfig
+      )
+      .addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartServiceConfig
+      )
+      .addService(
+        SelectedVariantServiceDefinition,
+        SelectedVariantService,
+        selectedVariantServiceConfig
+      )
+      .addService(
+        ProductMediaGalleryServiceDefinition,
+        ProductMediaGalleryService,
+        productMediaGalleryServiceConfig
+      )
+      .addService(
+        SocialSharingServiceDefinition,
+        SocialSharingService,
+        socialSharingServiceConfig
+      )
+      .addService(
+        RelatedProductsServiceDefinition,
+        RelatedProductsService,
+        relatedProductsServiceConfig
+      )
+  );
+
+  return (
+    <KitchensinkLayout>
+      <StoreLayout
+        currentCartServiceConfig={currentCartServiceConfig}
+        servicesManager={servicesManager}
+        showSuccessMessage={showSuccessMessage}
+        onSuccessMessageChange={setShowSuccessMessage}
+      >
+        <PageDocsRegistration
+          title="Advanced Product Detail Page"
+          description="Complete product detail page using Product, ProductVariantSelector, ProductMediaGallery, and CurrentCart headless components with enhanced UI patterns."
+          docsUrl="/docs/examples/advanced-product-detail"
+        />
+
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Breadcrumb */}
+            <nav className="mb-8">
+              <div className="flex items-center gap-2 text-white/60">
+                <a href="/store" className="hover:text-white transition-colors">
+                  Store
+                </a>
+                <span>/</span>
+                <a
+                  href="/store/example-2"
+                  className="hover:text-white transition-colors"
+                >
+                  Example 2
+                </a>
+                <span>/</span>
+                <span className="text-white">Product</span>
+              </div>
+            </nav>
+
+            {/* Product Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Product Images */}
+              <div>
+                <ProductImageGallery />
+              </div>
+
+              {/* Product Information */}
+              <div>
+                <ProductInfo
+                  onAddToCart={() => {
+                    setShowSuccessMessage(true);
+                    setTimeout(() => setShowSuccessMessage(false), 3000);
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Current Cart Summary */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <CurrentCart.CartSummary>
+                {withDocsWrapper(
+                  ({ subtotal, itemCount }) => (
+                    <>
+                      {itemCount > 0 && (
+                        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                          <h3 className="text-xl font-semibold text-white mb-4">
+                            Cart Summary
+                          </h3>
+                          <div className="flex items-center justify-between">
+                            <span className="text-white/80">
+                              {itemCount} item{itemCount !== 1 ? "s" : ""} in
+                              cart
+                            </span>
+                            <span className="text-xl font-bold text-white">
+                              {subtotal}
+                            </span>
+                          </div>
+                          <a
+                            href="/cart"
+                            className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                          >
+                            View Cart
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </a>
+                        </div>
+                      )}
+                    </>
+                  ),
+                  "CurrentCart.CartSummary",
+                  "/docs/components/current-cart#cartsummary"
+                )}
+              </CurrentCart.CartSummary>
+            </div>
+          </div>
+        </div>
+      </StoreLayout>
+    </KitchensinkLayout>
+  );
+}

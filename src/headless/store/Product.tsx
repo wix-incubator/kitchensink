@@ -66,7 +66,10 @@ export const ProductDescription = (props: ProductDescriptionProps) => {
   >;
 
   const product = service.product.get();
-  const description = product?.description || "";
+
+  // Handle v3 description which can be string or RichContent
+  const rawDescription = product?.description;
+  const description = typeof rawDescription === "string" ? rawDescription : "";
   const hasDescription = !!description;
   const isHtml = description.includes("<") && description.includes(">");
 
@@ -112,8 +115,10 @@ export const ProductDetails = (props: ProductDetailsProps) => {
   >;
 
   const product = service.product.get();
-  const sku = product?.sku || null;
-  const weight = product?.weight ? String(product.weight) : null;
+
+  // Handle v3 product structure
+  const sku = product?.variantsInfo?.variants?.[0]?.sku || null;
+  const weight = null; // Weight not available in current v3 API structure
   const dimensions = null; // Not available in basic product data
 
   return props.children({

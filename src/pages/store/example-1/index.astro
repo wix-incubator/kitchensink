@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import StoreCollectionPage from "../../../react-pages/store/example-1/index";
+import { loadCollectionServiceConfig } from "../../../headless/store/collection-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+
+// Load initial data for services
+const collectionServiceConfig = await loadCollectionServiceConfig();
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+---
+
+<BaseLayout>
+  <title>Store Example 1 - Traditional Collection Layout</title>
+  <meta
+    name="description"
+    content="Browse our amazing collection of products with traditional grid layout"
+  />
+
+  <StoreCollectionPage
+    client:load
+    collectionServiceConfig={collectionServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

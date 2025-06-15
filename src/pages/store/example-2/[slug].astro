@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProductDetailPage from "../../../react-pages/store/example-2/products/[slug]";
+import { loadProductServiceConfig } from "../../../headless/store/product-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/product-media-gallery-service";
+import { loadSelectedVariantServiceConfig } from "../../../headless/store/selected-variant-service";
+import { loadSocialSharingServiceConfig } from "../../../headless/store/social-sharing-service";
+import { loadRelatedProductsServiceConfig } from "../../../headless/store/related-products-service";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect("/store/example-2");
+}
+
+// Load service configurations using the standard headless services
+const productServiceConfigResult = await loadProductServiceConfig(slug);
+
+if (productServiceConfigResult.type === "notFound") {
+  return Astro.redirect("/404");
+}
+
+const productServiceConfig = productServiceConfigResult.config;
+
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+const productMediaGalleryServiceConfig =
+  await loadProductMediaGalleryServiceConfig(slug);
+const selectedVariantServiceConfig =
+  await loadSelectedVariantServiceConfig(slug);
+
+const productName = productServiceConfig.product.name || "Product";
+const productDescription =
+  productServiceConfig.product.description || "An amazing product";
+const productUrl = `${Astro.url.origin}/store/example-2/${slug}`;
+
+// Load social sharing service configuration
+const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
+  productName,
+  productUrl,
+  productDescription
+);
+
+// Load related products service configuration
+const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
+  productServiceConfig.product._id || "",
+  4 // limit to 4 related products
+);
+---
+
+<BaseLayout>
+  <title>{productName} - Advanced Store - Kitchensink</title>
+  <meta
+    name="description"
+    content={`View details for ${productName} with enhanced UI and modern design patterns.`}
+  />
+  <meta
+    name="keywords"
+    content={`${productName}, product, buy, e-commerce, store`}
+  />
+
+  <ProductDetailPage
+    client:load
+    productServiceConfig={productServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+    selectedVariantServiceConfig={selectedVariantServiceConfig}
+    socialSharingServiceConfig={socialSharingServiceConfig}
+    relatedProductsServiceConfig={relatedProductsServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

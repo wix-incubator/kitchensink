@@ -1,7 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { CollectionServiceDefinition } from "./collection-service";
-import { products } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
 /**
  * Props for ProductGrid headless component
@@ -16,7 +16,7 @@ export interface ProductGridProps {
  */
 export interface ProductGridRenderProps {
   /** Array of products */
-  products: products.Product[];
+  products: productsV3.V3Product[];
   /** Whether products are loading */
   isLoading: boolean;
   /** Error message if any */
@@ -25,6 +25,8 @@ export interface ProductGridRenderProps {
   isEmpty: boolean;
   /** Total number of products */
   totalProducts: number;
+  /** Whether collection has products */
+  hasProducts: boolean;
 }
 
 /**
@@ -35,17 +37,46 @@ export const ProductGrid = (props: ProductGridProps) => {
     typeof CollectionServiceDefinition
   >;
 
-  const productList = service.products.get();
-  const isLoading = service.isLoading.get();
-  const error = service.error.get();
+  // Debug logging to help identify service issues
+  if (!service) {
+    console.error("CollectionService is undefined");
+    return props.children({
+      products: [],
+      isLoading: false,
+      error: "Service not available",
+      isEmpty: true,
+      totalProducts: 0,
+      hasProducts: false,
+    });
+  }
 
-  return props.children({
-    products: productList,
-    isLoading,
-    error,
-    isEmpty: productList.length === 0 && !isLoading,
-    totalProducts: productList.length,
-  });
+  // Safely access service properties with error handling
+  try {
+    const productList = service.products?.get() || [];
+    const isLoading = service.isLoading?.get() || false;
+    const error = service.error?.get() || null;
+    const totalProducts = service.totalProducts?.get() || 0;
+    const hasProducts = service.hasProducts?.get() || false;
+
+    return props.children({
+      products: productList,
+      isLoading,
+      error,
+      isEmpty: !hasProducts && !isLoading,
+      totalProducts,
+      hasProducts,
+    });
+  } catch (err) {
+    console.error("Error accessing service properties:", err);
+    return props.children({
+      products: [],
+      isLoading: false,
+      error: "Failed to load products",
+      isEmpty: true,
+      totalProducts: 0,
+      hasProducts: false,
+    });
+  }
 };
 
 /**
@@ -53,7 +84,7 @@ export const ProductGrid = (props: ProductGridProps) => {
  */
 export interface ProductCardProps {
   /** Product data */
-  product: products.Product;
+  product: productsV3.V3Product;
   /** Render prop function that receives product card data */
   children: (props: ProductCardRenderProps) => React.ReactNode;
 }
@@ -86,11 +117,17 @@ export interface ProductCardRenderProps {
 export const ProductCard = (props: ProductCardProps) => {
   const { product } = props;
 
-  const imageUrl = product.media?.items?.[0]?.image?.url || null;
-  const price = product.priceData?.formatted?.price || "$0.00";
-  const inStock =
-    product.stock?.inventoryStatus === "IN_STOCK" ||
-    !product.stock?.trackInventory;
+  // Use actual v3 API structure based on real data
+  // Images are in media.main.image, not media.itemsInfo.items
+  const imageUrl = product?.media?.main?.image || null;
+
+  // Create formatted price since formattedAmount is not available
+  const rawAmount = product.actualPriceRange?.minValue?.amount;
+  const price = rawAmount ? `$${rawAmount}` : "$0.00";
+
+  const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
+  const description =
+    typeof product.description === "string" ? product.description : "";
 
   return props.children({
     productId: product._id || "",
@@ -98,7 +135,7 @@ export const ProductCard = (props: ProductCardProps) => {
     slug: product.slug || "",
     imageUrl,
     price,
-    description: product.description || "",
+    description,
     inStock,
     productUrl: `/store/products/${product.slug}`,
   });
@@ -118,36 +155,59 @@ export interface LoadMoreProductsProps {
 export interface LoadMoreProductsRenderProps {
   /** Function to load more products */
   loadMore: () => Promise<void>;
-  /** Whether there are more products to load */
-  hasMore: boolean;
+  /** Function to refresh products */
+  refresh: () => Promise<void>;
   /** Whether load more is currently loading */
   isLoading: boolean;
-  /** Current page number */
-  currentPage: number;
-  /** Total number of pages */
-  totalPages: number;
+  /** Whether there are products */
+  hasProducts: boolean;
+  /** Total number of products currently loaded */
+  totalProducts: number;
 }
 
 /**
  * Headless component for load more products functionality
+ * Note: V3 API uses simplified loading without traditional pagination
  */
 export const LoadMoreProducts = (props: LoadMoreProductsProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
 
-  const hasMore = service.hasMore.get();
-  const isLoading = service.isLoading.get();
-  const currentPage = service.currentPage.get();
-  const totalPages = service.totalPages.get();
+  // Error handling for undefined service
+  if (!service) {
+    console.error("CollectionService is undefined in LoadMoreProducts");
+    return props.children({
+      loadMore: async () => {},
+      refresh: async () => {},
+      isLoading: false,
+      hasProducts: false,
+      totalProducts: 0,
+    });
+  }
 
-  return props.children({
-    loadMore: service.loadMore,
-    hasMore,
-    isLoading,
-    currentPage,
-    totalPages,
-  });
+  try {
+    const isLoading = service.isLoading?.get() || false;
+    const hasProducts = service.hasProducts?.get() || false;
+    const totalProducts = service.totalProducts?.get() || 0;
+
+    return props.children({
+      loadMore: service.loadMore || (async () => {}),
+      refresh: service.refresh || (async () => {}),
+      isLoading,
+      hasProducts,
+      totalProducts,
+    });
+  } catch (err) {
+    console.error("Error in LoadMoreProducts:", err);
+    return props.children({
+      loadMore: async () => {},
+      refresh: async () => {},
+      isLoading: false,
+      hasProducts: false,
+      totalProducts: 0,
+    });
+  }
 };
 
 /**
@@ -178,62 +238,97 @@ export const CollectionHeader = (props: CollectionHeaderProps) => {
     typeof CollectionServiceDefinition
   >;
 
-  const productList = service.products.get();
-  const isLoading = service.isLoading.get();
+  // Error handling for undefined service
+  if (!service) {
+    console.error("CollectionService is undefined in CollectionHeader");
+    return props.children({
+      totalProducts: 0,
+      isLoading: false,
+      hasProducts: false,
+    });
+  }
 
-  return props.children({
-    totalProducts: productList.length,
-    isLoading,
-    hasProducts: productList.length > 0,
-  });
+  try {
+    const totalProducts = service.totalProducts?.get() || 0;
+    const isLoading = service.isLoading?.get() || false;
+    const hasProducts = service.hasProducts?.get() || false;
+
+    return props.children({
+      totalProducts,
+      isLoading,
+      hasProducts,
+    });
+  } catch (err) {
+    console.error("Error in CollectionHeader:", err);
+    return props.children({
+      totalProducts: 0,
+      isLoading: false,
+      hasProducts: false,
+    });
+  }
 };
 
 /**
- * Props for CollectionPagination headless component
+ * Props for CollectionActions headless component
  */
-export interface CollectionPaginationProps {
-  /** Render prop function that receives pagination data */
-  children: (props: CollectionPaginationRenderProps) => React.ReactNode;
+export interface CollectionActionsProps {
+  /** Render prop function that receives collection actions data */
+  children: (props: CollectionActionsRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CollectionPagination component
+ * Render props for CollectionActions component
  */
-export interface CollectionPaginationRenderProps {
-  /** Current page number */
-  currentPage: number;
-  /** Total number of pages */
-  totalPages: number;
-  /** Whether there's a previous page */
-  hasPrevious: boolean;
-  /** Whether there's a next page */
-  hasNext: boolean;
-  /** Function to go to specific page */
-  goToPage: (page: number) => Promise<void>;
-  /** Whether pagination is loading */
+export interface CollectionActionsRenderProps {
+  /** Function to refresh the collection */
+  refresh: () => Promise<void>;
+  /** Function to load more products */
+  loadMore: () => Promise<void>;
+  /** Whether actions are loading */
   isLoading: boolean;
+  /** Error message if any */
+  error: string | null;
 }
 
 /**
- * Headless component for collection pagination
+ * Headless component for collection actions (refresh, load more)
+ * Replaces traditional pagination for V3 API
  */
-export const CollectionPagination = (props: CollectionPaginationProps) => {
+export const CollectionActions = (props: CollectionActionsProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
 
-  const currentPage = service.currentPage.get();
-  const totalPages = service.totalPages.get();
-  const isLoading = service.isLoading.get();
+  // Error handling for undefined service
+  if (!service) {
+    console.error("CollectionService is undefined in CollectionActions");
+    return props.children({
+      refresh: async () => {},
+      loadMore: async () => {},
+      isLoading: false,
+      error: "Service not available",
+    });
+  }
 
-  return props.children({
-    currentPage,
-    totalPages,
-    hasPrevious: currentPage > 1,
-    hasNext: currentPage < totalPages,
-    goToPage: service.goToPage,
-    isLoading,
-  });
+  try {
+    const isLoading = service.isLoading?.get() || false;
+    const error = service.error?.get() || null;
+
+    return props.children({
+      refresh: service.refresh || (async () => {}),
+      loadMore: service.loadMore || (async () => {}),
+      isLoading,
+      error,
+    });
+  } catch (err) {
+    console.error("Error in CollectionActions:", err);
+    return props.children({
+      refresh: async () => {},
+      loadMore: async () => {},
+      isLoading: false,
+      error: "Failed to load actions",
+    });
+  }
 };
 
 // Namespace export for clean API
@@ -242,5 +337,5 @@ export const Collection = {
   ProductCard,
   LoadMoreProducts,
   CollectionHeader,
-  CollectionPagination,
+  CollectionActions,
 } as const;

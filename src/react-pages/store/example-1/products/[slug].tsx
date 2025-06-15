@@ -3,56 +3,53 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { StoreLayout } from "../../../layouts/StoreLayout";
+import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../../layouts/StoreLayout";
 import {
   ProductServiceDefinition,
   ProductService,
-} from "../../../headless/store/product-service";
+} from "../../../../headless/store/product-service";
 import {
   SelectedVariantServiceDefinition,
   SelectedVariantService,
-} from "../../../headless/store/selected-variant-service";
+} from "../../../../headless/store/selected-variant-service";
 import {
   ProductMediaGalleryServiceDefinition,
   ProductMediaGalleryService,
-} from "../../../headless/store/product-media-gallery-service";
+} from "../../../../headless/store/product-media-gallery-service";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../../../headless/store/current-cart-service";
-import { ProductMediaGallery } from "../../../headless/store/ProductMediaGallery";
-import { ProductVariantSelector } from "../../../headless/store/ProductVariantSelector";
-import { Product } from "../../../headless/store/Product";
+} from "../../../../headless/store/current-cart-service";
+import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGallery";
+import { ProductVariantSelector } from "../../../../headless/store/ProductVariantSelector";
+import { Product } from "../../../../headless/store/Product";
+import { CurrentCart } from "../../../../headless/store/CurrentCart";
 import {
   withDocsWrapper,
   PageDocsRegistration,
-} from "../../../components/DocsMode";
+} from "../../../../components/DocsMode";
+import WixMediaImage from "../../../../headless/media/Image";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
   currentCartServiceConfig: any;
+  productMediaGalleryServiceConfig: any;
+  selectedVariantServiceConfig: any;
 }
 
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
+  productMediaGalleryServiceConfig,
+  selectedVariantServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   // Create services manager with all required services
   const servicesManager = createServicesManager(
     createServicesMap()
-      .addService(
-        SelectedVariantServiceDefinition,
-        SelectedVariantService,
-        productServiceConfig
-      )
-      .addService(
-        ProductMediaGalleryServiceDefinition,
-        ProductMediaGalleryService,
-        productServiceConfig
-      )
       .addService(
         ProductServiceDefinition,
         ProductService,
@@ -62,6 +59,16 @@ export default function ProductDetailPage({
         CurrentCartServiceDefinition,
         CurrentCartService,
         currentCartServiceConfig
+      )
+      .addService(
+        SelectedVariantServiceDefinition,
+        SelectedVariantService,
+        selectedVariantServiceConfig
+      )
+      .addService(
+        ProductMediaGalleryServiceDefinition,
+        ProductMediaGalleryService,
+        productMediaGalleryServiceConfig
       )
   );
 
@@ -86,7 +93,7 @@ export default function ProductDetailPage({
             {/* Back to Store */}
             <div className="mb-8">
               <a
-                href="/store"
+                href="/store/example-1"
                 className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
               >
                 <svg
@@ -123,9 +130,8 @@ export default function ProductDetailPage({
                       }) => (
                         <>
                           {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={altText}
+                            <WixMediaImage
+                              media={{ image: imageUrl }}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -256,9 +262,8 @@ export default function ProductDetailPage({
                                     }`}
                                   >
                                     {imageUrl ? (
-                                      <img
-                                        src={imageUrl}
-                                        alt={altText}
+                                      <WixMediaImage
+                                        media={{ image: imageUrl }}
                                         className="w-full h-full object-cover rounded-lg"
                                       />
                                     ) : (
@@ -428,23 +433,46 @@ export default function ProductDetailPage({
                   )}
                 </ProductVariantSelector.ProductOptions>
 
+                {/* Quantity Selector */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-white">Quantity</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center border border-white/20 rounded-lg">
+                      <button
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={quantity <= 1}
+                        className="px-3 py-2 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        -
+                      </button>
+                      <span className="px-4 py-2 text-white border-x border-white/20 min-w-[3rem] text-center">
+                        {quantity}
+                      </span>
+                      <button
+                        onClick={() => setQuantity(quantity + 1)}
+                        className="px-3 py-2 text-white hover:bg-white/10 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <span className="text-white/60 text-sm">
+                      Max: 10 per order
+                    </span>
+                  </div>
+                </div>
+
                 {/* Add to Cart */}
                 <div className="space-y-4">
-                  <ProductVariantSelector.AddToCartTrigger quantity={1}>
+                  <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
                     {withDocsWrapper(
                       ({ addToCart, canAddToCart, isLoading, error }) => (
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center border border-white/20 rounded-lg">
-                            <button className="px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                              -
-                            </button>
-                            <span className="px-4 py-2 text-white border-x border-white/20">
-                              1
-                            </span>
-                            <button className="px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                              +
-                            </button>
-                          </div>
+                        <div className="space-y-4">
+                          {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                              <p className="text-red-400 text-sm">{error}</p>
+                            </div>
+                          )}
+
                           <button
                             onClick={async () => {
                               await addToCart();
@@ -454,8 +482,8 @@ export default function ProductDetailPage({
                                 3000
                               );
                             }}
-                            disabled={!canAddToCart}
-                            className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
+                            disabled={!canAddToCart || isLoading}
+                            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
                           >
                             {isLoading ? (
                               <>
@@ -559,6 +587,55 @@ export default function ProductDetailPage({
                   )}
                 </Product.Details>
               </div>
+            </div>
+
+            {/* Current Cart Summary */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <CurrentCart.CartSummary>
+                {withDocsWrapper(
+                  ({ subtotal, itemCount }) => (
+                    <>
+                      {itemCount > 0 && (
+                        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                          <h3 className="text-xl font-semibold text-white mb-4">
+                            Cart Summary
+                          </h3>
+                          <div className="flex items-center justify-between">
+                            <span className="text-white/80">
+                              {itemCount} item{itemCount !== 1 ? "s" : ""} in
+                              cart
+                            </span>
+                            <span className="text-xl font-bold text-white">
+                              {subtotal}
+                            </span>
+                          </div>
+                          <a
+                            href="/cart"
+                            className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                          >
+                            View Cart
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </a>
+                        </div>
+                      )}
+                    </>
+                  ),
+                  "CurrentCart.CartSummary",
+                  "/docs/components/current-cart#cartsummary"
+                )}
+              </CurrentCart.CartSummary>
             </div>
           </div>
         </div>

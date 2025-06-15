@@ -5,10 +5,17 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
-import { products } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 
+/**
+ * V3 Product Service API
+ *
+ * Aligned with Wix Stores Catalog V3 APIs
+ * @see https://dev.wix.com/docs/sdk/backend-modules/stores/catalog-v3/introduction
+ */
 export interface ProductServiceAPI {
-  product: Signal<products.Product | null>;
+  // --- State ---
+  product: Signal<productsV3.V3Product | null>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 }
@@ -17,12 +24,12 @@ export const ProductServiceDefinition =
   defineService<ProductServiceAPI>("product");
 
 export const ProductService = implementService.withConfig<{
-  product: products.Product;
+  product: productsV3.V3Product;
 }>()(ProductServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
   // State signals (only product-level state)
-  const product: Signal<products.Product | null> = signalsService.signal(
+  const product: Signal<productsV3.V3Product | null> = signalsService.signal(
     config.product as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
@@ -40,11 +47,18 @@ export type ProductServiceConfigResult =
   | { type: "success"; config: ServiceFactoryConfig<typeof ProductService> }
   | { type: "notFound" };
 
+/**
+ * Load product service configuration using Catalog V3 APIs
+ *
+ * @param productSlug - Product slug to load
+ * @returns Service factory configuration with complete v3 product data
+ */
 export async function loadProductServiceConfig(
   productSlug: string
 ): Promise<ProductServiceConfigResult> {
   try {
-    const storeProducts = await products
+    // First, find the product ID by slug using v3 queryProducts
+    const storeProducts = await productsV3
       .queryProducts()
       .eq("slug", productSlug)
       .find();
@@ -53,10 +67,20 @@ export async function loadProductServiceConfig(
       return { type: "notFound" };
     }
 
+    const productId = storeProducts.items[0]._id;
+    if (!productId) {
+      throw new Error("Product ID not found");
+    }
+
+    // Get complete product data using v3 getProduct
+    // Note: The fields parameter may not be fully working in early preview
+    // The v3 API currently returns basic product structure with media.main
+    const fullProduct = await productsV3.getProduct(productId);
+
     return {
       type: "success",
       config: {
-        product: storeProducts.items[0],
+        product: fullProduct,
       },
     };
   } catch (error) {

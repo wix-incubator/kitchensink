@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import StoreExample2Page from "../../../react-pages/store/example-2/index";
+import { loadCollectionServiceConfig } from "../../../headless/store/collection-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+
+// Load initial data for services
+const collectionServiceConfig = await loadCollectionServiceConfig();
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+---
+
+<BaseLayout>
+  <title>Store Example 2 - Advanced Product Experience</title>
+  <meta
+    name="description"
+    content="Advanced e-commerce experience with enhanced variant selection, dynamic pricing, and wishlist functionality"
+  />
+
+  <StoreExample2Page
+    client:load
+    collectionServiceConfig={collectionServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

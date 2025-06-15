@@ -1,7 +1,6 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "./product-media-gallery-service";
-import { products } from "@wix/stores";
 
 /**
  * Props for SelectedImage headless component
@@ -16,7 +15,7 @@ export interface SelectedImageProps {
  */
 export interface SelectedImageRenderProps {
   /** Current selected image */
-  image: products.MediaItem | null;
+  image: any | null; // V3 media item structure
   /** Image URL */
   imageUrl: string | null;
   /** Alt text for image */
@@ -43,7 +42,9 @@ export const SelectedImage = (props: SelectedImageProps) => {
   const totalImages = mediaService.totalImages.get();
   const productName = mediaService.productName.get();
 
-  const imageUrl = selectedImage?.image?.url || null;
+  // Use actual v3 media structure - images are in media.main.image
+  const product = mediaService.product.get();
+  const imageUrl = product?.media?.main?.image || null;
   const altText = productName || "Product image";
 
   return props.children({
@@ -71,7 +72,7 @@ export interface MediaItemThumbnailProps {
  */
 export interface MediaItemThumbnailRenderProps {
   /** Media item data */
-  mediaItem: products.MediaItem | null;
+  mediaItem: any | null; // V3 media item structure
   /** Thumbnail image URL */
   imageUrl: string | null;
   /** Whether this thumbnail is currently selected */
@@ -96,8 +97,10 @@ export const MediaItemThumbnail = (props: MediaItemThumbnailProps) => {
   const currentIndex = mediaService.selectedImageIndex.get();
   const productName = mediaService.productName.get();
 
-  const mediaItem = product?.media?.items?.[props.index] || null;
-  const imageUrl = mediaItem?.image?.url || null;
+  // Use actual v3 media structure - for now, only show main image
+  // Most v3 products seem to have only media.main, not itemsInfo.items
+  const imageUrl =
+    props.index === 0 ? product?.media?.main?.image || null : null;
   const isActive = currentIndex === props.index;
   const altText = `${productName || "Product"} image ${props.index + 1}`;
 
@@ -105,8 +108,13 @@ export const MediaItemThumbnail = (props: MediaItemThumbnailProps) => {
     mediaService.setSelectedImageIndex(props.index);
   };
 
+  // Only show thumbnail for index 0 (main image)
+  if (props.index > 0) {
+    return null;
+  }
+
   return props.children({
-    mediaItem,
+    mediaItem: product?.media?.main || null,
     imageUrl,
     isActive,
     selectImage,
