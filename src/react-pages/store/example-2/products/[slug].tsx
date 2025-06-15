@@ -55,7 +55,6 @@ interface ProductDetailPageProps {
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
-      {/* Main Image */}
       <ProductMediaGallery.SelectedImage>
         {withDocsWrapper(
           ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => {
@@ -88,7 +87,6 @@ const ProductImageGallery = () => {
                   </div>
                 )}
 
-                {/* Navigation Arrows */}
                 {totalImages > 1 && (
                   <>
                     <ProductMediaGallery.PrevImageButton>
@@ -155,7 +153,6 @@ const ProductImageGallery = () => {
                   </>
                 )}
 
-                {/* Image Counter */}
                 <ProductMediaGallery.MediaGalleryInfo>
                   {withDocsWrapper(
                     ({ currentImage, totalImages, hasImages }) => (
@@ -179,7 +176,6 @@ const ProductImageGallery = () => {
         )}
       </ProductMediaGallery.SelectedImage>
 
-      {/* Thumbnails */}
       <ProductMediaGallery.MediaGalleryInfo>
         {withDocsWrapper(
           ({ totalImages, hasImages }) => (
@@ -231,7 +227,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
   return (
     <div className="space-y-6">
-      {/* Product Name */}
       <div>
         <Product.Name>
           {withDocsWrapper(
@@ -248,7 +243,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         </Product.Name>
       </div>
 
-      {/* Product Description */}
       <Product.Description>
         {withDocsWrapper(
           ({ description, hasDescription, isHtml }) => (
@@ -272,7 +266,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Description>
 
-      {/* Product Price */}
       <ProductVariantSelector.ProductPrice>
         {withDocsWrapper(
           ({ price, isVariantPrice, currency }) => (
@@ -295,7 +288,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.ProductPrice>
 
-      {/* Enhanced Stock Status with Low Stock Warning & Pre-order */}
       <ProductVariantSelector.StockStatus>
         {withDocsWrapper(
           ({ inStock, status, quantity, trackInventory }) => {
@@ -340,7 +332,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </span>
                 </div>
 
-                {/* Pre-order Badge */}
                 {isPreorder && (
                   <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-2">
                     <p className="text-orange-300 text-xs">
@@ -350,7 +341,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </div>
                 )}
 
-                {/* Low Stock Warning */}
                 {isLowStock && (
                   <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
                     <p className="text-yellow-300 text-xs">
@@ -366,7 +356,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.StockStatus>
 
-      {/* Product Options with Reset */}
       <ProductVariantSelector.ProductOptions>
         {withDocsWrapper(
           ({ options, hasOptions }) => (
@@ -377,7 +366,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                     <h3 className="text-lg font-semibold text-white">
                       Product Options
                     </h3>
-                    {/* Reset Quantity Button */}
                     <button
                       onClick={() => setQuantity(1)}
                       className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
@@ -466,7 +454,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.ProductOptions>
 
-      {/* Quantity Selector */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-white">Quantity</h3>
         <div className="flex items-center gap-3">
@@ -492,7 +479,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         </div>
       </div>
 
-      {/* Add to Cart & Buy Now */}
       <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
         {withDocsWrapper(
           ({ addToCart, canAddToCart, isLoading, inStock, error }) => (
@@ -544,12 +530,10 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                     )}
                   </button>
 
-                  {/* Buy Now Button */}
                   <button
                     onClick={async () => {
                       await addToCart();
                       onAddToCart();
-                      // Simulate redirect to checkout
                       setTimeout(() => {
                         window.location.href = "/checkout";
                       }, 1000);
@@ -588,7 +572,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </button>
                 </div>
 
-                {/* Social Sharing */}
                 <SocialSharing.ShareButtons
                   url={
                     typeof window !== "undefined" ? window.location.href : ""
@@ -618,7 +601,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                         <div className="flex items-center gap-2 pt-2 border-t border-white/10">
                           <span className="text-white/60 text-sm">Share:</span>
 
-                          {/* Twitter */}
                           <button
                             onClick={shareTwitter}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
@@ -633,7 +615,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* Facebook */}
                           <button
                             onClick={shareFacebook}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-600/20 hover:text-blue-500 transition-all"
@@ -648,7 +629,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* LinkedIn */}
                           <button
                             onClick={shareLinkedIn}
                             className="p-2 rounded-full bg-white/10 hover:bg-blue-700/20 hover:text-blue-600 transition-all"
@@ -663,7 +643,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                             </svg>
                           </button>
 
-                          {/* Copy Link */}
                           <button
                             onClick={handleCopyLink}
                             className="p-2 rounded-full bg-white/10 hover:bg-teal-500/20 hover:text-teal-400 transition-all relative"
@@ -720,7 +699,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </ProductVariantSelector.AddToCartTrigger>
 
-      {/* Product Details */}
       <Product.Details>
         {withDocsWrapper(
           ({ sku, weight, hasSku, hasWeight }) => (
@@ -749,7 +727,6 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Details>
 
-      {/* Related Products */}
       <RelatedProducts.List>
         {withDocsWrapper(
           ({ relatedProducts, isLoading, error, hasRelatedProducts }) => (
@@ -896,7 +873,6 @@ export default function ProductDetailPage({
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Create services manager with all required services
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -947,7 +923,6 @@ export default function ProductDetailPage({
 
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Back to Store */}
             <div className="mb-8">
               <a
                 href="/store/example-2"
@@ -970,14 +945,11 @@ export default function ProductDetailPage({
               </a>
             </div>
 
-            {/* Product Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Product Images */}
               <div>
                 <ProductImageGallery />
               </div>
 
-              {/* Product Information */}
               <div>
                 <ProductInfo
                   onAddToCart={() => {
@@ -988,7 +960,6 @@ export default function ProductDetailPage({
               </div>
             </div>
 
-            {/* Current Cart Summary */}
             <div className="mt-12 pt-8 border-t border-white/10">
               <CurrentCart.CartSummary>
                 {withDocsWrapper(

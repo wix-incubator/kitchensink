@@ -185,7 +185,7 @@ export const CurrentCartService = implementService.withConfig<{
         ecomCheckout: { checkoutId: checkoutResult.checkoutId },
         callbacks: {
           postFlowUrl: window.location.href,
-          cartPageUrl: window.location.origin + '/cart',
+          cartPageUrl: window.location.origin + "/cart",
         },
       });
 

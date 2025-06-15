@@ -112,7 +112,6 @@ const ProductGridContent = () => {
                               </div>
                             )}
 
-                            {/* Enhanced badges */}
                             <div className="absolute top-2 left-2">
                               <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                                 New
@@ -260,7 +259,6 @@ export default function StoreExample2Page({
   collectionServiceConfig,
   currentCartServiceConfig,
 }: StoreExample2PageProps) {
-  // Create services manager with collection and current cart services
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -281,17 +279,14 @@ export default function StoreExample2Page({
         currentCartServiceConfig={currentCartServiceConfig}
         servicesManager={servicesManager}
       >
-        {/* Register page documentation */}
         <PageDocsRegistration
           title="Advanced Store Collection"
           description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
           docsUrl="/docs/examples/advanced-store-collection"
         />
 
-        {/* Main Content */}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
-            {/* Header */}
             <div className="text-center mb-12">
               <h1 className="text-5xl font-bold text-white mb-4">
                 <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
@@ -322,7 +317,6 @@ export default function StoreExample2Page({
               </Collection.CollectionHeader>
             </div>
 
-            {/* Features Banner */}
             <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl border border-white/10 p-6 mb-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
@@ -393,10 +387,8 @@ export default function StoreExample2Page({
               </div>
             </div>
 
-            {/* Product Grid */}
             <ProductGridContent />
 
-            {/* Load More */}
             <LoadMoreSection />
           </div>
         </div>
