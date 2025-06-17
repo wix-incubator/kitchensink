@@ -178,6 +178,7 @@ export const CurrentCartService = implementService.withConfig<{
 
       const { redirectSession } = await redirects.createRedirectSession({
         ecomCheckout: { checkoutId: checkoutResult.checkoutId },
+        preferences: { useGenericWixPages: false },
         callbacks: {
           postFlowUrl: window.location.href,
           cartPageUrl: window.location.origin + "/cart",

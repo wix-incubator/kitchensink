@@ -187,6 +187,7 @@ export const BookingSelectionService = implementService.withConfig<{
           slotAvailability: slot,
           timezone: timezone,
         },
+        preferences: { useGenericWixPages: false },
         callbacks: {
           postFlowUrl: returnUrl,
           cartPageUrl: window.location.origin + '/cart',
