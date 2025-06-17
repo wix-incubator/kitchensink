@@ -394,27 +394,34 @@ export function MembersPage({
               </div>
 
               <div className="space-y-4 lg:space-y-6">
-                <a
-                  href="/api/auth/logout"
-                  className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                <form
+                  action="/api/auth/logout?returnTo=/"
+                  method="POST"
+                  className="w-full"
+                  data-astro-reload
                 >
-                  <span className="absolute left-0 inset-y-0 flex items-center pl-6">
-                    <svg
-                      className="h-5 lg:h-6 w-5 lg:w-6 text-white/80 group-hover:text-white transition-colors"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
-                  </span>
-                  Sign Out
-                </a>
+                  <button
+                    type="submit"
+                    className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                  >
+                    <span className="absolute left-0 inset-y-0 flex items-center pl-6">
+                      <svg
+                        className="h-5 lg:h-6 w-5 lg:w-6 text-white/80 group-hover:text-white transition-colors"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        />
+                      </svg>
+                    </span>
+                    Sign Out
+                  </button>
+                </form>
 
                 <div className="text-center">
                   <p className="text-white/60 text-sm">

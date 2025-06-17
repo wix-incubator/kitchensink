@@ -38,7 +38,7 @@
     "@astrojs/cloudflare": "^12.5.4",
     "@astrojs/mdx": "^4.3.0",
     "@tailwindcss/vite": "^4.0.13",
-    "@wix/cli": "^1.1.93",
+    "@wix/cli": "^1.1.95",
     "tailwindcss": "^4.1.7"
   }
 }

@@ -7,7 +7,14 @@ alwaysApply: false
 
 The @wix/astro integration injects the following routes to the application
 * `/api/auth/login` - Sends to the Wix Managed login page, accepts a `returnToUrl` for after login completion.
-* `/api/auth/logout` - Redirects to the Wix logout url and then back to the `Referer`.
+* `/api/auth/logout` - POST endpoint that redirects to the Wix logout url and then back to the `Referer`. Use a form with `method="POST"` to call this endpoint.
+
+## Example logout implementation:
+```html
+<form action="/api/auth/logout" method="POST">
+  <button type="submit">Sign Out</button>
+</form>
+```
 
 # Checking if logged in 
 
@@ -31,7 +38,7 @@ interface GetCurrentMemberSignature {
      * Retrieves the current member.
      *
      * >**Note:**
-     * >This method requires [visitor or member authentication](https://dev.wix.com/docs/build-apps/develop-your-app/access/about-identities).
+     * >This method requires [visitor or member authentication](mdc:https:/dev.wix.com/docs/build-apps/develop-your-app/access/about-identities).
      * @returns Member profile.
      */
     (options?: GetCurrentMemberOptions | undefined): Promise<GetMyMemberResponse>;
