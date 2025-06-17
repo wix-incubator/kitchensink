@@ -3,23 +3,23 @@ import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "./product-media-gallery-service";
 
 /**
- * Props for SelectedImage headless component
+ * Props for Viewport headless component
  */
-export interface SelectedImageProps {
-  /** Render prop function that receives selected image data */
-  children: (props: SelectedImageRenderProps) => React.ReactNode;
+export interface ViewportProps {
+  /** Render prop function that receives viewport data */
+  children: (props: ViewportRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for SelectedImage component
+ * Render props for Viewport component
  */
-export interface SelectedImageRenderProps {
+export interface ViewportRenderProps {
   /** Current selected image */
   image: any | null; // V3 media item structure
   /** Image URL */
-  imageUrl: string | null;
+  src: string | null;
   /** Alt text for image */
-  altText: string;
+  alt: string;
   /** Whether image is loading */
   isLoading: boolean;
   /** Current image index */
@@ -29,9 +29,9 @@ export interface SelectedImageRenderProps {
 }
 
 /**
- * Headless component for displaying the currently selected product image
+ * Headless component for displaying the main viewport image
  */
-export const SelectedImage = (props: SelectedImageProps) => {
+export const Viewport = (props: ViewportProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
@@ -44,13 +44,13 @@ export const SelectedImage = (props: SelectedImageProps) => {
 
   // Use actual v3 media structure - images are in media.main.image
   const product = mediaService.product.get();
-  const imageUrl = product?.media?.main?.image || null;
-  const altText = productName || "Product image";
+  const src = product?.media?.main?.image || null;
+  const alt = productName || "Product image";
 
   return props.children({
     image: selectedImage,
-    imageUrl,
-    altText,
+    src,
+    alt,
     isLoading,
     currentIndex,
     totalImages,
@@ -58,37 +58,37 @@ export const SelectedImage = (props: SelectedImageProps) => {
 };
 
 /**
- * Props for MediaItemThumbnail headless component
+ * Props for Thumbnail headless component
  */
-export interface MediaItemThumbnailProps {
+export interface ThumbnailProps {
   /** Index of the media item */
   index: number;
   /** Render prop function that receives thumbnail data */
-  children: (props: MediaItemThumbnailRenderProps) => React.ReactNode;
+  children: (props: ThumbnailRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for MediaItemThumbnail component
+ * Render props for Thumbnail component
  */
-export interface MediaItemThumbnailRenderProps {
+export interface ThumbnailRenderProps {
   /** Media item data */
-  mediaItem: any | null; // V3 media item structure
+  item: any | null; // V3 media item structure
   /** Thumbnail image URL */
-  imageUrl: string | null;
-  /** Whether this thumbnail is currently selected */
+  src: string | null;
+  /** Whether this thumbnail is currently active */
   isActive: boolean;
   /** Function to select this image */
-  selectImage: () => void;
+  onSelect: () => void;
   /** Index of this thumbnail */
   index: number;
   /** Alt text for thumbnail */
-  altText: string;
+  alt: string;
 }
 
 /**
- * Headless component for individual media item thumbnail
+ * Headless component for individual media thumbnail
  */
-export const MediaItemThumbnail = (props: MediaItemThumbnailProps) => {
+export const Thumbnail = (props: ThumbnailProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
@@ -99,12 +99,11 @@ export const MediaItemThumbnail = (props: MediaItemThumbnailProps) => {
 
   // Use actual v3 media structure - for now, only show main image
   // Most v3 products seem to have only media.main, not itemsInfo.items
-  const imageUrl =
-    props.index === 0 ? product?.media?.main?.image || null : null;
+  const src = props.index === 0 ? product?.media?.main?.image || null : null;
   const isActive = currentIndex === props.index;
-  const altText = `${productName || "Product"} image ${props.index + 1}`;
+  const alt = `${productName || "Product"} image ${props.index + 1}`;
 
-  const selectImage = () => {
+  const onSelect = () => {
     mediaService.setSelectedImageIndex(props.index);
   };
 
@@ -114,31 +113,31 @@ export const MediaItemThumbnail = (props: MediaItemThumbnailProps) => {
   }
 
   return props.children({
-    mediaItem: product?.media?.main || null,
-    imageUrl,
+    item: product?.media?.main || null,
+    src,
     isActive,
-    selectImage,
+    onSelect,
     index: props.index,
-    altText,
+    alt,
   });
 };
 
 /**
- * Props for NextImageButton headless component
+ * Props for Next headless component
  */
-export interface NextImageButtonProps {
-  /** Render prop function that receives next image action */
-  children: (props: NextImageButtonRenderProps) => React.ReactNode;
+export interface NextProps {
+  /** Render prop function that receives next navigation data */
+  children: (props: NextRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for NextImageButton component
+ * Render props for Next component
  */
-export interface NextImageButtonRenderProps {
+export interface NextRenderProps {
   /** Function to go to next image */
-  nextImage: () => void;
+  onNext: () => void;
   /** Whether there is a next image available */
-  hasNext: boolean;
+  canGoNext: boolean;
   /** Current image index */
   currentIndex: number;
   /** Total number of images */
@@ -146,41 +145,41 @@ export interface NextImageButtonRenderProps {
 }
 
 /**
- * Headless component for next image navigation button
+ * Headless component for next image navigation
  */
-export const NextImageButton = (props: NextImageButtonProps) => {
+export const Next = (props: NextProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
 
   const currentIndex = mediaService.selectedImageIndex.get();
   const totalImages = mediaService.totalImages.get();
-  const hasNext = currentIndex < totalImages - 1;
+  const canGoNext = currentIndex < totalImages - 1;
 
   return props.children({
-    nextImage: mediaService.nextImage,
-    hasNext,
+    onNext: mediaService.nextImage,
+    canGoNext,
     currentIndex,
     totalImages,
   });
 };
 
 /**
- * Props for PrevImageButton headless component
+ * Props for Previous headless component
  */
-export interface PrevImageButtonProps {
-  /** Render prop function that receives previous image action */
-  children: (props: PrevImageButtonRenderProps) => React.ReactNode;
+export interface PreviousProps {
+  /** Render prop function that receives previous navigation data */
+  children: (props: PreviousRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for PrevImageButton component
+ * Render props for Previous component
  */
-export interface PrevImageButtonRenderProps {
+export interface PreviousRenderProps {
   /** Function to go to previous image */
-  prevImage: () => void;
+  onPrevious: () => void;
   /** Whether there is a previous image available */
-  hasPrev: boolean;
+  canGoPrevious: boolean;
   /** Current image index */
   currentIndex: number;
   /** Total number of images */
@@ -188,49 +187,49 @@ export interface PrevImageButtonRenderProps {
 }
 
 /**
- * Headless component for previous image navigation button
+ * Headless component for previous image navigation
  */
-export const PrevImageButton = (props: PrevImageButtonProps) => {
+export const Previous = (props: PreviousProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
 
   const currentIndex = mediaService.selectedImageIndex.get();
   const totalImages = mediaService.totalImages.get();
-  const hasPrev = currentIndex > 0;
+  const canGoPrevious = currentIndex > 0;
 
   return props.children({
-    prevImage: mediaService.previousImage,
-    hasPrev,
+    onPrevious: mediaService.previousImage,
+    canGoPrevious,
     currentIndex,
     totalImages,
   });
 };
 
 /**
- * Props for MediaGalleryInfo headless component
+ * Props for Indicator headless component
  */
-export interface MediaGalleryInfoProps {
-  /** Render prop function that receives gallery info */
-  children: (props: MediaGalleryInfoRenderProps) => React.ReactNode;
+export interface IndicatorProps {
+  /** Render prop function that receives indicator data */
+  children: (props: IndicatorRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for MediaGalleryInfo component
+ * Render props for Indicator component
  */
-export interface MediaGalleryInfoRenderProps {
+export interface IndicatorRenderProps {
   /** Current image index (1-based for display) */
-  currentImage: number;
+  current: number;
   /** Total number of images */
-  totalImages: number;
+  total: number;
   /** Whether gallery has images */
   hasImages: boolean;
 }
 
 /**
- * Headless component for media gallery information
+ * Headless component for media gallery indicator/counter
  */
-export const MediaGalleryInfo = (props: MediaGalleryInfoProps) => {
+export const Indicator = (props: IndicatorProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
@@ -239,17 +238,16 @@ export const MediaGalleryInfo = (props: MediaGalleryInfoProps) => {
   const totalImages = mediaService.totalImages.get();
 
   return props.children({
-    currentImage: currentIndex + 1,
-    totalImages,
+    current: currentIndex + 1,
+    total: totalImages,
     hasImages: totalImages > 0,
   });
 };
 
-// Namespace export for clean API
 export const ProductMediaGallery = {
-  SelectedImage,
-  MediaItemThumbnail,
-  NextImageButton,
-  PrevImageButton,
-  MediaGalleryInfo,
+  Viewport,
+  Thumbnail,
+  Next,
+  Previous,
+  Indicator,
 } as const;

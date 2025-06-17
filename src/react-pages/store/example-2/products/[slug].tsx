@@ -55,18 +55,18 @@ interface ProductDetailPageProps {
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
-      <ProductMediaGallery.SelectedImage>
+      <ProductMediaGallery.Viewport>
         {withDocsWrapper(
-          ({ imageUrl, altText, isLoading, currentIndex, totalImages }) => {
+          ({ src, alt, isLoading, currentIndex, totalImages }) => {
             return (
               <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
                 {isLoading ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
                   </div>
-                ) : imageUrl ? (
+                ) : src ? (
                   <WixMediaImage
-                    media={{ image: imageUrl }}
+                    media={{ image: src }}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
@@ -89,13 +89,13 @@ const ProductImageGallery = () => {
 
                 {totalImages > 1 && (
                   <>
-                    <ProductMediaGallery.PrevImageButton>
+                    <ProductMediaGallery.Previous>
                       {withDocsWrapper(
-                        ({ prevImage, hasPrev }) => (
+                        ({ onPrevious, canGoPrevious }) => (
                           <>
-                            {hasPrev && (
+                            {canGoPrevious && (
                               <button
-                                onClick={prevImage}
+                                onClick={onPrevious}
                                 className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                               >
                                 <svg
@@ -115,18 +115,18 @@ const ProductImageGallery = () => {
                             )}
                           </>
                         ),
-                        "ProductMediaGallery.PrevImageButton",
-                        "/docs/components/product-media-gallery#previmagebutton"
+                        "ProductMediaGallery.Previous",
+                        "/docs/components/product-media-gallery#previous"
                       )}
-                    </ProductMediaGallery.PrevImageButton>
+                    </ProductMediaGallery.Previous>
 
-                    <ProductMediaGallery.NextImageButton>
+                    <ProductMediaGallery.Next>
                       {withDocsWrapper(
-                        ({ nextImage, hasNext }) => (
+                        ({ onNext, canGoNext }) => (
                           <>
-                            {hasNext && (
+                            {canGoNext && (
                               <button
-                                onClick={nextImage}
+                                onClick={onNext}
                                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                               >
                                 <svg
@@ -146,78 +146,75 @@ const ProductImageGallery = () => {
                             )}
                           </>
                         ),
-                        "ProductMediaGallery.NextImageButton",
-                        "/docs/components/product-media-gallery#nextimagebutton"
+                        "ProductMediaGallery.Next",
+                        "/docs/components/product-media-gallery#next"
                       )}
-                    </ProductMediaGallery.NextImageButton>
+                    </ProductMediaGallery.Next>
                   </>
                 )}
 
-                <ProductMediaGallery.MediaGalleryInfo>
+                <ProductMediaGallery.Indicator>
                   {withDocsWrapper(
-                    ({ currentImage, totalImages, hasImages }) => (
+                    ({ current, total, hasImages }) => (
                       <>
-                        {hasImages && totalImages > 1 && (
+                        {hasImages && total > 1 && (
                           <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
-                            {currentImage} / {totalImages}
+                            {current} / {total}
                           </div>
                         )}
                       </>
                     ),
-                    "ProductMediaGallery.MediaGalleryInfo",
-                    "/docs/components/product-media-gallery#mediagalleryinfo"
+                    "ProductMediaGallery.Indicator",
+                    "/docs/components/product-media-gallery#indicator"
                   )}
-                </ProductMediaGallery.MediaGalleryInfo>
+                </ProductMediaGallery.Indicator>
               </div>
             );
           },
-          "ProductMediaGallery.SelectedImage",
-          "/docs/components/product-media-gallery#selectedimage"
+          "ProductMediaGallery.Viewport",
+          "/docs/components/product-media-gallery#viewport"
         )}
-      </ProductMediaGallery.SelectedImage>
+      </ProductMediaGallery.Viewport>
 
-      <ProductMediaGallery.MediaGalleryInfo>
+      <ProductMediaGallery.Indicator>
         {withDocsWrapper(
-          ({ totalImages, hasImages }) => (
+          ({ total, hasImages }) => (
             <>
-              {hasImages && totalImages > 1 && (
+              {hasImages && total > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
-                  {Array.from({ length: totalImages }).map((_, index) => (
-                    <ProductMediaGallery.MediaItemThumbnail
-                      key={index}
-                      index={index}
-                    >
+                  {Array.from({ length: total }).map((_, index) => (
+                    <ProductMediaGallery.Thumbnail key={index} index={index}>
                       {withDocsWrapper(
-                        ({ imageUrl, isActive, selectImage, altText }) => (
+                        ({ src, isActive, onSelect, alt }) => (
                           <button
-                            onClick={selectImage}
+                            onClick={onSelect}
                             className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                               isActive
                                 ? "border-teal-500 ring-2 ring-teal-500/30"
                                 : "border-white/20 hover:border-white/40"
                             }`}
                           >
-                            {imageUrl && (
+                            {src && (
                               <WixMediaImage
-                                media={{ image: imageUrl }}
+                                media={{ image: src }}
                                 className="w-full h-full object-cover"
                               />
                             )}
                           </button>
                         ),
-                        "ProductMediaGallery.MediaItemThumbnail",
-                        "/docs/components/product-media-gallery#mediaitemthumbnail"
+                        "ProductMediaGallery.Thumbnail",
+                        "/docs/components/product-media-gallery#thumbnail"
                       )}
-                    </ProductMediaGallery.MediaItemThumbnail>
+                    </ProductMediaGallery.Thumbnail>
                   ))}
                 </div>
               )}
             </>
           ),
-          "ProductMediaGallery.MediaGalleryInfo",
-          "/docs/components/product-media-gallery#mediagalleryinfo"
+          "ProductMediaGallery.Indicator",
+          "/docs/components/product-media-gallery#indicator"
         )}
-      </ProductMediaGallery.MediaGalleryInfo>
+      </ProductMediaGallery.Indicator>
     </div>
   );
 };
@@ -266,7 +263,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         )}
       </Product.Description>
 
-      <ProductVariantSelector.ProductPrice>
+      <ProductVariantSelector.Price>
         {withDocsWrapper(
           ({ price, isVariantPrice, currency }) => (
             <div className="space-y-2">
@@ -283,12 +280,12 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
               )}
             </div>
           ),
-          "ProductVariantSelector.ProductPrice",
-          "/docs/components/product-variant-selector#productprice"
+          "ProductVariantSelector.Price",
+          "/docs/components/product-variant-selector#price"
         )}
-      </ProductVariantSelector.ProductPrice>
+      </ProductVariantSelector.Price>
 
-      <ProductVariantSelector.StockStatus>
+      <ProductVariantSelector.Stock>
         {withDocsWrapper(
           ({ inStock, status, quantity, trackInventory }) => {
             const isLowStock =
@@ -351,12 +348,12 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
               </div>
             );
           },
-          "ProductVariantSelector.StockStatus",
-          "/docs/components/product-variant-selector#stockstatus"
+          "ProductVariantSelector.Stock",
+          "/docs/components/product-variant-selector#stock"
         )}
-      </ProductVariantSelector.StockStatus>
+      </ProductVariantSelector.Stock>
 
-      <ProductVariantSelector.ProductOptions>
+      <ProductVariantSelector.Options>
         {withDocsWrapper(
           ({ options, hasOptions }) => (
             <>
@@ -374,23 +371,18 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                     </button>
                   </div>
 
-                  {options.map((option) => (
-                    <ProductVariantSelector.ProductOptionChoices
+                  {options.map((option: any) => (
+                    <ProductVariantSelector.Option
                       key={option.name}
                       option={option}
                     >
                       {withDocsWrapper(
-                        ({
-                          optionName,
-                          choices,
-                          selectedValue,
-                          hasChoices,
-                        }) => (
+                        ({ name, choices, selectedValue, hasChoices }) => (
                           <>
                             {hasChoices && (
                               <div className="space-y-3">
                                 <h4 className="text-md font-medium text-white/90">
-                                  {optionName}
+                                  {name}
                                   {selectedValue && (
                                     <span className="ml-2 text-sm text-teal-400">
                                       ({selectedValue})
@@ -398,61 +390,63 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                   )}
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
-                                  {choices.map((choice, choiceIndex) => (
-                                    <ProductVariantSelector.ChoiceSelection
-                                      key={choiceIndex}
-                                      option={option}
-                                      choice={choice}
-                                    >
-                                      {withDocsWrapper(
-                                        ({
-                                          displayValue,
-                                          isSelected,
-                                          isAvailable,
-                                          selectChoice,
-                                        }) => (
-                                          <button
-                                            onClick={selectChoice}
-                                            disabled={!isAvailable}
-                                            className={`px-4 py-2 rounded-lg border transition-all ${
-                                              isSelected
-                                                ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                                : isAvailable
-                                                ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
-                                                : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
-                                            }`}
-                                          >
-                                            {displayValue}
-                                            {!isAvailable && (
-                                              <span className="ml-1 text-xs">
-                                                (unavailable)
-                                              </span>
-                                            )}
-                                          </button>
-                                        ),
-                                        "ProductVariantSelector.ChoiceSelection",
-                                        "/docs/components/product-variant-selector#choiceselection"
-                                      )}
-                                    </ProductVariantSelector.ChoiceSelection>
-                                  ))}
+                                  {choices.map(
+                                    (choice: any, choiceIndex: number) => (
+                                      <ProductVariantSelector.Choice
+                                        key={choiceIndex}
+                                        option={option}
+                                        choice={choice}
+                                      >
+                                        {withDocsWrapper(
+                                          ({
+                                            value,
+                                            isSelected,
+                                            isAvailable,
+                                            onSelect,
+                                          }) => (
+                                            <button
+                                              onClick={onSelect}
+                                              disabled={!isAvailable}
+                                              className={`px-4 py-2 rounded-lg border transition-all ${
+                                                isSelected
+                                                  ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                                  : isAvailable
+                                                  ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                                  : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
+                                              }`}
+                                            >
+                                              {value}
+                                              {!isAvailable && (
+                                                <span className="ml-1 text-xs">
+                                                  (unavailable)
+                                                </span>
+                                              )}
+                                            </button>
+                                          ),
+                                          "ProductVariantSelector.Choice",
+                                          "/docs/components/product-variant-selector#choice"
+                                        )}
+                                      </ProductVariantSelector.Choice>
+                                    )
+                                  )}
                                 </div>
                               </div>
                             )}
                           </>
                         ),
-                        "ProductVariantSelector.ProductOptionChoices",
-                        "/docs/components/product-variant-selector#productoptionchoices"
+                        "ProductVariantSelector.Option",
+                        "/docs/components/product-variant-selector#option"
                       )}
-                    </ProductVariantSelector.ProductOptionChoices>
+                    </ProductVariantSelector.Option>
                   ))}
                 </div>
               )}
             </>
           ),
-          "ProductVariantSelector.ProductOptions",
-          "/docs/components/product-variant-selector#productoptions"
+          "ProductVariantSelector.Options",
+          "/docs/components/product-variant-selector#options"
         )}
-      </ProductVariantSelector.ProductOptions>
+      </ProductVariantSelector.Options>
 
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-white">Quantity</h3>
@@ -479,9 +473,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
         </div>
       </div>
 
-      <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
+      <ProductVariantSelector.Trigger quantity={quantity}>
         {withDocsWrapper(
-          ({ addToCart, canAddToCart, isLoading, inStock, error }) => (
+          ({ onAddToCart, canAddToCart, isLoading, inStock, error }) => (
             <div className="space-y-4">
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
@@ -491,11 +485,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
               <div className="flex flex-col gap-3">
                 <div className="flex gap-3">
-                  {/* Add to Cart Button */}
                   <button
                     onClick={async () => {
-                      await addToCart();
-                      onAddToCart();
+                      await onAddToCart();
                     }}
                     disabled={!canAddToCart || isLoading}
                     className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
@@ -532,8 +524,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
                   <button
                     onClick={async () => {
-                      await addToCart();
-                      onAddToCart();
+                      await onAddToCart();
                       setTimeout(() => {
                         window.location.href = "/checkout";
                       }, 1000);
@@ -572,7 +563,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                   </button>
                 </div>
 
-                <SocialSharing.ShareButtons
+                <SocialSharing.Platforms
                   url={
                     typeof window !== "undefined" ? window.location.href : ""
                   }
@@ -687,17 +678,17 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                         </div>
                       );
                     },
-                    "SocialSharing.ShareButtons",
-                    "/docs/components/social-sharing#sharebuttons"
+                    "SocialSharing.Platforms",
+                    "/docs/components/social-sharing#platforms"
                   )}
-                </SocialSharing.ShareButtons>
+                </SocialSharing.Platforms>
               </div>
             </div>
           ),
-          "ProductVariantSelector.AddToCartTrigger",
-          "/docs/components/product-variant-selector#addtocarttrigger"
+          "ProductVariantSelector.Trigger",
+          "/docs/components/product-variant-selector#trigger"
         )}
-      </ProductVariantSelector.AddToCartTrigger>
+      </ProductVariantSelector.Trigger>
 
       <Product.Details>
         {withDocsWrapper(
@@ -729,7 +720,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
       <RelatedProducts.List>
         {withDocsWrapper(
-          ({ relatedProducts, isLoading, error, hasRelatedProducts }) => (
+          ({ products, isLoading, error, hasProducts }) => (
             <div className="border-t border-white/10 pt-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 You might also like
@@ -759,31 +750,28 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                 </div>
               )}
 
-              {!isLoading && hasRelatedProducts && (
+              {!isLoading && hasProducts && (
                 <div className="grid grid-cols-2 gap-4">
-                  {relatedProducts.map((product) => {
+                  {products.map((product: any) => {
                     return (
-                      <RelatedProducts.ProductCard
-                        key={product._id}
-                        product={product}
-                      >
+                      <RelatedProducts.Item key={product._id} product={product}>
                         {withDocsWrapper(
                           ({
-                            name,
-                            imageUrl,
+                            title,
+                            image,
                             price,
-                            inStock,
-                            productUrl,
+                            available,
+                            href,
                             description,
                           }) => (
                             <a
-                              href={productUrl}
+                              href={href}
                               className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
                             >
                               <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
-                                {imageUrl ? (
+                                {image ? (
                                   <WixMediaImage
-                                    media={{ image: imageUrl }}
+                                    media={{ image: image }}
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
@@ -805,7 +793,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                 )}
                               </div>
                               <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
-                                {name}
+                                {title}
                               </h4>
                               {description && (
                                 <p className="text-white/60 text-xs mb-2 line-clamp-2">
@@ -816,7 +804,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                 <p className="text-white font-semibold">
                                   {price}
                                 </p>
-                                {!inStock && (
+                                {!available && (
                                   <span className="text-red-400 text-xs">
                                     Out of Stock
                                   </span>
@@ -824,16 +812,16 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                               </div>
                             </a>
                           ),
-                          "RelatedProducts.ProductCard",
-                          "/docs/components/related-products#productcard"
+                          "RelatedProducts.Item",
+                          "/docs/components/related-products#item"
                         )}
-                      </RelatedProducts.ProductCard>
+                      </RelatedProducts.Item>
                     );
                   })}
                 </div>
               )}
 
-              {!isLoading && !hasRelatedProducts && !error && (
+              {!isLoading && !hasProducts && !error && (
                 <div className="text-center py-8">
                   <svg
                     className="w-12 h-12 text-white/20 mx-auto mb-3"
@@ -961,7 +949,7 @@ export default function ProductDetailPage({
             </div>
 
             <div className="mt-12 pt-8 border-t border-white/10">
-              <CurrentCart.CartSummary>
+              <CurrentCart.Summary>
                 {withDocsWrapper(
                   ({ subtotal, itemCount }) => (
                     <>
@@ -1002,10 +990,10 @@ export default function ProductDetailPage({
                       )}
                     </>
                   ),
-                  "CurrentCart.CartSummary",
-                  "/docs/components/current-cart#cartsummary"
+                  "CurrentCart.Summary",
+                  "/docs/components/current-cart#summary"
                 )}
-              </CurrentCart.CartSummary>
+              </CurrentCart.Summary>
             </div>
           </div>
         </div>

@@ -1,12 +1,15 @@
-import React from 'react';
+import React from "react";
 import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { CurrentCartServiceDefinition, CurrentCartService } from '../headless/store/current-cart-service';
-import { CurrentCart } from '../headless/store/CurrentCart';
-import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
+import {
+  CurrentCartServiceDefinition,
+  CurrentCartService,
+} from "../headless/store/current-cart-service";
+import { CurrentCart } from "../headless/store/CurrentCart";
+import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
 
 interface CartPageProps {
   data?: any;
@@ -16,19 +19,22 @@ const CartContent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
       <div className="max-w-7xl mx-auto">
-        <CurrentCart.CartModal>
+        <CurrentCart.Content>
           {({ cart, isLoading, error }) => (
             <>
               {/* Header */}
               <div className="text-center mb-12">
-                <h1 className="text-5xl font-bold text-white mb-4">Shopping Cart</h1>
-                <CurrentCart.CartIcon>
+                <h1 className="text-5xl font-bold text-white mb-4">
+                  Shopping Cart
+                </h1>
+                <CurrentCart.Trigger>
                   {({ itemCount }) => (
                     <p className="text-white/80 text-xl">
-                      {itemCount} {itemCount === 1 ? 'item' : 'items'} in your cart
+                      {itemCount} {itemCount === 1 ? "item" : "items"} in your
+                      cart
                     </p>
                   )}
-                </CurrentCart.CartIcon>
+                </CurrentCart.Trigger>
               </div>
 
               {/* Loading State */}
@@ -54,7 +60,9 @@ const CartContent = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    <span className="text-white text-lg">Loading your cart...</span>
+                    <span className="text-white text-lg">
+                      Loading your cart...
+                    </span>
                   </div>
                 </div>
               )}
@@ -62,14 +70,16 @@ const CartContent = () => {
               {/* Error State */}
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 mb-8">
-                  <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
+                  <h2 className="text-xl font-semibold text-red-400 mb-2">
+                    Error
+                  </h2>
                   <p className="text-red-300">{error}</p>
                 </div>
               )}
 
               {/* Empty Cart */}
-              <CurrentCart.CartLineItems>
-                {({ hasItems, lineItems }) => (
+              <CurrentCart.Items>
+                {({ hasItems, items }) => (
                   <>
                     {!hasItems && !isLoading && (
                       <div className="text-center py-16">
@@ -88,15 +98,29 @@ const CartContent = () => {
                             />
                           </svg>
                         </div>
-                        <h2 className="text-3xl font-bold text-white mb-4">Your cart is empty</h2>
-                        <p className="text-white/70 text-lg mb-8">Start shopping to add items to your cart</p>
+                        <h2 className="text-3xl font-bold text-white mb-4">
+                          Your cart is empty
+                        </h2>
+                        <p className="text-white/70 text-lg mb-8">
+                          Start shopping to add items to your cart
+                        </p>
                         <a
                           href="/store"
                           className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
                         >
                           Continue Shopping
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
                           </svg>
                         </a>
                       </div>
@@ -109,43 +133,48 @@ const CartContent = () => {
                         <div className="lg:col-span-2">
                           <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
                             <div className="flex items-center justify-between mb-6">
-                              <h2 className="text-2xl font-bold text-white">Cart Items</h2>
-                              <CurrentCart.ClearCart>
-                                {({ clearCart, hasItems, isLoading }) => (
+                              <h2 className="text-2xl font-bold text-white">
+                                Cart Items
+                              </h2>
+                              <CurrentCart.Clear>
+                                {({ onClear, hasItems, isLoading }) =>
                                   hasItems && (
                                     <button
-                                      onClick={clearCart}
+                                      onClick={onClear}
                                       disabled={isLoading}
                                       className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors duration-200 disabled:opacity-50"
                                     >
                                       Clear all items
                                     </button>
                                   )
-                                )}
-                              </CurrentCart.ClearCart>
+                                }
+                              </CurrentCart.Clear>
                             </div>
 
                             <div className="space-y-6">
-                              {lineItems.map((item: any) => (
-                                <CurrentCart.CartLineItem key={item._id} lineItemId={item._id}>
+                              {items.map((item: any) => (
+                                <CurrentCart.Item
+                                  key={item._id}
+                                  lineItemId={item._id}
+                                >
                                   {({
-                                    productName,
-                                    imageUrl,
+                                    title,
+                                    image,
                                     price,
                                     quantity,
-                                    increaseQuantity,
-                                    decreaseQuantity,
-                                    removeItem,
-                                    isLoading: itemLoading
+                                    onIncrease,
+                                    onDecrease,
+                                    onRemove,
+                                    isLoading: itemLoading,
                                   }) => (
                                     <div className="flex items-center space-x-6 p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-200">
                                       {/* Product Image */}
                                       <div className="flex-shrink-0">
-                                        {imageUrl ? (
+                                        {image ? (
                                           <img
                                             className="h-24 w-24 rounded-lg object-cover border border-white/20"
-                                            src={imageUrl}
-                                            alt={productName}
+                                            src={image}
+                                            alt={title}
                                           />
                                         ) : (
                                           <div className="h-24 w-24 bg-white/10 rounded-lg flex items-center justify-center border border-white/20">
@@ -169,7 +198,7 @@ const CartContent = () => {
                                       {/* Product Details */}
                                       <div className="flex-1 min-w-0">
                                         <h3 className="text-xl font-semibold text-white mb-2">
-                                          {productName}
+                                          {title}
                                         </h3>
                                         <p className="text-2xl font-bold text-white">
                                           {price}
@@ -179,12 +208,24 @@ const CartContent = () => {
                                       {/* Quantity Controls */}
                                       <div className="flex items-center space-x-3">
                                         <button
-                                          onClick={decreaseQuantity}
-                                          disabled={itemLoading || quantity <= 1}
+                                          onClick={onDecrease}
+                                          disabled={
+                                            itemLoading || quantity <= 1
+                                          }
                                           className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                          <svg
+                                            className="h-4 w-4"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M20 12H4"
+                                            />
                                           </svg>
                                         </button>
 
@@ -193,29 +234,49 @@ const CartContent = () => {
                                         </span>
 
                                         <button
-                                          onClick={increaseQuantity}
+                                          onClick={onIncrease}
                                           disabled={itemLoading}
                                           className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                          <svg
+                                            className="h-4 w-4"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
                                           </svg>
                                         </button>
                                       </div>
 
                                       {/* Remove Button */}
                                       <button
-                                        onClick={removeItem}
+                                        onClick={onRemove}
                                         disabled={itemLoading}
                                         className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-500/10 transition-all duration-200 disabled:opacity-50"
                                       >
-                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        <svg
+                                          className="h-5 w-5"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                          />
                                         </svg>
                                       </button>
                                     </div>
                                   )}
-                                </CurrentCart.CartLineItem>
+                                </CurrentCart.Item>
                               ))}
                             </div>
                           </div>
@@ -224,16 +285,25 @@ const CartContent = () => {
                         {/* Order Summary */}
                         <div className="lg:col-span-1">
                           <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 sticky top-6">
-                            <h2 className="text-2xl font-bold text-white mb-6">Order Summary</h2>
-                            
-                            <CurrentCart.CartSummary>
-                              {({ subtotal, total, itemCount, canCheckout }) => (
+                            <h2 className="text-2xl font-bold text-white mb-6">
+                              Order Summary
+                            </h2>
+
+                            <CurrentCart.Summary>
+                              {({
+                                subtotal,
+                                total,
+                                itemCount,
+                                canCheckout,
+                              }) => (
                                 <div className="space-y-4">
                                   <div className="flex justify-between text-lg text-white">
                                     <span>Subtotal ({itemCount} items)</span>
-                                    <span className="font-semibold">{subtotal}</span>
+                                    <span className="font-semibold">
+                                      {subtotal}
+                                    </span>
                                   </div>
-                                  
+
                                   <div className="border-t border-white/20 pt-4">
                                     <div className="flex justify-between text-xl font-bold text-white">
                                       <span>Total</span>
@@ -241,18 +311,27 @@ const CartContent = () => {
                                     </div>
                                   </div>
 
-                                  <CurrentCart.CheckoutButton>
-                                    {({ proceedToCheckout, canCheckout: canProceed, isLoading: checkoutLoading, error: checkoutError }) => (
+                                  <CurrentCart.Checkout>
+                                    {({
+                                      onProceed,
+                                      canCheckout: canProceed,
+                                      isLoading: checkoutLoading,
+                                      error: checkoutError,
+                                    }) => (
                                       <div className="space-y-4">
                                         {checkoutError && (
                                           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                                            <p className="text-red-400 text-sm">{checkoutError}</p>
+                                            <p className="text-red-400 text-sm">
+                                              {checkoutError}
+                                            </p>
                                           </div>
                                         )}
-                                        
+
                                         <button
-                                          onClick={proceedToCheckout}
-                                          disabled={!canProceed || checkoutLoading}
+                                          onClick={onProceed}
+                                          disabled={
+                                            !canProceed || checkoutLoading
+                                          }
                                           className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
                                         >
                                           {checkoutLoading ? (
@@ -279,37 +358,47 @@ const CartContent = () => {
                                               Processing...
                                             </span>
                                           ) : (
-                                            'Proceed to Checkout'
+                                            "Proceed to Checkout"
                                           )}
                                         </button>
                                       </div>
                                     )}
-                                  </CurrentCart.CheckoutButton>
+                                  </CurrentCart.Checkout>
 
                                   <div className="text-center pt-4">
                                     <a
                                       href="/store"
                                       className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200 flex items-center justify-center gap-2"
                                     >
-                                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M15 19l-7-7 7-7"
+                                        />
                                       </svg>
                                       Continue Shopping
                                     </a>
                                   </div>
                                 </div>
                               )}
-                            </CurrentCart.CartSummary>
+                            </CurrentCart.Summary>
                           </div>
                         </div>
                       </div>
                     )}
                   </>
                 )}
-              </CurrentCart.CartLineItems>
+              </CurrentCart.Items>
             </>
           )}
-        </CurrentCart.CartModal>
+        </CurrentCart.Content>
       </div>
     </div>
   );
@@ -332,4 +421,4 @@ export default function CartPage({ data }: CartPageProps) {
       </ServicesManagerProvider>
     </KitchensinkLayout>
   );
-} 
+}

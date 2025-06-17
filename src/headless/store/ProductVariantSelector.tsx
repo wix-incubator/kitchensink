@@ -4,29 +4,29 @@ import { SelectedVariantServiceDefinition } from "./selected-variant-service";
 import { productsV3 } from "@wix/stores";
 
 /**
- * Props for ProductOptions headless component
+ * Props for Options headless component
  */
-export interface ProductOptionsProps {
-  /** Render prop function that receives product options data */
-  children: (props: ProductOptionsRenderProps) => React.ReactNode;
+export interface OptionsProps {
+  /** Render prop function that receives options data */
+  children: (props: OptionsRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ProductOptions component
+ * Render props for Options component
  */
-export interface ProductOptionsRenderProps {
+export interface OptionsRenderProps {
   /** Array of product options */
   options: productsV3.ConnectedOption[];
   /** Whether product has options */
   hasOptions: boolean;
-  /** Currently selected choices (V3 terminology) */
+  /** Currently selected choices */
   selectedChoices: Record<string, string>;
 }
 
 /**
  * Headless component for all product options
  */
-export const ProductOptions = (props: ProductOptionsProps) => {
+export const Options = (props: OptionsProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -42,23 +42,23 @@ export const ProductOptions = (props: ProductOptionsProps) => {
 };
 
 /**
- * Props for ProductOptionChoices headless component
+ * Props for Option headless component
  */
-export interface ProductOptionChoicesProps {
+export interface OptionProps {
   /** Product option data */
   option: productsV3.ConnectedOption;
-  /** Render prop function that receives option choices data */
-  children: (props: ProductOptionChoicesRenderProps) => React.ReactNode;
+  /** Render prop function that receives option data */
+  children: (props: OptionRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ProductOptionChoices component
+ * Render props for Option component
  */
-export interface ProductOptionChoicesRenderProps {
+export interface OptionRenderProps {
   /** Option name */
-  optionName: string;
+  name: string;
   /** Option type */
-  optionType: productsV3.ProductOptionRenderType | undefined;
+  type: any;
   /** Array of choices for this option */
   choices: productsV3.ConnectedOptionChoice[];
   /** Currently selected value for this option */
@@ -70,7 +70,7 @@ export interface ProductOptionChoicesRenderProps {
 /**
  * Headless component for choices within a specific product option
  */
-export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
+export const Option = (props: OptionProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -78,13 +78,13 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
   const selectedChoices = variantService.selectedChoices.get();
   const { option } = props;
 
-  const optionName = option.name || "";
+  const name = option.name || "";
   const choices = option.choicesSettings?.choices || [];
-  const selectedValue = selectedChoices[optionName] || null;
+  const selectedValue = selectedChoices[name] || null;
 
   return props.children({
-    optionName,
-    optionType: option.optionRenderType,
+    name,
+    type: option.optionRenderType,
     choices,
     selectedValue,
     hasChoices: choices.length > 0,
@@ -92,23 +92,23 @@ export const ProductOptionChoices = (props: ProductOptionChoicesProps) => {
 };
 
 /**
- * Props for ChoiceSelection headless component
+ * Props for Choice headless component
  */
-export interface ChoiceSelectionProps {
+export interface ChoiceProps {
   /** Product option data */
   option: productsV3.ConnectedOption;
   /** Choice data */
   choice: productsV3.ConnectedOptionChoice;
-  /** Render prop function that receives choice selection data */
-  children: (props: ChoiceSelectionRenderProps) => React.ReactNode;
+  /** Render prop function that receives choice data */
+  children: (props: ChoiceRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ChoiceSelection component
+ * Render props for Choice component
  */
-export interface ChoiceSelectionRenderProps {
+export interface ChoiceRenderProps {
   /** Choice value to display */
-  displayValue: string;
+  value: string;
   /** Choice description (for color options) */
   description: string | undefined;
   /** Whether this choice is currently selected */
@@ -116,7 +116,7 @@ export interface ChoiceSelectionRenderProps {
   /** Whether this choice is available for selection */
   isAvailable: boolean;
   /** Function to select this choice */
-  selectChoice: () => void;
+  onSelect: () => void;
   /** Option name */
   optionName: string;
   /** Choice value */
@@ -126,7 +126,7 @@ export interface ChoiceSelectionRenderProps {
 /**
  * Headless component for individual choice selection
  */
-export const ChoiceSelection = (props: ChoiceSelectionProps) => {
+export const Choice = (props: ChoiceProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -148,39 +148,39 @@ export const ChoiceSelection = (props: ChoiceSelectionProps) => {
   // Simple availability check - in a real implementation, this would check against actual variants
   const isAvailable = true; // Simplified for now
 
-  const displayValue = choiceValue;
+  const value = choiceValue;
 
-  const selectChoice = () => {
+  const onSelect = () => {
     variantService.setSelectedChoices(testChoices);
   };
 
   return props.children({
-    displayValue,
+    value,
     description: undefined, // v3 choices don't have separate description field
     isSelected,
     isAvailable,
-    selectChoice,
+    onSelect,
     optionName,
     choiceValue,
   });
 };
 
 /**
- * Props for AddToCartTrigger headless component
+ * Props for Trigger headless component
  */
-export interface AddToCartTriggerProps {
+export interface TriggerProps {
   /** Quantity to add (optional) */
   quantity?: number;
-  /** Render prop function that receives add to cart data */
-  children: (props: AddToCartTriggerRenderProps) => React.ReactNode;
+  /** Render prop function that receives trigger data */
+  children: (props: TriggerRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for AddToCartTrigger component
+ * Render props for Trigger component
  */
-export interface AddToCartTriggerRenderProps {
+export interface TriggerRenderProps {
   /** Function to add product to cart */
-  addToCart: () => Promise<void>;
+  onAddToCart: () => Promise<void>;
   /** Whether add to cart is available */
   canAddToCart: boolean;
   /** Whether add to cart is currently loading */
@@ -196,7 +196,7 @@ export interface AddToCartTriggerRenderProps {
 /**
  * Headless component for add to cart trigger
  */
-export const AddToCartTrigger = (props: AddToCartTriggerProps) => {
+export const Trigger = (props: TriggerProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -209,12 +209,12 @@ export const AddToCartTrigger = (props: AddToCartTriggerProps) => {
   const quantity = props.quantity || 1;
   const canAddToCart = inStock && !isLoading;
 
-  const addToCart = async () => {
+  const onAddToCart = async () => {
     await variantService.addToCart(quantity);
   };
 
   return props.children({
-    addToCart,
+    onAddToCart,
     canAddToCart,
     isLoading,
     price,
@@ -224,17 +224,17 @@ export const AddToCartTrigger = (props: AddToCartTriggerProps) => {
 };
 
 /**
- * Props for ProductPrice headless component
+ * Props for Price headless component
  */
-export interface ProductPriceProps {
-  /** Render prop function that receives product price data */
-  children: (props: ProductPriceRenderProps) => React.ReactNode;
+export interface PriceProps {
+  /** Render prop function that receives price data */
+  children: (props: PriceRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ProductPrice component
+ * Render props for Price component
  */
-export interface ProductPriceRenderProps {
+export interface PriceRenderProps {
   /** Current price (formatted) */
   price: string;
   /** Whether price is for a variant */
@@ -246,7 +246,7 @@ export interface ProductPriceRenderProps {
 /**
  * Headless component for product price display
  */
-export const ProductPrice = (props: ProductPriceProps) => {
+export const Price = (props: PriceProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -265,17 +265,17 @@ export const ProductPrice = (props: ProductPriceProps) => {
 };
 
 /**
- * Props for StockStatus headless component
+ * Props for Stock headless component
  */
-export interface StockStatusProps {
-  /** Render prop function that receives stock status data */
-  children: (props: StockStatusRenderProps) => React.ReactNode;
+export interface StockProps {
+  /** Render prop function that receives stock data */
+  children: (props: StockRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for StockStatus component
+ * Render props for Stock component
  */
-export interface StockStatusRenderProps {
+export interface StockRenderProps {
   /** Whether product is in stock */
   inStock: boolean;
   /** Stock status message */
@@ -289,7 +289,7 @@ export interface StockStatusRenderProps {
 /**
  * Headless component for product stock status
  */
-export const StockStatus = (props: StockStatusProps) => {
+export const Stock = (props: StockProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
@@ -311,12 +311,11 @@ export const StockStatus = (props: StockStatusProps) => {
   });
 };
 
-// Namespace export for clean API
 export const ProductVariantSelector = {
-  ProductOptions,
-  ProductOptionChoices,
-  ChoiceSelection,
-  AddToCartTrigger,
-  ProductPrice,
-  StockStatus,
+  Options,
+  Option,
+  Choice,
+  Trigger,
+  Price,
+  Stock,
 } as const;

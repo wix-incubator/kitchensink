@@ -27,7 +27,7 @@ interface StoreExample2PageProps {
 
 const ProductGridContent = () => {
   return (
-    <Collection.ProductGrid>
+    <Collection.Grid>
       {withDocsWrapper(
         ({ products, isLoading, error, isEmpty }) => (
           <div className="min-h-screen">
@@ -77,21 +77,21 @@ const ProductGridContent = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map((product) => (
-                  <Collection.ProductCard key={product._id} product={product}>
+                  <Collection.Item key={product._id} product={product}>
                     {withDocsWrapper(
                       ({
-                        name,
-                        imageUrl,
+                        title,
+                        image,
                         price,
-                        inStock,
-                        productUrl,
+                        available,
+                        href,
                         description,
                       }) => (
                         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group">
                           <div className="aspect-square bg-white/10 rounded-lg mb-4 overflow-hidden relative">
-                            {imageUrl ? (
+                            {image ? (
                               <WixMediaImage
-                                media={{ image: imageUrl }}
+                                media={{ image: image }}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                             ) : (
@@ -120,7 +120,7 @@ const ProductGridContent = () => {
                           </div>
 
                           <h3 className="text-white font-semibold mb-2 line-clamp-2">
-                            {name}
+                            {title}
                           </h3>
 
                           {description && (
@@ -134,7 +134,7 @@ const ProductGridContent = () => {
                               {price}
                             </span>
                             <div className="flex items-center gap-2">
-                              {inStock ? (
+                              {available ? (
                                 <span className="text-green-400 text-sm flex items-center gap-1">
                                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                                   In Stock
@@ -150,7 +150,7 @@ const ProductGridContent = () => {
 
                           <div className="flex gap-2">
                             <a
-                              href={productUrl.replace(
+                              href={href.replace(
                                 "/store/products/",
                                 "/store/example-2/"
                               )}
@@ -174,25 +174,25 @@ const ProductGridContent = () => {
                           </div>
                         </div>
                       ),
-                      "Collection.ProductCard",
-                      "/docs/components/collection#productcard"
+                      "Collection.Item",
+                      "/docs/components/collection#item"
                     )}
-                  </Collection.ProductCard>
+                  </Collection.Item>
                 ))}
               </div>
             )}
           </div>
         ),
-        "Collection.ProductGrid",
-        "/docs/components/collection#productgrid"
+        "Collection.Grid",
+        "/docs/components/collection#grid"
       )}
-    </Collection.ProductGrid>
+    </Collection.Grid>
   );
 };
 
 const LoadMoreSection = () => {
   return (
-    <Collection.LoadMoreProducts>
+    <Collection.LoadMore>
       {withDocsWrapper(
         ({ loadMore, refresh, isLoading, hasProducts, totalProducts }) => (
           <>
@@ -248,10 +248,10 @@ const LoadMoreSection = () => {
             )}
           </>
         ),
-        "Collection.LoadMoreProducts",
-        "/docs/components/collection#loadmoreproducts"
+        "Collection.LoadMore",
+        "/docs/components/collection#loadmore"
       )}
-    </Collection.LoadMoreProducts>
+    </Collection.LoadMore>
   );
 };
 
@@ -298,7 +298,7 @@ export default function StoreExample2Page({
                 interactions and modern design patterns
               </p>
 
-              <Collection.CollectionHeader>
+              <Collection.Header>
                 {withDocsWrapper(
                   ({ totalProducts, isLoading, hasProducts }) => (
                     <div className="mt-6">
@@ -311,10 +311,10 @@ export default function StoreExample2Page({
                       )}
                     </div>
                   ),
-                  "Collection.CollectionHeader",
-                  "/docs/components/collection#collectionheader"
+                  "Collection.Header",
+                  "/docs/components/collection#header"
                 )}
-              </Collection.CollectionHeader>
+              </Collection.Header>
             </div>
 
             <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl border border-white/10 p-6 mb-12">

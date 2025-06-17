@@ -8,35 +8,35 @@ import {
 } from "./social-sharing-service";
 
 /**
- * Props for SharingActions headless component
+ * Props for Root headless component
  */
-export interface SharingActionsProps {
-  /** Render prop function that receives sharing actions */
-  children: (props: SharingActionsRenderProps) => React.ReactNode;
+export interface RootProps {
+  /** Render prop function that receives sharing data */
+  children: (props: RootRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for SharingActions component
+ * Render props for Root component
  */
-export interface SharingActionsRenderProps {
+export interface RootRenderProps {
   /** Available sharing platforms */
-  availablePlatforms: SharingPlatform[];
+  platforms: SharingPlatform[];
   /** Total share count */
   shareCount: number;
   /** Last shared platform */
-  lastSharedPlatform: string | null;
+  lastShared: string | null;
   /** Share to Facebook */
-  shareToFacebook: (url: string, title: string, description?: string) => void;
+  shareFacebook: (url: string, title: string, description?: string) => void;
   /** Share to Twitter */
-  shareToTwitter: (url: string, text: string, hashtags?: string[]) => void;
+  shareTwitter: (url: string, text: string, hashtags?: string[]) => void;
   /** Share to LinkedIn */
-  shareToLinkedIn: (url: string, title: string, summary?: string) => void;
+  shareLinkedIn: (url: string, title: string, summary?: string) => void;
   /** Share to WhatsApp */
-  shareToWhatsApp: (url: string, text: string) => void;
+  shareWhatsApp: (url: string, text: string) => void;
   /** Share via Email */
-  shareToEmail: (url: string, subject: string, body: string) => void;
+  shareEmail: (url: string, subject: string, body: string) => void;
   /** Copy to clipboard */
-  copyToClipboard: (url: string) => Promise<boolean>;
+  copyLink: (url: string) => Promise<boolean>;
   /** Native share API */
   shareNative: (data: {
     title: string;
@@ -46,83 +46,79 @@ export interface SharingActionsRenderProps {
 }
 
 /**
- * Headless component for social sharing actions
+ * Headless component for social sharing root
  */
-export const SharingActions = (props: SharingActionsProps) => {
+export const Root = (props: RootProps) => {
   const service = useService(SocialSharingServiceDefinition) as ServiceAPI<
     typeof SocialSharingServiceDefinition
   >;
 
-  const [availablePlatforms, setAvailablePlatforms] = React.useState<
-    SharingPlatform[]
-  >([]);
+  const [platforms, setPlatforms] = React.useState<SharingPlatform[]>([]);
   const [shareCount, setShareCount] = React.useState(0);
-  const [lastSharedPlatform, setLastSharedPlatform] = React.useState<
-    string | null
-  >(null);
+  const [lastShared, setLastShared] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const unsubscribes = [
-      service.availablePlatforms.subscribe(setAvailablePlatforms),
+      service.availablePlatforms.subscribe(setPlatforms),
       service.shareCount.subscribe(setShareCount),
-      service.lastSharedPlatform.subscribe(setLastSharedPlatform),
+      service.lastSharedPlatform.subscribe(setLastShared),
     ];
 
     return () => unsubscribes.forEach((fn) => fn());
   }, [service]);
 
   return props.children({
-    availablePlatforms,
+    platforms,
     shareCount,
-    lastSharedPlatform,
-    shareToFacebook: service.shareToFacebook,
-    shareToTwitter: service.shareToTwitter,
-    shareToLinkedIn: service.shareToLinkedIn,
-    shareToWhatsApp: service.shareToWhatsApp,
-    shareToEmail: service.shareToEmail,
-    copyToClipboard: service.copyToClipboard,
+    lastShared,
+    shareFacebook: service.shareToFacebook,
+    shareTwitter: service.shareToTwitter,
+    shareLinkedIn: service.shareToLinkedIn,
+    shareWhatsApp: service.shareToWhatsApp,
+    shareEmail: service.shareToEmail,
+    copyLink: service.copyToClipboard,
     shareNative: service.shareNative,
   });
 };
 
 /**
- * Props for SocialButton headless component
+ * Props for Platform headless component
  */
-export interface SocialButtonProps {
+export interface PlatformProps {
   /** Platform data */
   platform: SharingPlatform;
   /** Click handler */
   onClick: () => void;
-  /** Render prop function that receives button data */
-  children: (props: SocialButtonRenderProps) => React.ReactNode;
+  /** Render prop function that receives platform data */
+  children: (props: PlatformRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for SocialButton component
+ * Render props for Platform component
  */
-export interface SocialButtonRenderProps {
+export interface PlatformRenderProps {
   /** Platform data */
   platform: SharingPlatform;
-  /** Button click handler */
-  handleClick: () => void;
+  /** Platform click handler */
+  onSelect: () => void;
 }
 
 /**
- * Headless component for individual social sharing button
+ * Headless component for individual social platform
  */
-export const SocialButton = (props: SocialButtonProps) => {
+export const Platform = (props: PlatformProps) => {
   const { platform, onClick } = props;
 
   return props.children({
     platform,
-    handleClick: onClick,
+    onSelect: onClick,
   });
 };
 
 /**
- * Props for ShareButtons headless component
+ * Props for Platforms headless component
  */
-export interface ShareButtonsProps {
+export interface PlatformsProps {
   /** URL to share */
   url: string;
   /** Share title */
@@ -131,14 +127,14 @@ export interface ShareButtonsProps {
   description?: string;
   /** Hashtags for sharing */
   hashtags?: string[];
-  /** Render prop function that receives share buttons data */
-  children: (props: ShareButtonsRenderProps) => React.ReactNode;
+  /** Render prop function that receives platforms data */
+  children: (props: PlatformsRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ShareButtons component
+ * Render props for Platforms component
  */
-export interface ShareButtonsRenderProps {
+export interface PlatformsRenderProps {
   /** Available platforms */
   platforms: SharingPlatform[];
   /** Share to Facebook */
@@ -154,13 +150,13 @@ export interface ShareButtonsRenderProps {
   /** Copy link to clipboard */
   copyLink: () => Promise<boolean>;
   /** Share natively */
-  shareNatively: () => Promise<boolean>;
+  shareNative: () => Promise<boolean>;
 }
 
 /**
- * Headless component for social sharing buttons with platform logic
+ * Headless component for social sharing platforms with logic
  */
-export const ShareButtons = (props: ShareButtonsProps) => {
+export const Platforms = (props: PlatformsProps) => {
   const { url, title, description = "", hashtags = [] } = props;
 
   const service = useService(SocialSharingServiceDefinition) as ServiceAPI<
@@ -181,7 +177,7 @@ export const ShareButtons = (props: ShareButtonsProps) => {
     service.shareToWhatsApp(url, `${title} - ${description}`);
   const shareEmail = () => service.shareToEmail(url, title, description);
   const copyLink = () => service.copyToClipboard(url);
-  const shareNatively = () =>
+  const shareNative = () =>
     service.shareNative({ title, text: description, url });
 
   return props.children({
@@ -192,13 +188,12 @@ export const ShareButtons = (props: ShareButtonsProps) => {
     shareWhatsApp,
     shareEmail,
     copyLink,
-    shareNatively,
+    shareNative,
   });
 };
 
-// Namespace export for clean API
 export const SocialSharing = {
-  Actions: SharingActions,
-  Button: SocialButton,
-  ShareButtons: ShareButtons,
+  Root,
+  Platform,
+  Platforms,
 } as const;

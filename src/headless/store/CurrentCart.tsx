@@ -20,31 +20,31 @@ function formatCurrency(amount: number, currencyCode: string): string {
 }
 
 /**
- * Props for CartIcon headless component
+ * Props for Trigger headless component
  */
-export interface CartIconProps {
-  /** Render prop function that receives cart icon data */
-  children: (props: CartIconRenderProps) => React.ReactNode;
+export interface TriggerProps {
+  /** Render prop function that receives trigger data */
+  children: (props: TriggerRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CartIcon component
+ * Render props for Trigger component
  */
-export interface CartIconRenderProps {
+export interface TriggerRenderProps {
   /** Number of items in cart */
   itemCount: number;
   /** Whether cart has items */
   hasItems: boolean;
   /** Function to open cart */
-  openCart: () => void;
+  onOpen: () => void;
   /** Whether cart is currently loading */
   isLoading: boolean;
 }
 
 /**
- * Headless component for cart icon with item count
+ * Headless component for cart trigger with item count
  */
-export const CartIcon = (props: CartIconProps) => {
+export const Trigger = (props: TriggerProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
@@ -55,27 +55,27 @@ export const CartIcon = (props: CartIconProps) => {
   return props.children({
     itemCount,
     hasItems: itemCount > 0,
-    openCart: service.openCart,
+    onOpen: service.openCart,
     isLoading,
   });
 };
 
 /**
- * Props for CartModal headless component
+ * Props for Content headless component
  */
-export interface CartModalProps {
-  /** Render prop function that receives cart modal data */
-  children: (props: CartModalRenderProps) => React.ReactNode;
+export interface ContentProps {
+  /** Render prop function that receives content data */
+  children: (props: ContentRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CartModal component
+ * Render props for Content component
  */
-export interface CartModalRenderProps {
-  /** Whether cart modal is open */
+export interface ContentRenderProps {
+  /** Whether cart content is open */
   isOpen: boolean;
   /** Function to close cart */
-  closeCart: () => void;
+  onClose: () => void;
   /** Cart data */
   cart: currentCart.Cart | null;
   /** Whether cart is loading */
@@ -85,9 +85,9 @@ export interface CartModalRenderProps {
 }
 
 /**
- * Headless component for cart modal/drawer
+ * Headless component for cart content/modal
  */
-export const CartModal = (props: CartModalProps) => {
+export const Content = (props: ContentProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
@@ -99,7 +99,7 @@ export const CartModal = (props: CartModalProps) => {
 
   return props.children({
     isOpen,
-    closeCart: service.closeCart,
+    onClose: service.closeCart,
     cart,
     isLoading,
     error,
@@ -107,19 +107,19 @@ export const CartModal = (props: CartModalProps) => {
 };
 
 /**
- * Props for CartLineItems headless component
+ * Props for Items headless component
  */
-export interface CartLineItemsProps {
-  /** Render prop function that receives line items data */
-  children: (props: CartLineItemsRenderProps) => React.ReactNode;
+export interface ItemsProps {
+  /** Render prop function that receives items data */
+  children: (props: ItemsRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CartLineItems component
+ * Render props for Items component
  */
-export interface CartLineItemsRenderProps {
+export interface ItemsRenderProps {
   /** Array of line items in cart */
-  lineItems: any[];
+  items: any[];
   /** Whether cart has items */
   hasItems: boolean;
   /** Total number of items */
@@ -127,124 +127,124 @@ export interface CartLineItemsRenderProps {
 }
 
 /**
- * Headless component for cart line items
+ * Headless component for cart items collection
  */
-export const CartLineItems = (props: CartLineItemsProps) => {
+export const Items = (props: ItemsProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
 
   const cart = service.cart.get();
-  const lineItems = cart?.lineItems || [];
+  const items = cart?.lineItems || [];
   const totalItems = service.cartCount.get();
 
   return props.children({
-    lineItems,
-    hasItems: lineItems.length > 0,
+    items,
+    hasItems: items.length > 0,
     totalItems,
   });
 };
 
 /**
- * Props for CartLineItem headless component
+ * Props for Item headless component
  */
-export interface CartLineItemProps {
-  /** Line item ID */
-  lineItemId: string;
-  /** Render prop function that receives line item data */
-  children: (props: CartLineItemRenderProps) => React.ReactNode;
+export interface ItemProps {
+  /** Line item data */
+  item: any;
+  /** Render prop function that receives item data */
+  children: (props: ItemRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CartLineItem component
+ * Render props for Item component
  */
-export interface CartLineItemRenderProps {
+export interface ItemRenderProps {
   /** Line item data */
-  lineItem: any | null;
+  item: any | null;
   /** Current quantity */
   quantity: number;
-  /** Product name */
-  productName: string;
+  /** Product title */
+  title: string;
   /** Product image URL */
-  imageUrl: string | null;
+  image: string | null;
   /** Line item price */
   price: string;
   /** Function to increase quantity */
-  increaseQuantity: () => Promise<void>;
+  onIncrease: () => Promise<void>;
   /** Function to decrease quantity */
-  decreaseQuantity: () => Promise<void>;
+  onDecrease: () => Promise<void>;
   /** Function to remove item */
-  removeItem: () => Promise<void>;
+  onRemove: () => Promise<void>;
   /** Whether item is loading */
   isLoading: boolean;
 }
 
 /**
- * Headless component for individual cart line item
+ * Headless component for individual cart item
  */
-export const CartLineItem = (props: CartLineItemProps) => {
+export const Item = (props: ItemProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
 
   const cart = service.cart.get();
-  const lineItem = cart?.lineItems?.find(
-    (item: any) => item._id === props.lineItemId
-  );
+  const item = props.item;
   const isLoading = service.isLoading.get();
 
-  if (!lineItem) {
+  if (!item) {
     const currency = cart?.currency || "USD";
     return props.children({
-      lineItem: null,
+      item: null,
       quantity: 0,
-      productName: "",
-      imageUrl: null,
+      title: "",
+      image: null,
       price: formatCurrency(0, currency),
-      increaseQuantity: async () => {},
-      decreaseQuantity: async () => {},
-      removeItem: async () => {},
+      onIncrease: async () => {},
+      onDecrease: async () => {},
+      onRemove: async () => {},
       isLoading: false,
     });
   }
 
   // Fix image URL access - check multiple possible paths
-  let imageUrl = media.getImageUrl(lineItem.image || "").url;
+  let image = media.getImageUrl(item.image || "").url;
 
   // Calculate total price for this line item (unit price × quantity)
-  const unitPrice = parseFloat(lineItem.price?.amount || "0");
-  const quantity = lineItem.quantity || 0;
+  const unitPrice = parseFloat(item.price?.amount || "0");
+  const quantity = item.quantity || 0;
   const totalPrice = unitPrice * quantity;
   const currency = cart?.currency || "USD";
 
   // Format price with proper currency
   const formattedPrice = formatCurrency(totalPrice, currency);
 
+  const lineItemId = item._id || "";
+
   return props.children({
-    lineItem,
+    item,
     quantity,
-    productName: lineItem.productName?.original || "",
-    imageUrl,
+    title: item.productName?.original || "",
+    image,
     price: formattedPrice,
-    increaseQuantity: () => service.increaseLineItemQuantity(props.lineItemId),
-    decreaseQuantity: () => service.decreaseLineItemQuantity(props.lineItemId),
-    removeItem: () => service.removeLineItem(props.lineItemId),
+    onIncrease: () => service.increaseLineItemQuantity(lineItemId),
+    onDecrease: () => service.decreaseLineItemQuantity(lineItemId),
+    onRemove: () => service.removeLineItem(lineItemId),
     isLoading,
   });
 };
 
 /**
- * Props for CartSummary headless component
+ * Props for Summary headless component
  */
-export interface CartSummaryProps {
-  /** Render prop function that receives cart summary data */
-  children: (props: CartSummaryRenderProps) => React.ReactNode;
+export interface SummaryProps {
+  /** Render prop function that receives summary data */
+  children: (props: SummaryRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CartSummary component
+ * Render props for Summary component
  */
-export interface CartSummaryRenderProps {
+export interface SummaryRenderProps {
   /** Cart subtotal */
   subtotal: string;
   /** Cart total */
@@ -260,7 +260,7 @@ export interface CartSummaryRenderProps {
 /**
  * Headless component for cart summary/totals
  */
-export const CartSummary = (props: CartSummaryProps) => {
+export const Summary = (props: SummaryProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
@@ -290,19 +290,19 @@ export const CartSummary = (props: CartSummaryProps) => {
 };
 
 /**
- * Props for ClearCart headless component
+ * Props for Clear headless component
  */
-export interface ClearCartProps {
-  /** Render prop function that receives clear cart action */
-  children: (props: ClearCartRenderProps) => React.ReactNode;
+export interface ClearProps {
+  /** Render prop function that receives clear action */
+  children: (props: ClearRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ClearCart component
+ * Render props for Clear component
  */
-export interface ClearCartRenderProps {
+export interface ClearRenderProps {
   /** Function to clear all items from cart */
-  clearCart: () => Promise<void>;
+  onClear: () => Promise<void>;
   /** Whether cart has items to clear */
   hasItems: boolean;
   /** Whether clear action is loading */
@@ -312,7 +312,7 @@ export interface ClearCartRenderProps {
 /**
  * Headless component for clearing the cart
  */
-export const ClearCart = (props: ClearCartProps) => {
+export const Clear = (props: ClearProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
@@ -321,26 +321,26 @@ export const ClearCart = (props: ClearCartProps) => {
   const isLoading = service.isLoading.get();
 
   return props.children({
-    clearCart: service.clearCart,
+    onClear: service.clearCart,
     hasItems: itemCount > 0,
     isLoading,
   });
 };
 
 /**
- * Props for CheckoutButton headless component
+ * Props for Checkout headless component
  */
-export interface CheckoutButtonProps {
-  /** Render prop function that receives checkout button data */
-  children: (props: CheckoutButtonRenderProps) => React.ReactNode;
+export interface CheckoutProps {
+  /** Render prop function that receives checkout data */
+  children: (props: CheckoutRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CheckoutButton component
+ * Render props for Checkout component
  */
-export interface CheckoutButtonRenderProps {
+export interface CheckoutRenderProps {
   /** Function to proceed to checkout */
-  proceedToCheckout: () => Promise<void>;
+  onProceed: () => Promise<void>;
   /** Whether checkout is available */
   canCheckout: boolean;
   /** Whether checkout action is loading */
@@ -350,9 +350,9 @@ export interface CheckoutButtonRenderProps {
 }
 
 /**
- * Headless component for checkout button
+ * Headless component for checkout action
  */
-export const CheckoutButton = (props: CheckoutButtonProps) => {
+export const Checkout = (props: CheckoutProps) => {
   const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
     typeof CurrentCartServiceDefinition
   >;
@@ -362,20 +362,19 @@ export const CheckoutButton = (props: CheckoutButtonProps) => {
   const error = service.error.get();
 
   return props.children({
-    proceedToCheckout: service.proceedToCheckout,
+    onProceed: service.proceedToCheckout,
     canCheckout: itemCount > 0,
     isLoading,
     error,
   });
 };
 
-// Namespace export for clean API
 export const CurrentCart = {
-  CartIcon,
-  CartModal,
-  CartLineItems,
-  CartLineItem,
-  CartSummary,
-  CheckoutButton,
-  ClearCart,
+  Trigger,
+  Content,
+  Items,
+  Item,
+  Summary,
+  Checkout,
+  Clear,
 } as const;

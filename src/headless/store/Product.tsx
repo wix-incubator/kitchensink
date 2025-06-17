@@ -131,7 +131,6 @@ export const ProductDetails = (props: ProductDetailsProps) => {
   });
 };
 
-// Namespace export for clean API
 export const Product = {
   Name: ProductName,
   Description: ProductDescription,

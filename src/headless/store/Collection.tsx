@@ -4,17 +4,17 @@ import { CollectionServiceDefinition } from "./collection-service";
 import { productsV3 } from "@wix/stores";
 
 /**
- * Props for ProductGrid headless component
+ * Props for Grid headless component
  */
-export interface ProductGridProps {
+export interface GridProps {
   /** Render prop function that receives product grid data */
-  children: (props: ProductGridRenderProps) => React.ReactNode;
+  children: (props: GridRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ProductGrid component
+ * Render props for Grid component
  */
-export interface ProductGridRenderProps {
+export interface GridRenderProps {
   /** Array of products */
   products: productsV3.V3Product[];
   /** Whether products are loading */
@@ -32,7 +32,7 @@ export interface ProductGridRenderProps {
 /**
  * Headless component for product grid
  */
-export const ProductGrid = (props: ProductGridProps) => {
+export const Grid = (props: GridProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
@@ -80,79 +80,79 @@ export const ProductGrid = (props: ProductGridProps) => {
 };
 
 /**
- * Props for ProductCard headless component
+ * Props for Item headless component
  */
-export interface ProductCardProps {
+export interface ItemProps {
   /** Product data */
   product: productsV3.V3Product;
-  /** Render prop function that receives product card data */
-  children: (props: ProductCardRenderProps) => React.ReactNode;
+  /** Render prop function that receives product item data */
+  children: (props: ItemRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for ProductCard component
+ * Render props for Item component
  */
-export interface ProductCardRenderProps {
+export interface ItemRenderProps {
   /** Product ID */
-  productId: string;
-  /** Product name */
-  name: string;
+  id: string;
+  /** Product title */
+  title: string;
   /** Product slug for URL */
   slug: string;
   /** Main product image URL */
-  imageUrl: string | null;
+  image: string | null;
   /** Product price */
   price: string;
   /** Product description */
   description: string;
-  /** Whether product is in stock */
-  inStock: boolean;
+  /** Whether product is available */
+  available: boolean;
   /** Product URL */
-  productUrl: string;
+  href: string;
 }
 
 /**
- * Headless component for individual product card
+ * Headless component for individual product item
  */
-export const ProductCard = (props: ProductCardProps) => {
+export const Item = (props: ItemProps) => {
   const { product } = props;
 
   // Use actual v3 API structure based on real data
   // Images are in media.main.image, not media.itemsInfo.items
-  const imageUrl = product?.media?.main?.image || null;
+  const image = product?.media?.main?.image || null;
 
   // Create formatted price since formattedAmount is not available
   const rawAmount = product.actualPriceRange?.minValue?.amount;
   const price = rawAmount ? `$${rawAmount}` : "$0.00";
 
-  const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
+  const available = product.inventory?.availabilityStatus === "IN_STOCK";
   const description =
     typeof product.description === "string" ? product.description : "";
 
   return props.children({
-    productId: product._id || "",
-    name: product.name || "",
+    id: product._id || "",
+    title: product.name || "",
     slug: product.slug || "",
-    imageUrl,
+    image,
     price,
     description,
-    inStock,
-    productUrl: `/store/products/${product.slug}`,
+    available,
+    href: `/store/products/${product.slug}`,
   });
 };
 
 /**
- * Props for LoadMoreProducts headless component
+ * Props for LoadMore headless component
  */
-export interface LoadMoreProductsProps {
+export interface LoadMoreProps {
   /** Render prop function that receives load more data */
-  children: (props: LoadMoreProductsRenderProps) => React.ReactNode;
+  children: (props: LoadMoreRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for LoadMoreProducts component
+ * Render props for LoadMore component
  */
-export interface LoadMoreProductsRenderProps {
+export interface LoadMoreRenderProps {
   /** Function to load more products */
   loadMore: () => Promise<void>;
   /** Function to refresh products */
@@ -169,14 +169,14 @@ export interface LoadMoreProductsRenderProps {
  * Headless component for load more products functionality
  * Note: V3 API uses simplified loading without traditional pagination
  */
-export const LoadMoreProducts = (props: LoadMoreProductsProps) => {
+export const LoadMore = (props: LoadMoreProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
 
   // Error handling for undefined service
   if (!service) {
-    console.error("CollectionService is undefined in LoadMoreProducts");
+    console.error("CollectionService is undefined in LoadMore");
     return props.children({
       loadMore: async () => {},
       refresh: async () => {},
@@ -199,7 +199,7 @@ export const LoadMoreProducts = (props: LoadMoreProductsProps) => {
       totalProducts,
     });
   } catch (err) {
-    console.error("Error in LoadMoreProducts:", err);
+    console.error("Error in LoadMore:", err);
     return props.children({
       loadMore: async () => {},
       refresh: async () => {},
@@ -211,17 +211,17 @@ export const LoadMoreProducts = (props: LoadMoreProductsProps) => {
 };
 
 /**
- * Props for CollectionHeader headless component
+ * Props for Header headless component
  */
-export interface CollectionHeaderProps {
+export interface HeaderProps {
   /** Render prop function that receives collection header data */
-  children: (props: CollectionHeaderRenderProps) => React.ReactNode;
+  children: (props: HeaderRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CollectionHeader component
+ * Render props for Header component
  */
-export interface CollectionHeaderRenderProps {
+export interface HeaderRenderProps {
   /** Total number of products */
   totalProducts: number;
   /** Whether collection is loading */
@@ -233,14 +233,14 @@ export interface CollectionHeaderRenderProps {
 /**
  * Headless component for collection header with product count
  */
-export const CollectionHeader = (props: CollectionHeaderProps) => {
+export const Header = (props: HeaderProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
 
   // Error handling for undefined service
   if (!service) {
-    console.error("CollectionService is undefined in CollectionHeader");
+    console.error("CollectionService is undefined in Header");
     return props.children({
       totalProducts: 0,
       isLoading: false,
@@ -259,7 +259,7 @@ export const CollectionHeader = (props: CollectionHeaderProps) => {
       hasProducts,
     });
   } catch (err) {
-    console.error("Error in CollectionHeader:", err);
+    console.error("Error in Header:", err);
     return props.children({
       totalProducts: 0,
       isLoading: false,
@@ -269,17 +269,17 @@ export const CollectionHeader = (props: CollectionHeaderProps) => {
 };
 
 /**
- * Props for CollectionActions headless component
+ * Props for Actions headless component
  */
-export interface CollectionActionsProps {
+export interface ActionsProps {
   /** Render prop function that receives collection actions data */
-  children: (props: CollectionActionsRenderProps) => React.ReactNode;
+  children: (props: ActionsRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for CollectionActions component
+ * Render props for Actions component
  */
-export interface CollectionActionsRenderProps {
+export interface ActionsRenderProps {
   /** Function to refresh the collection */
   refresh: () => Promise<void>;
   /** Function to load more products */
@@ -294,14 +294,14 @@ export interface CollectionActionsRenderProps {
  * Headless component for collection actions (refresh, load more)
  * Replaces traditional pagination for V3 API
  */
-export const CollectionActions = (props: CollectionActionsProps) => {
+export const Actions = (props: ActionsProps) => {
   const service = useService(CollectionServiceDefinition) as ServiceAPI<
     typeof CollectionServiceDefinition
   >;
 
   // Error handling for undefined service
   if (!service) {
-    console.error("CollectionService is undefined in CollectionActions");
+    console.error("CollectionService is undefined in Actions");
     return props.children({
       refresh: async () => {},
       loadMore: async () => {},
@@ -321,7 +321,7 @@ export const CollectionActions = (props: CollectionActionsProps) => {
       error,
     });
   } catch (err) {
-    console.error("Error in CollectionActions:", err);
+    console.error("Error in Actions:", err);
     return props.children({
       refresh: async () => {},
       loadMore: async () => {},
@@ -331,11 +331,10 @@ export const CollectionActions = (props: CollectionActionsProps) => {
   }
 };
 
-// Namespace export for clean API
 export const Collection = {
-  ProductGrid,
-  ProductCard,
-  LoadMoreProducts,
-  CollectionHeader,
-  CollectionActions,
+  Grid,
+  Item,
+  LoadMore,
+  Header,
+  Actions,
 } as const;

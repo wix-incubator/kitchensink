@@ -5,88 +5,86 @@ import { RelatedProductsServiceDefinition } from "./related-products-service";
 import { productsV3 } from "@wix/stores";
 
 /**
- * Props for RelatedProductsList headless component
+ * Props for List headless component
  */
-export interface RelatedProductsListProps {
-  /** Render prop function that receives related products data */
-  children: (props: RelatedProductsListRenderProps) => React.ReactNode;
+export interface ListProps {
+  /** Render prop function that receives list data */
+  children: (props: ListRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for RelatedProductsList component
+ * Render props for List component
  */
-export interface RelatedProductsListRenderProps {
+export interface ListRenderProps {
   /** Array of related products */
-  relatedProducts: productsV3.V3Product[];
+  products: productsV3.V3Product[];
   /** Whether products are loading */
   isLoading: boolean;
   /** Error message if any */
   error: string | null;
-  /** Whether there are related products available */
-  hasRelatedProducts: boolean;
-  /** Function to refresh related products */
-  refreshRelatedProducts: () => Promise<void>;
+  /** Whether there are products available */
+  hasProducts: boolean;
+  /** Function to refresh products */
+  refresh: () => Promise<void>;
 }
 
 /**
  * Headless component for displaying related products list
  */
-export const RelatedProductsList = (props: RelatedProductsListProps) => {
+export const List = (props: ListProps) => {
   const service = useService(RelatedProductsServiceDefinition) as ServiceAPI<
     typeof RelatedProductsServiceDefinition
   >;
 
-  const [relatedProducts, setRelatedProducts] = React.useState<
-    productsV3.V3Product[]
-  >([]);
+  const [products, setProducts] = React.useState<productsV3.V3Product[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [hasRelatedProducts, setHasRelatedProducts] = React.useState(false);
+  const [hasProducts, setHasProducts] = React.useState(false);
 
   React.useEffect(() => {
     const unsubscribes = [
-      service.relatedProducts.subscribe(setRelatedProducts),
+      service.relatedProducts.subscribe(setProducts),
       service.isLoading.subscribe(setIsLoading),
       service.error.subscribe(setError),
-      service.hasRelatedProducts.subscribe(setHasRelatedProducts),
+      service.hasRelatedProducts.subscribe(setHasProducts),
     ];
 
     return () => unsubscribes.forEach((fn) => fn());
   }, [service]);
 
   return props.children({
-    relatedProducts,
+    products,
     isLoading,
     error,
-    hasRelatedProducts,
-    refreshRelatedProducts: service.refreshRelatedProducts,
+    hasProducts,
+    refresh: service.refreshRelatedProducts,
   });
 };
 
 /**
- * Props for RelatedProductCard headless component
+ * Props for Item headless component
  */
-export interface RelatedProductCardProps {
+export interface ItemProps {
   /** Product data */
   product: productsV3.V3Product;
-  /** Render prop function that receives product card data */
-  children: (props: RelatedProductCardRenderProps) => React.ReactNode;
+  /** Render prop function that receives item data */
+  children: (props: ItemRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for RelatedProductCard component
+ * Render props for Item component
  */
-export interface RelatedProductCardRenderProps {
-  /** Product name */
-  name: string;
+export interface ItemRenderProps {
+  /** Product title */
+  title: string;
   /** Product image URL */
-  imageUrl: string | null;
+  image: string | null;
   /** Formatted price */
   price: string;
-  /** Whether product is in stock */
-  inStock: boolean;
+  /** Whether product is available */
+  available: boolean;
   /** Product page URL */
-  productUrl: string;
+  href: string;
   /** Product description */
   description: string;
   /** Function to add product to cart quickly */
@@ -94,19 +92,19 @@ export interface RelatedProductCardRenderProps {
 }
 
 /**
- * Headless component for individual related product card
+ * Headless component for individual related product item
  */
-export const RelatedProductCard = (props: RelatedProductCardProps) => {
+export const Item = (props: ItemProps) => {
   const { product } = props;
 
-  const name = product.name || "Unknown Product";
+  const title = product.name || "Unknown Product";
   // Use actual v3 media structure - image is directly a string URL
-  const imageUrl = product.media?.main?.image || null;
+  const image = product.media?.main?.image || null;
   // Create formatted price from raw amount since formattedAmount may not be available
   const rawPrice = product.actualPriceRange?.minValue?.amount;
   const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
-  const inStock = product.inventory?.availabilityStatus === "IN_STOCK";
-  const productUrl = `/store/example-2/${product.slug}`;
+  const available = product.inventory?.availabilityStatus === "IN_STOCK";
+  const href = `/store/example-2/${product.slug}`;
   const description =
     typeof product.description === "string" ? product.description : "";
 
@@ -117,18 +115,17 @@ export const RelatedProductCard = (props: RelatedProductCardProps) => {
   };
 
   return props.children({
-    name,
-    imageUrl,
+    title,
+    image,
     price,
-    inStock,
-    productUrl,
+    available,
+    href,
     description,
     onQuickAdd: handleQuickAdd,
   });
 };
 
-// Namespace export for clean API
 export const RelatedProducts = {
-  List: RelatedProductsList,
-  ProductCard: RelatedProductCard,
+  List,
+  Item,
 } as const;

@@ -119,19 +119,13 @@ export default function ProductDetailPage({
               <div className="space-y-4">
                 {/* Main Image */}
                 <div className="aspect-square bg-white/5 rounded-2xl overflow-hidden border border-white/10 relative">
-                  <ProductMediaGallery.SelectedImage>
+                  <ProductMediaGallery.Viewport>
                     {withDocsWrapper(
-                      ({
-                        imageUrl,
-                        altText,
-                        isLoading,
-                        currentIndex,
-                        totalImages,
-                      }) => (
+                      ({ src, alt, isLoading, currentIndex, totalImages }) => (
                         <>
-                          {imageUrl ? (
+                          {src ? (
                             <WixMediaImage
-                              media={{ image: imageUrl }}
+                              media={{ image: src }}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -155,12 +149,12 @@ export default function ProductDetailPage({
                           {/* Navigation Arrows */}
                           {totalImages > 1 && (
                             <>
-                              <ProductMediaGallery.PrevImageButton>
+                              <ProductMediaGallery.Previous>
                                 {withDocsWrapper(
-                                  ({ prevImage, hasPrev }) => (
+                                  ({ onPrevious, canGoPrevious }) => (
                                     <button
-                                      onClick={prevImage}
-                                      disabled={!hasPrev}
+                                      onClick={onPrevious}
+                                      disabled={!canGoPrevious}
                                       className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all disabled:opacity-30"
                                     >
                                       <svg
@@ -178,17 +172,17 @@ export default function ProductDetailPage({
                                       </svg>
                                     </button>
                                   ),
-                                  "ProductMediaGallery.PrevImageButton",
-                                  "/docs/components/product-media-gallery#previmagebutton"
+                                  "ProductMediaGallery.Previous",
+                                  "/docs/components/product-media-gallery#previous"
                                 )}
-                              </ProductMediaGallery.PrevImageButton>
+                              </ProductMediaGallery.Previous>
 
-                              <ProductMediaGallery.NextImageButton>
+                              <ProductMediaGallery.Next>
                                 {withDocsWrapper(
-                                  ({ nextImage, hasNext }) => (
+                                  ({ onNext, canGoNext }) => (
                                     <button
-                                      onClick={nextImage}
-                                      disabled={!hasNext}
+                                      onClick={onNext}
+                                      disabled={!canGoNext}
                                       className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all disabled:opacity-30"
                                     >
                                       <svg
@@ -206,97 +200,87 @@ export default function ProductDetailPage({
                                       </svg>
                                     </button>
                                   ),
-                                  "ProductMediaGallery.NextImageButton",
-                                  "/docs/components/product-media-gallery#nextimagebutton"
+                                  "ProductMediaGallery.Next",
+                                  "/docs/components/product-media-gallery#next"
                                 )}
-                              </ProductMediaGallery.NextImageButton>
+                              </ProductMediaGallery.Next>
                             </>
                           )}
 
                           {/* Image Counter */}
                           {totalImages > 1 && (
-                            <ProductMediaGallery.MediaGalleryInfo>
+                            <ProductMediaGallery.Indicator>
                               {withDocsWrapper(
-                                ({ currentImage, totalImages }) => (
+                                ({ current, total }) => (
                                   <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                                    {currentImage} / {totalImages}
+                                    {current} / {total}
                                   </div>
                                 ),
-                                "ProductMediaGallery.MediaGalleryInfo",
-                                "/docs/components/product-media-gallery#mediagalleryinfo"
+                                "ProductMediaGallery.Indicator",
+                                "/docs/components/product-media-gallery#indicator"
                               )}
-                            </ProductMediaGallery.MediaGalleryInfo>
+                            </ProductMediaGallery.Indicator>
                           )}
                         </>
                       ),
-                      "ProductMediaGallery.SelectedImage",
-                      "/docs/components/product-media-gallery#selectedimage"
+                      "ProductMediaGallery.Viewport",
+                      "/docs/components/product-media-gallery#viewport"
                     )}
-                  </ProductMediaGallery.SelectedImage>
+                  </ProductMediaGallery.Viewport>
                 </div>
 
                 {/* Thumbnail Images */}
-                <ProductMediaGallery.MediaGalleryInfo>
+                <ProductMediaGallery.Indicator>
                   {withDocsWrapper(
-                    ({ totalImages }) => (
+                    ({ total }) => (
                       <div className="grid grid-cols-4 gap-4">
-                        {Array.from({ length: totalImages || 4 }).map(
-                          (_, i) => (
-                            <ProductMediaGallery.MediaItemThumbnail
-                              key={i}
-                              index={i}
-                            >
-                              {withDocsWrapper(
-                                ({
-                                  imageUrl,
-                                  isActive,
-                                  selectImage,
-                                  altText,
-                                }) => (
-                                  <div
-                                    onClick={selectImage}
-                                    className={`aspect-square bg-white/5 rounded-lg border cursor-pointer transition-all ${
-                                      isActive
-                                        ? "border-blue-400/50 ring-2 ring-blue-400/30"
-                                        : "border-white/10 hover:border-white/20"
-                                    }`}
-                                  >
-                                    {imageUrl ? (
-                                      <WixMediaImage
-                                        media={{ image: imageUrl }}
-                                        className="w-full h-full object-cover rounded-lg"
-                                      />
-                                    ) : (
-                                      <div className="w-full h-full flex items-center justify-center">
-                                        <svg
-                                          className="w-6 h-6 text-white/40"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                          />
-                                        </svg>
-                                      </div>
-                                    )}
-                                  </div>
-                                ),
-                                "ProductMediaGallery.MediaItemThumbnail",
-                                "/docs/components/product-media-gallery#mediaitemthumbnail"
-                              )}
-                            </ProductMediaGallery.MediaItemThumbnail>
-                          )
-                        )}
+                        {Array.from({ length: total || 4 }).map((_, i) => (
+                          <ProductMediaGallery.Thumbnail key={i} index={i}>
+                            {withDocsWrapper(
+                              ({ src, isActive, onSelect, alt }) => (
+                                <div
+                                  onClick={onSelect}
+                                  className={`aspect-square bg-white/5 rounded-lg border cursor-pointer transition-all ${
+                                    isActive
+                                      ? "border-blue-400/50 ring-2 ring-blue-400/30"
+                                      : "border-white/10 hover:border-white/20"
+                                  }`}
+                                >
+                                  {src ? (
+                                    <WixMediaImage
+                                      media={{ image: src }}
+                                      className="w-full h-full object-cover rounded-lg"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <svg
+                                        className="w-6 h-6 text-white/40"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
+                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                      </svg>
+                                    </div>
+                                  )}
+                                </div>
+                              ),
+                              "ProductMediaGallery.Thumbnail",
+                              "/docs/components/product-media-gallery#thumbnail"
+                            )}
+                          </ProductMediaGallery.Thumbnail>
+                        ))}
                       </div>
                     ),
-                    "ProductMediaGallery.MediaGalleryInfo",
-                    "/docs/components/product-media-gallery#mediagalleryinfo"
+                    "ProductMediaGallery.Indicator",
+                    "/docs/components/product-media-gallery#indicator"
                   )}
-                </ProductMediaGallery.MediaGalleryInfo>
+                </ProductMediaGallery.Indicator>
               </div>
 
               {/* Product Info */}
@@ -314,7 +298,7 @@ export default function ProductDetailPage({
                       "/docs/components/product#name"
                     )}
                   </Product.Name>
-                  <ProductVariantSelector.ProductPrice>
+                  <ProductVariantSelector.Price>
                     {withDocsWrapper(
                       ({ price, isVariantPrice }) => (
                         <div className="text-3xl font-bold text-white">
@@ -326,10 +310,10 @@ export default function ProductDetailPage({
                           )}
                         </div>
                       ),
-                      "ProductVariantSelector.ProductPrice",
-                      "/docs/components/product-variant-selector#productprice"
+                      "ProductVariantSelector.Price",
+                      "/docs/components/product-variant-selector#price"
                     )}
-                  </ProductVariantSelector.ProductPrice>
+                  </ProductVariantSelector.Price>
                 </div>
 
                 {/* Product Description */}
@@ -364,7 +348,7 @@ export default function ProductDetailPage({
                 </Product.Description>
 
                 {/* Product Options (if any) */}
-                <ProductVariantSelector.ProductOptions>
+                <ProductVariantSelector.Options>
                   {withDocsWrapper(
                     ({ options, hasOptions }) => (
                       <>
@@ -372,19 +356,17 @@ export default function ProductDetailPage({
                           <div className="space-y-6">
                             {options.map((option: any) => (
                               <div key={option.name}>
-                                <ProductVariantSelector.ProductOptionChoices
-                                  option={option}
-                                >
+                                <ProductVariantSelector.Option option={option}>
                                   {withDocsWrapper(
-                                    ({ optionName, choices, hasChoices }) => (
+                                    ({ name, choices, hasChoices }) => (
                                       <>
                                         <h3 className="text-lg font-semibold text-white mb-3">
-                                          {optionName}
+                                          {name}
                                         </h3>
                                         {hasChoices && (
                                           <div className="flex flex-wrap gap-3">
                                             {choices.map((choice: any) => (
-                                              <ProductVariantSelector.ChoiceSelection
+                                              <ProductVariantSelector.Choice
                                                 key={
                                                   choice.value ||
                                                   choice.description
@@ -394,44 +376,44 @@ export default function ProductDetailPage({
                                               >
                                                 {withDocsWrapper(
                                                   ({
-                                                    displayValue,
+                                                    value,
                                                     isSelected,
-                                                    selectChoice,
+                                                    onSelect,
                                                   }) => (
                                                     <button
-                                                      onClick={selectChoice}
+                                                      onClick={onSelect}
                                                       className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                                         isSelected
                                                           ? "bg-blue-500/20 border-blue-400/50 text-blue-300"
                                                           : "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white"
                                                       }`}
                                                     >
-                                                      {displayValue}
+                                                      {value}
                                                     </button>
                                                   ),
-                                                  "ProductVariantSelector.ChoiceSelection",
-                                                  "/docs/components/product-variant-selector#choiceselection"
+                                                  "ProductVariantSelector.Choice",
+                                                  "/docs/components/product-variant-selector#choice"
                                                 )}
-                                              </ProductVariantSelector.ChoiceSelection>
+                                              </ProductVariantSelector.Choice>
                                             ))}
                                           </div>
                                         )}
                                       </>
                                     ),
-                                    "ProductVariantSelector.ProductOptionChoices",
-                                    "/docs/components/product-variant-selector#productoptionchoices"
+                                    "ProductVariantSelector.Option",
+                                    "/docs/components/product-variant-selector#option"
                                   )}
-                                </ProductVariantSelector.ProductOptionChoices>
+                                </ProductVariantSelector.Option>
                               </div>
                             ))}
                           </div>
                         )}
                       </>
                     ),
-                    "ProductVariantSelector.ProductOptions",
-                    "/docs/components/product-variant-selector#productoptions"
+                    "ProductVariantSelector.Options",
+                    "/docs/components/product-variant-selector#options"
                   )}
-                </ProductVariantSelector.ProductOptions>
+                </ProductVariantSelector.Options>
 
                 {/* Quantity Selector */}
                 <div className="space-y-3">
@@ -463,9 +445,9 @@ export default function ProductDetailPage({
 
                 {/* Add to Cart */}
                 <div className="space-y-4">
-                  <ProductVariantSelector.AddToCartTrigger quantity={quantity}>
+                  <ProductVariantSelector.Trigger quantity={quantity}>
                     {withDocsWrapper(
-                      ({ addToCart, canAddToCart, isLoading, error }) => (
+                      ({ onAddToCart, canAddToCart, isLoading, error }) => (
                         <div className="space-y-4">
                           {error && (
                             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
@@ -475,7 +457,7 @@ export default function ProductDetailPage({
 
                           <button
                             onClick={async () => {
-                              await addToCart();
+                              await onAddToCart();
                               setShowSuccessMessage(true);
                               setTimeout(
                                 () => setShowSuccessMessage(false),
@@ -516,13 +498,13 @@ export default function ProductDetailPage({
                           </button>
                         </div>
                       ),
-                      "ProductVariantSelector.AddToCartTrigger",
-                      "/docs/components/product-variant-selector#addtocarttrigger"
+                      "ProductVariantSelector.Trigger",
+                      "/docs/components/product-variant-selector#trigger"
                     )}
-                  </ProductVariantSelector.AddToCartTrigger>
+                  </ProductVariantSelector.Trigger>
 
                   {/* Stock Status */}
-                  <ProductVariantSelector.StockStatus>
+                  <ProductVariantSelector.Stock>
                     {withDocsWrapper(
                       ({ inStock, status, quantity, trackInventory }) => (
                         <div className="flex items-center gap-2">
@@ -545,10 +527,10 @@ export default function ProductDetailPage({
                           </span>
                         </div>
                       ),
-                      "ProductVariantSelector.StockStatus",
-                      "/docs/components/product-variant-selector#stockstatus"
+                      "ProductVariantSelector.Stock",
+                      "/docs/components/product-variant-selector#stock"
                     )}
-                  </ProductVariantSelector.StockStatus>
+                  </ProductVariantSelector.Stock>
                 </div>
 
                 {/* Product Details */}
@@ -591,7 +573,7 @@ export default function ProductDetailPage({
 
             {/* Current Cart Summary */}
             <div className="mt-12 pt-8 border-t border-white/10">
-              <CurrentCart.CartSummary>
+              <CurrentCart.Summary>
                 {withDocsWrapper(
                   ({ subtotal, itemCount }) => (
                     <>
@@ -632,10 +614,10 @@ export default function ProductDetailPage({
                       )}
                     </>
                   ),
-                  "CurrentCart.CartSummary",
-                  "/docs/components/current-cart#cartsummary"
+                  "CurrentCart.Summary",
+                  "/docs/components/current-cart#summary"
                 )}
-              </CurrentCart.CartSummary>
+              </CurrentCart.Summary>
             </div>
           </div>
         </div>
