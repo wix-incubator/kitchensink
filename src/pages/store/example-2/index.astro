@@ -3,10 +3,12 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import StoreExample2Page from "../../../react-pages/store/example-2/index";
 import { loadCollectionServiceConfig } from "../../../headless/store/collection-service";
 import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
+import { loadCategoriesConfig } from "../../../headless/store/category-service";
 
 // Load initial data for services
-const collectionServiceConfig = await loadCollectionServiceConfig();
+const filteredCollectionServiceConfig = await loadCollectionServiceConfig();
 const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+const categoriesConfig = await loadCategoriesConfig();
 ---
 
 <BaseLayout>
@@ -18,8 +20,9 @@ const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 
   <StoreExample2Page
     client:load
-    collectionServiceConfig={collectionServiceConfig}
+    filteredCollectionServiceConfig={filteredCollectionServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
+    categoriesConfig={categoriesConfig}
     slot="body"
   />
 </BaseLayout>

@@ -1,0 +1,87 @@
+import React, { useState, useEffect } from 'react';
+import { categories } from '@wix/categories';
+import { Category } from '../headless/store/Category';
+
+// Use the Wix SDK category type directly
+type Category = categories.Category;
+
+interface CategoryPickerProps {
+  onCategorySelect: (categoryId: string | null) => void;
+  selectedCategory: string | null;
+  categories: categories.Category[];
+  className?: string;
+}
+
+function CategoryPicker({ 
+  onCategorySelect, 
+  selectedCategory,
+  categories,
+  className = ""
+}: CategoryPickerProps) {
+  if (categories.length === 0) {
+    return null; // No categories to show
+  }
+
+  return (
+    <div className={`${className} bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-4 mb-6`}>
+      <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
+        Shop by Category
+      </h3>
+      
+      {/* Category Navigation - Horizontal scrollable for mobile */}
+      <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
+        {/* All Products button */}
+        <button
+          onClick={() => onCategorySelect(null)}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+            selectedCategory === null
+              ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105'
+              : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+          }`}
+        >
+          All Products
+        </button>
+        
+        {/* Category buttons */}
+        {categories.map((category) => (
+          <button
+            key={category._id}
+            onClick={() => onCategorySelect(category._id || null)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+              selectedCategory === category._id
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105'
+                : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+            }`}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+      
+      {/* Active category indicator */}
+      {selectedCategory && (
+        <div className="mt-3 text-sm text-white/60">
+          Showing products in: {' '}
+          <span className="text-teal-400 font-medium">
+            {categories.find(cat => cat._id === selectedCategory)?.name || 'Selected Category'}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function CategoryPickerWithContext({className}: {className?: string}) {
+  return (<Category.Provider>
+    <Category.List>
+      {({ categories, selectedCategory, setSelectedCategory }) => (
+        <CategoryPicker 
+          categories={categories} 
+          selectedCategory={selectedCategory} 
+          onCategorySelect={setSelectedCategory} 
+          className={className}
+        />
+      )}
+    </Category.List>
+  </Category.Provider>);
+}

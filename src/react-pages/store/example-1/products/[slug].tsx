@@ -365,37 +365,63 @@ export default function ProductDetailPage({
                                         </h3>
                                         {hasChoices && (
                                           <div className="flex flex-wrap gap-3">
-                                            {choices.map((choice: any) => (
-                                              <ProductVariantSelector.Choice
-                                                key={
-                                                  choice.value ||
-                                                  choice.description
-                                                }
-                                                option={option}
-                                                choice={choice}
-                                              >
-                                                {withDocsWrapper(
-                                                  ({
-                                                    value,
-                                                    isSelected,
-                                                    onSelect,
-                                                  }) => (
-                                                    <button
-                                                      onClick={onSelect}
-                                                      className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
-                                                        isSelected
-                                                          ? "bg-blue-500/20 border-blue-400/50 text-blue-300"
-                                                          : "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white"
-                                                      }`}
-                                                    >
-                                                      {value}
-                                                    </button>
-                                                  ),
-                                                  "ProductVariantSelector.Choice",
-                                                  "/docs/components/product-variant-selector#choice"
-                                                )}
-                                              </ProductVariantSelector.Choice>
-                                            ))}
+                                            {choices.map((choice: any) => {
+                                              // Check if this is a color option
+                                              const isColorOption = String(name).toLowerCase().includes('color');
+                                              const hasColorCode = choice.colorCode;
+                                              
+                                              return (
+                                                <ProductVariantSelector.Choice
+                                                  key={
+                                                    choice.value ||
+                                                    choice.description ||
+                                                    choice.name
+                                                  }
+                                                  option={option}
+                                                  choice={choice}
+                                                >
+                                                  {withDocsWrapper(
+                                                    ({
+                                                      value,
+                                                      isSelected,
+                                                      onSelect,
+                                                    }) => (
+                                                      <>
+                                                        {isColorOption && hasColorCode ? (
+                                                          // Color Swatch
+                                                                                                                     <button
+                                                             onClick={onSelect}
+                                                             title={value}
+                                                             className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                               isSelected
+                                                                 ? "border-blue-400 shadow-lg scale-110 ring-2 ring-blue-500/30"
+                                                                 : "border-white/30 hover:border-white/60 hover:scale-105"
+                                                             }`}
+                                                             style={{
+                                                               backgroundColor: choice.colorCode || '#000000',
+                                                             }}
+                                                           />
+                                                        ) : (
+                                                          // Regular Text Button
+                                                          <button
+                                                            onClick={onSelect}
+                                                            className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                              isSelected
+                                                                ? "bg-blue-500/20 border-blue-400/50 text-blue-300"
+                                                                : "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white"
+                                                            }`}
+                                                          >
+                                                            {value}
+                                                          </button>
+                                                        )}
+                                                      </>
+                                                    ),
+                                                    "ProductVariantSelector.Choice",
+                                                    "/docs/components/product-variant-selector#choice"
+                                                  )}
+                                                </ProductVariantSelector.Choice>
+                                              );
+                                            })}
                                           </div>
                                         )}
                                       </>

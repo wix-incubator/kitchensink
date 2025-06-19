@@ -206,8 +206,16 @@ export const Item = (props: ItemProps) => {
     });
   }
 
-  // Fix image URL access - check multiple possible paths
-  let image = media.getImageUrl(item.image || "").url;
+  // Fix image URL access - properly handle null/undefined image
+  let image: string | null = null;
+  if (item.image) {
+    try {
+      image = media.getImageUrl(item.image).url;
+    } catch (error) {
+      console.warn("Failed to get image URL:", error);
+      image = null;
+    }
+  }
 
   // Calculate total price for this line item (unit price × quantity)
   const unitPrice = parseFloat(item.price?.amount || "0");

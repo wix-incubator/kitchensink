@@ -31,7 +31,7 @@ const selectedVariantServiceConfig =
 
 const productName = productServiceConfig.product.name || "Product";
 const productDescription =
-  productServiceConfig.product.description || "An amazing product";
+  productServiceConfig.product.plainDescription || "An amazing product";
 const productUrl = `${Astro.url.origin}/store/example-2/${slug}`;
 
 // Load social sharing service configuration

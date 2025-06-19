@@ -1,0 +1,202 @@
+import React, { createContext, useContext, type ReactNode } from "react";
+import {
+  FilterServiceDefinition,
+  type AvailableOptions,
+  type FilterServiceAPI,
+  type Filter,
+} from "./filter-service";
+import { useService } from "@wix/services-manager-react";
+import { productsV3 } from "@wix/stores";
+import { CollectionServiceDefinition, type CollectionServiceAPI } from "./collection-service";
+
+const FilteredCollectionContext = createContext<{
+  filter: FilterServiceAPI | null;
+  collection: CollectionServiceAPI | null
+}>({filter: null, collection: null});
+
+interface FilteredCollectionProviderProps {
+  children: ReactNode;
+}
+
+export const FilteredCollectionProvider: React.FC<FilteredCollectionProviderProps> = ({
+  children,
+}) => {
+  const serviceInstance = useService(FilterServiceDefinition);
+  const collectionServiceInstance = useService(CollectionServiceDefinition);
+  const context = {
+    filter: serviceInstance,
+    collection: collectionServiceInstance,
+  }
+
+  return (
+    <FilteredCollectionContext.Provider value={context}>
+      {children}
+    </FilteredCollectionContext.Provider>
+  );
+};
+
+export const useFilteredCollection = () => {
+  const context = useContext(FilteredCollectionContext);
+  if (!context) {
+    throw new Error("useFilteredCollection must be used within a FilteredCollectionProvider");
+  }
+  return context;
+};
+
+// Grid component for displaying filtered products
+interface FilteredGridProps {
+  children: (data: {
+    products: productsV3.V3Product[];
+    totalProducts: number;
+    isLoading: boolean;
+    error: string | null;
+    isEmpty: boolean;
+    hasMoreProducts: boolean;
+  }) => ReactNode;
+}
+
+export const FilteredGrid: React.FC<FilteredGridProps> = ({ children }) => {
+  const { collection } = useFilteredCollection();
+  
+  const products = collection!.products.get() || [];
+  const totalProducts = collection!.totalProducts.get();
+  const isLoading = collection!.isLoading.get();
+  const error = collection!.error.get();
+  const hasProducts = collection!.hasProducts.get();
+  const hasMoreProducts = collection!.hasMoreProducts.get();
+
+  return (
+    <>
+      {children({
+        products,
+        isLoading,
+        error,
+        isEmpty: !hasProducts,
+        totalProducts,
+        hasMoreProducts,
+      })}
+    </>
+  );
+};
+
+// Item component for individual product rendering
+interface FilteredItemProps {
+  product: productsV3.V3Product;
+  children: (data: {
+    title: string;
+    image: string | null;
+    price: string;
+    available: boolean;
+    href: string;
+    description?: string;
+  }) => ReactNode;
+}
+
+export const FilteredItem: React.FC<FilteredItemProps> = ({ product, children }) => {
+  // Safe conversion of product data with type safety guards
+  const title = String(product.name || "");
+  const image = product.media?.main?.image || null;
+  const price = product.actualPriceRange?.minValue?.formattedAmount || 
+               product.actualPriceRange?.maxValue?.formattedAmount || 
+               "$0.00";
+  const available = product.inventory?.availabilityStatus === "IN_STOCK";
+  const href = `/store/products/${String(product.slug || product._id || "")}`;
+  const description = product.plainDescription ? String(product.plainDescription) : undefined;
+
+  return (
+    <>
+      {children({
+        title,
+        image,
+        price: String(price),
+        available,
+        href,
+        description,
+      })}
+    </>
+  );
+};
+
+// Load More component for pagination
+interface FilteredLoadMoreProps {
+  children: (data: {
+    loadMore: () => Promise<void>;
+    refresh: () => Promise<void>;
+    isLoading: boolean;
+    hasProducts: boolean;
+    totalProducts: number;
+    hasMoreProducts: boolean;
+  }) => ReactNode;
+}
+
+export const FilteredLoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
+  const { collection } = useFilteredCollection();
+  
+  const loadMore = collection!.loadMore;
+  const refresh = collection!.refresh;
+  const isLoading = collection!.isLoading.get();
+  const hasProducts = collection!.hasProducts.get();
+  const totalProducts = collection!.totalProducts.get();
+  const hasMoreProducts = collection!.hasMoreProducts.get();
+
+  return (
+    <>
+      {children({
+        loadMore,
+        refresh,
+        isLoading,
+        hasProducts,
+        totalProducts,
+        hasMoreProducts,
+      })}
+    </>
+  );
+};
+
+// Filters component for managing filters
+interface FilteredFiltersProps {
+  children: (data: {
+    applyFilters: (filters: Filter) => void;
+    clearFilters: () => void;
+    currentFilters: Filter;
+    allProducts: productsV3.V3Product[];
+    availableOptions: AvailableOptions;
+    isFiltered: boolean;
+  }) => ReactNode;
+}
+
+export const FilteredFilters: React.FC<FilteredFiltersProps> = ({ children }) => {
+  const { collection, filter } = useFilteredCollection();
+  
+  const applyFilters = filter!.applyFilters;
+  const clearFilters = filter!.clearFilters;
+  const currentFilters = filter!.currentFilters.get();
+  const allProducts = collection!.products.get();
+  const availableOptions = filter!.availableOptions.get();
+  const isFiltered =
+    currentFilters.priceRange.min !== availableOptions.priceRange.min ||
+    currentFilters.priceRange.max !== availableOptions.priceRange.max ||
+    Object.keys(currentFilters.selectedOptions).length > 0;;
+
+  return (
+    <>
+      {children({
+        applyFilters,
+        clearFilters,
+        currentFilters,
+        allProducts,
+        availableOptions,
+        isFiltered
+      })}
+    </>
+  );
+};
+
+// Export the main collection object for easier usage
+export const FilteredCollection = {
+  Provider: FilteredCollectionProvider,
+  Grid: FilteredGrid,
+  Item: FilteredItem,
+  LoadMore: FilteredLoadMore,
+  Filters: FilteredFilters,
+}; 

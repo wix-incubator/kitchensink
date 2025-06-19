@@ -391,43 +391,71 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
                                   {choices.map(
-                                    (choice: any, choiceIndex: number) => (
-                                      <ProductVariantSelector.Choice
-                                        key={choiceIndex}
-                                        option={option}
-                                        choice={choice}
-                                      >
-                                        {withDocsWrapper(
-                                          ({
-                                            value,
-                                            isSelected,
-                                            isAvailable,
-                                            onSelect,
-                                          }) => (
-                                            <button
-                                              onClick={onSelect}
-                                              disabled={!isAvailable}
-                                              className={`px-4 py-2 rounded-lg border transition-all ${
-                                                isSelected
-                                                  ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                                  : isAvailable
-                                                  ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
-                                                  : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
-                                              }`}
-                                            >
-                                              {value}
-                                              {!isAvailable && (
-                                                <span className="ml-1 text-xs">
-                                                  (unavailable)
-                                                </span>
-                                              )}
-                                            </button>
-                                          ),
-                                          "ProductVariantSelector.Choice",
-                                          "/docs/components/product-variant-selector#choice"
-                                        )}
-                                      </ProductVariantSelector.Choice>
-                                    )
+                                    (choice: any, choiceIndex: number) => {
+                                      // Check if this is a color option
+                                      const isColorOption = String(name).toLowerCase().includes('color');
+                                      const hasColorCode = choice.colorCode;
+                                      
+                                      return (
+                                        <ProductVariantSelector.Choice
+                                          key={choiceIndex}
+                                          option={option}
+                                          choice={choice}
+                                        >
+                                          {withDocsWrapper(
+                                            ({
+                                              value,
+                                              isSelected,
+                                              isAvailable,
+                                              onSelect,
+                                            }) => (
+                                              <>
+                                                {isColorOption && hasColorCode ? (
+                                                  // Color Swatch
+                                                                                                     <button
+                                                     onClick={onSelect}
+                                                     disabled={!isAvailable}
+                                                     title={value}
+                                                     className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                       isSelected
+                                                         ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
+                                                         : isAvailable
+                                                         ? "border-white/30 hover:border-white/60 hover:scale-105"
+                                                         : "border-white/10 opacity-50 cursor-not-allowed"
+                                                     } ${!isAvailable ? "grayscale" : ""}`}
+                                                     style={{
+                                                       backgroundColor: choice.colorCode || '#000000',
+                                                     }}
+                                                   />
+                                                ) : (
+                                                  // Regular Text Button
+                                                  <button
+                                                    onClick={onSelect}
+                                                    disabled={!isAvailable}
+                                                    className={`px-4 py-2 rounded-lg border transition-all ${
+                                                      isSelected
+                                                        ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                                        : isAvailable
+                                                        ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                                        : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
+                                                    }`}
+                                                  >
+                                                    {value}
+                                                    {!isAvailable && (
+                                                      <span className="ml-1 text-xs">
+                                                        (unavailable)
+                                                      </span>
+                                                    )}
+                                                  </button>
+                                                )}
+                                              </>
+                                            ),
+                                            "ProductVariantSelector.Choice",
+                                            "/docs/components/product-variant-selector#choice"
+                                          )}
+                                        </ProductVariantSelector.Choice>
+                                      );
+                                    }
                                   )}
                                 </div>
                               </div>
