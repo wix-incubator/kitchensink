@@ -7,11 +7,15 @@ alwaysApply: false
 
 The @wix/astro integration injects the following routes to the application
 * `/api/auth/login` - Sends to the Wix Managed login page, accepts a `returnToUrl` for after login completion.
-* `/api/auth/logout` - POST endpoint that redirects to the Wix logout url and then back to the `Referer`. Use a form with `method="POST"` to call this endpoint.
+* `/api/auth/logout` - POST endpoint that redirects to the Wix logout url and then back to the `Referer` or to an explicitly provided query param of `returnToUrl`. Use a form with `method="POST"` to call this endpoint.
 
 ## Example logout implementation:
+<note>
+Whe using View Transitions in Astro with the `ClientRouter`, adding `data-astro-reload` is required for the logout to work.
+</note>
+
 ```html
-<form action="/api/auth/logout" method="POST">
+<form action="/api/auth/logout" method="POST" data-astro-reload>
   <button type="submit">Sign Out</button>
 </form>
 ```
