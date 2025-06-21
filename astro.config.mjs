@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import wix from "@wix/astro";
 import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
+import { headlessDocsWrapper } from "./docs-wrapper-plugin.ts";
 
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
@@ -18,7 +19,7 @@ export default defineConfig({
   adapter: cloudflare(),
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), headlessDocsWrapper()],
     // Bundle @wix/image for SSR compatibility to fix module loading issues
     ssr: {
       noExternal: ["@wix/image"],

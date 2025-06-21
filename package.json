@@ -38,8 +38,13 @@
   "devDependencies": {
     "@astrojs/cloudflare": "^12.5.4",
     "@astrojs/mdx": "^4.3.0",
+    "@babel/core": "^7.27.4",
+    "@babel/plugin-syntax-jsx": "^7.27.1",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
     "@tailwindcss/vite": "^4.0.13",
+    "@types/lodash.kebabcase": "^4.1.9",
     "@wix/cli": "^1.1.95",
+    "lodash.kebabcase": "^4.1.1",
     "tailwindcss": "^4.1.7"
   }
 }
