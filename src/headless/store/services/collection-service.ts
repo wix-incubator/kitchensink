@@ -208,7 +208,7 @@ export const CollectionService = implementService.withConfig<{
       const filters = collectionFilters.currentFilters.get();
       const sortBy = sortService.currentSort.get();
       const filteredProducts = applyClientSideFilters(
-        allProducts,
+        newProducts,
         filters,
         selectedCategory,
         sortBy

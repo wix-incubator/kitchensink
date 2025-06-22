@@ -1,30 +1,34 @@
+import React from "react";
+import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../layouts/StoreLayout";
+import {
+  withDocsWrapper,
+  PageDocsRegistration,
+} from "../../../components/DocsMode";
+import WixMediaImage from "../../../headless/media/components/Image";
+import ProductFilters from "../../../components/ProductFilters";
+import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
+import {
+  CollectionService,
+  CollectionServiceDefinition,
+} from "../../../headless/store/services/collection-service";
 import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { StoreLayout } from "../../../layouts/StoreLayout";
 import {
-  FilterServiceDefinition,
   FilterService,
+  FilterServiceDefinition,
 } from "../../../headless/store/services/filter-service";
 import {
-  CollectionServiceDefinition,
-  CollectionService,
-} from "../../../headless/store/services/collection-service";
-import {
-  CurrentCartServiceDefinition,
   CurrentCartService,
+  CurrentCartServiceDefinition,
 } from "../../../headless/store/services/current-cart-service";
-import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
-import { withDocsWrapper } from "../../../components/DocsMode";
-import WixMediaImage from "../../../headless/media/components/Image";
-import ProductFilters from "../../../components/ProductFilters";
-import StoreHeader from "../../../components/StoreHeader";
 import {
-  CategoryServiceDefinition,
   CategoryService,
+  CategoryServiceDefinition,
 } from "../../../headless/store/services/category-service";
+import StoreHeader from "../../../components/StoreHeader";
 import {
   SortService,
   SortServiceDefinition,
@@ -61,8 +65,8 @@ const ProductGridContent = () => {
                         <div className="w-80 flex-shrink-0">
                           <div className="sticky top-6">
                             <ProductFilters
-                              onFiltersChange={applyFilters}
                               availableOptions={availableOptions}
+                              onFiltersChange={applyFilters}
                               clearFilters={clearFilters}
                               currentFilters={currentFilters}
                               isFiltered={isFiltered}
@@ -72,6 +76,12 @@ const ProductGridContent = () => {
 
                         {/* Main Content Area */}
                         <div className="flex-1 min-w-0">
+                          {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
+                              <p className="text-red-400">{error}</p>
+                            </div>
+                          )}
+
                           {/* Filter Status Bar */}
                           {isFiltered && (
                             <div className="flex items-center justify-between bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6">
@@ -100,12 +110,6 @@ const ProductGridContent = () => {
                               >
                                 Clear Filters
                               </button>
-                            </div>
-                          )}
-
-                          {error && (
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
-                              <p className="text-red-400">{error}</p>
                             </div>
                           )}
 
@@ -191,6 +195,13 @@ const ProductGridContent = () => {
                                             </div>
                                           )}
                                         </div>
+
+                                        {product.ribbon?.name &&
+                                            (<div className="absolute top-2 left-2">
+                                              <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                                {product.ribbon.name}
+                                              </span>
+                                            </div>)}
 
                                         <h3 className="text-white font-semibold mb-2 line-clamp-2">
                                           {title}
@@ -309,6 +320,7 @@ const ProductGridContent = () => {
                                           </div>
                                         </div>
 
+                                        <div className="flex gap-2">
                                         <a
                                           href={href.replace(
                                             "/store/products/",
@@ -331,6 +343,7 @@ const ProductGridContent = () => {
                                             />
                                           </svg>
                                         </a>
+                                        </div>
                                       </div>
                                     ),
                                     "FilteredCollection.Item",
@@ -363,8 +376,17 @@ const LoadMoreSection = () => {
     <FilteredCollection.Provider>
       <FilteredCollection.LoadMore>
         {withDocsWrapper(
-          ({ loadMore, isLoading, totalProducts, hasMoreProducts }) =>
+        ({
+          loadMore,
+          refresh,
+          isLoading,
+          hasProducts,
+          totalProducts,
+          hasMoreProducts,
+        }) =>
             hasMoreProducts && (
+            <>
+              {hasProducts && totalProducts > 0 && (
               <div className="text-center mt-12">
                 <button
                   onClick={loadMore}
@@ -418,6 +440,8 @@ const LoadMoreSection = () => {
                   {totalProducts} products loaded
                 </p>
               </div>
+              )}
+            </>
             ),
           "FilteredCollection.LoadMore",
           "/docs/components/filtered-collection#loadmore"

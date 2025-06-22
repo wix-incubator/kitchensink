@@ -5,7 +5,6 @@ import {
   withDocsWrapper,
   PageDocsRegistration,
 } from "../../../components/DocsMode";
-import { Collection } from "../../../headless/store/components/Collection";
 import WixMediaImage from "../../../headless/media/components/Image";
 import ProductFilters from "../../../components/ProductFilters";
 import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
@@ -106,9 +105,7 @@ const ProductGridContent = () => {
                                 </span>
                               </div>
                               <button
-                                onClick={() => {
-                                  clearFilters();
-                                }}
+                                onClick={clearFilters}
                                 className="text-teal-400 hover:text-teal-300 transition-colors text-sm"
                               >
                                 Clear Filters
@@ -197,13 +194,14 @@ const ProductGridContent = () => {
                                               </svg>
                                             </div>
                                           )}
-
-                                          <div className="absolute top-2 left-2">
-                                            <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                                              New
-                                            </span>
-                                          </div>
                                         </div>
+
+                                          {product.ribbon?.name &&
+                                            (<div className="absolute top-2 left-2">
+                                              <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                                {product.ribbon.name}
+                                              </span>
+                                            </div>)}
 
                                         <h3 className="text-white font-semibold mb-2 line-clamp-2">
                                           {title}
@@ -283,21 +281,27 @@ const ProductGridContent = () => {
                                                       {option.choicesSettings
                                                         ?.choices?.length >
                                                         3 && (
-                                                        <span className="text-white/60 text-xs">
-                                                          +
-                                                          {option
-                                                            .choicesSettings
-                                                            .choices.length -
-                                                            3}{" "}
-                                                          more
-                                                        </span>
-                                                      )}
+                                                          <span className="text-white/60 text-xs">
+                                                            +
+                                                            {option
+                                                              .choicesSettings
+                                                              .choices.length -
+                                                              3}{" "}
+                                                            more
+                                                          </span>
+                                                        )}
                                                     </div>
                                                   </div>
                                                 )
                                               )}
                                             </div>
                                           )}
+
+                                        {description && (
+                                          <p className="text-white/60 text-sm mb-3 line-clamp-2">
+                                            {description}
+                                          </p>
+                                        )}
 
                                         <div className="flex items-center justify-between mb-3">
                                           <span className="text-xl font-bold text-white">
@@ -371,74 +375,76 @@ const ProductGridContent = () => {
 
 const LoadMoreSection = () => {
   return (
-    <Collection.LoadMore>
-      {withDocsWrapper(
-        ({
-          loadMore,
-          refresh,
-          isLoading,
-          hasProducts,
-          totalProducts,
-          hasMoreProducts,
-        }) =>
-          hasMoreProducts && (
-            <>
-              {hasProducts && totalProducts > 0 && (
-                <div className="text-center mt-12">
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
-                      onClick={loadMore}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center gap-2">
-                          <svg
-                            className="animate-spin w-5 h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Loading...
-                        </span>
-                      ) : (
-                        "Load More Products"
-                      )}
-                    </button>
+    <FilteredCollection.Provider>
+      <FilteredCollection.LoadMore>
+        {withDocsWrapper(
+          ({
+            loadMore,
+            refresh,
+            isLoading,
+            hasProducts,
+            totalProducts,
+            hasMoreProducts,
+          }) =>
+            hasMoreProducts && (
+              <>
+                {hasProducts && totalProducts > 0 && (
+                  <div className="text-center mt-12">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button
+                        onClick={loadMore}
+                        disabled={isLoading}
+                        className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                      >
+                        {isLoading ? (
+                          <span className="flex items-center gap-2">
+                            <svg
+                              className="animate-spin w-5 h-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                            Loading...
+                          </span>
+                        ) : (
+                          "Load More Products"
+                        )}
+                      </button>
 
-                    <button
-                      onClick={refresh}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                    >
-                      Refresh Products
-                    </button>
+                      <button
+                        onClick={refresh}
+                        disabled={isLoading}
+                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                      >
+                        Refresh Products
+                      </button>
+                    </div>
+
+                    <p className="text-white/60 text-sm mt-4">
+                      Advanced store experience • {totalProducts} products loaded
+                    </p>
                   </div>
-
-                  <p className="text-white/60 text-sm mt-4">
-                    Advanced store experience • {totalProducts} products loaded
-                  </p>
-                </div>
-              )}
-            </>
-          ),
-        "Collection.LoadMore",
-        "/docs/components/collection#loadmore"
-      )}
-    </Collection.LoadMore>
+                )}
+              </>
+            ),
+          "Collection.LoadMore",
+          "/docs/components/collection#loadmore"
+        )}
+      </FilteredCollection.LoadMore>
+    </FilteredCollection.Provider>
   );
 };
 
