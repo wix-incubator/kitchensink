@@ -1,53 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { auth } from "@wix/essentials";
-import { members } from "@wix/members";
-import { type IOAuthStrategy } from "@wix/sdk";
 import { MembersPage } from "../../react-pages/members/index";
-import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
-import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
-
-// Server-side logic
-const userIsLoggedIn = auth.getContextualAuth<IOAuthStrategy>().loggedIn();
-let member;
-let currentMemberServiceConfig;
-let profileUpdateServiceConfig;
-
-if (userIsLoggedIn) {
-  member = (
-    await members.getCurrentMember({
-      fieldsets: ["FULL"],
-    })
-  ).member;
-
-  // Load service configurations for headless components
-  if (member && member._id) {
-    currentMemberServiceConfig = await loadCurrentMemberServiceConfig();
-    profileUpdateServiceConfig = await loadProfileUpdateServiceConfig();
-  }
-}
-
-// Handle URL parameters for success/error messages
-const url = new URL(Astro.request.url);
-const updated = url.searchParams.get("updated");
-const error = url.searchParams.get("error");
 ---
 
 <BaseLayout>
-  <title>Members - Wix Kitchensink</title>
+  <title>Wix Members - Wix Kitchensink</title>
   <meta
     name="description"
-    content="Member authentication, profile management, and member data handling with Wix Members"
+    content="Explore the features of Wix Members for authentication, profile management, and member data handling."
   />
 
-  <MembersPage
-    client:load
-    userIsLoggedIn={userIsLoggedIn}
-    member={member}
-    updated={updated}
-    error={error}
-    currentMemberServiceConfig={currentMemberServiceConfig}
-    profileUpdateServiceConfig={profileUpdateServiceConfig}
-    slot="body"
-  />
+  <MembersPage client:load slot="body" />
 </BaseLayout>

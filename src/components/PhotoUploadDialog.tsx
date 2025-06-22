@@ -6,15 +6,14 @@ import {
   UploadTrigger,
 } from "../headless/members/PhotoUpload";
 import { withDocsWrapper } from "./DocsMode";
+import { CurrentMemberProfile } from "../headless/members/CurrentMemberProfile";
 
 interface PhotoUploadDialogProps {
-  member?: any;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function PhotoUploadDialog({
-  member,
   isOpen,
   onClose,
 }: PhotoUploadDialogProps) {
@@ -76,29 +75,33 @@ export default function PhotoUploadDialog({
                 Current Profile Photo
               </p>
               <div className="relative inline-block">
-                {member?.profile?.photo?.url ? (
-                  <img
-                    src={member.profile.photo.url}
-                    alt="Current profile photo"
-                    className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl object-cover"
-                  />
-                ) : (
-                  <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                    <svg
-                      className="w-16 h-16 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7-7h14a7 7 0 00-7-7z"
+                <CurrentMemberProfile.ProfilePhoto>
+                  {({ photoUrl, hasPhoto, altText }) =>
+                    hasPhoto ? (
+                      <img
+                        src={photoUrl}
+                        alt={altText}
+                        className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl object-cover"
                       />
-                    </svg>
-                  </div>
-                )}
+                    ) : (
+                      <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                        <svg
+                          className="w-16 h-16 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7-7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                      </div>
+                    )
+                  }
+                </CurrentMemberProfile.ProfilePhoto>
               </div>
             </div>
 

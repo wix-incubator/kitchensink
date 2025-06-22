@@ -1,0 +1,32 @@
+---
+import { auth } from "@wix/essentials";
+import { type IOAuthStrategy } from "@wix/sdk";
+import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
+import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ProfilePage } from "../../react-pages/members/profile";
+
+const userIsLoggedIn = auth.getContextualAuth<IOAuthStrategy>().loggedIn();
+
+if (!userIsLoggedIn) {
+  return Astro.redirect(`/api/auth/login?returnToUrl=${Astro.url.pathname}`);
+}
+
+const currentMemberServiceConfig = await loadCurrentMemberServiceConfig();
+const profileUpdateServiceConfig = await loadProfileUpdateServiceConfig();
+---
+
+<BaseLayout>
+  <title>Member Profile - Wix Kitchensink</title>
+  <meta
+    name="description"
+    content="Member authentication, profile management, and member data handling with Wix Members"
+  />
+
+  <ProfilePage
+    client:load
+    currentMemberServiceConfig={currentMemberServiceConfig}
+    profileUpdateServiceConfig={profileUpdateServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

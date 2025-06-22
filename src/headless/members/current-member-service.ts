@@ -1,9 +1,5 @@
-import {
-  defineService,
-  implementService,
-  type ServiceFactoryConfig,
-} from "@wix/services-definitions";
 import { members } from "@wix/members";
+import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../Signal";
 
@@ -13,37 +9,43 @@ export const CurrentMemberServiceDefinition = defineService<{
   refreshCurrentMember: () => Promise<void>;
 }>("currentMember");
 
-export const CurrentMemberService = implementService.withConfig<{
+export type CurrentMemberServiceConfig = {
   member: members.Member;
-}>()(CurrentMemberServiceDefinition, ({ getService, config }) => {
-  const signalsService = getService(SignalsServiceDefinition);
-  const currentMember: Signal<members.Member> = signalsService.signal(
-    config.member as any
+};
+
+export const CurrentMemberService =
+  implementService.withConfig<CurrentMemberServiceConfig>()(
+    CurrentMemberServiceDefinition,
+    ({ getService, config }) => {
+      const signalsService = getService(SignalsServiceDefinition);
+      const currentMember: Signal<members.Member> = signalsService.signal(
+        config.member as any
+      );
+
+      const refreshCurrentMember = async () => {
+        const { member } = await members.getCurrentMember({
+          fieldsets: ["FULL"],
+        });
+        if (member) {
+          currentMember.set(member);
+        }
+      };
+
+      return {
+        currentMember,
+        updateMember: async (update) => {
+          const newMember = await members.updateMember(
+            currentMember.get()._id!,
+            update
+          );
+          currentMember.set(newMember);
+        },
+        refreshCurrentMember,
+      };
+    }
   );
 
-  const refreshCurrentMember = async () => {
-    const { member } = await members.getCurrentMember({
-      fieldsets: ["FULL"],
-    });
-    if (member) {
-      currentMember.set(member);
-    }
-  };
-
-  return {
-    currentMember,
-    updateMember: async (update) => {
-      await members.updateMember(currentMember.get()._id!, update);
-      // Refresh the current member data after update
-      await refreshCurrentMember();
-    },
-    refreshCurrentMember,
-  };
-});
-
-export async function loadCurrentMemberServiceConfig(): Promise<
-  ServiceFactoryConfig<typeof CurrentMemberService>
-> {
+export async function loadCurrentMemberServiceConfig(): Promise<CurrentMemberServiceConfig> {
   const { member } = await members.getCurrentMember({
     fieldsets: ["FULL"],
   });
