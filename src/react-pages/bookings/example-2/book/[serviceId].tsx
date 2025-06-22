@@ -498,7 +498,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
   };
 
   return (
-    <BookingServices.ServiceGrid>
+    <BookingServices.ServicesList>
       {withDocsWrapper(
         ({ services, isLoading, error }) => {
           // Auto-select the service when services are loaded
@@ -552,7 +552,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
           }
 
           return (
-            <BookingServices.ServiceCard service={service}>
+            <BookingServices.ServiceListItem service={service}>
               {withDocsWrapper(
                 ({ name, tagLine, price, duration, image }) => (
                   <BookingSelection.ServiceSelector services={[service]}>
@@ -648,13 +648,13 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
                 "Book Now Header",
                 "/docs/components/bookings-services#servicecard"
               )}
-            </BookingServices.ServiceCard>
+            </BookingServices.ServiceListItem>
           );
         },
         "Book Now Content",
         "/docs/components/bookings-services#servicegrid"
       )}
-    </BookingServices.ServiceGrid>
+    </BookingServices.ServicesList>
   );
 };
 
