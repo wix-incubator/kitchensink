@@ -1,5 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { type AvailableOptions, type Filter, defaultFilter } from "../headless/store/filter-service";
+import {
+  type AvailableOptions,
+  type Filter,
+  defaultFilter,
+} from "../headless/store/services/filter-service";
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: Filter) => void;
@@ -27,8 +31,8 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   isFiltered,
 }) => {
   const { priceRange, productOptions } = availableOptions;
-  const [ tempPriceRange, setTempPriceRange ] = useState(priceRange);
-  const [ selectedOptions, setSelectedOptions ] = useState<{
+  const [tempPriceRange, setTempPriceRange] = useState(priceRange);
+  const [selectedOptions, setSelectedOptions] = useState<{
     [optionId: string]: string[];
   }>(currentFilters.selectedOptions);
 
@@ -49,25 +53,33 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   // Handle price range commit (when user releases slider)
   const handlePriceRangeCommit = useCallback(() => {
-    if (tempPriceRange.min !== currentFilters.priceRange.min || tempPriceRange.max !== currentFilters.priceRange.max) {
+    if (
+      tempPriceRange.min !== currentFilters.priceRange.min ||
+      tempPriceRange.max !== currentFilters.priceRange.max
+    ) {
       onFiltersChange({
         priceRange: tempPriceRange,
         selectedOptions,
       });
     }
-  }, [tempPriceRange, selectedOptions, onFiltersChange, currentFilters.priceRange]);
+  }, [
+    tempPriceRange,
+    selectedOptions,
+    onFiltersChange,
+    currentFilters.priceRange,
+  ]);
 
   // Setup document-level event listeners for proper drag handling
   useEffect(() => {
     const handleMouseUp = () => handlePriceRangeCommit();
     const handleTouchEnd = () => handlePriceRangeCommit();
 
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('touchend', handleTouchEnd);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, [handlePriceRangeCommit]);
 
@@ -106,7 +118,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   );
 
   return (
-    <div className={`bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 ${className}`}>
+    <div
+      className={`bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 ${className}`}
+    >
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold text-white flex items-center gap-2">
           <svg
@@ -200,7 +214,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   })
                 }
                 className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
-                style={{ zIndex: tempPriceRange.min > priceRange.min + (priceRange.max - priceRange.min) * 0.5 ? 2 : 1 }}
+                style={{
+                  zIndex:
+                    tempPriceRange.min >
+                    priceRange.min + (priceRange.max - priceRange.min) * 0.5
+                      ? 2
+                      : 1,
+                }}
               />
 
               {/* Max Range Input */}
@@ -216,7 +236,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   })
                 }
                 className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
-                style={{ zIndex: tempPriceRange.max < priceRange.min + (priceRange.max - priceRange.min) * 0.5 ? 2 : 1 }}
+                style={{
+                  zIndex:
+                    tempPriceRange.max <
+                    priceRange.min + (priceRange.max - priceRange.min) * 0.5
+                      ? 2
+                      : 1,
+                }}
               />
             </div>
 
@@ -261,10 +287,12 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Product Options Filters */}
         {productOptions.map((option) => (
           <div key={option.id}>
-            <h4 className="text-white font-medium mb-3">{String(option.name)}</h4>
+            <h4 className="text-white font-medium mb-3">
+              {String(option.name)}
+            </h4>
 
             {/* Color Swatch Options */}
-            {option.optionRenderType === 'SWATCH_CHOICES' ? (
+            {option.optionRenderType === "SWATCH_CHOICES" ? (
               <div className="flex flex-wrap gap-4 mb-8">
                 {option.choices.map((choice) => (
                   <label
@@ -274,20 +302,26 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   >
                     <input
                       type="checkbox"
-                      checked={selectedOptions[option.id]?.includes(choice.id) || false}
+                      checked={
+                        selectedOptions[option.id]?.includes(choice.id) || false
+                      }
                       onChange={(e) =>
-                        handleOptionChange(option.id, choice.id, e.target.checked)
+                        handleOptionChange(
+                          option.id,
+                          choice.id,
+                          e.target.checked
+                        )
                       }
                       className="sr-only"
                     />
                     <div
                       className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
                         selectedOptions[option.id]?.includes(choice.id)
-                          ? 'border-white shadow-lg scale-110 ring-2 ring-blue-500'
-                          : 'border-white/30 hover:border-white/60 hover:scale-105'
+                          ? "border-white shadow-lg scale-110 ring-2 ring-blue-500"
+                          : "border-white/30 hover:border-white/60 hover:scale-105"
                       }`}
                       style={{
-                        backgroundColor: choice.colorCode || '#000000',
+                        backgroundColor: choice.colorCode || "#000000",
                       }}
                     />
                     <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-white/70 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -306,9 +340,15 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   >
                     <input
                       type="checkbox"
-                      checked={selectedOptions[option.id]?.includes(choice.id) || false}
+                      checked={
+                        selectedOptions[option.id]?.includes(choice.id) || false
+                      }
                       onChange={(e) =>
-                        handleOptionChange(option.id, choice.id, e.target.checked)
+                        handleOptionChange(
+                          option.id,
+                          choice.id,
+                          e.target.checked
+                        )
                       }
                       className="w-4 h-4 bg-white/10 border border-white/30 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
                     />
@@ -327,8 +367,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             <p>No filter options available</p>
           </div>
         )}
-
-
       </div>
 
       <style>{`

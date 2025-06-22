@@ -7,9 +7,9 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../headless/bookings/booking-services-service";
-import { BookingServices } from "../../../headless/bookings/BookingServices";
-import WixMediaImage from "../../../headless/media/Image";
+} from "../../../headless/bookings/services/booking-services-service";
+import { BookingServices } from "../../../headless/bookings/components/BookingServices";
+import WixMediaImage from "../../../headless/media/components/Image";
 import {
   withDocsWrapper,
   PageDocsRegistration,

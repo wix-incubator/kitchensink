@@ -4,9 +4,9 @@ import {
   PreviewImage,
   UploadProgress,
   UploadTrigger,
-} from "../headless/members/PhotoUpload";
+} from "../headless/members/components/PhotoUpload";
 import { withDocsWrapper } from "./DocsMode";
-import { CurrentMemberProfile } from "../headless/members/CurrentMemberProfile";
+import { CurrentMemberProfile } from "../headless/members/components/CurrentMemberProfile";
 
 interface PhotoUploadDialogProps {
   isOpen: boolean;

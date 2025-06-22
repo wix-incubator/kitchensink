@@ -1,5 +1,29 @@
 # Client-Side Services and Headless Components Pattern
 
+## Folder Structure (2024+)
+
+Each domain under `src/headless/` (e.g., `store`, `bookings`, `members`, `media`) is organized as follows:
+
+- `services/` — All service logic files (e.g., `*-service.ts`)
+- `components/` — All headless React components (e.g., `*.tsx` except services and actions)
+- `actions/` — All Astro/server actions (e.g., `*-actions.ts`)
+
+**Example:**
+
+```
+src/headless/store/
+  services/
+    collection-service.ts
+    filter-service.ts
+    ...
+  components/
+    Collection.tsx
+    FilteredCollection.tsx
+    ...
+  actions/
+    (if any)
+```
+
 ## Overview
 
 This pattern separates client-side state management and business logic from UI presentation through a combination of **Client-Side Services** and **Headless Components**. This architecture enables better code reusability, testability, and maintainability by decoupling reactive state management from UI implementation.

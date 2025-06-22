@@ -7,24 +7,20 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../../headless/bookings/booking-services-service";
-import {
-  BookingAvailabilityService,
-  BookingAvailabilityServiceDefinition,
-} from "../../../../headless/bookings/booking-availability-service";
-import {
-  BookingSelectionService,
-  BookingSelectionServiceDefinition,
-} from "../../../../headless/bookings/booking-selection-service";
-import { BookingServices } from "../../../../headless/bookings/BookingServices";
-import { BookingAvailability } from "../../../../headless/bookings/BookingAvailability";
-import { BookingSelection } from "../../../../headless/bookings/BookingSelection";
-import WixMediaImage from "../../../../headless/media/Image";
+} from "../../../../headless/bookings/services/booking-services-service";
+import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
+import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
+import { BookingServices } from "../../../../headless/bookings/components/BookingServices";
+import { BookingAvailability } from "../../../../headless/bookings/components/BookingAvailability";
+import { BookingSelection } from "../../../../headless/bookings/components/BookingSelection";
+import WixMediaImage from "../../../../headless/media/components/Image";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import {
   withDocsWrapper,
   PageDocsRegistration,
 } from "../../../../components/DocsMode";
+import { BookingAvailabilityServiceDefinition } from "../../../../headless/bookings/services/booking-availability-service";
+import { BookingSelectionServiceDefinition } from "../../../../headless/bookings/services/booking-selection-service";
 
 interface BookNowPageProps {
   serviceId: string;

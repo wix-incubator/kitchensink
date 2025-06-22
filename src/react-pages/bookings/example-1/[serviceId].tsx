@@ -7,18 +7,18 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
-} from "../../../headless/bookings/booking-service-service";
+} from "../../../headless/bookings/services/booking-service-service";
 import {
   BookingAvailabilityService,
   BookingAvailabilityServiceDefinition,
-} from "../../../headless/bookings/booking-availability-service";
+} from "../../../headless/bookings/services/booking-availability-service";
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
-} from "../../../headless/bookings/booking-selection-service";
-import { BookingService } from "../../../headless/bookings/BookingService";
-import { BookingAvailability } from "../../../headless/bookings/BookingAvailability";
-import { BookingSelection } from "../../../headless/bookings/BookingSelection";
+} from "../../../headless/bookings/services/booking-selection-service";
+import { BookingService } from "../../../headless/bookings/components/BookingService";
+import { BookingAvailability } from "../../../headless/bookings/components/BookingAvailability";
+import { BookingSelection } from "../../../headless/bookings/components/BookingSelection";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import {
   withDocsWrapper,

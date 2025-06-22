@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { categories } from '@wix/categories';
-import { Category } from '../headless/store/Category';
+import React, { useState, useEffect } from "react";
+import { categories } from "@wix/categories";
+import { Category } from "../headless/store/components/Category";
 
 // Use the Wix SDK category type directly
 type Category = categories.Category;
@@ -12,11 +12,11 @@ interface CategoryPickerProps {
   className?: string;
 }
 
-function CategoryPicker({ 
-  onCategorySelect, 
+function CategoryPicker({
+  onCategorySelect,
   selectedCategory,
   categories,
-  className = ""
+  className = "",
 }: CategoryPickerProps) {
   if (categories.length === 0) {
     return null; // No categories to show
@@ -29,7 +29,7 @@ function CategoryPicker({
           Shop by Category
         </h3>
       </div>
-      
+
       {/* Category Navigation - Horizontal scrollable for mobile */}
       <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
         {/* All Products button */}
@@ -37,13 +37,13 @@ function CategoryPicker({
           onClick={() => onCategorySelect(null)}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
             selectedCategory === null
-              ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105'
-              : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+              ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105"
+              : "bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
           }`}
         >
           All Products
         </button>
-        
+
         {/* Category buttons */}
         {categories.map((category) => (
           <button
@@ -51,8 +51,8 @@ function CategoryPicker({
             onClick={() => onCategorySelect(category._id || null)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               selectedCategory === category._id
-                ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105'
-                : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white'
+                ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105"
+                : "bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
             }`}
           >
             {category.name}
@@ -64,20 +64,22 @@ function CategoryPicker({
 }
 
 export default function CategoryPickerWithContext({
-  className
+  className,
 }: {
   className?: string;
 }) {
-  return (<Category.Provider>
-    <Category.List>
-      {({ categories, selectedCategory, setSelectedCategory }) => (
-        <CategoryPicker 
-          categories={categories} 
-          selectedCategory={selectedCategory} 
-          onCategorySelect={setSelectedCategory} 
-          className={className}
-        />
-      )}
-    </Category.List>
-  </Category.Provider>);
+  return (
+    <Category.Provider>
+      <Category.List>
+        {({ categories, selectedCategory, setSelectedCategory }) => (
+          <CategoryPicker
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+            className={className}
+          />
+        )}
+      </Category.List>
+    </Category.Provider>
+  );
 }

@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductDetailPage from "../../../react-pages/store/example-2/products/[slug]";
-import { loadProductServiceConfig } from "../../../headless/store/product-service";
-import { loadCurrentCartServiceConfig } from "../../../headless/store/current-cart-service";
-import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/product-media-gallery-service";
-import { loadSelectedVariantServiceConfig } from "../../../headless/store/selected-variant-service";
-import { loadSocialSharingServiceConfig } from "../../../headless/store/social-sharing-service";
-import { loadRelatedProductsServiceConfig } from "../../../headless/store/related-products-service";
+import { loadProductServiceConfig } from "../../../headless/store/services/product-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/services/current-cart-service";
+import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
+import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
+import { loadSocialSharingServiceConfig } from "../../../headless/store/services/social-sharing-service";
+import { loadRelatedProductsServiceConfig } from "../../../headless/store/services/related-products-service";
 
 const { slug } = Astro.params;
 

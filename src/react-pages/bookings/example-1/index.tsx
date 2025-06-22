@@ -7,15 +7,15 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../headless/bookings/booking-services-service";
+} from "../../../headless/bookings/services/booking-services-service";
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
-} from "../../../headless/bookings/booking-selection-service";
-import { BookingServices } from "../../../headless/bookings/BookingServices";
-import { BookingSelection } from "../../../headless/bookings/BookingSelection";
+} from "../../../headless/bookings/services/booking-selection-service";
+import { BookingServices } from "../../../headless/bookings/components/BookingServices";
+import { BookingSelection } from "../../../headless/bookings/components/BookingSelection";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import WixMediaImage from "../../../headless/media/Image";
+import WixMediaImage from "../../../headless/media/components/Image";
 import {
   withDocsWrapper,
   PageDocsRegistration,

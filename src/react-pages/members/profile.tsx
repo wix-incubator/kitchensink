@@ -19,18 +19,19 @@ import {
   CurrentMemberService,
   CurrentMemberServiceDefinition,
   type CurrentMemberServiceConfig,
-} from "../../headless/members/current-member-service";
-import { CurrentMemberProfile } from "../../headless/members/CurrentMemberProfile";
-import {
-  PhotoUploadService,
-  PhotoUploadServiceDefinition,
-} from "../../headless/members/photo-upload-service";
+} from "../../headless/members/services/current-member-service";
+import { CurrentMemberProfile } from "../../headless/members/components/CurrentMemberProfile";
 import {
   ProfileUpdateService,
   ProfileUpdateServiceDefinition,
   type ProfileUpdateServiceConfig,
-} from "../../headless/members/profile-update-service";
+} from "../../headless/members/services/profile-update-service";
 import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
+import {
+  loadPhotoUploadServiceConfig,
+  PhotoUploadService,
+  PhotoUploadServiceDefinition,
+} from "../../headless/members/services/photo-upload-service";
 
 interface ProfilePageProps {
   currentMemberServiceConfig?: CurrentMemberServiceConfig;

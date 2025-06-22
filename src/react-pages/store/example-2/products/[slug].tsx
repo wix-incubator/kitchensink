@@ -12,36 +12,36 @@ import {
 import {
   ProductServiceDefinition,
   ProductService,
-} from "../../../../headless/store/product-service";
+} from "../../../../headless/store/services/product-service";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../../../../headless/store/current-cart-service";
+} from "../../../../headless/store/services/current-cart-service";
 import {
   ProductMediaGalleryServiceDefinition,
   ProductMediaGalleryService,
-} from "../../../../headless/store/product-media-gallery-service";
+} from "../../../../headless/store/services/product-media-gallery-service";
 import {
   SelectedVariantServiceDefinition,
   SelectedVariantService,
-} from "../../../../headless/store/selected-variant-service";
+} from "../../../../headless/store/services/selected-variant-service";
 import {
   SocialSharingServiceDefinition,
   SocialSharingService,
   loadSocialSharingServiceConfig,
-} from "../../../../headless/store/social-sharing-service";
+} from "../../../../headless/store/services/social-sharing-service";
 import {
   RelatedProductsServiceDefinition,
   RelatedProductsService,
   loadRelatedProductsServiceConfig,
-} from "../../../../headless/store/related-products-service";
-import { Product } from "../../../../headless/store/Product";
-import { ProductVariantSelector } from "../../../../headless/store/ProductVariantSelector";
-import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGallery";
-import { CurrentCart } from "../../../../headless/store/CurrentCart";
-import { SocialSharing } from "../../../../headless/store/SocialSharing";
-import { RelatedProducts } from "../../../../headless/store/RelatedProducts";
-import WixMediaImage from "../../../../headless/media/Image";
+} from "../../../../headless/store/services/related-products-service";
+import { Product } from "../../../../headless/store/components/Product";
+import { ProductVariantSelector } from "../../../../headless/store/components/ProductVariantSelector";
+import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
+import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
+import { SocialSharing } from "../../../../headless/store/components/SocialSharing";
+import { RelatedProducts } from "../../../../headless/store/components/RelatedProducts";
+import WixMediaImage from "../../../../headless/media/components/Image";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -393,9 +393,11 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                   {choices.map(
                                     (choice: any, choiceIndex: number) => {
                                       // Check if this is a color option
-                                      const isColorOption = String(name).toLowerCase().includes('color');
+                                      const isColorOption = String(name)
+                                        .toLowerCase()
+                                        .includes("color");
                                       const hasColorCode = choice.colorCode;
-                                      
+
                                       return (
                                         <ProductVariantSelector.Choice
                                           key={choiceIndex}
@@ -410,23 +412,30 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                               onSelect,
                                             }) => (
                                               <>
-                                                {isColorOption && hasColorCode ? (
+                                                {isColorOption &&
+                                                hasColorCode ? (
                                                   // Color Swatch
-                                                                                                     <button
-                                                     onClick={onSelect}
-                                                     disabled={!isAvailable}
-                                                     title={value}
-                                                     className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
-                                                       isSelected
-                                                         ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                                         : isAvailable
-                                                         ? "border-white/30 hover:border-white/60 hover:scale-105"
-                                                         : "border-white/10 opacity-50 cursor-not-allowed"
-                                                     } ${!isAvailable ? "grayscale" : ""}`}
-                                                     style={{
-                                                       backgroundColor: choice.colorCode || '#000000',
-                                                     }}
-                                                   />
+                                                  <button
+                                                    onClick={onSelect}
+                                                    disabled={!isAvailable}
+                                                    title={value}
+                                                    className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                      isSelected
+                                                        ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
+                                                        : isAvailable
+                                                        ? "border-white/30 hover:border-white/60 hover:scale-105"
+                                                        : "border-white/10 opacity-50 cursor-not-allowed"
+                                                    } ${
+                                                      !isAvailable
+                                                        ? "grayscale"
+                                                        : ""
+                                                    }`}
+                                                    style={{
+                                                      backgroundColor:
+                                                        choice.colorCode ||
+                                                        "#000000",
+                                                    }}
+                                                  />
                                                 ) : (
                                                   // Regular Text Button
                                                   <button

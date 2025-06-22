@@ -1,0 +1,321 @@
+import type { ServiceAPI } from "@wix/services-definitions";
+import { useService } from "@wix/services-manager-react";
+import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
+import { productsV3 } from "@wix/stores";
+
+/**
+ * Props for Options headless component
+ */
+export interface OptionsProps {
+  /** Render prop function that receives options data */
+  children: (props: OptionsRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Options component
+ */
+export interface OptionsRenderProps {
+  /** Array of product options */
+  options: productsV3.ConnectedOption[];
+  /** Whether product has options */
+  hasOptions: boolean;
+  /** Currently selected choices */
+  selectedChoices: Record<string, string>;
+}
+
+/**
+ * Headless component for all product options
+ */
+export const Options = (props: OptionsProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const selectedChoices = variantService.selectedChoices.get();
+  const options = variantService.productOptions.get();
+
+  return props.children({
+    options,
+    hasOptions: options.length > 0,
+    selectedChoices,
+  });
+};
+
+/**
+ * Props for Option headless component
+ */
+export interface OptionProps {
+  /** Product option data */
+  option: productsV3.ConnectedOption;
+  /** Render prop function that receives option data */
+  children: (props: OptionRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Option component
+ */
+export interface OptionRenderProps {
+  /** Option name */
+  name: string;
+  /** Option type */
+  type: any;
+  /** Array of choices for this option */
+  choices: productsV3.ConnectedOptionChoice[];
+  /** Currently selected value for this option */
+  selectedValue: string | null;
+  /** Whether this option has choices */
+  hasChoices: boolean;
+}
+
+/**
+ * Headless component for choices within a specific product option
+ */
+export const Option = (props: OptionProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const selectedChoices = variantService.selectedChoices.get();
+  const { option } = props;
+
+  const name = option.name || "";
+  const choices = option.choicesSettings?.choices || [];
+  const selectedValue = selectedChoices[name] || null;
+
+  return props.children({
+    name,
+    type: option.optionRenderType,
+    choices,
+    selectedValue,
+    hasChoices: choices.length > 0,
+  });
+};
+
+/**
+ * Props for Choice headless component
+ */
+export interface ChoiceProps {
+  /** Product option data */
+  option: productsV3.ConnectedOption;
+  /** Choice data */
+  choice: productsV3.ConnectedOptionChoice;
+  /** Render prop function that receives choice data */
+  children: (props: ChoiceRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Choice component
+ */
+export interface ChoiceRenderProps {
+  /** Choice value to display */
+  value: string;
+  /** Choice description (for color options) */
+  description: string | undefined;
+  /** Whether this choice is currently selected */
+  isSelected: boolean;
+  /** Whether this choice is available for selection */
+  isAvailable: boolean;
+  /** Function to select this choice */
+  onSelect: () => void;
+  /** Option name */
+  optionName: string;
+  /** Choice value */
+  choiceValue: string;
+}
+
+/**
+ * Headless component for individual choice selection
+ */
+export const Choice = (props: ChoiceProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const selectedChoices = variantService.selectedChoices.get();
+  const { option, choice } = props;
+
+  const optionName = option.name || "";
+  const choiceValue = choice.name || "";
+
+  const isSelected = selectedChoices[optionName] === choiceValue;
+
+  // Check if this choice would result in an available variant
+  const testChoices = {
+    ...selectedChoices,
+    [optionName]: choiceValue,
+  };
+
+  // Simple availability check - in a real implementation, this would check against actual variants
+  const isAvailable = true; // Simplified for now
+
+  const value = choiceValue;
+
+  const onSelect = () => {
+    variantService.setSelectedChoices(testChoices);
+  };
+
+  return props.children({
+    value,
+    description: undefined, // v3 choices don't have separate description field
+    isSelected,
+    isAvailable,
+    onSelect,
+    optionName,
+    choiceValue,
+  });
+};
+
+/**
+ * Props for Trigger headless component
+ */
+export interface TriggerProps {
+  /** Quantity to add (optional) */
+  quantity?: number;
+  /** Render prop function that receives trigger data */
+  children: (props: TriggerRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Trigger component
+ */
+export interface TriggerRenderProps {
+  /** Function to add product to cart */
+  onAddToCart: () => Promise<void>;
+  /** Whether add to cart is available */
+  canAddToCart: boolean;
+  /** Whether add to cart is currently loading */
+  isLoading: boolean;
+  /** Current product price */
+  price: string;
+  /** Whether product is in stock */
+  inStock: boolean;
+  /** Error message if any */
+  error: string | null;
+}
+
+/**
+ * Headless component for add to cart trigger
+ */
+export const Trigger = (props: TriggerProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const price = variantService.currentPrice.get();
+  const inStock = variantService.isInStock.get();
+  const isLoading = variantService.isLoading.get();
+  const error = variantService.error.get();
+
+  const quantity = props.quantity || 1;
+  const canAddToCart = inStock && !isLoading;
+
+  const onAddToCart = async () => {
+    await variantService.addToCart(quantity);
+  };
+
+  return props.children({
+    onAddToCart,
+    canAddToCart,
+    isLoading,
+    price,
+    inStock,
+    error,
+  });
+};
+
+/**
+ * Props for Price headless component
+ */
+export interface PriceProps {
+  /** Render prop function that receives price data */
+  children: (props: PriceRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Price component
+ */
+export interface PriceRenderProps {
+  /** Current price (formatted) */
+  price: string;
+  /** Whether price is for a variant */
+  isVariantPrice: boolean;
+  /** Currency code */
+  currency: string;
+}
+
+/**
+ * Headless component for product price display
+ */
+export const Price = (props: PriceProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const price = variantService.currentPrice.get();
+  const currentVariant = variantService.currentVariant.get();
+  const currency = variantService.currency.get();
+
+  const isVariantPrice = !!currentVariant;
+
+  return props.children({
+    price,
+    isVariantPrice,
+    currency,
+  });
+};
+
+/**
+ * Props for Stock headless component
+ */
+export interface StockProps {
+  /** Render prop function that receives stock data */
+  children: (props: StockRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Stock component
+ */
+export interface StockRenderProps {
+  /** Whether product is in stock */
+  inStock: boolean;
+  /** Stock status message */
+  status: string;
+  /** Stock quantity (if available) */
+  quantity: number | null;
+  /** Whether stock tracking is enabled */
+  trackInventory: boolean;
+}
+
+/**
+ * Headless component for product stock status
+ */
+export const Stock = (props: StockProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const inStock = variantService.isInStock.get();
+  const currentVariant = variantService.currentVariant.get();
+  const product = variantService.product.get();
+
+  const trackInventory = false; // V3 API has different inventory structure
+  const quantity = null; // Not directly available in v3 API
+
+  const status = inStock ? "In Stock" : "Out of Stock";
+
+  return props.children({
+    inStock,
+    status,
+    quantity,
+    trackInventory,
+  });
+};
+
+export const ProductVariantSelector = {
+  Options,
+  Option,
+  Choice,
+  Trigger,
+  Price,
+  Stock,
+} as const;

@@ -2,7 +2,7 @@ import {
   ProfileFormField,
   ProfileUpdateProgress,
   ProfileUpdateTrigger,
-} from "../headless/members/ProfileUpdate";
+} from "../headless/members/components/ProfileUpdate";
 import { PencilIcon } from "./icons/PencilIcon";
 import { CloseIcon } from "./icons/CloseIcon";
 import { UserIcon } from "./icons/UserIcon";

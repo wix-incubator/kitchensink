@@ -1,16 +1,34 @@
-import { createServicesManager, createServicesMap } from "@wix/services-manager";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
-import { FilterServiceDefinition, FilterService } from "../../../headless/store/filter-service";
-import { CollectionServiceDefinition, CollectionService } from "../../../headless/store/collection-service";
-import { CurrentCartServiceDefinition, CurrentCartService } from "../../../headless/store/current-cart-service";
-import { FilteredCollection } from "../../../headless/store/FilteredCollection";
+import {
+  FilterServiceDefinition,
+  FilterService,
+} from "../../../headless/store/services/filter-service";
+import {
+  CollectionServiceDefinition,
+  CollectionService,
+} from "../../../headless/store/services/collection-service";
+import {
+  CurrentCartServiceDefinition,
+  CurrentCartService,
+} from "../../../headless/store/services/current-cart-service";
+import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
 import { withDocsWrapper } from "../../../components/DocsMode";
-import WixMediaImage from "../../../headless/media/Image";
+import WixMediaImage from "../../../headless/media/components/Image";
 import ProductFilters from "../../../components/ProductFilters";
 import StoreHeader from "../../../components/StoreHeader";
-import { CategoryService, CategoryServiceDefinition } from "../../../headless/store/category-service";
-import { SortService, SortServiceDefinition } from "../../../headless/store/sort-service";
+import {
+  CategoryServiceDefinition,
+  CategoryService,
+} from "../../../headless/store/services/category-service";
+import {
+  SortService,
+  SortServiceDefinition,
+} from "../../../headless/store/services/sort-service";
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -26,8 +44,13 @@ const ProductGridContent = () => {
           ({ products, isLoading, error, isEmpty, totalProducts }) => (
             <FilteredCollection.Filters>
               {withDocsWrapper(
-                ({ currentFilters, applyFilters, clearFilters, availableOptions, isFiltered }) => {
-
+                ({
+                  currentFilters,
+                  applyFilters,
+                  clearFilters,
+                  availableOptions,
+                  isFiltered,
+                }) => {
                   return (
                     <div className="min-h-screen">
                       <StoreHeader className="mb-6" />
@@ -67,7 +90,8 @@ const ProductGridContent = () => {
                                   />
                                 </svg>
                                 <span className="text-blue-300">
-                                  Showing {String(products.length)} of {totalProducts} products
+                                  Showing {String(products.length)} of{" "}
+                                  {totalProducts} products
                                 </span>
                               </div>
                               <button
@@ -116,19 +140,23 @@ const ProductGridContent = () => {
                                 </svg>
                               </div>
                               <h2 className="text-2xl font-bold text-white mb-4">
-                                {isFiltered ? "No Products Match Your Filters" : "No Products Found"}
+                                {isFiltered
+                                  ? "No Products Match Your Filters"
+                                  : "No Products Found"}
                               </h2>
                               <p className="text-white/70">
                                 {isFiltered
                                   ? "Try adjusting your filters to see more products."
-                                  : "We couldn't find any products to display."
-                                }
+                                  : "We couldn't find any products to display."}
                               </p>
                             </div>
                           ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                               {products.map((product) => (
-                                <FilteredCollection.Item key={product._id} product={product}>
+                                <FilteredCollection.Item
+                                  key={product._id}
+                                  product={product}
+                                >
                                   {withDocsWrapper(
                                     ({
                                       title,
@@ -169,58 +197,94 @@ const ProductGridContent = () => {
                                         </h3>
 
                                         {/* Product Options */}
-                                        {product.options && product.options.length > 0 && (
-                                          <div className="mb-3 space-y-2">
-                                            {product.options.map((option: any) => (
-                                              <div key={option._id} className="space-y-1">
-                                                <span className="text-white/80 text-xs font-medium">
-                                                  {String(option.name)}:
-                                                </span>
-                                                <div className="flex flex-wrap gap-1">
-                                                  {option.choicesSettings?.choices?.slice(0, 3).map((choice: any) => {
-                                                    // Check if this is a color option and if choice has color data
-                                                    const isColorOption = String(option.name).toLowerCase().includes('color');
-                                                    const hasColorCode = choice.colorCode || (choice.media?.image);
-
-                                                    if (isColorOption && (choice.colorCode || hasColorCode)) {
-                                                      return (
-                                                        <div
-                                                          key={choice.choiceId}
-                                                          className="relative group/color"
-                                                        >
-                                                          <div
-                                                            className="w-6 h-6 rounded-full border-2 border-white/30 hover:border-white/60 transition-colors cursor-pointer"
-                                                            style={{
-                                                              backgroundColor: choice.colorCode || '#000000'
-                                                            }}
-                                                          />
-                                                          {/* Tooltip */}
-                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                            {String(choice.name)}
-                                                          </div>
-                                                        </div>
-                                                      );
-                                                    } else {
-                                                      return (
-                                                        <span
-                                                          key={choice.choiceId}
-                                                          className="inline-flex items-center px-2 py-1 bg-white/10 text-white/90 text-xs rounded border border-white/20"
-                                                        >
-                                                          {String(choice.name)}
-                                                        </span>
-                                                      );
-                                                    }
-                                                  })}
-                                                  {option.choicesSettings?.choices?.length > 3 && (
-                                                    <span className="text-white/60 text-xs">
-                                                      +{option.choicesSettings.choices.length - 3} more
+                                        {product.options &&
+                                          product.options.length > 0 && (
+                                            <div className="mb-3 space-y-2">
+                                              {product.options.map(
+                                                (option: any) => (
+                                                  <div
+                                                    key={option._id}
+                                                    className="space-y-1"
+                                                  >
+                                                    <span className="text-white/80 text-xs font-medium">
+                                                      {String(option.name)}:
                                                     </span>
-                                                  )}
-                                                </div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        )}
+                                                    <div className="flex flex-wrap gap-1">
+                                                      {option.choicesSettings?.choices
+                                                        ?.slice(0, 3)
+                                                        .map((choice: any) => {
+                                                          // Check if this is a color option and if choice has color data
+                                                          const isColorOption =
+                                                            String(option.name)
+                                                              .toLowerCase()
+                                                              .includes(
+                                                                "color"
+                                                              );
+                                                          const hasColorCode =
+                                                            choice.colorCode ||
+                                                            choice.media?.image;
+
+                                                          if (
+                                                            isColorOption &&
+                                                            (choice.colorCode ||
+                                                              hasColorCode)
+                                                          ) {
+                                                            return (
+                                                              <div
+                                                                key={
+                                                                  choice.choiceId
+                                                                }
+                                                                className="relative group/color"
+                                                              >
+                                                                <div
+                                                                  className="w-6 h-6 rounded-full border-2 border-white/30 hover:border-white/60 transition-colors cursor-pointer"
+                                                                  style={{
+                                                                    backgroundColor:
+                                                                      choice.colorCode ||
+                                                                      "#000000",
+                                                                  }}
+                                                                />
+                                                                {/* Tooltip */}
+                                                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                                  {String(
+                                                                    choice.name
+                                                                  )}
+                                                                </div>
+                                                              </div>
+                                                            );
+                                                          } else {
+                                                            return (
+                                                              <span
+                                                                key={
+                                                                  choice.choiceId
+                                                                }
+                                                                className="inline-flex items-center px-2 py-1 bg-white/10 text-white/90 text-xs rounded border border-white/20"
+                                                              >
+                                                                {String(
+                                                                  choice.name
+                                                                )}
+                                                              </span>
+                                                            );
+                                                          }
+                                                        })}
+                                                      {option.choicesSettings
+                                                        ?.choices?.length >
+                                                        3 && (
+                                                        <span className="text-white/60 text-xs">
+                                                          +
+                                                          {option
+                                                            .choicesSettings
+                                                            .choices.length -
+                                                            3}{" "}
+                                                          more
+                                                        </span>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                )
+                                              )}
+                                            </div>
+                                          )}
 
                                         {description && (
                                           <p className="text-white/60 text-sm mb-3 line-clamp-2">
@@ -299,61 +363,62 @@ const LoadMoreSection = () => {
     <FilteredCollection.Provider>
       <FilteredCollection.LoadMore>
         {withDocsWrapper(
-          ({ loadMore, isLoading, totalProducts, hasMoreProducts }) => hasMoreProducts && (
-            <div className="text-center mt-12">
-              <button
-                onClick={loadMore}
-                disabled={isLoading}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
-              >
-                {isLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
+          ({ loadMore, isLoading, totalProducts, hasMoreProducts }) =>
+            hasMoreProducts && (
+              <div className="text-center mt-12">
+                <button
+                  onClick={loadMore}
+                  disabled={isLoading}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
+                >
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      Load More Products
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
                         stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Loading...
-                  </>
-                ) : (
-                  <>
-                    Load More Products
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                      />
-                    </svg>
-                  </>
-                )}
-              </button>
-              <p className="text-white/60 text-sm mt-4">
-                {totalProducts} products loaded
-              </p>
-            </div>
-          ),
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                        />
+                      </svg>
+                    </>
+                  )}
+                </button>
+                <p className="text-white/60 text-sm mt-4">
+                  {totalProducts} products loaded
+                </p>
+              </div>
+            ),
           "FilteredCollection.LoadMore",
           "/docs/components/filtered-collection#loadmore"
         )}
@@ -384,16 +449,8 @@ export default function StoreCollectionPage({
         CurrentCartService,
         currentCartServiceConfig
       )
-      .addService(
-        CategoryServiceDefinition,
-        CategoryService,
-        categoriesConfig
-      )
-      .addService(
-        SortServiceDefinition,
-        SortService,
-        {}
-      )
+      .addService(CategoryServiceDefinition, CategoryService, categoriesConfig)
+      .addService(SortServiceDefinition, SortService, {})
   );
 
   return (
@@ -419,4 +476,3 @@ export default function StoreCollectionPage({
     </KitchensinkLayout>
   );
 }
-

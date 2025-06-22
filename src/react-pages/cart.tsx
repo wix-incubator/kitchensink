@@ -7,8 +7,8 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/store/current-cart-service";
-import { CurrentCart } from "../headless/store/CurrentCart";
+} from "../headless/store/services/current-cart-service";
+import { CurrentCart } from "../headless/store/components/CurrentCart";
 import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
 
 interface CartPageProps {

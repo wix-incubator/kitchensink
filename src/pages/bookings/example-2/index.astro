@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BookingsHomePage from "../../../react-pages/bookings/example-2/index.tsx";
-import { loadBookingServicesServiceConfig } from "../../../headless/bookings/booking-services-service";
+import { loadBookingServicesServiceConfig } from "../../../headless/bookings/services/booking-services-service";
 
 // Load featured services (first 3)
 const bookingServicesConfig = await loadBookingServicesServiceConfig();

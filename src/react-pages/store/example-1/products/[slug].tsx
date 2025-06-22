@@ -8,28 +8,28 @@ import { StoreLayout } from "../../../../layouts/StoreLayout";
 import {
   ProductServiceDefinition,
   ProductService,
-} from "../../../../headless/store/product-service";
+} from "../../../../headless/store/services/product-service";
 import {
   SelectedVariantServiceDefinition,
   SelectedVariantService,
-} from "../../../../headless/store/selected-variant-service";
+} from "../../../../headless/store/services/selected-variant-service";
 import {
   ProductMediaGalleryServiceDefinition,
   ProductMediaGalleryService,
-} from "../../../../headless/store/product-media-gallery-service";
+} from "../../../../headless/store/services/product-media-gallery-service";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../../../../headless/store/current-cart-service";
-import { ProductMediaGallery } from "../../../../headless/store/ProductMediaGallery";
-import { ProductVariantSelector } from "../../../../headless/store/ProductVariantSelector";
-import { Product } from "../../../../headless/store/Product";
-import { CurrentCart } from "../../../../headless/store/CurrentCart";
+} from "../../../../headless/store/services/current-cart-service";
+import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
+import { ProductVariantSelector } from "../../../../headless/store/components/ProductVariantSelector";
+import { Product } from "../../../../headless/store/components/Product";
+import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
 import {
   withDocsWrapper,
   PageDocsRegistration,
 } from "../../../../components/DocsMode";
-import WixMediaImage from "../../../../headless/media/Image";
+import WixMediaImage from "../../../../headless/media/components/Image";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -367,9 +367,12 @@ export default function ProductDetailPage({
                                           <div className="flex flex-wrap gap-3">
                                             {choices.map((choice: any) => {
                                               // Check if this is a color option
-                                              const isColorOption = String(name).toLowerCase().includes('color');
-                                              const hasColorCode = choice.colorCode;
-                                              
+                                              const isColorOption = String(name)
+                                                .toLowerCase()
+                                                .includes("color");
+                                              const hasColorCode =
+                                                choice.colorCode;
+
                                               return (
                                                 <ProductVariantSelector.Choice
                                                   key={
@@ -387,20 +390,23 @@ export default function ProductDetailPage({
                                                       onSelect,
                                                     }) => (
                                                       <>
-                                                        {isColorOption && hasColorCode ? (
+                                                        {isColorOption &&
+                                                        hasColorCode ? (
                                                           // Color Swatch
-                                                                                                                     <button
-                                                             onClick={onSelect}
-                                                             title={value}
-                                                             className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
-                                                               isSelected
-                                                                 ? "border-blue-400 shadow-lg scale-110 ring-2 ring-blue-500/30"
-                                                                 : "border-white/30 hover:border-white/60 hover:scale-105"
-                                                             }`}
-                                                             style={{
-                                                               backgroundColor: choice.colorCode || '#000000',
-                                                             }}
-                                                           />
+                                                          <button
+                                                            onClick={onSelect}
+                                                            title={value}
+                                                            className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                              isSelected
+                                                                ? "border-blue-400 shadow-lg scale-110 ring-2 ring-blue-500/30"
+                                                                : "border-white/30 hover:border-white/60 hover:scale-105"
+                                                            }`}
+                                                            style={{
+                                                              backgroundColor:
+                                                                choice.colorCode ||
+                                                                "#000000",
+                                                            }}
+                                                          />
                                                         ) : (
                                                           // Regular Text Button
                                                           <button
