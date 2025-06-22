@@ -9,6 +9,7 @@ import { productsV3 } from "@wix/stores";
 import { FilterServiceDefinition, type Filter } from "./filter-service";
 import { CategoryServiceDefinition } from "./category-service";
 import { SortServiceDefinition, type SortBy } from "./sort-service";
+import { URLParamsUtils } from "../utils/url-params";
 
 export interface CollectionServiceAPI {
   products: Signal<productsV3.V3Product[]>;
@@ -58,18 +59,6 @@ export const CollectionService = implementService.withConfig<{
   const initialProducts = config.initialProducts || [];
 
   void collectionFilters.calculateAvailableOptions(initialProducts);
-
-  const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
-    initialProducts as any
-  );
-  const isLoading: Signal<boolean> = signalsService.signal(false as any);
-  const error: Signal<string | null> = signalsService.signal(null as any);
-  const totalProducts: Signal<number> = signalsService.signal(
-    initialProducts.length as any
-  );
-  const hasProducts: Signal<boolean> = signalsService.signal(
-    (initialProducts.length > 0) as any
-  );
 
   const pageSize = config.pageSize || 12;
   let allProducts: productsV3.V3Product[] = initialProducts;
@@ -156,6 +145,29 @@ export const CollectionService = implementService.withConfig<{
       }
     });
   };
+
+  // Apply initial filters and sorting to products immediately
+  const initialFilters = collectionFilters.currentFilters.get();
+  const initialSort = sortService.currentSort.get();
+  const selectedCategory = categoryService.selectedCategory.get();
+  const initialFilteredProducts = applyClientSideFilters(
+    initialProducts,
+    initialFilters,
+    selectedCategory,
+    initialSort
+  );
+
+  const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
+    initialFilteredProducts as any
+  );
+  const isLoading: Signal<boolean> = signalsService.signal(false as any);
+  const error: Signal<string | null> = signalsService.signal(null as any);
+  const totalProducts: Signal<number> = signalsService.signal(
+    initialFilteredProducts.length as any
+  );
+  const hasProducts: Signal<boolean> = signalsService.signal(
+    (initialFilteredProducts.length > 0) as any
+  );
 
   const loadMore = async () => {
     // Don't load more if there are no more products available
@@ -281,12 +293,106 @@ export const CollectionService = implementService.withConfig<{
   };
 });
 
+// Helper function to parse URL parameters
+function parseURLParams(
+  searchParams?: URLSearchParams,
+  products: productsV3.V3Product[] = []
+) {
+  const initialFilters: Filter = {
+    priceRange: { min: 0, max: 1000 },
+    selectedOptions: {},
+  };
+  let initialSort: SortBy = "";
+
+  if (!searchParams) return { initialSort, initialFilters };
+
+  const urlParams = URLParamsUtils.parseSearchParams(searchParams);
+
+  // Parse sort parameter
+  const sortMap: Record<string, SortBy> = {
+    name_asc: "name-asc",
+    name_desc: "name-desc",
+    price_asc: "price-asc",
+    price_desc: "price-desc",
+  };
+  initialSort = sortMap[urlParams.sort as string] || "";
+
+  if (products.length === 0) return { initialSort, initialFilters };
+
+  // Calculate price range from products
+  let minPrice = 0,
+    maxPrice = 1000;
+  products.forEach((product) => {
+    const min = parseFloat(product.actualPriceRange?.minValue?.amount || "0");
+    const max = parseFloat(product.actualPriceRange?.maxValue?.amount || "0");
+    if (min > 0) minPrice = minPrice === 0 ? min : Math.min(minPrice, min);
+    if (max > 0) maxPrice = Math.max(maxPrice, max);
+  });
+  initialFilters.priceRange = { min: minPrice, max: maxPrice };
+
+  // Parse price filters from URL
+  if (urlParams.minPrice) {
+    const min = parseFloat(urlParams.minPrice as string);
+    if (!isNaN(min)) initialFilters.priceRange.min = min;
+  }
+  if (urlParams.maxPrice) {
+    const max = parseFloat(urlParams.maxPrice as string);
+    if (!isNaN(max)) initialFilters.priceRange.max = max;
+  }
+
+  // Build options map and parse option filters
+  const optionsMap = new Map<
+    string,
+    { id: string; choices: { id: string; name: string }[] }
+  >();
+  products.forEach((product) => {
+    product.options?.forEach((option) => {
+      if (!option._id || !option.name) return;
+      if (!optionsMap.has(option.name)) {
+        optionsMap.set(option.name, { id: option._id, choices: [] });
+      }
+      const optionData = optionsMap.get(option.name)!;
+      option.choicesSettings?.choices?.forEach((choice) => {
+        if (
+          choice.choiceId &&
+          choice.name &&
+          !optionData.choices.find((c) => c.id === choice.choiceId)
+        ) {
+          optionData.choices.push({ id: choice.choiceId, name: choice.name });
+        }
+      });
+    });
+  });
+
+  // Parse option filters from URL
+  Object.entries(urlParams).forEach(([key, value]) => {
+    if (["sort", "minPrice", "maxPrice"].includes(key)) return;
+    const option = optionsMap.get(key);
+    if (option) {
+      const values = Array.isArray(value) ? value : [value];
+      const matchingChoices = option.choices.filter((choice) =>
+        values.includes(choice.name)
+      );
+      if (matchingChoices.length > 0) {
+        initialFilters.selectedOptions[option.id] = matchingChoices.map(
+          (c) => c.id
+        );
+      }
+    }
+  });
+
+  return { initialSort, initialFilters };
+}
+
 export async function loadCollectionServiceConfig(
-  collectionId?: string
+  collectionId?: string,
+  searchParams?: URLSearchParams
 ): Promise<
   ServiceFactoryConfig<typeof CollectionService> & {
     initialCursor?: string;
     initialHasMore?: boolean;
+    initialSort?: SortBy;
+    initialFilters?: Filter;
   }
 > {
   try {
@@ -294,6 +400,12 @@ export async function loadCollectionServiceConfig(
     let query = buildQuery();
 
     const productResults = await query.limit(100).find();
+
+    // Parse URL parameters for initial state
+    const { initialSort, initialFilters } = parseURLParams(
+      searchParams,
+      productResults.items || []
+    );
 
     return {
       initialProducts: productResults.items || [],
@@ -305,14 +417,19 @@ export async function loadCollectionServiceConfig(
           productResults.items &&
           productResults.items.length === 12
       ),
+      initialSort,
+      initialFilters,
     };
   } catch (error) {
     console.warn("Failed to load initial products:", error);
+    const { initialSort, initialFilters } = parseURLParams(searchParams);
     return {
       initialProducts: [],
       pageSize: 12,
       collectionId,
       initialHasMore: false,
+      initialSort,
+      initialFilters,
     };
   }
 }

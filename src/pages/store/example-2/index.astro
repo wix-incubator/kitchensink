@@ -6,7 +6,10 @@ import { loadCurrentCartServiceConfig } from "../../../headless/store/services/c
 import { loadCategoriesConfig } from "../../../headless/store/services/category-service";
 
 // Load initial data for services
-const filteredCollectionServiceConfig = await loadCollectionServiceConfig();
+const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
+  undefined,
+  Astro.url.searchParams
+);
 const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 const categoriesConfig = await loadCategoriesConfig();
 ---

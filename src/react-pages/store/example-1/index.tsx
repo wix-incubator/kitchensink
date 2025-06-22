@@ -450,7 +450,9 @@ export default function StoreCollectionPage({
         currentCartServiceConfig
       )
       .addService(CategoryServiceDefinition, CategoryService, categoriesConfig)
-      .addService(SortServiceDefinition, SortService, {})
+      .addService(SortServiceDefinition, SortService, {
+        initialSort: filteredCollectionServiceConfig.initialSort,
+      })
   );
 
   return (

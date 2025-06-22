@@ -77,6 +77,12 @@ const ProductGridContent = () => {
 
                         {/* Main Content Area */}
                         <div className="flex-1 min-w-0">
+                          {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
+                              <p className="text-red-400">{error}</p>
+                            </div>
+                          )}
+
                           {/* Filter Status Bar */}
                           {isFiltered && (
                             <div className="flex items-center justify-between bg-teal-500/10 border border-teal-500/20 rounded-xl p-4 mb-6">
@@ -105,14 +111,8 @@ const ProductGridContent = () => {
                                 }}
                                 className="text-teal-400 hover:text-teal-300 transition-colors text-sm"
                               >
-                                Clear All Filters
+                                Clear Filters
                               </button>
-                            </div>
-                          )}
-
-                          {error && (
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
-                              <p className="text-red-400">{error}</p>
                             </div>
                           )}
 
@@ -465,7 +465,9 @@ export default function StoreExample2Page({
         currentCartServiceConfig
       )
       .addService(CategoryServiceDefinition, CategoryService, categoriesConfig)
-      .addService(SortServiceDefinition, SortService, {})
+      .addService(SortServiceDefinition, SortService, {
+        initialSort: filteredCollectionServiceConfig.initialSort,
+      })
   );
 
   return (
