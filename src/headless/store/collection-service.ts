@@ -8,6 +8,7 @@ import type { Signal } from "../Signal";
 import { productsV3 } from "@wix/stores";
 import { FilterServiceDefinition, type Filter } from "./filter-service";
 import { CategoryServiceDefinition } from "./category-service";
+import { SortServiceDefinition, type SortBy } from "./sort-service";
 
 export interface CollectionServiceAPI {
   products: Signal<productsV3.V3Product[]>;
@@ -48,6 +49,7 @@ export const CollectionService = implementService.withConfig<{
   const signalsService = getService(SignalsServiceDefinition);
   const collectionFilters = getService(FilterServiceDefinition);
   const categoryService = getService(CategoryServiceDefinition);
+  const sortService = getService(SortServiceDefinition);
   const hasMoreProducts: Signal<boolean> = signalsService.signal((config.initialHasMore ?? true) as any);
   let nextCursor: string | undefined = config.initialCursor;
 
@@ -74,7 +76,8 @@ export const CollectionService = implementService.withConfig<{
   const applyClientSideFilters = (
     products: productsV3.V3Product[],
     filters: Filter,
-    selectedCategory: string | null
+    selectedCategory: string | null,
+    sortBy: SortBy
   ): productsV3.V3Product[] => {
     const filteredProducts = products.filter((product) => {
       if (selectedCategory && !product.allCategoriesInfo?.categories?.some((cat: any) => cat._id === selectedCategory)) {
@@ -115,7 +118,7 @@ export const CollectionService = implementService.withConfig<{
       return true;
     });
     return filteredProducts.sort((a, b) => {
-      switch (filters.sortBy) {
+      switch (sortBy) {
         case 'name-asc':
           return (a.name || '').localeCompare(b.name || '');
         case 'name-desc':
@@ -169,7 +172,8 @@ export const CollectionService = implementService.withConfig<{
 
       const newProducts = [...currentProducts, ...(productResults.items || [])];
       const filters = collectionFilters.currentFilters.get();
-      const filteredProducts = applyClientSideFilters(allProducts, filters, selectedCategory);
+      const sortBy = sortService.currentSort.get();
+      const filteredProducts = applyClientSideFilters(allProducts, filters, selectedCategory, sortBy);
 
       productsList.set(filteredProducts);
       totalProducts.set(newProducts.length);
@@ -198,7 +202,8 @@ export const CollectionService = implementService.withConfig<{
       hasMoreProducts.set(hasMore);
 
       const filters = collectionFilters.currentFilters.get();
-      const filteredProducts = applyClientSideFilters(productResults.items || [], filters, selectedCategory);
+      const sortBy = sortService.currentSort.get();
+      const filteredProducts = applyClientSideFilters(productResults.items || [], filters, selectedCategory, sortBy);
 
       productsList.set(filteredProducts);
       if (setTotalProducts) {
@@ -221,6 +226,10 @@ export const CollectionService = implementService.withConfig<{
   });
 
   categoryService.selectedCategory.subscribe(() => {
+    refresh(false);
+  });
+
+  sortService.currentSort.subscribe(() => {
     refresh(false);
   });
 

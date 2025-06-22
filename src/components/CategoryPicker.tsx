@@ -23,10 +23,12 @@ function CategoryPicker({
   }
 
   return (
-    <div className={`${className} bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-4 mb-6`}>
-      <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">
-        Shop by Category
-      </h3>
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
+          Shop by Category
+        </h3>
+      </div>
       
       {/* Category Navigation - Horizontal scrollable for mobile */}
       <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
@@ -57,21 +59,15 @@ function CategoryPicker({
           </button>
         ))}
       </div>
-      
-      {/* Active category indicator */}
-      {selectedCategory && (
-        <div className="mt-3 text-sm text-white/60">
-          Showing products in: {' '}
-          <span className="text-teal-400 font-medium">
-            {categories.find(cat => cat._id === selectedCategory)?.name || 'Selected Category'}
-          </span>
-        </div>
-      )}
     </div>
   );
 }
 
-export default function CategoryPickerWithContext({className}: {className?: string}) {
+export default function CategoryPickerWithContext({
+  className
+}: {
+  className?: string;
+}) {
   return (<Category.Provider>
     <Category.List>
       {({ categories, selectedCategory, setSelectedCategory }) => (

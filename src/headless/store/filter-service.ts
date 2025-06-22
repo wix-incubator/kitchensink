@@ -26,7 +26,6 @@ export interface AvailableOptions {
 export interface Filter {
   priceRange: { min: number; max: number };
   selectedOptions: { [optionId: string]: string[] };
-  sortBy: 'none' | 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
 }
 
 export interface FilterServiceAPI {
@@ -44,7 +43,6 @@ export const FilterServiceDefinition =
 export const defaultFilter: Filter = {
   priceRange: { min: 0, max: 1000 },
   selectedOptions: {},
-  sortBy: 'none',
 }
 
 export const FilterService = implementService.withConfig<{}>()(FilterServiceDefinition, ({ getService }) => {

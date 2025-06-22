@@ -8,8 +8,9 @@ import { FilteredCollection } from "../../../headless/store/FilteredCollection";
 import { withDocsWrapper } from "../../../components/DocsMode";
 import WixMediaImage from "../../../headless/media/Image";
 import ProductFilters from "../../../components/ProductFilters";
-import CategoryFilter from "../../../components/CategoryPicker";
+import StoreHeader from "../../../components/StoreHeader";
 import { CategoryService, CategoryServiceDefinition } from "../../../headless/store/category-service";
+import { SortService, SortServiceDefinition } from "../../../headless/store/sort-service";
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -29,8 +30,8 @@ const ProductGridContent = () => {
 
                   return (
                     <div className="min-h-screen">
-                      {/* Category Filter - Full Width */}
-                      <CategoryFilter className="mb-6" />
+                      <StoreHeader className="mb-6" />
+
                       {/* Main Layout with Sidebar and Content */}
                       <div className="flex gap-8">
                         {/* Filters Sidebar */}
@@ -185,8 +186,7 @@ const ProductGridContent = () => {
                                                       return (
                                                         <div
                                                           key={choice.choiceId}
-                                                          className="relative group"
-                                                          title={String(choice.name)}
+                                                          className="relative group/color"
                                                         >
                                                           <div
                                                             className="w-6 h-6 rounded-full border-2 border-white/30 hover:border-white/60 transition-colors cursor-pointer"
@@ -195,7 +195,7 @@ const ProductGridContent = () => {
                                                             }}
                                                           />
                                                           {/* Tooltip */}
-                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                                             {String(choice.name)}
                                                           </div>
                                                         </div>
@@ -388,6 +388,11 @@ export default function StoreCollectionPage({
         CategoryServiceDefinition,
         CategoryService,
         categoriesConfig
+      )
+      .addService(
+        SortServiceDefinition,
+        SortService,
+        {}
       )
   );
 

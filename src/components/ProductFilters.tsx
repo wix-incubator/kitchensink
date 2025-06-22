@@ -31,7 +31,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   const [ selectedOptions, setSelectedOptions ] = useState<{
     [optionId: string]: string[];
   }>(currentFilters.selectedOptions);
-  const [sortBy, setSortBy] = useState<Filter['sortBy']>(defaultFilter.sortBy);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Handle price range change
@@ -45,8 +45,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   useEffect(() => {
     setTempPriceRange(currentFilters.priceRange);
     setSelectedOptions(currentFilters.selectedOptions);
-    setSortBy(currentFilters.sortBy);
-  }, [currentFilters.selectedOptions, currentFilters.sortBy, currentFilters.priceRange]);
+  }, [currentFilters.selectedOptions, currentFilters.priceRange]);
 
   // Handle price range commit (when user releases slider)
   const handlePriceRangeCommit = useCallback(() => {
@@ -54,10 +53,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
       onFiltersChange({
         priceRange: tempPriceRange,
         selectedOptions,
-        sortBy,
       });
     }
-  }, [tempPriceRange, selectedOptions, sortBy, onFiltersChange, currentFilters.priceRange]);
+  }, [tempPriceRange, selectedOptions, onFiltersChange, currentFilters.priceRange]);
 
   // Setup document-level event listeners for proper drag handling
   useEffect(() => {
@@ -99,7 +97,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         onFiltersChange({
           priceRange: tempPriceRange,
           selectedOptions: newOptions,
-          sortBy,
         });
 
         return newOptions;
@@ -331,35 +328,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           </div>
         )}
 
-        {/* Sort Options */}
-        <div>
-          <h4 className="text-white font-medium mb-3">Sort By</h4>
-          <select
-            value={sortBy}
-            onChange={(e) => {
-              const newSortBy = e.target.value as Filter['sortBy'];
-              setSortBy(newSortBy);
-              onFiltersChange({
-                priceRange: tempPriceRange,
-                selectedOptions,
-                sortBy: newSortBy,
-              });
-            }}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-              backgroundPosition: 'right 8px center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '16px',
-            }}
-          >
-            <option value="none" className="bg-gray-800 text-white">None</option>
-            <option value="name-asc" className="bg-gray-800 text-white">Name (A-Z)</option>
-            <option value="name-desc" className="bg-gray-800 text-white">Name (Z-A)</option>
-            <option value="price-asc" className="bg-gray-800 text-white">Price (Low to High)</option>
-            <option value="price-desc" className="bg-gray-800 text-white">Price (High to Low)</option>
-          </select>
-        </div>
+
       </div>
 
       <style>{`
