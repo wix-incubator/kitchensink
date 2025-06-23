@@ -24,15 +24,11 @@ interface FilteredCollectionProviderProps {
 export const FilteredCollectionProvider: React.FC<
   FilteredCollectionProviderProps
 > = ({ children }) => {
-  const serviceInstance = useService(FilterServiceDefinition);
-  const collectionServiceInstance = useService(CollectionServiceDefinition);
-  const context = {
-    filter: serviceInstance,
-    collection: collectionServiceInstance,
-  };
+  const filter = useService(FilterServiceDefinition);
+  const collection = useService(CollectionServiceDefinition);
 
   return (
-    <FilteredCollectionContext.Provider value={context}>
+    <FilteredCollectionContext.Provider value={{ filter, collection }}>
       {children}
     </FilteredCollectionContext.Provider>
   );
@@ -46,6 +42,25 @@ export const useFilteredCollection = () => {
     );
   }
   return context;
+};
+
+// Filters Loading component with pulse animation
+interface FiltersLoadingProps {
+  children: (data: {
+    isFullyLoaded: boolean;
+  }) => ReactNode;
+}
+
+export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
+  const { filter } = useFilteredCollection();
+  
+  const isFullyLoaded = filter!.isFullyLoaded.get();
+  
+  return (
+    <>
+      {children({ isFullyLoaded })}
+    </>
+  );
 };
 
 // Grid component for displaying filtered products

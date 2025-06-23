@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { categories } from "@wix/categories";
 import { Category } from "../headless/store/components/Category";
 

@@ -76,7 +76,7 @@ const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, 
         "actualPriceRange.minValue.amount": { "$gte": min.toString() }
       });
     }
-    if (max < 999999) {
+    if (max > 0 && max < 999999) {
       filterConditions.push({
         "actualPriceRange.maxValue.amount": { "$lte": max.toString() }
       });
@@ -170,7 +170,7 @@ export const CollectionService = implementService.withConfig<{
   // Debouncing mechanism to prevent multiple simultaneous refreshes
   let refreshTimeout: NodeJS.Timeout | null = null;
   let isRefreshing = false;
-  let hasInitialized = false;
+  let isInitializingCatalogData = true;
 
   const loadMore = async () => {
     // Don't load more if there are no more products available
@@ -286,23 +286,25 @@ export const CollectionService = implementService.withConfig<{
 
   // Refresh with server-side filtering when any filters change
   collectionFilters.currentFilters.subscribe(() => {
+    // Skip refresh during catalog data initialization to prevent double API calls
+    if (isInitializingCatalogData) {
+      return;
+    }
     // All filtering (categories, price, options) is now handled server-side
     debouncedRefresh(false);
   });
 
-  categoryService.selectedCategory.subscribe(async () => {
-    // Reload catalog price range and options for the new category
+  // Initialize catalog data when the service starts
+  const initializeCatalogData = async () => {
     const selectedCategory = categoryService.selectedCategory.get();
     await collectionFilters.loadCatalogPriceRange(selectedCategory || undefined);
     await collectionFilters.loadCatalogOptions(selectedCategory || undefined);
-    
-    // Only trigger refresh if this isn't the initial load
-    if (hasInitialized) {
-      debouncedRefresh(false);
-    } else {
-      hasInitialized = true;
-    }
-  });
+    // Reset flag to allow filter changes to trigger refreshes
+    isInitializingCatalogData = false;
+  };
+  
+  // Load catalog data on initialization
+  void initializeCatalogData();
 
   sortService.currentSort.subscribe(() => {
     debouncedRefresh(false);
@@ -326,7 +328,7 @@ function parseURLParams(
   products: productsV3.V3Product[] = []
 ) {
   const defaultFilters: Filter = {
-    priceRange: { min: 0, max: 1000 },
+    priceRange: { min: 0, max: 0 },
     selectedOptions: {},
   };
   
@@ -348,7 +350,7 @@ function parseURLParams(
   // Check if there are any filter parameters (excluding sort)
   const filterParams = Object.keys(urlParams).filter(key => key !== 'sort');
   
-  if (filterParams.length === 0 || products.length === 0) {
+  if (filterParams.length === 0) {
     return { initialSort, initialFilters: defaultFilters };
   }
 
@@ -378,15 +380,22 @@ function parseURLParams(
 
 // Helper function to calculate price range from products
 function calculatePriceRange(products: productsV3.V3Product[]): { min: number; max: number } {
-  let minPrice = 0;
-  let maxPrice = 1000;
+  if (products.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
+  let minPrice = Infinity;
+  let maxPrice = 0;
   
   products.forEach((product) => {
     const min = parseFloat(product.actualPriceRange?.minValue?.amount || "0");
     const max = parseFloat(product.actualPriceRange?.maxValue?.amount || "0");
-    if (min > 0) minPrice = minPrice === 0 ? min : Math.min(minPrice, min);
+    if (min > 0) minPrice = Math.min(minPrice, min);
     if (max > 0) maxPrice = Math.max(maxPrice, max);
   });
+  
+  // If no valid prices found, return zero range
+  if (minPrice === Infinity) minPrice = 0;
   
   return { min: minPrice, max: maxPrice };
 }

@@ -1,7 +1,6 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../../Signal";
-import { productsV3 } from "@wix/stores";
 import { URLParamsUtils } from "../utils/url-params";
 import { CatalogPriceRangeServiceDefinition } from "./catalog-price-range-service";
 import { CatalogOptionsServiceDefinition } from "./catalog-options-service";
@@ -36,11 +35,9 @@ export interface FilterServiceAPI {
     productOptions: ProductOption[];
     priceRange: { min: number; max: number };
   }>;
-  calculateAvailableOptions: (
-    products: productsV3.V3Product[]
-  ) => Promise<void>;
   loadCatalogPriceRange: (categoryId?: string) => Promise<void>;
   loadCatalogOptions: (categoryId?: string) => Promise<void>;
+  isFullyLoaded: Signal<boolean>;
 }
 
 export const FilterServiceDefinition = defineService<FilterServiceAPI>(
@@ -71,6 +68,20 @@ export const FilterService = implementService.withConfig<{
     priceRange: { min: 0, max: 0 },
   } as any);
 
+  const isFullyLoaded: Signal<boolean> = signalsService.signal(false as any);
+
+  // Helper function to check if both catalog data are loaded
+  const checkIfFullyLoaded = () => {
+    const catalogPriceRange = catalogPriceRangeService.catalogPriceRange.get();
+    const catalogOptions = catalogOptionsService.catalogOptions.get();
+    
+    // Price range data is considered loaded whether it's null (no prices) or has valid data
+    const hasPriceRangeData = catalogPriceRange !== undefined; // includes null case
+    const hasOptionsData = !!(catalogOptions && catalogOptions.length >= 0); // Even 0 options is valid
+    
+    isFullyLoaded.set(hasPriceRangeData && hasOptionsData);
+  };
+
   // Subscribe to catalog price range changes and automatically update our signals
   catalogPriceRangeService.catalogPriceRange.subscribe((catalogPriceRange) => {
     if (catalogPriceRange && catalogPriceRange.minPrice < catalogPriceRange.maxPrice) {
@@ -88,9 +99,8 @@ export const FilterService = implementService.withConfig<{
       
       // Update current filters to use catalog price range
       const currentFiltersValue = currentFilters.get();
-      // Only update if current filter range is at defaults (either 0-0 or 0-1000)
-      const isDefaultRange = (currentFiltersValue.priceRange.min === 0 && currentFiltersValue.priceRange.max === 0) ||
-                             (currentFiltersValue.priceRange.min === 0 && currentFiltersValue.priceRange.max === 1000);
+      // Only update if current filter range is at defaults (0-0)
+      const isDefaultRange = (currentFiltersValue.priceRange.min === 0 && currentFiltersValue.priceRange.max === 0);
       
       if (isDefaultRange) {
         currentFilters.set({
@@ -99,6 +109,9 @@ export const FilterService = implementService.withConfig<{
         });
       }
     }
+    
+    // Check if fully loaded after price range update
+    checkIfFullyLoaded();
   });
 
   // Subscribe to catalog options changes and automatically update our signals
@@ -111,75 +124,12 @@ export const FilterService = implementService.withConfig<{
         productOptions: catalogOptions
       });
     }
+    
+    // Check if fully loaded after options update
+    checkIfFullyLoaded();
   });
 
-  const sortChoices = (
-    choices: { id: string; name: string; colorCode?: string }[],
-    optionName: string
-  ) => {
-    const sortedChoices = [...choices];
 
-    // Check if all choices are numbers
-    const allNumbers = sortedChoices.every(
-      (choice) => !isNaN(Number(choice.name))
-    );
-
-    if (allNumbers) {
-      // Sort numbers in descending order
-      return sortedChoices.sort((a, b) => Number(b.name) - Number(a.name));
-    }
-
-    // Check if choices are sizes (common clothing/shoe sizes)
-    const sizeOrder = [
-      "XXS",
-      "XS",
-      "S",
-      "SM",
-      "M",
-      "MD",
-      "L",
-      "LG",
-      "XL",
-      "XXL",
-      "XXXL",
-      "2XL",
-      "3XL",
-      "4XL",
-      "5XL",
-    ];
-    const shoeSizePattern = /^\d+(\.\d+)?$/; // Pattern for shoe sizes like "8", "8.5", "10"
-    const allSizes = sortedChoices.every(
-      (choice) =>
-        sizeOrder.includes(choice.name.toUpperCase()) ||
-        shoeSizePattern.test(choice.name)
-    );
-
-    if (allSizes) {
-      return sortedChoices.sort((a, b) => {
-        const aUpper = a.name.toUpperCase();
-        const bUpper = b.name.toUpperCase();
-
-        // Handle shoe sizes (numeric)
-        if (shoeSizePattern.test(a.name) && shoeSizePattern.test(b.name)) {
-          return Number(a.name) - Number(b.name); // Ascending for shoe sizes
-        }
-
-        // Handle clothing sizes
-        const aIndex = sizeOrder.indexOf(aUpper);
-        const bIndex = sizeOrder.indexOf(bUpper);
-
-        if (aIndex !== -1 && bIndex !== -1) {
-          return aIndex - bIndex; // Ascending for clothing sizes
-        }
-
-        // Fallback to alphabetical
-        return a.name.localeCompare(b.name);
-      });
-    }
-
-    // For colors or other text, use alphabetical order
-    return sortedChoices.sort((a, b) => a.name.localeCompare(b.name));
-  };
 
   // Apply filters by delegating to the collection service
   const applyFilters = async (filters: Filter) => {
@@ -245,14 +195,7 @@ export const FilterService = implementService.withConfig<{
     }
     URLParamsUtils.updateURL(urlParams);
   };
-  const calculateAvailableOptions = async (
-    products: productsV3.V3Product[]
-  ) => {
-    // No longer calculating options from current page products
-    // Options are now loaded from the catalog-wide service
-    // This function is kept for backward compatibility but does nothing
-    console.log('🔄 calculateAvailableOptions called but using catalog-wide options instead');
-  };
+
 
   const loadCatalogPriceRange = async (categoryId?: string) => {
     // Just call the catalog service - subscriptions will handle signal updates
@@ -269,8 +212,8 @@ export const FilterService = implementService.withConfig<{
     applyFilters,
     clearFilters,
     availableOptions,
-    calculateAvailableOptions,
     loadCatalogPriceRange,
     loadCatalogOptions,
+    isFullyLoaded,
   };
 });

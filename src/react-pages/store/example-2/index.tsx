@@ -41,6 +41,7 @@ import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
 } from "../../../headless/store/services/catalog-options-service";
+import { FiltersLoading } from "../../../headless/store/components/FilteredCollection";
 
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
@@ -72,14 +73,41 @@ const ProductGridContent = () => {
                         {/* Filters Sidebar */}
                         <div className="w-80 flex-shrink-0">
                           <div className="sticky top-6">
-                            <ProductFilters
-                              availableOptions={availableOptions}
-                              onFiltersChange={applyFilters}
-                              clearFilters={clearFilters}
-                              currentFilters={currentFilters}
-                              isFiltered={isFiltered}
-                              categoryId={undefined}
-                            />
+                            <FiltersLoading>
+                              {({ isFullyLoaded }) => (
+                                <div className="relative">
+                                  <ProductFilters
+                                    availableOptions={availableOptions}
+                                    onFiltersChange={applyFilters}
+                                    clearFilters={clearFilters}
+                                    currentFilters={currentFilters}
+                                    isFiltered={isFiltered}
+                                  />
+                                  
+                                  {/* Pulse Loading Overlay */}
+                                  {!isFullyLoaded && (
+                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl">
+                                      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-xl">
+                                        <div className="p-6 space-y-4">
+                                          <div className="h-6 bg-white/20 rounded w-32"></div>
+                                          <div className="space-y-3">
+                                            <div className="h-10 bg-white/15 rounded"></div>
+                                            <div className="h-10 bg-white/15 rounded"></div>
+                                            <div className="h-16 bg-white/15 rounded"></div>
+                                          </div>
+                                          <div className="h-6 bg-white/20 rounded w-24"></div>
+                                          <div className="space-y-2">
+                                            <div className="h-8 bg-white/15 rounded"></div>
+                                            <div className="h-8 bg-white/15 rounded"></div>
+                                            <div className="h-8 bg-white/15 rounded"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </FiltersLoading>
                           </div>
                         </div>
 
@@ -511,7 +539,7 @@ export default function StoreExample2Page({
         newPath = `${basePath}/category/${categorySlug}`;
       }
       
-      // Clear all filters when changing categories - only navigate to the clean category URL
+      // Navigate immediately - pulse animation will show during page load
       window.location.href = newPath;
     }
   };
