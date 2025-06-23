@@ -5,7 +5,6 @@ import {
   defaultFilter,
 } from "../headless/store/services/filter-service";
 
-
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
     priceRange: { min: number; max: number };
@@ -82,7 +81,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     selectedOptions,
     onFiltersChange,
     currentFilters.priceRange,
-    ]);
+  ]);
 
   // Setup document-level event listeners for proper drag handling
   useEffect(() => {
@@ -266,7 +265,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
               {/* Manual Price Input */}
               <div className="flex items-center gap-4">
                 <div className="flex-1">
+<<<<<<< HEAD
                   <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Min</label>
+=======
+                  <label className="block text-xs text-white/60 mb-1">
+                    Min
+                  </label>
+>>>>>>> df7cac6 (feat: support inventory filter (#19))
                   <input
                     type="number"
                     value={tempPriceRange.min}
@@ -282,7 +287,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   />
                 </div>
                 <div className="flex-1">
+<<<<<<< HEAD
                   <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Max</label>
+=======
+                  <label className="block text-xs text-white/60 mb-1">
+                    Max
+                  </label>
+>>>>>>> df7cac6 (feat: support inventory filter (#19))
                   <input
                     type="number"
                     value={tempPriceRange.max}
