@@ -46,7 +46,7 @@ export interface SelectedVariantServiceAPI {
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
-  
+
   // New methods for smart variant selection
   getAvailableChoicesForOption: (optionName: string) => string[];
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
@@ -187,7 +187,10 @@ export const SelectedVariantService = implementService.withConfig<{
           compareAtPrice: configProduct.compareAtPriceRange?.minValue,
         },
         inventoryStatus: {
-          inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
+          inStock:
+            configProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+            configProduct.inventory?.availabilityStatus ===
+              "PARTIALLY_OUT_OF_STOCK",
           preorderEnabled:
             configProduct.inventory?.preorderStatus === "ENABLED",
         },
@@ -248,30 +251,31 @@ export const SelectedVariantService = implementService.withConfig<{
     return rawAmount ? `$${rawAmount}` : "";
   });
 
-  const currentCompareAtPrice: ReadOnlySignal<string | null> = signalsService.computed(() => {
-    const variant = currentVariant.get();
-    const prod = v3Product.get();
+  const currentCompareAtPrice: ReadOnlySignal<string | null> =
+    signalsService.computed(() => {
+      const variant = currentVariant.get();
+      const prod = v3Product.get();
 
-    // Try to get formatted compare-at price first
-    if (variant?.price?.compareAtPrice?.formattedAmount) {
-      return variant.price.compareAtPrice.formattedAmount;
-    }
+      // Try to get formatted compare-at price first
+      if (variant?.price?.compareAtPrice?.formattedAmount) {
+        return variant.price.compareAtPrice.formattedAmount;
+      }
 
-    if (prod?.compareAtPriceRange?.minValue?.formattedAmount) {
-      return prod.compareAtPriceRange.minValue.formattedAmount;
-    }
+      if (prod?.compareAtPriceRange?.minValue?.formattedAmount) {
+        return prod.compareAtPriceRange.minValue.formattedAmount;
+      }
 
-    // Fallback: create our own formatted price from amount
-    let rawAmount = null;
+      // Fallback: create our own formatted price from amount
+      let rawAmount = null;
 
-    if (variant?.price?.compareAtPrice?.amount) {
-      rawAmount = variant.price.compareAtPrice.amount;
-    } else if (prod?.compareAtPriceRange?.minValue?.amount) {
-      rawAmount = prod.compareAtPriceRange.minValue.amount;
-    }
+      if (variant?.price?.compareAtPrice?.amount) {
+        rawAmount = variant.price.compareAtPrice.amount;
+      } else if (prod?.compareAtPriceRange?.minValue?.amount) {
+        rawAmount = prod.compareAtPriceRange.minValue.amount;
+      }
 
-    return rawAmount ? `$${rawAmount}` : null;
-  });
+      return rawAmount ? `$${rawAmount}` : null;
+    });
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
@@ -281,6 +285,12 @@ export const SelectedVariantService = implementService.withConfig<{
     } else {
       return false;
     }
+<<<<<<< HEAD
+=======
+
+    const status = prod?.inventory?.availabilityStatus;
+    return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
+>>>>>>> df7cac6 (feat: support inventory filter (#19))
   });
 
 
@@ -436,27 +446,30 @@ export const SelectedVariantService = implementService.withConfig<{
   const getAvailableChoicesForOption = (optionName: string): string[] => {
     const currentChoices = selectedChoices.get();
     const variantsList = variants.get();
-    
+
     // Get all possible choices for this option that result in valid variants
     const availableChoices = new Set<string>();
-    
-    variantsList.forEach(variant => {
+
+    variantsList.forEach((variant) => {
       const variantChoices = processVariantChoices(variant);
-      
+
       // Check if this variant matches all currently selected choices (except for the option we're checking)
       const matchesOtherChoices = Object.entries(currentChoices)
         .filter(([key]) => key !== optionName)
         .every(([key, value]) => variantChoices[key] === value);
-      
+
       if (matchesOtherChoices && variantChoices[optionName]) {
         availableChoices.add(variantChoices[optionName]);
       }
     });
-    
+
     return Array.from(availableChoices);
   };
 
-  const isChoiceAvailable = (optionName: string, choiceValue: string): boolean => {
+  const isChoiceAvailable = (
+    optionName: string,
+    choiceValue: string
+  ): boolean => {
     const availableChoices = getAvailableChoicesForOption(optionName);
     return availableChoices.includes(choiceValue);
   };
@@ -495,7 +508,7 @@ export const SelectedVariantService = implementService.withConfig<{
     selectVariantById,
     loadProductVariants,
     resetSelections,
-    
+
     // New methods for smart variant selection
     getAvailableChoicesForOption,
     isChoiceAvailable,
