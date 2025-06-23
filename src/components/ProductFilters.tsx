@@ -134,10 +134,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   return (
     <div
-      className={`bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 ${className}`}
+      className={`bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl p-6 border border-[var(--theme-border-primary-10)] ${className}`}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-[var(--theme-text-content)] flex items-center gap-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -157,14 +157,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           {isFiltered && (
             <button
               onClick={clearFilters}
-              className="text-sm text-white/60 hover:text-white transition-colors"
+              className="text-sm text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
             >
               Clear All
             </button>
           )}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="lg:hidden text-white/60 hover:text-white transition-colors"
+            className="lg:hidden text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
           >
             <svg
               className={`w-5 h-5 transition-transform ${
@@ -189,20 +189,21 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Price Range Filter - Only show if valid price range is available */}
         {priceRange.min < priceRange.max && priceRange.max > 0 && (
           <div>
-            <h4 className="text-white font-medium mb-4">Price Range</h4>
+            <h4 className="text-[var(--theme-text-content)] font-medium mb-4">Price Range</h4>
             <div className="space-y-4">
               {/* Price Range Display */}
-              <div className="flex items-center justify-between text-sm text-white/70">
+              <div className="flex items-center justify-between text-sm text-[var(--theme-text-content-70)]">
                 <span>${String(tempPriceRange.min)}</span>
                 <span>${String(tempPriceRange.max)}</span>
               </div>
 
               {/* Dual Range Slider */}
               <div className="relative h-6">
-                <div className="absolute top-2 left-0 right-0 h-2 bg-white/20 rounded-full">
+                <div className="absolute top-2 left-0 right-0 h-2 bg-[var(--theme-bg-primary-20)] rounded-full">
                   <div
-                    className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+                    className="absolute h-2 rounded-full"
                     style={{
+                      background: 'var(--theme-gradient-primary)',
                       left: `${
                         ((tempPriceRange.min - priceRange.min) /
                           (priceRange.max - priceRange.min)) *
@@ -265,7 +266,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
               {/* Manual Price Input */}
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <label className="block text-xs text-white/60 mb-1">Min</label>
+                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Min</label>
                   <input
                     type="number"
                     value={tempPriceRange.min}
@@ -277,11 +278,11 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       setTempPriceRange({ ...tempPriceRange, min: value });
                     }}
                     onBlur={handlePriceRangeCommit}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)]"
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-xs text-white/60 mb-1">Max</label>
+                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Max</label>
                   <input
                     type="number"
                     value={tempPriceRange.max}
@@ -293,7 +294,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       setTempPriceRange({ ...tempPriceRange, max: value });
                     }}
                     onBlur={handlePriceRangeCommit}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)]"
                   />
                 </div>
               </div>
@@ -304,7 +305,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Product Options Filters */}
         {productOptions.map((option) => (
           <div key={option.id}>
-            <h4 className="text-white font-medium mb-3">
+            <h4 className="text-[var(--theme-text-content)] font-medium mb-3">
               {String(option.name)}
             </h4>
 
@@ -334,14 +335,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                     <div
                       className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
                         selectedOptions[option.id]?.includes(choice.id)
-                          ? "border-white shadow-lg scale-110 ring-2 ring-blue-500"
-                          : "border-white/30 hover:border-white/60 hover:scale-105"
+                          ? "border-[var(--theme-text-content)] shadow-lg scale-110 ring-2 ring-[var(--theme-primary-500)]"
+                          : "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
                       }`}
                       style={{
-                        backgroundColor: choice.colorCode || "#000000",
+                        backgroundColor: choice.colorCode || "var(--theme-text-content-40)",
                       }}
                     />
-                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-white/70 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-[var(--theme-text-content-70)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       {String(choice.name)}
                     </span>
                   </label>
@@ -367,9 +368,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                           e.target.checked
                         )
                       }
-                      className="w-4 h-4 bg-white/10 border border-white/30 rounded text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+                      className="w-4 h-4 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-30)] rounded text-[var(--theme-primary-500)] focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:ring-offset-0"
                     />
-                    <span className="text-white/80 group-hover:text-white transition-colors text-sm">
+                    <span className="text-[var(--theme-text-content-80)] group-hover:text-[var(--theme-text-content)] transition-colors text-sm">
                       {String(choice.name)}
                     </span>
                   </label>
@@ -380,7 +381,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         ))}
 
         {productOptions.length === 0 && (
-          <div className="text-center py-4 text-white/60">
+          <div className="text-center py-4 text-[var(--theme-text-content-60)]">
             <p>No filter options available</p>
           </div>
         )}
@@ -397,10 +398,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           width: 20px;
           height: 20px;
           border-radius: 50%;
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+          background: var(--theme-gradient-primary);
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          border: 2px solid var(--theme-text-content);
+          box-shadow: 0 2px 8px var(--theme-bg-tooltip);
           position: relative;
         }
 
@@ -409,10 +410,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           width: 20px;
           height: 20px;
           border-radius: 50%;
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+          background: var(--theme-gradient-primary);
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          border: 2px solid var(--theme-text-content);
+          box-shadow: 0 2px 8px var(--theme-bg-tooltip);
           border: none;
         }
 
@@ -428,19 +429,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
         /* Different colors for min and max sliders */
         .range-slider-min::-webkit-slider-thumb {
-          background: linear-gradient(45deg, #10b981, #3b82f6);
+          background: var(--theme-gradient-primary);
         }
         
         .range-slider-min::-moz-range-thumb {
-          background: linear-gradient(45deg, #10b981, #3b82f6);
+          background: var(--theme-gradient-primary);
         }
         
         .range-slider-max::-webkit-slider-thumb {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+          background: var(--theme-gradient-primary);
         }
         
         .range-slider-max::-moz-range-thumb {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+          background: var(--theme-gradient-primary);
         }
       `}</style>
     </div>

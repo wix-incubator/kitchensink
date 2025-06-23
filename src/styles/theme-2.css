@@ -10,16 +10,24 @@
   --theme-bg-primary-10: rgba(20, 184, 166, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
   --theme-bg-primary-20: rgba(20, 184, 166, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
   --theme-bg-options: rgba(20, 184, 166, 0.2); /* Background color for product option tags and choice buttons */
+  --theme-bg-loading: rgba(255, 255, 255, 0.15); /* Background color for loading skeleton elements */
+  --theme-bg-card: rgba(255, 255, 255, 0.05); /* Very light background for cards and product items */
+  --theme-bg-error: rgba(248, 113, 113, 0.1); /* Light red background for error messages */
+  --theme-bg-tooltip: rgba(0, 0, 0, 0.8); /* Dark background for tooltips and overlays */
 
   /* Border Colors */
   --theme-border-primary-10: rgba(20, 184, 166, 0.1); /* Very subtle primary-colored border for filter status bars */
   --theme-border-primary-20: rgba(20, 184, 166, 0.2); /* More visible primary-colored border for emphasized elements */
   --theme-border-primary-30: rgba(20, 184, 166, 0.3); /* Strong primary-colored border used for product option tags */
+  --theme-border-card: rgba(255, 255, 255, 0.1); /* Light border for cards and product items */
+  --theme-border-card-hover: rgba(255, 255, 255, 0.2); /* Medium border for card hover states */
+  --theme-border-error: rgba(248, 113, 113, 0.2); /* Red border for error messages */
 
   /* Text Colors */
   --theme-text-primary-300: #5eead4; /* Light primary color used for filter status text and active filter labels */
   --theme-text-primary-400: #2dd4bf; /* Medium primary color used for filter icons and interactive text elements */
   --theme-text-content: #ffffff; /* Main content text color used for headings, product titles, and button labels */
+  --theme-text-content-30: rgba(255, 255, 255, 0.3); /* Very faded content text used for disabled text elements */
   --theme-text-content-40: rgba(255, 255, 255, 0.4); /* Very dim content text used for placeholder icons and subtle elements */
   --theme-text-content-50: rgba(255, 255, 255, 0.5); /* Dim content text used for strikethrough sale prices */
   --theme-text-content-60: rgba(255, 255, 255, 0.6); /* Muted content text used for descriptions, counts, and secondary information */
