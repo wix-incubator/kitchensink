@@ -34,7 +34,7 @@ function SortDropdownContent({
         }}
       >
         <option value="" className="bg-gray-800 text-white">
-          None
+          Latest Arrivals
         </option>
         <option value="name-asc" className="bg-gray-800 text-white">
           Name (A-Z)

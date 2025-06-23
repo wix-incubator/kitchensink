@@ -91,6 +91,7 @@ interface FilteredItemProps {
     title: string;
     image: string | null;
     price: string;
+    compareAtPrice: string | null;
     available: boolean;
     href: string;
     description?: string;
@@ -107,7 +108,13 @@ export const FilteredItem: React.FC<FilteredItemProps> = ({
   const price =
     product.actualPriceRange?.minValue?.formattedAmount ||
     product.actualPriceRange?.maxValue?.formattedAmount ||
-    "$0.00";
+    (product.actualPriceRange?.minValue?.amount ? `$${product.actualPriceRange.minValue.amount}` : "$0.00");
+  
+  // Add compare at price
+  const compareAtPrice = 
+    product.compareAtPriceRange?.minValue?.formattedAmount ||
+    (product.compareAtPriceRange?.minValue?.amount ? `$${product.compareAtPriceRange.minValue.amount}` : null);
+  
   const available = product.inventory?.availabilityStatus === "IN_STOCK";
   const href = `/store/products/${String(product.slug || product._id || "")}`;
   const description = product.plainDescription
@@ -120,6 +127,7 @@ export const FilteredItem: React.FC<FilteredItemProps> = ({
         title,
         image,
         price: String(price),
+        compareAtPrice,
         available,
         href,
         description,

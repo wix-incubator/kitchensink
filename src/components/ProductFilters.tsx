@@ -5,11 +5,26 @@ import {
   defaultFilter,
 } from "../headless/store/services/filter-service";
 
+
 interface ProductFiltersProps {
-  onFiltersChange: (filters: Filter) => void;
+  onFiltersChange: (filters: {
+    priceRange: { min: number; max: number };
+    selectedOptions: { [optionId: string]: string[] };
+  }) => void;
   className?: string;
-  availableOptions: AvailableOptions;
-  currentFilters: Filter;
+  availableOptions: {
+    productOptions: Array<{
+      id: string;
+      name: string;
+      choices: Array<{ id: string; name: string; colorCode?: string }>;
+      optionRenderType?: string;
+    }>;
+    priceRange: { min: number; max: number };
+  };
+  currentFilters: {
+    priceRange: { min: number; max: number };
+    selectedOptions: { [optionId: string]: string[] };
+  };
   clearFilters: () => void;
   isFiltered: boolean;
 }
@@ -67,7 +82,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     selectedOptions,
     onFiltersChange,
     currentFilters.priceRange,
-  ]);
+    ]);
 
   // Setup document-level event listeners for proper drag handling
   useEffect(() => {
@@ -171,118 +186,120 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
       </div>
 
       <div className={`space-y-6 ${isExpanded ? "block" : "hidden lg:block"}`}>
-        {/* Price Range Filter */}
-        <div>
-          <h4 className="text-white font-medium mb-4">Price Range</h4>
-          <div className="space-y-4">
-            {/* Price Range Display */}
-            <div className="flex items-center justify-between text-sm text-white/70">
-              <span>${String(tempPriceRange.min)}</span>
-              <span>${String(tempPriceRange.max)}</span>
-            </div>
-
-            {/* Dual Range Slider */}
-            <div className="relative h-6">
-              <div className="absolute top-2 left-0 right-0 h-2 bg-white/20 rounded-full">
-                <div
-                  className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
-                  style={{
-                    left: `${
-                      ((tempPriceRange.min - priceRange.min) /
-                        (priceRange.max - priceRange.min)) *
-                      100
-                    }%`,
-                    width: `${
-                      ((tempPriceRange.max - tempPriceRange.min) /
-                        (priceRange.max - priceRange.min)) *
-                      100
-                    }%`,
-                  }}
-                />
+        {/* Price Range Filter - Only show if valid price range is available */}
+        {priceRange.min < priceRange.max && priceRange.max > 0 && (
+          <div>
+            <h4 className="text-white font-medium mb-4">Price Range</h4>
+            <div className="space-y-4">
+              {/* Price Range Display */}
+              <div className="flex items-center justify-between text-sm text-white/70">
+                <span>${String(tempPriceRange.min)}</span>
+                <span>${String(tempPriceRange.max)}</span>
               </div>
 
-              {/* Min Range Input */}
-              <input
-                type="range"
-                min={priceRange.min}
-                max={priceRange.max}
-                value={tempPriceRange.min}
-                onChange={(e) =>
-                  handlePriceRangeChange({
-                    ...tempPriceRange,
-                    min: Math.min(Number(e.target.value), tempPriceRange.max),
-                  })
-                }
-                className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
-                style={{
-                  zIndex:
-                    tempPriceRange.min >
-                    priceRange.min + (priceRange.max - priceRange.min) * 0.5
-                      ? 2
-                      : 1,
-                }}
-              />
+              {/* Dual Range Slider */}
+              <div className="relative h-6">
+                <div className="absolute top-2 left-0 right-0 h-2 bg-white/20 rounded-full">
+                  <div
+                    className="absolute h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+                    style={{
+                      left: `${
+                        ((tempPriceRange.min - priceRange.min) /
+                          (priceRange.max - priceRange.min)) *
+                        100
+                      }%`,
+                      width: `${
+                        ((tempPriceRange.max - tempPriceRange.min) /
+                          (priceRange.max - priceRange.min)) *
+                        100
+                      }%`,
+                    }}
+                  />
+                </div>
 
-              {/* Max Range Input */}
-              <input
-                type="range"
-                min={priceRange.min}
-                max={priceRange.max}
-                value={tempPriceRange.max}
-                onChange={(e) =>
-                  handlePriceRangeChange({
-                    ...tempPriceRange,
-                    max: Math.max(Number(e.target.value), tempPriceRange.min),
-                  })
-                }
-                className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
-                style={{
-                  zIndex:
-                    tempPriceRange.max <
-                    priceRange.min + (priceRange.max - priceRange.min) * 0.5
-                      ? 2
-                      : 1,
-                }}
-              />
-            </div>
-
-            {/* Manual Price Input */}
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <label className="block text-xs text-white/60 mb-1">Min</label>
+                {/* Min Range Input */}
                 <input
-                  type="number"
+                  type="range"
+                  min={priceRange.min}
+                  max={priceRange.max}
                   value={tempPriceRange.min}
-                  onChange={(e) => {
-                    const value = Math.max(
-                      priceRange.min,
-                      Math.min(Number(e.target.value), tempPriceRange.max)
-                    );
-                    setTempPriceRange({ ...tempPriceRange, min: value });
+                  onChange={(e) =>
+                    handlePriceRangeChange({
+                      ...tempPriceRange,
+                      min: Math.min(Number(e.target.value), tempPriceRange.max),
+                    })
+                  }
+                  className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
+                  style={{
+                    zIndex:
+                      tempPriceRange.min >
+                      priceRange.min + (priceRange.max - priceRange.min) * 0.5
+                        ? 2
+                        : 1,
                   }}
-                  onBlur={handlePriceRangeCommit}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                {/* Max Range Input */}
+                <input
+                  type="range"
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  value={tempPriceRange.max}
+                  onChange={(e) =>
+                    handlePriceRangeChange({
+                      ...tempPriceRange,
+                      max: Math.max(Number(e.target.value), tempPriceRange.min),
+                    })
+                  }
+                  className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
+                  style={{
+                    zIndex:
+                      tempPriceRange.max <
+                      priceRange.min + (priceRange.max - priceRange.min) * 0.5
+                        ? 2
+                        : 1,
+                  }}
                 />
               </div>
-              <div className="flex-1">
-                <label className="block text-xs text-white/60 mb-1">Max</label>
-                <input
-                  type="number"
-                  value={tempPriceRange.max}
-                  onChange={(e) => {
-                    const value = Math.min(
-                      priceRange.max,
-                      Math.max(Number(e.target.value), tempPriceRange.min)
-                    );
-                    setTempPriceRange({ ...tempPriceRange, max: value });
-                  }}
-                  onBlur={handlePriceRangeCommit}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+
+              {/* Manual Price Input */}
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <label className="block text-xs text-white/60 mb-1">Min</label>
+                  <input
+                    type="number"
+                    value={tempPriceRange.min}
+                    onChange={(e) => {
+                      const value = Math.max(
+                        priceRange.min,
+                        Math.min(Number(e.target.value), tempPriceRange.max)
+                      );
+                      setTempPriceRange({ ...tempPriceRange, min: value });
+                    }}
+                    onBlur={handlePriceRangeCommit}
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-xs text-white/60 mb-1">Max</label>
+                  <input
+                    type="number"
+                    value={tempPriceRange.max}
+                    onChange={(e) => {
+                      const value = Math.min(
+                        priceRange.max,
+                        Math.max(Number(e.target.value), tempPriceRange.min)
+                      );
+                      setTempPriceRange({ ...tempPriceRange, max: value });
+                    }}
+                    onBlur={handlePriceRangeCommit}
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Product Options Filters */}
         {productOptions.map((option) => (

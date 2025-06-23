@@ -33,6 +33,14 @@ import {
   SortService,
   SortServiceDefinition,
 } from "../../../headless/store/services/sort-service";
+import {
+  CatalogPriceRangeService,
+  CatalogPriceRangeServiceDefinition,
+} from "../../../headless/store/services/catalog-price-range-service";
+import {
+  CatalogOptionsService,
+  CatalogOptionsServiceDefinition,
+} from "../../../headless/store/services/catalog-options-service";
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -70,6 +78,7 @@ const ProductGridContent = () => {
                               clearFilters={clearFilters}
                               currentFilters={currentFilters}
                               isFiltered={isFiltered}
+                              categoryId={undefined}
                             />
                           </div>
                         </div>
@@ -166,11 +175,12 @@ const ProductGridContent = () => {
                                       title,
                                       image,
                                       price,
+                                      compareAtPrice,
                                       available,
                                       href,
                                       description,
                                     }) => (
-                                      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group">
+                                      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group h-full flex flex-col">
                                         <div className="aspect-square bg-white/10 rounded-lg mb-4 overflow-hidden">
                                           {image ? (
                                             <WixMediaImage
@@ -303,21 +313,47 @@ const ProductGridContent = () => {
                                           </p>
                                         )}
 
-                                        <div className="flex items-center justify-between">
-                                          <span className="text-xl font-bold text-white">
-                                            {price}
-                                          </span>
-                                          <div className="flex items-center gap-2">
-                                            {available ? (
-                                              <span className="text-green-400 text-sm">
-                                                In Stock
-                                              </span>
-                                            ) : (
-                                              <span className="text-red-400 text-sm">
-                                                Out of Stock
-                                              </span>
-                                            )}
-                                          </div>
+                                        <div className="space-y-1 mt-auto">
+                                          {compareAtPrice && parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 ? (
+                                            <>
+                                              <div className="text-xl font-bold text-white">
+                                                {price}
+                                              </div>
+                                              <div className="flex items-center justify-between">
+                                                <div className="text-sm font-medium text-white/50 line-through">
+                                                  {compareAtPrice}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                  {available ? (
+                                                    <span className="text-green-400 text-sm">
+                                                      In Stock
+                                                    </span>
+                                                  ) : (
+                                                    <span className="text-red-400 text-sm">
+                                                      Out of Stock
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            </>
+                                          ) : (
+                                            <div className="flex items-center justify-between">
+                                              <div className="text-xl font-bold text-white">
+                                                {price}
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                {available ? (
+                                                  <span className="text-green-400 text-sm">
+                                                    In Stock
+                                                  </span>
+                                                ) : (
+                                                  <span className="text-red-400 text-sm">
+                                                    Out of Stock
+                                                  </span>
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
                                         </div>
 
                                         <div className="flex gap-2">
@@ -456,6 +492,29 @@ export default function StoreCollectionPage({
   currentCartServiceConfig,
   categoriesConfig,
 }: StoreCollectionPageProps) {
+  // Create navigation handler for example-1 specific URLs
+  const handleCategoryChange = (categoryId: string | null, category: any) => {
+    if (typeof window !== "undefined") {
+      const basePath = '/store/example-1';
+      let newPath;
+      
+      if (categoryId === null) {
+        // No category selected - fallback to base path  
+        newPath = basePath;
+      } else {
+        // Use category slug for URL
+        if (!category?.slug) {
+          console.warn(`Category ${categoryId} has no slug, using category ID as fallback`);
+        }
+        const categorySlug = category?.slug || categoryId;
+        newPath = `${basePath}/category/${categorySlug}`;
+      }
+      
+      // Clear all filters when changing categories - only navigate to the clean category URL
+      window.location.href = newPath;
+    }
+  };
+
   const servicesManager = createServicesManager(
     createServicesMap()
       .addService(
@@ -473,10 +532,15 @@ export default function StoreCollectionPage({
         CurrentCartService,
         currentCartServiceConfig
       )
-      .addService(CategoryServiceDefinition, CategoryService, categoriesConfig)
+      .addService(CategoryServiceDefinition, CategoryService, {
+        ...categoriesConfig,
+        onCategoryChange: handleCategoryChange
+      })
       .addService(SortServiceDefinition, SortService, {
         initialSort: filteredCollectionServiceConfig.initialSort,
       })
+      .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService, {})
+      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
   );
 
   return (

@@ -26,110 +26,87 @@ export interface ProductMediaGalleryServiceAPI {
 export const ProductMediaGalleryServiceDefinition =
   defineService<ProductMediaGalleryServiceAPI>("productMediaGallery");
 
-export const ProductMediaGalleryService = implementService.withConfig<{
-  product: productsV3.V3Product;
-}>()(ProductMediaGalleryServiceDefinition, ({ getService, config }) => {
-  const signalsService = getService(SignalsServiceDefinition);
-  const selectedVariantService = getService(SelectedVariantServiceDefinition);
-  const productService = getService(ProductServiceDefinition);
+export const ProductMediaGalleryService = implementService.withConfig<{}>()(
+  ProductMediaGalleryServiceDefinition,
+  ({ getService, config }) => {
+    const signalsService = getService(SignalsServiceDefinition);
+    const selectedVariantService = getService(SelectedVariantServiceDefinition);
+    const productService = getService(ProductServiceDefinition);
 
-  const selectedImageIndex: Signal<number> = signalsService.signal(0 as any);
+    const selectedImageIndex: Signal<number> = signalsService.signal(0 as any);
 
-  const selectedImage: ReadOnlySignal<any | null> =
-    signalsService.computed<any>(() => {
+    const selectedImage: ReadOnlySignal<any | null> =
+      signalsService.computed<any>(() => {
+        const prod = productService.product.get();
+        const imageIndex = selectedImageIndex.get();
+
+        if (imageIndex === 0 && prod?.media?.main) {
+          return prod.media.main;
+        }
+
+        return null;
+      });
+
+    const product: ReadOnlySignal<productsV3.V3Product | null> =
+      productService.product;
+    const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
+
+    const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
       const prod = productService.product.get();
-      const imageIndex = selectedImageIndex.get();
-
-      if (imageIndex === 0 && prod?.media?.main) {
-        return prod.media.main;
-      }
-
-      return null;
+      return prod?.media?.main ? 1 : 0;
     });
 
-  const product: ReadOnlySignal<productsV3.V3Product | null> =
-    productService.product;
-  const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
+    const productName: ReadOnlySignal<string> = signalsService.computed(() => {
+      const prod = productService.product.get();
+      return prod?.name || "Product";
+    });
 
-  const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
-    const prod = productService.product.get();
-    return prod?.media?.main ? 1 : 0;
-  });
+    const subscribeToVariantChanges = () => {
+      return selectedVariantService.selectedChoices.subscribe(() => {
+        selectedImageIndex.set(0);
+      });
+    };
 
-  const productName: ReadOnlySignal<string> = signalsService.computed(() => {
-    const prod = productService.product.get();
-    return prod?.name || "Product";
-  });
+    subscribeToVariantChanges();
 
-  const subscribeToVariantChanges = () => {
-    return selectedVariantService.selectedChoices.subscribe(() => {
+    const setSelectedImageIndex = (index: number) => {
+      const validIndex = index === 0 ? 0 : 0;
+      selectedImageIndex.set(validIndex);
+    };
+
+    const nextImage = () => {
       selectedImageIndex.set(0);
-    });
-  };
+    };
 
-  subscribeToVariantChanges();
+    const previousImage = () => {
+      selectedImageIndex.set(0);
+    };
 
-  const setSelectedImageIndex = (index: number) => {
-    const validIndex = index === 0 ? 0 : 0;
-    selectedImageIndex.set(validIndex);
-  };
+    return {
+      selectedImageIndex,
+      selectedImage,
 
-  const nextImage = () => {
-    selectedImageIndex.set(0);
-  };
+      setSelectedImageIndex,
+      nextImage,
+      previousImage,
 
-  const previousImage = () => {
-    selectedImageIndex.set(0);
-  };
-
-  return {
-    selectedImageIndex,
-    selectedImage,
-
-    setSelectedImageIndex,
-    nextImage,
-    previousImage,
-
-    product,
-    isLoading,
-    totalImages,
-    productName,
-  };
-});
+      product,
+      isLoading,
+      totalImages,
+      productName,
+    };
+  }
+);
 
 export async function loadProductMediaGalleryServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof ProductMediaGalleryService>> {
   try {
-    const storeProducts = await productsV3
-      .queryProducts()
-      .eq("slug", productSlug)
-      .find();
-
-    if (!storeProducts.items?.[0]) {
-      throw new Error("Product not found");
-    }
-
-    const productId = storeProducts.items[0]._id;
-    if (!productId) {
-      throw new Error("Product ID not found");
-    }
-
-    const fullProduct = await productsV3.getProduct(productId, {
-      fields: [
-        "MEDIA_ITEMS_INFO" as any,
-        "CURRENCY" as any,
-        "DESCRIPTION" as any,
-        "PLAIN_DESCRIPTION" as any,
-        "VARIANT_OPTION_CHOICE_NAMES" as any,
-      ],
-    });
-
-    return {
-      product: fullProduct,
-    };
+    // No need to fetch product data here since this service depends on ProductServiceDefinition
+    // which already loads the product data. We just need to return an empty config.
+    return {};
   } catch (error) {
-    console.error("Failed to load product:", error);
+    console.error("Failed to load product media gallery config:", error);
     throw error;
   }
 }

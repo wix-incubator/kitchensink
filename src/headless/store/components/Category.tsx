@@ -63,9 +63,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ children }) => {
       {children({
         selectedCategory,
         categories,
-        setSelectedCategory: (categoryId: string | null) => {
-          service.selectedCategory.set(categoryId);
-        },
+        setSelectedCategory: service.setSelectedCategory,
       })}
     </>
   );

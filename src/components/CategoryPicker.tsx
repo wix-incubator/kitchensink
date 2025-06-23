@@ -32,18 +32,6 @@ function CategoryPicker({
 
       {/* Category Navigation - Horizontal scrollable for mobile */}
       <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-        {/* All Products button */}
-        <button
-          onClick={() => onCategorySelect(null)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-            selectedCategory === null
-              ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105"
-              : "bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
-          }`}
-        >
-          All Products
-        </button>
-
         {/* Category buttons */}
         {categories.map((category) => (
           <button

@@ -3,6 +3,8 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
 import { URLParamsUtils } from "../utils/url-params";
+import { CatalogPriceRangeServiceDefinition } from "./catalog-price-range-service";
+import { CatalogOptionsServiceDefinition } from "./catalog-options-service";
 
 export interface ProductOption {
   id: string;
@@ -37,6 +39,8 @@ export interface FilterServiceAPI {
   calculateAvailableOptions: (
     products: productsV3.V3Product[]
   ) => Promise<void>;
+  loadCatalogPriceRange: (categoryId?: string) => Promise<void>;
+  loadCatalogOptions: (categoryId?: string) => Promise<void>;
 }
 
 export const FilterServiceDefinition = defineService<FilterServiceAPI>(
@@ -44,7 +48,7 @@ export const FilterServiceDefinition = defineService<FilterServiceAPI>(
 );
 
 export const defaultFilter: Filter = {
-  priceRange: { min: 0, max: 1000 },
+  priceRange: { min: 0, max: 0 },
   selectedOptions: {},
 };
 
@@ -52,10 +56,62 @@ export const FilterService = implementService.withConfig<{
   initialFilters?: Filter;
 }>()(FilterServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
+  const catalogPriceRangeService = getService(CatalogPriceRangeServiceDefinition);
+  const catalogOptionsService = getService(CatalogOptionsServiceDefinition);
 
   const currentFilters: Signal<Filter> = signalsService.signal(
     (config.initialFilters || defaultFilter) as any
   );
+
+  const availableOptions: Signal<{
+    productOptions: ProductOption[];
+    priceRange: { min: number; max: number };
+  }> = signalsService.signal({
+    productOptions: [],
+    priceRange: { min: 0, max: 0 },
+  } as any);
+
+  // Subscribe to catalog price range changes and automatically update our signals
+  catalogPriceRangeService.catalogPriceRange.subscribe((catalogPriceRange) => {
+    if (catalogPriceRange && catalogPriceRange.minPrice < catalogPriceRange.maxPrice) {
+      const priceRange = {
+        min: catalogPriceRange.minPrice,
+        max: catalogPriceRange.maxPrice
+      };
+      
+      // Update available options with catalog price range
+      const currentAvailableOptions = availableOptions.get();
+      availableOptions.set({
+        ...currentAvailableOptions,
+        priceRange
+      });
+      
+      // Update current filters to use catalog price range
+      const currentFiltersValue = currentFilters.get();
+      // Only update if current filter range is at defaults (either 0-0 or 0-1000)
+      const isDefaultRange = (currentFiltersValue.priceRange.min === 0 && currentFiltersValue.priceRange.max === 0) ||
+                             (currentFiltersValue.priceRange.min === 0 && currentFiltersValue.priceRange.max === 1000);
+      
+      if (isDefaultRange) {
+        currentFilters.set({
+          ...currentFiltersValue,
+          priceRange
+        });
+      }
+    }
+  });
+
+  // Subscribe to catalog options changes and automatically update our signals
+  catalogOptionsService.catalogOptions.subscribe((catalogOptions) => {
+    if (catalogOptions && catalogOptions.length > 0) {
+      // Update available options with catalog options
+      const currentAvailableOptions = availableOptions.get();
+      availableOptions.set({
+        ...currentAvailableOptions,
+        productOptions: catalogOptions
+      });
+    }
+  });
 
   const sortChoices = (
     choices: { id: string; name: string; colorCode?: string }[],
@@ -125,14 +181,6 @@ export const FilterService = implementService.withConfig<{
     return sortedChoices.sort((a, b) => a.name.localeCompare(b.name));
   };
 
-  const availableOptions: Signal<{
-    productOptions: ProductOption[];
-    priceRange: { min: number; max: number };
-  }> = signalsService.signal({
-    productOptions: [],
-    priceRange: { min: 0, max: 1000 },
-  } as any);
-
   // Apply filters by delegating to the collection service
   const applyFilters = async (filters: Filter) => {
     currentFilters.set(filters);
@@ -183,9 +231,10 @@ export const FilterService = implementService.withConfig<{
 
   // Clear all filters by applying default filter state
   const clearFilters = async () => {
+    const availablePriceRange = availableOptions.get()?.priceRange;
     currentFilters.set({
       ...defaultFilter,
-      priceRange: availableOptions.get()?.priceRange || { min: 0, max: 1000 },
+      priceRange: availablePriceRange || { min: 0, max: 0 },
     });
 
     // Clear filter parameters from URL, keeping only sort parameter
@@ -199,78 +248,20 @@ export const FilterService = implementService.withConfig<{
   const calculateAvailableOptions = async (
     products: productsV3.V3Product[]
   ) => {
-    if (!products || products.length === 0) return;
+    // No longer calculating options from current page products
+    // Options are now loaded from the catalog-wide service
+    // This function is kept for backward compatibility but does nothing
+    console.log('🔄 calculateAvailableOptions called but using catalog-wide options instead');
+  };
 
-    // Calculate price range
-    let minPrice = Infinity;
-    let maxPrice = 0;
+  const loadCatalogPriceRange = async (categoryId?: string) => {
+    // Just call the catalog service - subscriptions will handle signal updates
+    await catalogPriceRangeService.loadCatalogPriceRange(categoryId);
+  };
 
-    // Extract all unique options
-    const optionsMap = new Map<string, ProductOption>();
-
-    products.forEach((product) => {
-      // Calculate price range
-      if (product.actualPriceRange?.minValue?.amount) {
-        const min = parseFloat(product.actualPriceRange.minValue.amount);
-        minPrice = Math.min(minPrice, min);
-      }
-      if (product.actualPriceRange?.maxValue?.amount) {
-        const max = parseFloat(product.actualPriceRange.maxValue.amount);
-        maxPrice = Math.max(maxPrice, max);
-      }
-
-      // Extract options
-      if (product.options) {
-        product.options.forEach((option) => {
-          if (!option._id || !option.name) return;
-
-          if (!optionsMap.has(option._id)) {
-            optionsMap.set(option._id, {
-              id: option._id,
-              name: option.name,
-              choices: [],
-              optionRenderType: option.optionRenderType,
-            });
-          }
-
-          const optionData = optionsMap.get(option._id)!;
-
-          // Add choices
-          if (option.choicesSettings?.choices) {
-            option.choicesSettings.choices.forEach((choice) => {
-              if (
-                choice.choiceId &&
-                choice.name &&
-                !optionData.choices.find((c) => c.id === choice.choiceId)
-              ) {
-                optionData.choices.push({
-                  id: choice.choiceId,
-                  name: choice.name,
-                  colorCode: choice.colorCode,
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-
-    if (minPrice === Infinity) minPrice = 0;
-    if (maxPrice === 0) maxPrice = 1000;
-
-    const sortedOptions = Array.from(optionsMap.values()).map((option) => ({
-      ...option,
-      choices: sortChoices(option.choices, option.name),
-    }));
-
-    availableOptions.set({
-      productOptions: Array.from(sortedOptions.values()),
-      priceRange: { min: minPrice, max: maxPrice },
-    });
-    currentFilters.set({
-      ...currentFilters.get(),
-      priceRange: { min: minPrice, max: maxPrice },
-    });
+  const loadCatalogOptions = async (categoryId?: string) => {
+    // Just call the catalog service - subscriptions will handle signal updates
+    await catalogOptionsService.loadCatalogOptions(categoryId);
   };
 
   return {
@@ -279,5 +270,7 @@ export const FilterService = implementService.withConfig<{
     clearFilters,
     availableOptions,
     calculateAvailableOptions,
+    loadCatalogPriceRange,
+    loadCatalogOptions,
   };
 });

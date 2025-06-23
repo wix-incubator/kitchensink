@@ -3,6 +3,8 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import { useService } from "@wix/services-manager-react";
+import type { ServiceAPI } from "@wix/services-definitions";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import {
@@ -219,8 +221,11 @@ const ProductImageGallery = () => {
   );
 };
 
-const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
+const ProductInfo = ({ onAddToCart, servicesManager }: { onAddToCart: () => void; servicesManager: any }) => {
   const [quantity, setQuantity] = useState(1);
+  
+  // Get access to variant service for reset functionality
+  const variantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
   return (
     <div className="space-y-6">
@@ -265,16 +270,14 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
       <ProductVariantSelector.Price>
         {withDocsWrapper(
-          ({ price, isVariantPrice, currency }) => (
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-white">{price}</span>
-                {isVariantPrice && (
-                  <span className="bg-teal-500/20 text-teal-300 text-sm px-2 py-1 rounded-full">
-                    Variant Price
-                  </span>
-                )}
+          ({ price, compareAtPrice, isVariantPrice, currency }) => (
+            <div className="space-y-1">
+              <div className="text-3xl font-bold text-white">{price}</div>
+              {compareAtPrice && parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 && (
+                <div className="text-lg font-medium text-white/50 line-through">
+                  {compareAtPrice}
               </div>
+              )}
               {currency && (
                 <p className="text-white/60 text-sm">Currency: {currency}</p>
               )}
@@ -359,17 +362,9 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
             <>
               {hasOptions && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-white">
                       Product Options
                     </h3>
-                    <button
-                      onClick={() => setQuantity(1)}
-                      className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
-                    >
-                      Reset Quantity
-                    </button>
-                  </div>
 
                   {options.map((option: any) => (
                     <ProductVariantSelector.Option
@@ -415,6 +410,7 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                                 {isColorOption &&
                                                 hasColorCode ? (
                                                   // Color Swatch
+                                                  <div className="relative">
                                                   <button
                                                     onClick={onSelect}
                                                     disabled={!isAvailable}
@@ -436,8 +432,27 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                                         "#000000",
                                                     }}
                                                   />
+                                                    {!isAvailable && (
+                                                      <div className="absolute inset-0 flex items-center justify-center">
+                                                        <svg
+                                                          className="w-6 h-6 text-red-400"
+                                                          fill="none"
+                                                          viewBox="0 0 24 24"
+                                                          stroke="currentColor"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                          />
+                                                        </svg>
+                                                      </div>
+                                                    )}
+                                                  </div>
                                                 ) : (
                                                   // Regular Text Button
+                                                  <div className="relative">
                                                   <button
                                                     onClick={onSelect}
                                                     disabled={!isAvailable}
@@ -446,16 +461,29 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                                                         ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
                                                         : isAvailable
                                                         ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
-                                                        : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed line-through"
+                                                          : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                                     }`}
                                                   >
                                                     {value}
+                                                    </button>
                                                     {!isAvailable && (
-                                                      <span className="ml-1 text-xs">
-                                                        (unavailable)
-                                                      </span>
+                                                      <div className="absolute inset-0 flex items-center justify-center">
+                                                        <svg
+                                                          className="w-6 h-6 text-red-400"
+                                                          fill="none"
+                                                          viewBox="0 0 24 24"
+                                                          stroke="currentColor"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                          />
+                                                        </svg>
+                                                      </div>
                                                     )}
-                                                  </button>
+                                                  </div>
                                                 )}
                                               </>
                                             ),
@@ -476,6 +504,18 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
                       )}
                     </ProductVariantSelector.Option>
                   ))}
+                  
+                  {/* Reset Button - appears after all options */}
+                  {variantService.hasAnySelections() && (
+                    <div className="pt-2">
+                      <button
+                        onClick={() => variantService.resetSelections()}
+                        className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+                      >
+                        Reset Selections
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </>
@@ -508,6 +548,12 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
           </div>
           <span className="text-white/60 text-sm">Max: 10 per order</span>
         </div>
+        <button
+          onClick={() => setQuantity(1)}
+          className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+        >
+          Reset Quantity
+        </button>
       </div>
 
       <ProductVariantSelector.Trigger quantity={quantity}>
@@ -561,10 +607,17 @@ const ProductInfo = ({ onAddToCart }: { onAddToCart: () => void }) => {
 
                   <button
                     onClick={async () => {
+                      // Clear cart first, then add this product and proceed to checkout
+                      try {
+                        const cartService = servicesManager.getService(CurrentCartServiceDefinition);
+                        await cartService.clearCart();
                       await onAddToCart();
-                      setTimeout(() => {
-                        window.location.href = "/checkout";
-                      }, 1000);
+                        await cartService.proceedToCheckout();
+                      } catch (error) {
+                        console.error('Buy now failed:', error);
+                        // Fallback to cart page if checkout fails
+                        window.location.href = "/cart";
+                      }
                     }}
                     disabled={!canAddToCart || isLoading}
                     className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
@@ -977,6 +1030,7 @@ export default function ProductDetailPage({
 
               <div>
                 <ProductInfo
+                  servicesManager={servicesManager}
                   onAddToCart={() => {
                     setShowSuccessMessage(true);
                     setTimeout(() => setShowSuccessMessage(false), 3000);

@@ -11,6 +11,20 @@ import { CategoryServiceDefinition } from "./category-service";
 import { SortServiceDefinition, type SortBy } from "./sort-service";
 import { URLParamsUtils } from "../utils/url-params";
 
+const searchProducts = async (searchOptions: any) => {
+  const searchParams = {
+    filter: searchOptions.search?.filter,
+    sort: searchOptions.search?.sort,
+    ...(searchOptions.paging && { cursorPaging: searchOptions.paging })
+  };
+
+  const options = {
+    fields: searchOptions.fields || []
+  };
+
+  return await productsV3.searchProducts(searchParams, options);
+};
+
 export interface CollectionServiceAPI {
   products: Signal<productsV3.V3Product[]>;
   isLoading: Signal<boolean>;
@@ -22,19 +36,98 @@ export interface CollectionServiceAPI {
   refresh: () => Promise<void>;
 }
 
-// Helper to build query with supported filters only
-const buildQuery = () => {
-  let query = productsV3.queryProducts({
+// Helper to build search options with supported filters
+const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, sortBy?: SortBy, categories?: any[]) => {
+  const searchOptions: any = {
+    search: {},
     fields: [
-      "DESCRIPTION",
-      "MEDIA_ITEMS_INFO",
-      "VARIANT_OPTION_CHOICE_NAMES",
-      "CURRENCY",
-      "URL",
-      "ALL_CATEGORIES_INFO",
-    ],
-  });
-  return query;
+      'PLAIN_DESCRIPTION',
+      'MEDIA_ITEMS_INFO',
+      'CURRENCY',
+      'THUMBNAIL',
+      'URL',
+      'ALL_CATEGORIES_INFO'
+    ]
+  };
+
+  // Build filter conditions array
+  const filterConditions: any[] = [];
+
+  // Add category filter if selected
+  if (selectedCategory) {
+    filterConditions.push({
+      'allCategoriesInfo.categories': {
+        $matchItems: [
+          {
+            id: {
+              $in: [selectedCategory],
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  // Add price range filter if provided
+  if (filters?.priceRange) {
+    const { min, max } = filters.priceRange;
+    if (min > 0) {
+      filterConditions.push({
+        "actualPriceRange.minValue.amount": { "$gte": min.toString() }
+      });
+    }
+    if (max < 999999) {
+      filterConditions.push({
+        "actualPriceRange.maxValue.amount": { "$lte": max.toString() }
+      });
+    }
+  }
+
+  // Add product options filter if provided
+  if (filters?.selectedOptions && Object.keys(filters.selectedOptions).length > 0) {
+    for (const [optionId, choiceIds] of Object.entries(filters.selectedOptions)) {
+      if (choiceIds.length > 0) {
+        filterConditions.push({
+          "options.choicesSettings.choices.choiceId": {
+            "$hasSome": choiceIds
+          }
+        });
+      }
+    }
+  }
+
+  // Apply filters
+  if (filterConditions.length > 0) {
+    if (filterConditions.length === 1) {
+      // Single condition - no need for $and wrapper
+      searchOptions.search.filter = filterConditions[0];
+    } else {
+      // Multiple conditions - use $and
+      searchOptions.search.filter = {
+        $and: filterConditions
+      };
+    }
+  }
+
+  // Add sort if provided
+  if (sortBy) {
+    switch (sortBy) {
+      case 'name-asc':
+        searchOptions.search.sort = [{ fieldName: 'name', order: 'ASC' }];
+        break;
+      case 'name-desc':
+        searchOptions.search.sort = [{ fieldName: 'name', order: 'DESC' }];
+        break;
+      case 'price-asc':
+        searchOptions.search.sort = [{ fieldName: 'actualPriceRange.minValue.amount', order: 'ASC' }];
+        break;
+      case 'price-desc':
+        searchOptions.search.sort = [{ fieldName: 'actualPriceRange.minValue.amount', order: 'DESC' }];
+        break;
+    }
+  }
+
+  return searchOptions;
 };
 
 export const CollectionServiceDefinition =
@@ -43,9 +136,9 @@ export const CollectionServiceDefinition =
 export const CollectionService = implementService.withConfig<{
   initialProducts?: productsV3.V3Product[];
   pageSize?: number;
-  collectionId?: string;
   initialCursor?: string;
   initialHasMore?: boolean;
+  categories?: any[];
 }>()(CollectionServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
   const collectionFilters = getService(FilterServiceDefinition);
@@ -58,116 +151,26 @@ export const CollectionService = implementService.withConfig<{
 
   const initialProducts = config.initialProducts || [];
 
-  void collectionFilters.calculateAvailableOptions(initialProducts);
-
-  const pageSize = config.pageSize || 12;
-  let allProducts: productsV3.V3Product[] = initialProducts;
-
-  // Helper to apply client-side filtering since the API doesn't support all filter types
-  const applyClientSideFilters = (
-    products: productsV3.V3Product[],
-    filters: Filter,
-    selectedCategory: string | null,
-    sortBy: SortBy
-  ): productsV3.V3Product[] => {
-    const filteredProducts = products.filter((product) => {
-      if (
-        selectedCategory &&
-        !product.allCategoriesInfo?.categories?.some(
-          (cat: any) => cat._id === selectedCategory
-        )
-      ) {
-        return false;
-      }
-      // Check price range
-      const productPrice =
-        product.actualPriceRange?.minValue?.amount ||
-        product.actualPriceRange?.maxValue?.amount;
-
-      if (productPrice) {
-        const price = parseFloat(productPrice);
-        if (price < filters.priceRange.min || price > filters.priceRange.max) {
-          return false;
-        }
-      }
-
-      // Check product options
-      if (Object.keys(filters.selectedOptions).length > 0) {
-        for (const [optionId, choiceIds] of Object.entries(
-          filters.selectedOptions
-        )) {
-          if (choiceIds.length === 0) continue;
-
-          const productOption = product.options?.find(
-            (opt) => opt._id === optionId
-          );
-          if (!productOption) return false;
-
-          const productChoices =
-            productOption.choicesSettings?.choices?.map((c) => c.choiceId) ||
-            [];
-          const hasMatchingChoice = choiceIds.some((choiceId) =>
-            productChoices.includes(choiceId)
-          );
-
-          if (!hasMatchingChoice) return false;
-        }
-      }
-
-      return true;
-    });
-    return filteredProducts.sort((a, b) => {
-      switch (sortBy) {
-        case "name-asc":
-          return (a.name || "").localeCompare(b.name || "");
-        case "name-desc":
-          return (b.name || "").localeCompare(a.name || "");
-        case "price-asc": {
-          const priceA = parseFloat(
-            a.actualPriceRange?.minValue?.amount || "0"
-          );
-          const priceB = parseFloat(
-            b.actualPriceRange?.minValue?.amount || "0"
-          );
-          return priceA - priceB;
-        }
-        case "price-desc": {
-          const priceA = parseFloat(
-            a.actualPriceRange?.minValue?.amount || "0"
-          );
-          const priceB = parseFloat(
-            b.actualPriceRange?.minValue?.amount || "0"
-          );
-          return priceB - priceA;
-        }
-        default:
-          return 0;
-      }
-    });
-  };
-
-  // Apply initial filters and sorting to products immediately
-  const initialFilters = collectionFilters.currentFilters.get();
-  const initialSort = sortService.currentSort.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  const initialFilteredProducts = applyClientSideFilters(
-    initialProducts,
-    initialFilters,
-    selectedCategory,
-    initialSort
-  );
-
+  // Signal declarations
   const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
-    initialFilteredProducts as any
+    initialProducts as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
   const totalProducts: Signal<number> = signalsService.signal(
-    initialFilteredProducts.length as any
+    initialProducts.length as any
   );
   const hasProducts: Signal<boolean> = signalsService.signal(
-    (initialFilteredProducts.length > 0) as any
+    (initialProducts.length > 0) as any
   );
+
+  const pageSize = config.pageSize || 12;
+  let allProducts: productsV3.V3Product[] = initialProducts;
+  
+  // Debouncing mechanism to prevent multiple simultaneous refreshes
+  let refreshTimeout: NodeJS.Timeout | null = null;
+  let isRefreshing = false;
+  let hasInitialized = false;
 
   const loadMore = async () => {
     // Don't load more if there are no more products available
@@ -179,44 +182,37 @@ export const CollectionService = implementService.withConfig<{
       isLoading.set(true);
       error.set(null);
 
-      let query = buildQuery();
-      if (nextCursor) {
-        query = query.skipTo(nextCursor);
-      }
+      // For loadMore, use no filters or sorting to work with cursor pagination
+      const searchOptions = buildSearchOptions(undefined, undefined, undefined, undefined);
 
-      // Apply cursor pagination if we have a next cursor
+      // Add pagination
+      searchOptions.paging = { limit: pageSize };
       if (nextCursor) {
-        query = query.skipTo(nextCursor);
+        searchOptions.paging.cursor = nextCursor;
       }
 
       const currentProducts = productsList.get();
-      const selectedCategory = categoryService.selectedCategory.get();
-      const productResults = await query.limit(pageSize).find();
+      const productResults = await searchProducts(searchOptions);
 
       // Update cursor for next pagination
-      nextCursor = productResults.cursors?.next || undefined;
+      nextCursor = productResults.pagingMetadata?.cursors?.next || undefined;
 
       // Check if there are more products to load
       const hasMore = Boolean(
         nextCursor &&
-          productResults.items &&
-          productResults.items.length === pageSize
+          productResults.products &&
+          productResults.products.length === pageSize
       );
       hasMoreProducts.set(hasMore);
 
-      const newProducts = [...currentProducts, ...(productResults.items || [])];
-      const filters = collectionFilters.currentFilters.get();
-      const sortBy = sortService.currentSort.get();
-      const filteredProducts = applyClientSideFilters(
-        newProducts,
-        filters,
-        selectedCategory,
-        sortBy
-      );
+      // Update allProducts with the new data
+      allProducts = [...allProducts, ...(productResults.products || [])];
 
-      productsList.set(filteredProducts);
-      totalProducts.set(newProducts.length);
-      hasProducts.set(newProducts.length > 0);
+      // Add new products to the list
+      const additionalProducts = productResults.products || [];
+      productsList.set([...currentProducts, ...additionalProducts]);
+      totalProducts.set(currentProducts.length + additionalProducts.length);
+      hasProducts.set((currentProducts.length + additionalProducts.length) > 0);
     } catch (err) {
       error.set(
         err instanceof Error ? err.message : "Failed to load more products"
@@ -227,58 +223,89 @@ export const CollectionService = implementService.withConfig<{
   };
 
   const refresh = async (setTotalProducts: boolean = true) => {
+    if (isRefreshing) return;
+    
     try {
+      isRefreshing = true;
       isLoading.set(true);
       error.set(null);
 
-      const query = buildQuery();
-      const productResults = await query.limit(pageSize).find();
+      const filters = collectionFilters.currentFilters.get();
       const selectedCategory = categoryService.selectedCategory.get();
+      const sortBy = sortService.currentSort.get();
+      const categories = config.categories || categoryService.categories.get();
+      const searchOptions = buildSearchOptions(filters, selectedCategory, sortBy, categories);
+
+      // Add pagination
+      searchOptions.paging = { limit: pageSize };
+
+      const productResults = await searchProducts(searchOptions);
 
       // Reset pagination state
-      nextCursor = productResults.cursors?.next || undefined;
+      nextCursor = productResults.pagingMetadata?.cursors?.next || undefined;
       const hasMore = Boolean(
-        productResults.cursors?.next &&
-          productResults.items &&
-          productResults.items.length === pageSize
+        productResults.pagingMetadata?.cursors?.next &&
+          productResults.products &&
+          productResults.products.length === pageSize
       );
       hasMoreProducts.set(hasMore);
 
-      const filters = collectionFilters.currentFilters.get();
-      const sortBy = sortService.currentSort.get();
-      const filteredProducts = applyClientSideFilters(
-        productResults.items || [],
-        filters,
-        selectedCategory,
-        sortBy
-      );
+      // Update allProducts with the new data
+      allProducts = productResults.products || [];
 
-      productsList.set(filteredProducts);
+      // All filtering is handled server-side
+      productsList.set(allProducts);
       if (setTotalProducts) {
-        totalProducts.set(filteredProducts.length);
+        totalProducts.set(allProducts.length);
       }
 
-      totalProducts.set((productResults.items || []).length);
-      hasProducts.set((productResults.items || []).length > 0);
+      hasProducts.set(allProducts.length > 0);
     } catch (err) {
       error.set(
         err instanceof Error ? err.message : "Failed to refresh products"
       );
     } finally {
       isLoading.set(false);
+      isRefreshing = false;
     }
   };
+  
+  // Debounced refresh function
+  const debouncedRefresh = async (setTotalProducts: boolean = true): Promise<void> => {
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout);
+    }
+    
+    return new Promise<void>((resolve) => {
+      refreshTimeout = setTimeout(async () => {
+        await refresh(setTotalProducts);
+        resolve();
+      }, 50); // 50ms debounce delay
+    });
+  };
 
+  // Refresh with server-side filtering when any filters change
   collectionFilters.currentFilters.subscribe(() => {
-    refresh(false);
+    // All filtering (categories, price, options) is now handled server-side
+    debouncedRefresh(false);
   });
 
-  categoryService.selectedCategory.subscribe(() => {
-    refresh(false);
+  categoryService.selectedCategory.subscribe(async () => {
+    // Reload catalog price range and options for the new category
+    const selectedCategory = categoryService.selectedCategory.get();
+    await collectionFilters.loadCatalogPriceRange(selectedCategory || undefined);
+    await collectionFilters.loadCatalogOptions(selectedCategory || undefined);
+    
+    // Only trigger refresh if this isn't the initial load
+    if (hasInitialized) {
+      debouncedRefresh(false);
+    } else {
+      hasInitialized = true;
+    }
   });
 
   sortService.currentSort.subscribe(() => {
-    refresh(false);
+    debouncedRefresh(false);
   });
 
   return {
@@ -289,7 +316,7 @@ export const CollectionService = implementService.withConfig<{
     hasProducts,
     hasMoreProducts,
     loadMore,
-    refresh,
+    refresh: debouncedRefresh,
   };
 });
 
@@ -298,13 +325,14 @@ function parseURLParams(
   searchParams?: URLSearchParams,
   products: productsV3.V3Product[] = []
 ) {
-  const initialFilters: Filter = {
+  const defaultFilters: Filter = {
     priceRange: { min: 0, max: 1000 },
     selectedOptions: {},
   };
-  let initialSort: SortBy = "";
-
-  if (!searchParams) return { initialSort, initialFilters };
+  
+  if (!searchParams) {
+    return { initialSort: "" as SortBy, initialFilters: defaultFilters };
+  }
 
   const urlParams = URLParamsUtils.parseSearchParams(searchParams);
 
@@ -315,22 +343,23 @@ function parseURLParams(
     price_asc: "price-asc",
     price_desc: "price-desc",
   };
-  initialSort = sortMap[urlParams.sort as string] || "";
+  const initialSort = sortMap[urlParams.sort as string] || ("" as SortBy);
 
-  if (products.length === 0) return { initialSort, initialFilters };
+  // Check if there are any filter parameters (excluding sort)
+  const filterParams = Object.keys(urlParams).filter(key => key !== 'sort');
+  
+  if (filterParams.length === 0 || products.length === 0) {
+    return { initialSort, initialFilters: defaultFilters };
+  }
 
-  // Calculate price range from products
-  let minPrice = 0,
-    maxPrice = 1000;
-  products.forEach((product) => {
-    const min = parseFloat(product.actualPriceRange?.minValue?.amount || "0");
-    const max = parseFloat(product.actualPriceRange?.maxValue?.amount || "0");
-    if (min > 0) minPrice = minPrice === 0 ? min : Math.min(minPrice, min);
-    if (max > 0) maxPrice = Math.max(maxPrice, max);
-  });
-  initialFilters.priceRange = { min: minPrice, max: maxPrice };
+  // Calculate available price range from products
+  const priceRange = calculatePriceRange(products);
+  const initialFilters: Filter = {
+    priceRange,
+    selectedOptions: {},
+  };
 
-  // Parse price filters from URL
+  // Apply price filters from URL
   if (urlParams.minPrice) {
     const min = parseFloat(urlParams.minPrice as string);
     if (!isNaN(min)) initialFilters.priceRange.min = min;
@@ -340,52 +369,75 @@ function parseURLParams(
     if (!isNaN(max)) initialFilters.priceRange.max = max;
   }
 
-  // Build options map and parse option filters
-  const optionsMap = new Map<
-    string,
-    { id: string; choices: { id: string; name: string }[] }
-  >();
+  // Parse option filters
+  const optionsMap = buildOptionsMap(products);
+  parseOptionFilters(urlParams, optionsMap, initialFilters);
+
+  return { initialSort, initialFilters };
+}
+
+// Helper function to calculate price range from products
+function calculatePriceRange(products: productsV3.V3Product[]): { min: number; max: number } {
+  let minPrice = 0;
+  let maxPrice = 1000;
+  
+  products.forEach((product) => {
+    const min = parseFloat(product.actualPriceRange?.minValue?.amount || "0");
+    const max = parseFloat(product.actualPriceRange?.maxValue?.amount || "0");
+    if (min > 0) minPrice = minPrice === 0 ? min : Math.min(minPrice, min);
+    if (max > 0) maxPrice = Math.max(maxPrice, max);
+  });
+  
+  return { min: minPrice, max: maxPrice };
+}
+
+// Helper function to build options map from products
+function buildOptionsMap(products: productsV3.V3Product[]) {
+  const optionsMap = new Map<string, { id: string; choices: { id: string; name: string }[] }>();
+  
   products.forEach((product) => {
     product.options?.forEach((option) => {
       if (!option._id || !option.name) return;
+      
       if (!optionsMap.has(option.name)) {
         optionsMap.set(option.name, { id: option._id, choices: [] });
       }
+      
       const optionData = optionsMap.get(option.name)!;
       option.choicesSettings?.choices?.forEach((choice) => {
-        if (
-          choice.choiceId &&
-          choice.name &&
-          !optionData.choices.find((c) => c.id === choice.choiceId)
-        ) {
+        if (choice.choiceId && choice.name && !optionData.choices.find(c => c.id === choice.choiceId)) {
           optionData.choices.push({ id: choice.choiceId, name: choice.name });
         }
       });
     });
   });
+  
+  return optionsMap;
+}
 
-  // Parse option filters from URL
+// Helper function to parse option filters from URL parameters
+function parseOptionFilters(
+  urlParams: Record<string, string | string[]>,
+  optionsMap: Map<string, { id: string; choices: { id: string; name: string }[] }>,
+  filters: Filter
+) {
   Object.entries(urlParams).forEach(([key, value]) => {
     if (["sort", "minPrice", "maxPrice"].includes(key)) return;
+    
     const option = optionsMap.get(key);
     if (option) {
       const values = Array.isArray(value) ? value : [value];
-      const matchingChoices = option.choices.filter((choice) =>
-        values.includes(choice.name)
-      );
+      const matchingChoices = option.choices.filter(choice => values.includes(choice.name));
+      
       if (matchingChoices.length > 0) {
-        initialFilters.selectedOptions[option.id] = matchingChoices.map(
-          (c) => c.id
-        );
+        filters.selectedOptions[option.id] = matchingChoices.map(c => c.id);
       }
     }
   });
-
-  return { initialSort, initialFilters };
 }
 
 export async function loadCollectionServiceConfig(
-  collectionId?: string,
+  categoryId?: string,
   searchParams?: URLSearchParams
 ): Promise<
   ServiceFactoryConfig<typeof CollectionService> & {
@@ -396,29 +448,36 @@ export async function loadCollectionServiceConfig(
   }
 > {
   try {
-    // Query products with ALL_CATEGORIES_INFO field as required for category filtering
-    let query = buildQuery();
+    // Load categories for service configuration
+    const { loadCategoriesConfig } = await import('./category-service');
+    const categoriesConfig = await loadCategoriesConfig();
+    const categories = categoriesConfig.categories;
 
-    const productResults = await query.limit(100).find();
+    // Build search options with category filter
+    const searchOptions = buildSearchOptions(undefined, categoryId, undefined, categories);
+    const pageSize = 12;
+    searchOptions.paging = { limit: pageSize };
+
+    const productResults = await searchProducts(searchOptions);
 
     // Parse URL parameters for initial state
     const { initialSort, initialFilters } = parseURLParams(
       searchParams,
-      productResults.items || []
+      productResults.products || []
     );
 
     return {
-      initialProducts: productResults.items || [],
-      pageSize: 100,
-      collectionId,
-      initialCursor: productResults.cursors?.next || undefined,
+      initialProducts: productResults.products || [],
+      pageSize,
+      initialCursor: productResults.pagingMetadata?.cursors?.next || undefined,
       initialHasMore: Boolean(
-        productResults.cursors?.next &&
-          productResults.items &&
-          productResults.items.length === 12
+        productResults.pagingMetadata?.cursors?.next &&
+          productResults.products &&
+          productResults.products.length === pageSize
       ),
       initialSort,
       initialFilters,
+      categories,
     };
   } catch (error) {
     console.warn("Failed to load initial products:", error);
@@ -426,10 +485,10 @@ export async function loadCollectionServiceConfig(
     return {
       initialProducts: [],
       pageSize: 12,
-      collectionId,
       initialHasMore: false,
       initialSort,
       initialFilters,
+      categories: [],
     };
   }
 }

@@ -16,6 +16,7 @@ export interface SelectedVariantServiceAPI {
   selectedVariantId: ReadOnlySignal<string | null>;
   currentVariant: ReadOnlySignal<productsV3.Variant | null>;
   currentPrice: ReadOnlySignal<string>;
+  currentCompareAtPrice: ReadOnlySignal<string | null>;
   isInStock: ReadOnlySignal<boolean>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
@@ -44,6 +45,11 @@ export interface SelectedVariantServiceAPI {
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
+  
+  // New methods for smart variant selection
+  getAvailableChoicesForOption: (optionName: string) => string[];
+  isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
+  hasAnySelections: () => boolean;
 }
 
 export const SelectedVariantServiceDefinition =
@@ -233,6 +239,31 @@ export const SelectedVariantService = implementService.withConfig<{
     return rawAmount ? `$${rawAmount}` : "$0.00";
   });
 
+  const currentCompareAtPrice: ReadOnlySignal<string | null> = signalsService.computed(() => {
+    const variant = currentVariant.get();
+    const prod = v3Product.get();
+
+    // Try to get formatted compare-at price first
+    if (variant?.price?.compareAtPrice?.formattedAmount) {
+      return variant.price.compareAtPrice.formattedAmount;
+    }
+
+    if (prod?.compareAtPriceRange?.minValue?.formattedAmount) {
+      return prod.compareAtPriceRange.minValue.formattedAmount;
+    }
+
+    // Fallback: create our own formatted price from amount
+    let rawAmount = null;
+
+    if (variant?.price?.compareAtPrice?.amount) {
+      rawAmount = variant.price.compareAtPrice.amount;
+    } else if (prod?.compareAtPriceRange?.minValue?.amount) {
+      rawAmount = prod.compareAtPriceRange.minValue.amount;
+    }
+
+    return rawAmount ? `$${rawAmount}` : null;
+  });
+
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
     const prod = v3Product.get();
@@ -341,11 +372,46 @@ export const SelectedVariantService = implementService.withConfig<{
     updateQuantityFromVariant(defaultVariant);
   };
 
+  // New methods for smart variant selection
+  const getAvailableChoicesForOption = (optionName: string): string[] => {
+    const currentChoices = selectedChoices.get();
+    const variantsList = variants.get();
+    
+    // Get all possible choices for this option that result in valid variants
+    const availableChoices = new Set<string>();
+    
+    variantsList.forEach(variant => {
+      const variantChoices = processVariantChoices(variant);
+      
+      // Check if this variant matches all currently selected choices (except for the option we're checking)
+      const matchesOtherChoices = Object.entries(currentChoices)
+        .filter(([key]) => key !== optionName)
+        .every(([key, value]) => variantChoices[key] === value);
+      
+      if (matchesOtherChoices && variantChoices[optionName]) {
+        availableChoices.add(variantChoices[optionName]);
+      }
+    });
+    
+    return Array.from(availableChoices);
+  };
+
+  const isChoiceAvailable = (optionName: string, choiceValue: string): boolean => {
+    const availableChoices = getAvailableChoicesForOption(optionName);
+    return availableChoices.includes(choiceValue);
+  };
+
+  const hasAnySelections = (): boolean => {
+    const currentChoices = selectedChoices.get();
+    return Object.keys(currentChoices).length > 0;
+  };
+
   return {
     selectedChoices,
     selectedVariantId,
     currentVariant,
     currentPrice,
+    currentCompareAtPrice,
     isInStock,
     isLoading,
     error,
@@ -367,6 +433,11 @@ export const SelectedVariantService = implementService.withConfig<{
     selectVariantById,
     loadProductVariants,
     resetSelections,
+    
+    // New methods for smart variant selection
+    getAvailableChoicesForOption,
+    isChoiceAvailable,
+    hasAnySelections,
 
     selectedVariant,
     finalPrice,
@@ -382,35 +453,31 @@ export async function loadSelectedVariantServiceConfig(
   productSlug: string
 ): Promise<ServiceFactoryConfig<typeof SelectedVariantService>> {
   try {
-    const storeProducts = await productsV3
-      .queryProducts()
-      .eq("slug", productSlug)
-      .find();
-
-    if (!storeProducts.items?.[0]) {
-      throw new Error("Product not found");
-    }
-
-    const productId = storeProducts.items[0]._id;
-    if (!productId) {
-      throw new Error("Product ID not found");
-    }
-
-    const fullProduct = await productsV3.getProduct(productId, {
+    // Use getProductBySlug directly - single API call with comprehensive fields
+    const productResponse = await productsV3.getProductBySlug(productSlug, {
       fields: [
-        "MEDIA_ITEMS_INFO" as any,
-        "CURRENCY" as any,
         "DESCRIPTION" as any,
+        "DIRECT_CATEGORIES_INFO" as any,
+        "BREADCRUMBS_INFO" as any,
+        "INFO_SECTION" as any,
+        "MEDIA_ITEMS_INFO" as any,
         "PLAIN_DESCRIPTION" as any,
+        "THUMBNAIL" as any,
+        "URL" as any,
         "VARIANT_OPTION_CHOICE_NAMES" as any,
+        "WEIGHT_MEASUREMENT_UNIT_INFO" as any,
       ],
     });
 
+    if (!productResponse.product) {
+      throw new Error("Product not found");
+    }
+
     return {
-      product: fullProduct,
+      product: productResponse.product,
     };
   } catch (error) {
-    console.error("Failed to load product:", error);
+    console.error(`Failed to load product for slug "${productSlug}":`, error);
     throw error;
   }
 }

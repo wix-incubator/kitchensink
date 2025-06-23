@@ -42,30 +42,34 @@ export async function loadProductServiceConfig(
   productSlug: string
 ): Promise<ProductServiceConfigResult> {
   try {
-    const storeProducts = await productsV3
-      .queryProducts()
-      .eq("slug", productSlug)
-      .find();
+    // Use getProductBySlug directly - single API call with comprehensive fields
+    const productResponse = await productsV3.getProductBySlug(productSlug, {
+      fields: [
+        "DESCRIPTION" as any,
+        "DIRECT_CATEGORIES_INFO" as any,
+        "BREADCRUMBS_INFO" as any,
+        "INFO_SECTION" as any,
+        "MEDIA_ITEMS_INFO" as any,
+        "PLAIN_DESCRIPTION" as any,
+        "THUMBNAIL" as any,
+        "URL" as any,
+        "VARIANT_OPTION_CHOICE_NAMES" as any,
+        "WEIGHT_MEASUREMENT_UNIT_INFO" as any,
+      ],
+    });
 
-    if (!storeProducts.items?.[0]) {
+    if (!productResponse.product) {
       return { type: "notFound" };
     }
-
-    const productId = storeProducts.items[0]._id;
-    if (!productId) {
-      throw new Error("Product ID not found");
-    }
-
-    const fullProduct = await productsV3.getProduct(productId);
 
     return {
       type: "success",
       config: {
-        product: fullProduct,
+        product: productResponse.product,
       },
     };
   } catch (error) {
-    console.error("Failed to load product:", error);
+    console.error(`Failed to load product for slug "${productSlug}":`, error);
     return { type: "notFound" };
   }
 }

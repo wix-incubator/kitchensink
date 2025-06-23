@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import StoreCollectionPage from "../../../../react-pages/store/example-2/index";
+import { loadCollectionServiceConfig } from "../../../../headless/store/services/collection-service";
+import { loadCurrentCartServiceConfig } from "../../../../headless/store/services/current-cart-service";
+import { loadCategoriesConfig } from "../../../../headless/store/services/category-service";
+
+// Get category slug from URL params
+const { categorySlug } = Astro.params;
+
+// Load categories to find the matching category ID
+const categoriesConfig = await loadCategoriesConfig();
+
+// Find category by its real slug
+const selectedCategory = categoriesConfig.categories.find(
+  (cat: any) => cat.slug === categorySlug
+);
+
+// Load initial data for services with selected category
+const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
+  selectedCategory?._id || undefined,
+  Astro.url.searchParams
+);
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+
+// If category not found, return 404
+if (!selectedCategory) {
+  return Astro.redirect('/404');
+}
+---
+
+<BaseLayout>
+  <title>Store Example 2 - {selectedCategory.name}</title>
+  <meta
+    name="description"
+    content={`Browse our ${selectedCategory.name} products with modern card layout`}
+  />
+
+  <StoreCollectionPage
+    client:load
+    filteredCollectionServiceConfig={filteredCollectionServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    categoriesConfig={{...categoriesConfig, initialCategoryId: selectedCategory._id}}
+    slot="body"
+  />
+</BaseLayout>

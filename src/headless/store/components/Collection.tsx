@@ -103,6 +103,8 @@ export interface ItemRenderProps {
   image: string | null;
   /** Product price */
   price: string;
+  /** Compare at price (for strikethrough) */
+  compareAtPrice: string | null;
   /** Product description */
   description: string;
   /** Whether product is available */
@@ -125,6 +127,10 @@ export const Item = (props: ItemProps) => {
   const rawAmount = product.actualPriceRange?.minValue?.amount;
   const price = rawAmount ? `$${rawAmount}` : "$0.00";
 
+  // Create formatted compare-at price
+  const rawCompareAmount = product.compareAtPriceRange?.minValue?.amount;
+  const compareAtPrice = rawCompareAmount ? `$${rawCompareAmount}` : null;
+
   const available = product.inventory?.availabilityStatus === "IN_STOCK";
   const description =
     typeof product.description === "string" ? product.description : "";
@@ -135,6 +141,7 @@ export const Item = (props: ItemProps) => {
     slug: product.slug || "",
     image,
     price,
+    compareAtPrice,
     description,
     available,
     href: `/store/products/${product.slug}`,

@@ -40,17 +40,6 @@ export const RelatedProductsService = implementService.withConfig<{
     error.set(null);
 
     try {
-      const currentProduct = await productsV3
-        .queryProducts()
-        .eq("_id", productId)
-        .find();
-
-      if (!currentProduct.items?.[0]) {
-        throw new Error("Current product not found");
-      }
-
-      const product = currentProduct.items[0];
-
       let relatedQuery = productsV3.queryProducts().ne("_id", productId);
 
       const relatedResult = await relatedQuery.limit(limit).find();

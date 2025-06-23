@@ -3,6 +3,8 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import { useService } from "@wix/services-manager-react";
+import type { ServiceAPI } from "@wix/services-definitions";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import {
@@ -300,13 +302,15 @@ export default function ProductDetailPage({
                   </Product.Name>
                   <ProductVariantSelector.Price>
                     {withDocsWrapper(
-                      ({ price, isVariantPrice }) => (
+                      ({ price, compareAtPrice, isVariantPrice }) => (
+                        <div className="space-y-1">
                         <div className="text-3xl font-bold text-white">
                           {price}
-                          {isVariantPrice && (
-                            <span className="text-sm text-white/60 ml-2">
-                              (variant price)
-                            </span>
+                          </div>
+                          {compareAtPrice && parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 && (
+                            <div className="text-lg font-medium text-white/50 line-through">
+                              {compareAtPrice}
+                            </div>
                           )}
                         </div>
                       ),
@@ -350,10 +354,14 @@ export default function ProductDetailPage({
                 {/* Product Options (if any) */}
                 <ProductVariantSelector.Options>
                   {withDocsWrapper(
-                    ({ options, hasOptions }) => (
+                    ({ options, hasOptions, selectedChoices }) => (
                       <>
                         {hasOptions && (
                           <div className="space-y-6">
+                            <h3 className="text-lg font-semibold text-white">
+                              Product Options
+                            </h3>
+                            
                             {options.map((option: any) => (
                               <div key={option.name}>
                                 <ProductVariantSelector.Option option={option}>
@@ -387,19 +395,28 @@ export default function ProductDetailPage({
                                                     ({
                                                       value,
                                                       isSelected,
+                                      isAvailable,
                                                       onSelect,
                                                     }) => (
                                                       <>
                                                         {isColorOption &&
                                                         hasColorCode ? (
                                                           // Color Swatch
+                                          <div className="relative">
                                                           <button
                                                             onClick={onSelect}
+                                              disabled={!isAvailable}
                                                             title={value}
                                                             className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                                               isSelected
                                                                 ? "border-blue-400 shadow-lg scale-110 ring-2 ring-blue-500/30"
-                                                                : "border-white/30 hover:border-white/60 hover:scale-105"
+                                                  : isAvailable
+                                                  ? "border-white/30 hover:border-white/60 hover:scale-105"
+                                                  : "border-white/10 opacity-50 cursor-not-allowed"
+                                              } ${
+                                                !isAvailable
+                                                  ? "grayscale"
+                                                  : ""
                                                             }`}
                                                             style={{
                                                               backgroundColor:
@@ -407,18 +424,58 @@ export default function ProductDetailPage({
                                                                 "#000000",
                                                             }}
                                                           />
+                                            {!isAvailable && (
+                                              <div className="absolute inset-0 flex items-center justify-center">
+                                                <svg
+                                                  className="w-6 h-6 text-red-400"
+                                                  fill="none"
+                                                  viewBox="0 0 24 24"
+                                                  stroke="currentColor"
+                                                >
+                                                  <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            )}
+                                          </div>
                                                         ) : (
                                                           // Regular Text Button
+                                          <div className="relative">
                                                           <button
                                                             onClick={onSelect}
+                                              disabled={!isAvailable}
                                                             className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                                               isSelected
                                                                 ? "bg-blue-500/20 border-blue-400/50 text-blue-300"
-                                                                : "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white"
+                                                  : isAvailable
+                                                  ? "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white"
+                                                  : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                                             }`}
                                                           >
                                                             {value}
                                                           </button>
+                                            {!isAvailable && (
+                                              <div className="absolute inset-0 flex items-center justify-center">
+                                                <svg
+                                                  className="w-6 h-6 text-red-400"
+                                                  fill="none"
+                                                  viewBox="0 0 24 24"
+                                                  stroke="currentColor"
+                                                >
+                                                  <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            )}
+                                          </div>
                                                         )}
                                                       </>
                                                     ),
@@ -438,6 +495,22 @@ export default function ProductDetailPage({
                                 </ProductVariantSelector.Option>
                               </div>
                             ))}
+                            
+                            {/* Reset Button - appears after all options */}
+                            {Object.keys(selectedChoices).length > 0 && (
+                              <div className="pt-4">
+                                <button
+                                  onClick={() => {
+                                    // Reset all selections
+                                    const variantService = servicesManager.getService(SelectedVariantServiceDefinition);
+                                    variantService.resetSelections();
+                                  }}
+                                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                  Reset Selections
+                                </button>
+                              </div>
+                            )}
                           </div>
                         )}
                       </>

@@ -1,31 +1,21 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import StoreExample2Page from "../../../react-pages/store/example-2/index";
-import { loadCollectionServiceConfig } from "../../../headless/store/services/collection-service";
-import { loadCurrentCartServiceConfig } from "../../../headless/store/services/current-cart-service";
 import { loadCategoriesConfig } from "../../../headless/store/services/category-service";
 
-// Load initial data for services
-const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
-  undefined,
-  Astro.url.searchParams
-);
-const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+// Redirect to the first category (typically "All Products") for consistent URL structure
 const categoriesConfig = await loadCategoriesConfig();
+const firstCategory = categoriesConfig.categories[0];
+
+if (!firstCategory) {
+  throw new Error("No categories found");
+}
+
+// Use the real category slug from Wix API
+if (!firstCategory.slug) {
+  throw new Error(`Category "${firstCategory.name}" has no slug`);
+}
+
+const categorySlug = firstCategory.slug;
+const redirectUrl = `/store/example-2/category/${categorySlug}${Astro.url.search}`;
+
+return Astro.redirect(redirectUrl);
 ---
-
-<BaseLayout>
-  <title>Store Example 2 - Advanced Product Experience</title>
-  <meta
-    name="description"
-    content="Advanced e-commerce experience with enhanced variant selection, dynamic pricing, and wishlist functionality"
-  />
-
-  <StoreExample2Page
-    client:load
-    filteredCollectionServiceConfig={filteredCollectionServiceConfig}
-    currentCartServiceConfig={currentCartServiceConfig}
-    categoriesConfig={categoriesConfig}
-    slot="body"
-  />
-</BaseLayout>
