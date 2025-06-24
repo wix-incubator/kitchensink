@@ -23,11 +23,10 @@ Whe using View Transitions in Astro with the `ClientRouter`, adding `data-astro-
 # Checking if logged in 
 
 ```ts
-import { isLoggedIn } from "@wix/astro/auth";
-```
+import { auth } from "@wix/essentials";
+import { type IOAuthStrategy } from "@wix/sdk";
 
-```ts
-declare function isLoggedIn(): boolean;
+const userIsLoggedIn = auth.getContextualAuth<IOAuthStrategy>().loggedIn();
 ```
 
 # Get Current Member
