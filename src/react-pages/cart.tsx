@@ -11,6 +11,7 @@ import {
 } from "../headless/store/services/current-cart-service";
 import { CurrentCart } from "../headless/store/components/CurrentCart";
 import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
+import WixMediaImage from "../headless/media/components/Image";
 
 interface CartPageProps {
   data?: any;
@@ -108,12 +109,14 @@ const CartContent = () => {
                         <a
                           href="/store"
                           className="inline-flex items-center gap-2 text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                          style={{ background: 'var(--theme-btn-primary)' }}
+                          style={{ background: "var(--theme-btn-primary)" }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                            e.currentTarget.style.background =
+                              "var(--theme-btn-primary-hover)";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                            e.currentTarget.style.background =
+                              "var(--theme-btn-primary)";
                           }}
                         >
                           Continue Shopping
@@ -161,10 +164,7 @@ const CartContent = () => {
 
                             <div className="space-y-6">
                               {items.map((item: any) => (
-                                <CurrentCart.Item
-                                  key={item._id}
-                                  item={item}
-                                >
+                                <CurrentCart.Item key={item._id} item={item}>
                                   {({
                                     title,
                                     image,
@@ -179,10 +179,14 @@ const CartContent = () => {
                                       {/* Product Image */}
                                       <div className="flex-shrink-0">
                                         {image ? (
-                                          <img
-                                            className="h-24 w-24 rounded-lg object-cover border border-[var(--theme-border-primary-20)]"
-                                            src={image}
+                                          <WixMediaImage
+                                            media={{
+                                              image,
+                                            }}
+                                            width={96}
+                                            height={96}
                                             alt={title}
+                                            className="h-24 w-24 rounded-lg object-cover border border-[var(--theme-border-primary-20)]"
                                           />
                                         ) : (
                                           <div className="h-24 w-24 bg-[var(--theme-bg-options)] rounded-lg flex items-center justify-center border border-[var(--theme-border-primary-20)]">
@@ -342,17 +346,23 @@ const CartContent = () => {
                                           }
                                           className="w-full text-[var(--theme-text-content)] font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                           style={{
-                                            background: canProceed ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
-                                            cursor: !canProceed ? 'not-allowed' : 'pointer'
+                                            background: canProceed
+                                              ? "var(--theme-btn-primary)"
+                                              : "var(--theme-bg-options)",
+                                            cursor: !canProceed
+                                              ? "not-allowed"
+                                              : "pointer",
                                           }}
                                           onMouseEnter={(e) => {
                                             if (canProceed) {
-                                              e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                                              e.currentTarget.style.background =
+                                                "var(--theme-btn-primary-hover)";
                                             }
                                           }}
                                           onMouseLeave={(e) => {
                                             if (canProceed) {
-                                              e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                                              e.currentTarget.style.background =
+                                                "var(--theme-btn-primary)";
                                             }
                                           }}
                                         >
