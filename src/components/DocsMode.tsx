@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { BookOpenIcon } from "./icons/StackedBooksIcon";
 
 // Context for managing docs mode state
 interface DocsContextType {
@@ -370,6 +371,20 @@ export const DocsFloatingMenu: React.FC = () => {
   } = useDocsMode();
   const [isComponentsExpanded, setIsComponentsExpanded] = useState(false);
   const [isPageDocsExpanded, setIsPageDocsExpanded] = useState(false);
+  const [isGeneralDocsExpanded, setIsGeneralDocsExpanded] = useState(false);
+
+  // List of general docs
+  const generalDocs = [
+    {
+      label: "Overview",
+      path: "/docs",
+    },
+    {
+      label: "Architecture & Patterns",
+      path: "/docs/architecture/client-side-services",
+    },
+    // Add more general docs here if needed
+  ];
 
   // Start with page docs expanded when entering docs mode, reset when leaving
   useEffect(() => {
@@ -388,9 +403,73 @@ export const DocsFloatingMenu: React.FC = () => {
 
   const hasPageDocs = pageTitle && pageDescription && pageDocs;
   const hasComponents = discoveredComponents.size > 0;
+  const hasGeneralDocs = generalDocs.length > 0;
 
   return (
     <div className="fixed left-6 top-36 z-[100] flex flex-col gap-4 max-w-xs">
+      {/* General Docs Section */}
+      {hasGeneralDocs && (
+        <>
+          {/* Collapsed state - small button */}
+          {!isGeneralDocsExpanded ? (
+            <button
+              onClick={() => setIsGeneralDocsExpanded(true)}
+              className="w-12 h-12 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/30 group"
+              title="General Docs"
+            >
+              <BookOpenIcon className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" />
+            </button>
+          ) : (
+            <div className="bg-white/80 backdrop-blur-lg border border-white/90 rounded-2xl shadow-2xl transition-all duration-500 ease-out transform scale-100 opacity-100 translate-y-0 min-w-64">
+              {/* Header with collapse button */}
+              <div className="flex items-center justify-between p-4 border-b border-white/40">
+                <h3 className="text-gray-800 text-sm font-medium">
+                  General Docs
+                </h3>
+                <button
+                  onClick={() => setIsGeneralDocsExpanded(false)}
+                  className="p-1 hover:bg-gray-200 rounded-lg transition-colors group"
+                  title="Collapse general docs list"
+                >
+                  <svg
+                    className="w-4 h-4 text-gray-600 group-hover:text-gray-800 transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {/* General Docs list */}
+              <div className="p-3">
+                <div className="space-y-1 max-h-64 overflow-y-auto">
+                  {generalDocs.map((doc, index) => (
+                    <button
+                      key={doc.path}
+                      onClick={() => openDocs(doc.path)}
+                      className="block w-full text-left text-gray-700 hover:text-gray-900 text-xs p-2 hover:bg-gray-200 rounded-lg transition-all duration-200 transform hover:scale-105 animate-slideIn"
+                      style={{
+                        animationDelay: `${index * 50}ms`,
+                      }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></div>
+                        <span className="truncate">{doc.label}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
       {/* Page Docs Section */}
       {hasPageDocs && (
         <>
