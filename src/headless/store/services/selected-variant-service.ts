@@ -7,6 +7,7 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "./current-cart-service";
+import { ProductModifiersServiceDefinition } from "./product-modifiers-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
@@ -40,7 +41,7 @@ export interface SelectedVariantServiceAPI {
   isLowStock: (threshold?: number) => boolean;
 
   setSelectedChoices: (choices: Record<string, string>) => void;
-  addToCart: (quantity?: number) => Promise<void>;
+  addToCart: (quantity?: number, modifiers?: Record<string, any>) => Promise<void>;
   setOption: (group: string, value: string) => void;
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
@@ -310,7 +311,7 @@ export const SelectedVariantService = implementService.withConfig<{
     updateQuantityFromVariant(matchingVariant);
   };
 
-  const addToCart = async (quantity: number = 1) => {
+  const addToCart = async (quantity: number = 1, modifiers?: Record<string, any>) => {
     try {
       isLoading.set(true);
       error.set(null);
@@ -322,11 +323,20 @@ export const SelectedVariantService = implementService.withConfig<{
         throw new Error("Product not found");
       }
 
-      const catalogReference = {
+      // Build catalog reference with modifiers if provided
+      const catalogReference: any = {
         catalogItemId: prod._id,
         appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
         options: variant?._id ? { variantId: variant._id } : undefined,
       };
+
+      // Add modifiers to catalog reference if they exist
+      if (modifiers && Object.keys(modifiers).length > 0) {
+        catalogReference.options = {
+          ...catalogReference.options,
+          customizations: modifiers,
+        };
+      }
 
       const lineItems = [
         {

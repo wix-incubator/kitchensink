@@ -37,12 +37,17 @@ import {
   RelatedProductsService,
   loadRelatedProductsServiceConfig,
 } from "../../../../headless/store/services/related-products-service";
+import {
+  ProductModifiersServiceDefinition,
+  ProductModifiersService,
+} from "../../../../headless/store/services/product-modifiers-service";
 import { Product } from "../../../../headless/store/components/Product";
 import { ProductVariantSelector } from "../../../../headless/store/components/ProductVariantSelector";
 import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
 import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
 import { SocialSharing } from "../../../../headless/store/components/SocialSharing";
 import { RelatedProducts } from "../../../../headless/store/components/RelatedProducts";
+import { ProductModifiers } from "../../../../headless/store/components/ProductModifiers";
 import WixMediaImage from "../../../../headless/media/components/Image";
 
 interface ProductDetailPageProps {
@@ -52,6 +57,7 @@ interface ProductDetailPageProps {
   selectedVariantServiceConfig: any;
   socialSharingServiceConfig: any;
   relatedProductsServiceConfig: any;
+  productModifiersServiceConfig?: any;
 }
 
 const ProductImageGallery = () => {
@@ -525,6 +531,175 @@ const ProductInfo = ({ onAddToCart, servicesManager }: { onAddToCart: () => void
         )}
       </ProductVariantSelector.Options>
 
+      {/* Product Modifiers */}
+      <ProductModifiers.Modifiers>
+        {withDocsWrapper(
+          ({ modifiers, hasModifiers, selectedModifiers, areAllRequiredModifiersFilled }) => (
+            <>
+              {hasModifiers && (
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold text-white">
+                    Product Customizations
+                  </h3>
+                  
+                  {modifiers.map((modifier: any) => (
+                    <div key={modifier.name}>
+                      <ProductModifiers.Modifier modifier={modifier}>
+                        {withDocsWrapper(
+                          ({ name, type, mandatory, choices, hasChoices, isFreeText, maxChars, placeholder }) => (
+                            <div className="space-y-3">
+                              <h4 className="text-md font-medium text-white">
+                                {name}
+                                {mandatory && <span className="text-red-400 ml-1">*</span>}
+                              </h4>
+                              
+                              {isFreeText ? (
+                                // FREE_TEXT modifier
+                                <div className="space-y-2">
+                                  {!mandatory ? (
+                                    // Optional free text with toggle
+                                    <ProductModifiers.ToggleFreeText modifier={modifier}>
+                                      {withDocsWrapper(
+                                        ({ isTextInputShown, onToggle, mandatory: toggleMandatory }) => (
+                                          <div className="space-y-3">
+                                            <label className="flex items-center gap-2">
+                                              <input
+                                                type="checkbox"
+                                                checked={isTextInputShown}
+                                                onChange={onToggle}
+                                                className="rounded border-white/20 bg-white/10 text-teal-500 focus:ring-teal-500"
+                                              />
+                                              <span className="text-white/80">Enable</span>
+                                            </label>
+                                            
+                                            {isTextInputShown && (
+                                              <ProductModifiers.FreeText modifier={modifier}>
+                                                {withDocsWrapper(
+                                                  ({ value, onChange, charCount, isOverLimit, maxChars: textMaxChars, placeholder: freeTextPlaceholder }) => (
+                                                    <div className="space-y-1">
+                                                      <textarea
+                                                        value={value}
+                                                        onChange={(e) => onChange(e.target.value)}
+                                                        placeholder={freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`}
+                                                        maxLength={textMaxChars}
+                                                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
+                                                        rows={3}
+                                                      />
+                                                      {textMaxChars && (
+                                                        <p className={`text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-white/60'}`}>
+                                                          {charCount}/{textMaxChars}
+                                                        </p>
+                                                      )}
+                                                    </div>
+                                                  ),
+                                                  "ProductModifiers.FreeText",
+                                                  "/docs/components/product-modifiers#free-text"
+                                                )}
+                                              </ProductModifiers.FreeText>
+                                            )}
+                                          </div>
+                                        ),
+                                        "ProductModifiers.ToggleFreeText",
+                                        "/docs/components/product-modifiers#toggle-free-text"
+                                      )}
+                                    </ProductModifiers.ToggleFreeText>
+                                  ) : (
+                                    // Mandatory free text (always shown)
+                                    <ProductModifiers.FreeText modifier={modifier}>
+                                      {withDocsWrapper(
+                                        ({ value, onChange, charCount, isOverLimit, maxChars: textMaxChars, placeholder: freeTextPlaceholder }) => (
+                                          <div className="space-y-1">
+                                            <textarea
+                                              value={value}
+                                              onChange={(e) => onChange(e.target.value)}
+                                              placeholder={freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`}
+                                              maxLength={textMaxChars}
+                                              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
+                                              rows={3}
+                                            />
+                                            {textMaxChars && (
+                                              <p className={`text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-white/60'}`}>
+                                                {charCount}/{textMaxChars}
+                                              </p>
+                                            )}
+                                          </div>
+                                        ),
+                                        "ProductModifiers.FreeText",
+                                        "/docs/components/product-modifiers#free-text"
+                                      )}
+                                    </ProductModifiers.FreeText>
+                                  )}
+                                </div>
+                              ) : hasChoices ? (
+                                // SWATCH_CHOICES or TEXT_CHOICES modifier
+                                <div className="flex flex-wrap gap-3">
+                                  {choices.map((choice: any, choiceIndex: number) => {
+                                    const isColorModifier = type === "SWATCH_CHOICES";
+                                    const hasColorCode = choice.colorCode;
+
+                                    return (
+                                      <ProductModifiers.Choice
+                                        key={choiceIndex}
+                                        modifier={modifier}
+                                        choice={choice}
+                                      >
+                                        {withDocsWrapper(
+                                          ({ value, isSelected, onSelect, colorCode }) => (
+                                            <>
+                                              {isColorModifier && hasColorCode ? (
+                                                // Color Swatch for modifiers
+                                                <button
+                                                  onClick={onSelect}
+                                                  title={value}
+                                                  className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                    isSelected
+                                                      ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
+                                                      : "border-white/30 hover:border-white/60 hover:scale-105"
+                                                  }`}
+                                                  style={{
+                                                    backgroundColor: colorCode || "#000000",
+                                                  }}
+                                                />
+                                              ) : (
+                                                // Regular Text Button for modifiers
+                                                <button
+                                                  onClick={onSelect}
+                                                  className={`px-4 py-2 rounded-lg border transition-all ${
+                                                    isSelected
+                                                      ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                                      : "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                                  }`}
+                                                >
+                                                  {value}
+                                                </button>
+                                              )}
+                                            </>
+                                          ),
+                                          "ProductModifiers.Choice",
+                                          "/docs/components/product-modifiers#choice"
+                                        )}
+                                      </ProductModifiers.Choice>
+                                    );
+                                  })}
+                                </div>
+                              ) : null}
+                            </div>
+                          ),
+                          "ProductModifiers.Modifier",
+                          "/docs/components/product-modifiers#modifier"
+                        )}
+                      </ProductModifiers.Modifier>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          ),
+          "ProductModifiers.Modifiers",
+          "/docs/components/product-modifiers#modifiers"
+        )}
+      </ProductModifiers.Modifiers>
+
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-white">Quantity</h3>
         <div className="flex items-center gap-3">
@@ -948,42 +1123,52 @@ export default function ProductDetailPage({
   selectedVariantServiceConfig,
   socialSharingServiceConfig,
   relatedProductsServiceConfig,
+  productModifiersServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const servicesManager = createServicesManager(
-    createServicesMap()
-      .addService(
-        ProductServiceDefinition,
-        ProductService,
-        productServiceConfig
-      )
-      .addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartServiceConfig
-      )
-      .addService(
-        SelectedVariantServiceDefinition,
-        SelectedVariantService,
-        selectedVariantServiceConfig
-      )
-      .addService(
-        ProductMediaGalleryServiceDefinition,
-        ProductMediaGalleryService,
-        productMediaGalleryServiceConfig
-      )
-      .addService(
-        SocialSharingServiceDefinition,
-        SocialSharingService,
-        socialSharingServiceConfig
-      )
-      .addService(
-        RelatedProductsServiceDefinition,
-        RelatedProductsService,
-        relatedProductsServiceConfig
-      )
-  );
+  let servicesMap = createServicesMap()
+    .addService(
+      ProductServiceDefinition,
+      ProductService,
+      productServiceConfig
+    )
+    .addService(
+      CurrentCartServiceDefinition,
+      CurrentCartService,
+      currentCartServiceConfig
+    )
+    .addService(
+      SelectedVariantServiceDefinition,
+      SelectedVariantService,
+      selectedVariantServiceConfig
+    )
+    .addService(
+      ProductMediaGalleryServiceDefinition,
+      ProductMediaGalleryService,
+      productMediaGalleryServiceConfig
+    )
+    .addService(
+      SocialSharingServiceDefinition,
+      SocialSharingService,
+      socialSharingServiceConfig
+    )
+    .addService(
+      RelatedProductsServiceDefinition,
+      RelatedProductsService,
+      relatedProductsServiceConfig
+    );
+
+  // Add product modifiers service if available
+  if (productModifiersServiceConfig) {
+    servicesMap = servicesMap.addService(
+      ProductModifiersServiceDefinition,
+      ProductModifiersService,
+      productModifiersServiceConfig
+    );
+  }
+
+  const servicesManager = createServicesManager(servicesMap);
 
   return (
     <KitchensinkLayout>

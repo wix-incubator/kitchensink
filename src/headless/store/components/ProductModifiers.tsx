@@ -1,0 +1,432 @@
+import { useState } from "react";
+import type { ServiceAPI } from "@wix/services-definitions";
+import { useService } from "@wix/services-manager-react";
+import { ProductModifiersServiceDefinition } from "../services/product-modifiers-service";
+import { productsV3 } from "@wix/stores";
+
+/**
+ * Props for Modifiers headless component
+ */
+export interface ModifiersProps {
+  /** Render prop function that receives modifiers data */
+  children: (props: ModifiersRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Modifiers component
+ */
+export interface ModifiersRenderProps {
+  /** Array of product modifiers */
+  modifiers: productsV3.ConnectedModifier[];
+  /** Whether product has modifiers */
+  hasModifiers: boolean;
+  /** Currently selected modifier values */
+  selectedModifiers: Record<string, any>;
+  /** Whether all required modifiers are filled */
+  areAllRequiredModifiersFilled: boolean;
+}
+
+/**
+ * Headless component for all product modifiers
+ */
+export const Modifiers = (props: ModifiersProps) => {
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+  }
+
+  if (!modifiersService) {
+    // No modifiers service available, return empty state
+    return props.children({
+      modifiers: [],
+      hasModifiers: false,
+      selectedModifiers: {},
+      areAllRequiredModifiersFilled: true,
+    });
+  }
+
+  const modifiers = modifiersService.modifiers.get();
+  const hasModifiers = modifiersService.hasModifiers.get();
+  const selectedModifiers = modifiersService.selectedModifiers.get();
+  const areAllRequiredModifiersFilled = modifiersService.areAllRequiredModifiersFilled();
+
+  return props.children({
+    modifiers,
+    hasModifiers,
+    selectedModifiers,
+    areAllRequiredModifiersFilled,
+  });
+};
+
+/**
+ * Props for Modifier headless component
+ */
+export interface ModifierProps {
+  /** Product modifier data */
+  modifier: productsV3.ConnectedModifier;
+  /** Render prop function that receives modifier data */
+  children: (props: ModifierRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Modifier component
+ */
+export interface ModifierRenderProps {
+  /** Modifier name */
+  name: string;
+  /** Modifier type */
+  type: any;
+  /** Whether this modifier is mandatory */
+  mandatory: boolean;
+  /** Array of choices for this modifier (for choice-based modifiers) */
+  choices: productsV3.ConnectedModifierChoice[];
+  /** Currently selected value for this modifier */
+  selectedValue: any;
+  /** Whether this modifier has choices */
+  hasChoices: boolean;
+  /** Whether this modifier is a free text type */
+  isFreeText: boolean;
+  /** Maximum characters for free text */
+  maxChars?: number;
+  /** Placeholder text for free text */
+  placeholder?: string;
+}
+
+/**
+ * Headless component for a specific product modifier
+ */
+export const Modifier = (props: ModifierProps) => {
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+  }
+
+  const { modifier } = props;
+  
+  if (!modifiersService) {
+    // No service available, return basic modifier info without selection state
+    const name = modifier.name || "";
+    const type = modifier.modifierRenderType;
+    const mandatory = modifier.mandatory || false;
+    const choices = modifier.choicesSettings?.choices || [];
+    const hasChoices = choices.length > 0;
+    const isFreeText = type === "FREE_TEXT";
+    const freeTextSettings = modifier.freeTextSettings;
+    const maxChars = (freeTextSettings as any)?.maxLength;
+    const placeholder = (freeTextSettings as any)?.placeholder;
+
+    return props.children({
+      name,
+      type,
+      mandatory,
+      choices,
+      selectedValue: null,
+      hasChoices,
+      isFreeText,
+      maxChars,
+      placeholder,
+    });
+  }
+
+  const selectedModifiers = modifiersService.selectedModifiers.get();
+
+  const name = modifier.name || "";
+  const type = modifier.modifierRenderType;
+  const mandatory = modifier.mandatory || false;
+  const choices = modifier.choicesSettings?.choices || [];
+  const selectedValue = modifiersService.getModifierValue(name);
+  const hasChoices = choices.length > 0;
+  const isFreeText = type === "FREE_TEXT";
+
+  // Get free text settings
+  const freeTextSettings = modifier.freeTextSettings;
+  const maxChars = (freeTextSettings as any)?.maxLength;
+  const placeholder = (freeTextSettings as any)?.placeholder;
+
+  return props.children({
+    name,
+    type,
+    mandatory,
+    choices,
+    selectedValue,
+    hasChoices,
+    isFreeText,
+    maxChars,
+    placeholder,
+  });
+};
+
+/**
+ * Props for ModifierChoice headless component
+ */
+export interface ModifierChoiceProps {
+  /** Product modifier data */
+  modifier: productsV3.ConnectedModifier;
+  /** Choice data */
+  choice: productsV3.ConnectedModifierChoice;
+  /** Render prop function that receives choice data */
+  children: (props: ModifierChoiceRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for ModifierChoice component
+ */
+export interface ModifierChoiceRenderProps {
+  /** Choice value to display */
+  value: string;
+  /** Choice description (for color options) */
+  description: string | undefined;
+  /** Whether this choice is currently selected */
+  isSelected: boolean;
+  /** Function to select this choice */
+  onSelect: () => void;
+  /** Modifier name */
+  modifierName: string;
+  /** Choice value */
+  choiceValue: string;
+  /** Color code for swatch choices */
+  colorCode?: string;
+}
+
+/**
+ * Headless component for individual modifier choice selection
+ */
+export const ModifierChoice = (props: ModifierChoiceProps) => {
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+  }
+
+  const { modifier, choice } = props;
+
+  const modifierName = modifier.name || "";
+  const choiceValue = choice.name || "";
+  
+  if (!modifiersService) {
+    // No service available, return basic choice info without selection functionality
+    const value = choiceValue;
+    const description = (choice as any).description;
+    const colorCode = (choice as any).colorCode;
+
+    return props.children({
+      value,
+      description,
+      isSelected: false,
+      onSelect: () => {}, // No-op when service not available
+      modifierName,
+      choiceValue,
+      colorCode,
+    });
+  }
+  
+  const selectedValue = modifiersService.getModifierValue(modifierName);
+  
+  const isSelected = selectedValue?.choiceValue === choiceValue;
+  const value = choiceValue;
+  const description = (choice as any).description;
+  const colorCode = (choice as any).colorCode;
+
+  const onSelect = () => {
+    modifiersService.setModifierChoice(modifierName, choiceValue);
+  };
+
+  return props.children({
+    value,
+    description,
+    isSelected,
+    onSelect,
+    modifierName,
+    choiceValue,
+    colorCode,
+  });
+};
+
+/**
+ * Props for ModifierFreeText headless component
+ */
+export interface ModifierFreeTextProps {
+  /** Product modifier data */
+  modifier: productsV3.ConnectedModifier;
+  /** Render prop function that receives free text data */
+  children: (props: ModifierFreeTextRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for ModifierFreeText component
+ */
+export interface ModifierFreeTextRenderProps {
+  /** Current text value */
+  value: string;
+  /** Function to update text value */
+  onChange: (value: string) => void;
+  /** Whether this modifier is mandatory */
+  mandatory: boolean;
+  /** Maximum characters allowed */
+  maxChars?: number;
+  /** Placeholder text */
+  placeholder?: string;
+  /** Character count */
+  charCount: number;
+  /** Whether character limit is exceeded */
+  isOverLimit: boolean;
+  /** Modifier name */
+  modifierName: string;
+}
+
+/**
+ * Headless component for free text modifier input
+ */
+export const ModifierFreeText = (props: ModifierFreeTextProps) => {
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+  }
+
+  const { modifier } = props;
+  const modifierName = modifier.name || "";
+  const mandatory = modifier.mandatory || false;
+  
+  const freeTextSettings = modifier.freeTextSettings;
+  const maxChars = (freeTextSettings as any)?.maxLength;
+  const placeholder = (freeTextSettings as any)?.placeholder;
+  
+  // Debug logging
+  console.log('ModifierFreeText Debug:', modifierName, {
+    freeTextSettings,
+    maxChars,
+    placeholder,
+    modifier
+  });
+  
+  if (!modifiersService) {
+    // No service available, return basic free text info without functionality
+    return props.children({
+      value: "",
+      onChange: () => {}, // No-op when service not available
+      mandatory,
+      maxChars,
+      placeholder,
+      charCount: 0,
+      isOverLimit: false,
+      modifierName,
+    });
+  }
+  
+  const selectedValue = modifiersService.getModifierValue(modifierName);
+  const value = selectedValue?.freeTextValue || "";
+  
+  const charCount = value.length;
+  const isOverLimit = maxChars ? charCount > maxChars : false;
+
+  const onChange = (newValue: string) => {
+    // Don't update if over character limit
+    if (maxChars && newValue.length > maxChars) {
+      return;
+    }
+    modifiersService.setModifierFreeText(modifierName, newValue);
+  };
+
+  return props.children({
+    value,
+    onChange,
+    mandatory,
+    maxChars,
+    placeholder,
+    charCount,
+    isOverLimit,
+    modifierName,
+  });
+};
+
+/**
+ * Props for ModifierToggleFreeText headless component  
+ */
+export interface ModifierToggleFreeTextProps {
+  /** Product modifier data */
+  modifier: productsV3.ConnectedModifier;
+  /** Render prop function that receives toggle data */
+  children: (props: ModifierToggleFreeTextRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for ModifierToggleFreeText component
+ */
+export interface ModifierToggleFreeTextRenderProps {
+  /** Whether the text input is shown */
+  isTextInputShown: boolean;
+  /** Function to toggle text input visibility */
+  onToggle: () => void;
+  /** Whether this modifier is mandatory */
+  mandatory: boolean;
+  /** Modifier name */
+  modifierName: string;
+}
+
+/**
+ * Headless component for toggling free text modifier input
+ * Used for optional free text modifiers where a checkbox shows/hides the input
+ */
+export const ModifierToggleFreeText = (props: ModifierToggleFreeTextProps) => {
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+  }
+
+  const { modifier } = props;
+  const modifierName = modifier.name || "";
+  const mandatory = modifier.mandatory || false;
+  
+  const [isTextInputShown, setIsTextInputShown] = useState(mandatory);
+
+  if (!modifiersService) {
+    // No service available, return basic toggle info without functionality
+    return props.children({
+      isTextInputShown,
+      onToggle: () => {}, // No-op when service not available
+      mandatory,
+      modifierName,
+    });
+  }
+  
+  const selectedValue = modifiersService.getModifierValue(modifierName);
+
+  const onToggle = () => {
+    const newState = !isTextInputShown;
+    setIsTextInputShown(newState);
+    
+    // Clear modifier value when hiding
+    if (!newState) {
+      modifiersService.clearModifier(modifierName);
+    }
+  };
+
+  return props.children({
+    isTextInputShown,
+    onToggle,
+    mandatory,
+    modifierName,
+  });
+};
+
+export const ProductModifiers = {
+  Modifiers,
+  Modifier,
+  Choice: ModifierChoice,
+  FreeText: ModifierFreeText,
+  ToggleFreeText: ModifierToggleFreeText,
+} as const; 
