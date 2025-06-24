@@ -227,6 +227,39 @@ const ProductImageGallery = () => {
   );
 };
 
+// Reusable component for free text inputs
+const FreeTextInput = ({ 
+  modifier, 
+  name 
+}: { 
+  modifier: any; 
+  name: string; 
+}) => (
+  <ProductModifiers.FreeText modifier={modifier}>
+    {withDocsWrapper(
+      ({ value, onChange, charCount, isOverLimit, maxChars: textMaxChars, placeholder: freeTextPlaceholder }) => (
+        <div className="space-y-1">
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`}
+            maxLength={textMaxChars}
+            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
+            rows={3}
+          />
+          {textMaxChars && (
+            <p className={`text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-white/60'}`}>
+              {charCount}/{textMaxChars}
+            </p>
+          )}
+        </div>
+      ),
+      "ProductModifiers.FreeText",
+      "/docs/components/product-modifiers#free-text"
+    )}
+  </ProductModifiers.FreeText>
+);
+
 const ProductInfo = ({ onAddToCart, servicesManager }: { onAddToCart: () => void; servicesManager: any }) => {
   const [quantity, setQuantity] = useState(1);
   
@@ -573,29 +606,7 @@ const ProductInfo = ({ onAddToCart, servicesManager }: { onAddToCart: () => void
                                             </label>
                                             
                                             {isTextInputShown && (
-                                              <ProductModifiers.FreeText modifier={modifier}>
-                                                {withDocsWrapper(
-                                                  ({ value, onChange, charCount, isOverLimit, maxChars: textMaxChars, placeholder: freeTextPlaceholder }) => (
-                                                    <div className="space-y-1">
-                                                      <textarea
-                                                        value={value}
-                                                        onChange={(e) => onChange(e.target.value)}
-                                                        placeholder={freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`}
-                                                        maxLength={textMaxChars}
-                                                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
-                                                        rows={3}
-                                                      />
-                                                      {textMaxChars && (
-                                                        <p className={`text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-white/60'}`}>
-                                                          {charCount}/{textMaxChars}
-                                                        </p>
-                                                      )}
-                                                    </div>
-                                                  ),
-                                                  "ProductModifiers.FreeText",
-                                                  "/docs/components/product-modifiers#free-text"
-                                                )}
-                                              </ProductModifiers.FreeText>
+                                              <FreeTextInput modifier={modifier} name={name} />
                                             )}
                                           </div>
                                         ),
@@ -605,29 +616,7 @@ const ProductInfo = ({ onAddToCart, servicesManager }: { onAddToCart: () => void
                                     </ProductModifiers.ToggleFreeText>
                                   ) : (
                                     // Mandatory free text (always shown)
-                                    <ProductModifiers.FreeText modifier={modifier}>
-                                      {withDocsWrapper(
-                                        ({ value, onChange, charCount, isOverLimit, maxChars: textMaxChars, placeholder: freeTextPlaceholder }) => (
-                                          <div className="space-y-1">
-                                            <textarea
-                                              value={value}
-                                              onChange={(e) => onChange(e.target.value)}
-                                              placeholder={freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`}
-                                              maxLength={textMaxChars}
-                                              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
-                                              rows={3}
-                                            />
-                                            {textMaxChars && (
-                                              <p className={`text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-white/60'}`}>
-                                                {charCount}/{textMaxChars}
-                                              </p>
-                                            )}
-                                          </div>
-                                        ),
-                                        "ProductModifiers.FreeText",
-                                        "/docs/components/product-modifiers#free-text"
-                                      )}
-                                    </ProductModifiers.FreeText>
+                                    <FreeTextInput modifier={modifier} name={name} />
                                   )}
                                 </div>
                               ) : hasChoices ? (
