@@ -46,6 +46,18 @@ const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
   productServiceConfig.product._id || "",
   4 // limit to 4 related products
 );
+
+// Load product modifiers service configuration if product has modifiers
+let productModifiersServiceConfig = null;
+try {
+  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+    productModifiersServiceConfig = {
+      product: productServiceConfig.product,
+    };
+  }
+} catch (error) {
+  console.warn("Could not load product modifiers service:", error);
+}
 ---
 
 <BaseLayout>
@@ -67,6 +79,7 @@ const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
     selectedVariantServiceConfig={selectedVariantServiceConfig}
     socialSharingServiceConfig={socialSharingServiceConfig}
     relatedProductsServiceConfig={relatedProductsServiceConfig}
+    productModifiersServiceConfig={productModifiersServiceConfig}
     slot="body"
   />
 </BaseLayout>

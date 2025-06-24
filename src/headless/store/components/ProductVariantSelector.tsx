@@ -1,6 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
+import { ProductModifiersServiceDefinition } from "../services/product-modifiers-service";
 import { productsV3 } from "@wix/stores";
 
 /**
@@ -198,6 +199,15 @@ export const Trigger = (props: TriggerProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+  
+  // Try to get modifiers service - it may not exist for all products
+  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  try {
+    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+  } catch {
+    // Modifiers service not available for this product
+    modifiersService = null;
+  }
 
   const price = variantService.currentPrice.get();
   const inStock = variantService.isInStock.get();
@@ -208,7 +218,16 @@ export const Trigger = (props: TriggerProps) => {
   const canAddToCart = inStock && !isLoading;
 
   const onAddToCart = async () => {
-    await variantService.addToCart(quantity);
+    // Get modifiers data if available
+    let modifiersData: Record<string, any> | undefined;
+    if (modifiersService) {
+      const selectedModifiers = modifiersService.selectedModifiers.get();
+      if (Object.keys(selectedModifiers).length > 0) {
+        modifiersData = selectedModifiers;
+      }
+    }
+    
+    await variantService.addToCart(quantity, modifiersData);
   };
 
   return props.children({
