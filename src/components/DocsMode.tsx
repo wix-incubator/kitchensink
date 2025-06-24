@@ -5,7 +5,7 @@ import { BookOpenIcon } from "./icons/StackedBooksIcon";
 interface DocsContextType {
   isDocsMode: boolean;
   toggleDocsMode: () => void;
-  openDocs: (componentName: string) => void;
+  openDocs: (componentName: string, options?: { wide?: boolean }) => void;
   selectedComponent: string | null;
   discoveredComponents: Map<string, string>; // componentName -> componentPath
   registerComponent: (componentName: string, componentPath: string) => void;
@@ -14,6 +14,7 @@ interface DocsContextType {
   pageDescription: string | null;
   pageDocs: string | null;
   registerPage: (title: string, description: string, docsUrl: string) => void;
+  isWideDocsDrawer: boolean;
 }
 
 const DocsContext = createContext<DocsContextType | null>(null);
@@ -44,6 +45,7 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [discoveredComponents, setDiscoveredComponents] = useState<
     Map<string, string>
   >(new Map());
+  const [isWideDocsDrawer, setIsWideDocsDrawer] = useState(false);
 
   // Page docs state
   const [pageTitle, setPageTitle] = useState<string | null>(null);
@@ -57,8 +59,9 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const openDocs = (componentName: string) => {
+  const openDocs = (componentName: string, options?: { wide?: boolean }) => {
     setSelectedComponent(componentName);
+    setIsWideDocsDrawer(!!options?.wide);
   };
 
   const registerComponent = (componentName: string, componentPath: string) => {
@@ -109,6 +112,7 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
         pageDescription,
         pageDocs,
         registerPage,
+        isWideDocsDrawer,
       }}
     >
       {children}
@@ -180,7 +184,8 @@ export const withDocsWrapper = <T extends Record<string, any>>(
 
 // Docs drawer component
 export const DocsDrawer: React.FC = () => {
-  const { selectedComponent, isDocsMode, openDocs } = useDocsMode();
+  const { selectedComponent, isDocsMode, openDocs, isWideDocsDrawer } =
+    useDocsMode();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -244,7 +249,11 @@ export const DocsDrawer: React.FC = () => {
 
       {/* Drawer */}
       <div
-        className={`docs-drawer fixed right-0 top-0 h-full w-full sm:w-96 lg:w-[32rem] bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`docs-drawer fixed right-0 top-0 h-full w-full ${
+          isWideDocsDrawer
+            ? "sm:w-[32rem] lg:w-[48rem]"
+            : "sm:w-96 lg:w-[32rem]"
+        } bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
@@ -452,7 +461,7 @@ export const DocsFloatingMenu: React.FC = () => {
                   {generalDocs.map((doc, index) => (
                     <button
                       key={doc.path}
-                      onClick={() => openDocs(doc.path)}
+                      onClick={() => openDocs(doc.path, { wide: true })}
                       className="block w-full text-left text-gray-700 hover:text-gray-900 text-xs p-2 hover:bg-gray-200 rounded-lg transition-all duration-200 transform hover:scale-105 animate-slideIn"
                       style={{
                         animationDelay: `${index * 50}ms`,
@@ -530,7 +539,7 @@ export const DocsFloatingMenu: React.FC = () => {
                 </p>
 
                 <button
-                  onClick={() => openDocs(pageDocs)}
+                  onClick={() => openDocs(pageDocs, { wide: true })}
                   className="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors duration-200 flex items-center gap-1 group"
                 >
                   <span>Read more</span>
