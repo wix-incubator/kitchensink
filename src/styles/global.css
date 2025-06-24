@@ -51,3 +51,131 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* Theme utility classes */
+.theme-bg-primary-10 {
+  background-color: var(--theme-bg-primary-10);
+}
+
+.theme-bg-primary-20 {
+  background-color: var(--theme-bg-primary-20);
+}
+
+.theme-border-primary-10 {
+  border-color: var(--theme-border-primary-10);
+}
+
+.theme-border-primary-20 {
+  border-color: var(--theme-border-primary-20);
+}
+
+.theme-border-primary-30 {
+  border-color: var(--theme-border-primary-30);
+}
+
+.theme-color-border-40 {
+  border-color: var(--theme-color-border-40);
+}
+
+.theme-color-border-80 {
+  border-color: var(--theme-color-border-80);
+}
+
+.theme-text-primary-300 {
+  color: var(--theme-text-primary-300);
+}
+
+.theme-text-primary-400 {
+  color: var(--theme-text-primary-400);
+}
+
+.theme-gradient-primary {
+  background: var(--theme-gradient-primary);
+}
+
+.theme-gradient-primary-hover:hover {
+  background: var(--theme-gradient-primary-hover);
+}
+
+.theme-gradient-ribbon {
+  background: var(--theme-gradient-ribbon);
+}
+
+.theme-btn-primary {
+  background: var(--theme-btn-primary);
+}
+
+.theme-btn-primary:hover {
+  background: var(--theme-btn-primary-hover);
+}
+
+.theme-btn-secondary {
+  background: var(--theme-btn-secondary);
+}
+
+.theme-btn-secondary:hover {
+  background: var(--theme-btn-secondary-hover);
+}
+
+.theme-bg-options {
+  background-color: var(--theme-bg-options);
+}
+
+.theme-text-options {
+  color: var(--theme-text-primary-300);
+}
+
+.theme-border-options {
+  border-color: var(--theme-border-primary-30);
+}
+
+.theme-hero-text-gradient {
+  background: var(--theme-hero-text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-hero-card-gradient {
+  background: var(--theme-hero-card-gradient);
+}
+
+.theme-hero-feature-gradient {
+  background: var(--theme-hero-feature-gradient);
+}
+
+.theme-text-content {
+  color: var(--theme-text-content);
+}
+
+.theme-text-content-40 {
+  color: var(--theme-text-content-40);
+}
+
+.theme-text-content-50 {
+  color: var(--theme-text-content-50);
+}
+
+.theme-text-content-60 {
+  color: var(--theme-text-content-60);
+}
+
+.theme-text-content-70 {
+  color: var(--theme-text-content-70);
+}
+
+.theme-text-content-80 {
+  color: var(--theme-text-content-80);
+}
+
+.theme-text-content-90 {
+  color: var(--theme-text-content-90);
+}
+
+.theme-text-success {
+  color: var(--theme-text-success);
+}
+
+.theme-text-error {
+  color: var(--theme-text-error);
+}

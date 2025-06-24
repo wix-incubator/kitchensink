@@ -1,0 +1,66 @@
+:root {
+  /* Primary Theme Colors - Material Blue */
+  --theme-primary-500: #1976d2; /* Primary brand color used for main UI elements like filter status bars and icons */
+  --theme-primary-600: #1565c0; /* Darker variant of primary color used for hover states and emphasis */
+  --theme-secondary-500: #03dac6; /* Secondary accent color (Material Teal) used in gradients alongside primary color */
+  --theme-secondary-600: #00bcd4; /* Darker variant of secondary color used for hover state gradients */
+  --theme-secondary-700: #0097a7; /* Darkest variant of secondary color used for intense hover states */
+
+  /* Background Colors with Opacity */
+  --theme-bg-primary-10: rgba(25, 118, 210, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
+  --theme-bg-primary-20: rgba(25, 118, 210, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
+  --theme-bg-options: rgba(0, 0, 0, 0.04); /* Background color for product option tags and choice buttons */
+  --theme-bg-loading: rgba(0, 0, 0, 0.08); /* Background color for loading skeleton elements */
+  --theme-bg-card: rgba(0, 0, 0, 0.02); /* Very light background for cards and product items */
+  --theme-bg-error: rgba(244, 67, 54, 0.1); /* Light red background for error messages */
+  --theme-bg-tooltip: rgba(33, 33, 33, 0.9); /* Dark background for tooltips and overlays */
+
+  /* Border Colors */
+  --theme-border-primary-10: rgba(25, 118, 210, 0.1); /* Very subtle primary-colored border for filter status bars */
+  --theme-border-primary-20: rgba(25, 118, 210, 0.2); /* More visible primary-colored border for emphasized elements */
+  --theme-border-primary-30: rgba(25, 118, 210, 0.3); /* Strong primary-colored border used for product option tags */
+  --theme-border-card: rgba(0, 0, 0, 0.12); /* Light border for cards and product items */
+  --theme-border-card-hover: rgba(0, 0, 0, 0.2); /* Medium border for card hover states */
+  --theme-border-error: rgba(244, 67, 54, 0.2); /* Red border for error messages */
+
+  /* Text Colors - Material Design Light Theme */
+  --theme-text-primary-300: #1976d2; /* Primary color used for filter status text and active filter labels */
+  --theme-text-primary-400: #1565c0; /* Darker primary color used for filter icons and interactive text elements */
+  --theme-text-content: #212121; /* Main content text color used for headings, product titles, and button labels */
+  --theme-text-content-30: rgba(33, 33, 33, 0.3); /* Very faded content text used for disabled text elements */
+  --theme-text-content-40: rgba(33, 33, 33, 0.4); /* Very dim content text used for placeholder icons and subtle elements */
+  --theme-text-content-50: rgba(33, 33, 33, 0.5); /* Dim content text used for strikethrough sale prices */
+  --theme-text-content-60: rgba(33, 33, 33, 0.6); /* Muted content text used for descriptions, counts, and secondary information */
+  --theme-text-content-70: rgba(33, 33, 33, 0.7); /* Semi-muted content text used for subtitles and intro paragraphs */
+  --theme-text-content-80: rgba(33, 33, 33, 0.8); /* Clear content text used for option labels and form text */
+  --theme-text-content-90: rgba(33, 33, 33, 0.9); /* Almost full opacity content text used for emphasized secondary text */
+  --theme-text-success: #4caf50; /* Material Green color used for "In Stock" status indicators */
+  --theme-text-error: #f44336; /* Material Red color used for "Out of Stock" status and error messages */
+
+  /* Color Picker Border Colors */
+  --theme-color-border-40: rgba(25, 118, 210, 0.4); /* Default border color for product color option circles */
+  --theme-color-border-80: rgba(25, 118, 210, 0.8); /* Hover border color for product color option circles */
+
+  /* Gradient Colors - Material Design */
+  --theme-gradient-primary: linear-gradient(to right, #1976d2, #03dac6); /* Main brand gradient used for primary buttons and CTAs */
+  --theme-gradient-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Darker gradient used for button hover states */
+  --theme-gradient-ribbon: linear-gradient(to right, #1976d2, #03dac6); /* Gradient used for product ribbon/badge backgrounds */
+
+  /* Button Gradients */
+  --theme-btn-primary: linear-gradient(to right, #1976d2, #03dac6); /* Primary button background gradient for main actions */
+  --theme-btn-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Primary button hover state gradient */
+  --theme-btn-secondary: linear-gradient(to right, #1976d2, #03dac6); /* Secondary button background gradient */
+  --theme-btn-secondary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Secondary button hover state gradient */
+
+  /* Hero Section Gradients */
+  --theme-hero-text-gradient: linear-gradient(to right, #1976d2, #03dac6); /* Text gradient used for hero section main headlines */
+  --theme-hero-card-gradient: linear-gradient(to right, rgba(25, 118, 210, 0.08), rgba(3, 218, 198, 0.08)); /* Background gradient for hero feature cards */
+  --theme-hero-feature-gradient: linear-gradient(to bottom right, #1976d2, #03dac6); /* Background gradient for hero feature icons */
+  
+  /* Typography - Material Design */
+  --theme-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Material Design font family for all themed text elements */
+  --theme-font-weight-normal: 400; /* Normal font weight for body text */
+  --theme-font-weight-medium: 500; /* Medium font weight for emphasized text */
+  --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings and labels */
+  --theme-font-weight-bold: 700; /* Bold font weight for titles and strong emphasis */
+} 

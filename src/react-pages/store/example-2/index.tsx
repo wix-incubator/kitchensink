@@ -1,6 +1,7 @@
 import React from "react";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
+import "../../../styles/theme-2.css";
 import {
   withDocsWrapper,
   PageDocsRegistration,
@@ -83,23 +84,23 @@ const ProductGridContent = () => {
                                     currentFilters={currentFilters}
                                     isFiltered={isFiltered}
                                   />
-                                  
+
                                   {/* Pulse Loading Overlay */}
                                   {!isFullyLoaded && (
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl">
-                                      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-xl">
+                                    <div className="absolute inset-0 bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl">
+                                      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[var(--theme-bg-card)] via-[var(--theme-bg-options)] to-[var(--theme-bg-card)] rounded-xl">
                                         <div className="p-6 space-y-4">
-                                          <div className="h-6 bg-white/20 rounded w-32"></div>
+                                          <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-32"></div>
                                           <div className="space-y-3">
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-16 bg-white/15 rounded"></div>
+                                            <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
+                                            <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
+                                            <div className="h-16 bg-[var(--theme-bg-loading)] rounded"></div>
                                           </div>
-                                          <div className="h-6 bg-white/20 rounded w-24"></div>
+                                          <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-24"></div>
                                           <div className="space-y-2">
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
+                                            <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
+                                            <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
+                                            <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                           </div>
                                         </div>
                                       </div>
@@ -114,17 +115,17 @@ const ProductGridContent = () => {
                         {/* Main Content Area */}
                         <div className="flex-1 min-w-0">
                           {error && (
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
-                              <p className="text-red-400">{error}</p>
+                            <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-4 mb-6">
+                              <p className="text-[var(--theme-text-error)]">{error}</p>
                             </div>
                           )}
 
                           {/* Filter Status Bar */}
                           {isFiltered && (
-                            <div className="flex items-center justify-between bg-teal-500/10 border border-teal-500/20 rounded-xl p-4 mb-6">
+                            <div className="flex items-center justify-between bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] rounded-xl p-4 mb-6">
                               <div className="flex items-center gap-2">
                                 <svg
-                                  className="w-5 h-5 text-teal-400"
+                                  className="w-5 h-5 text-[var(--theme-text-primary-400)]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -136,14 +137,14 @@ const ProductGridContent = () => {
                                     d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                                   />
                                 </svg>
-                                <span className="text-teal-300">
+                                <span className="text-[var(--theme-text-primary-300)]">
                                   Showing {String(products.length)} of{" "}
                                   {totalProducts} products
                                 </span>
                               </div>
                               <button
                                 onClick={clearFilters}
-                                className="text-teal-400 hover:text-teal-300 transition-colors text-sm"
+                                className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors text-sm"
                               >
                                 Clear Filters
                               </button>
@@ -155,19 +156,19 @@ const ProductGridContent = () => {
                               {Array.from({ length: 8 }).map((_, i) => (
                                 <div
                                   key={i}
-                                  className="bg-white/5 rounded-xl p-4 animate-pulse"
+                                  className="bg-[var(--theme-bg-card)] rounded-xl p-4 animate-pulse"
                                 >
-                                  <div className="aspect-square bg-white/10 rounded-lg mb-4"></div>
-                                  <div className="h-4 bg-white/10 rounded mb-2"></div>
-                                  <div className="h-3 bg-white/10 rounded w-2/3"></div>
+                                  <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4"></div>
+                                  <div className="h-4 bg-[var(--theme-bg-options)] rounded mb-2"></div>
+                                  <div className="h-3 bg-[var(--theme-bg-options)] rounded w-2/3"></div>
                                 </div>
                               ))}
                             </div>
                           ) : isEmpty ? (
                             <div className="text-center py-16">
-                              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                              <div className="w-24 h-24 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-6">
                                 <svg
-                                  className="w-12 h-12 text-white/60"
+                                  className="w-12 h-12 text-[var(--theme-text-content-60)]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -180,12 +181,12 @@ const ProductGridContent = () => {
                                   />
                                 </svg>
                               </div>
-                              <h2 className="text-2xl font-bold text-white mb-4">
+                              <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
                                 {isFiltered
                                   ? "No Products Match Your Filters"
                                   : "No Products Found"}
                               </h2>
-                              <p className="text-white/70">
+                              <p className="text-[var(--theme-text-content-70)]">
                                 {isFiltered
                                   ? "Try adjusting your filters to see more products."
                                   : "We couldn't find any products to display."}
@@ -208,8 +209,8 @@ const ProductGridContent = () => {
                                       href,
                                       description,
                                     }) => (
-                                      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-200 hover:scale-105 group h-full flex flex-col">
-                                        <div className="aspect-square bg-white/10 rounded-lg mb-4 overflow-hidden relative">
+                                      <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
+                                        <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4 overflow-hidden relative">
                                           {image ? (
                                             <WixMediaImage
                                               media={{ image: image }}
@@ -218,7 +219,7 @@ const ProductGridContent = () => {
                                           ) : (
                                             <div className="w-full h-full flex items-center justify-center">
                                               <svg
-                                                className="w-12 h-12 text-white/40"
+                                                className="w-12 h-12 text-[var(--theme-text-content-40)]"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
@@ -227,21 +228,21 @@ const ProductGridContent = () => {
                                                   strokeLinecap="round"
                                                   strokeLinejoin="round"
                                                   strokeWidth="2"
-                                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                               </svg>
                                             </div>
                                           )}
                                         </div>
 
-                                          {product.ribbon?.name &&
-                                            (<div className="absolute top-2 left-2">
-                                              <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                                                {product.ribbon.name}
-                                              </span>
-                                            </div>)}
+                                        {product.ribbon?.name &&
+                                          (<div className="absolute top-2 left-2">
+                                            <span className="bg-[var(--theme-gradient-ribbon)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded-full font-medium">
+                                              {product.ribbon.name}
+                                            </span>
+                                          </div>)}
 
-                                        <h3 className="text-white font-semibold mb-2 line-clamp-2">
+                                        <h3 className="text-[var(--theme-text-content)] font-semibold mb-2 line-clamp-2">
                                           {title}
                                         </h3>
 
@@ -255,7 +256,7 @@ const ProductGridContent = () => {
                                                     key={option._id}
                                                     className="space-y-1"
                                                   >
-                                                    <span className="text-white/80 text-xs font-medium">
+                                                    <span className="text-[var(--theme-text-content-80)] text-xs font-medium">
                                                       {String(option.name)}:
                                                     </span>
                                                     <div className="flex flex-wrap gap-1">
@@ -286,7 +287,7 @@ const ProductGridContent = () => {
                                                                 className="relative group/color"
                                                               >
                                                                 <div
-                                                                  className="w-6 h-6 rounded-full border-2 border-teal-300/40 hover:border-teal-300/80 transition-colors cursor-pointer"
+                                                                  className="w-6 h-6 rounded-full border-2 border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] transition-colors cursor-pointer"
                                                                   style={{
                                                                     backgroundColor:
                                                                       choice.colorCode ||
@@ -294,7 +295,7 @@ const ProductGridContent = () => {
                                                                   }}
                                                                 />
                                                                 {/* Tooltip */}
-                                                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-[var(--theme-bg-tooltip)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                                                   {String(
                                                                     choice.name
                                                                   )}
@@ -307,7 +308,7 @@ const ProductGridContent = () => {
                                                                 key={
                                                                   choice.choiceId
                                                                 }
-                                                                className="inline-flex items-center px-2 py-1 bg-teal-500/20 text-teal-300 text-xs rounded border border-teal-500/30"
+                                                                className="inline-flex items-center px-2 py-1 bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] text-xs rounded border border-[var(--theme-border-primary-30)]"
                                                               >
                                                                 {String(
                                                                   choice.name
@@ -319,7 +320,7 @@ const ProductGridContent = () => {
                                                       {option.choicesSettings
                                                         ?.choices?.length >
                                                         3 && (
-                                                          <span className="text-white/60 text-xs">
+                                                          <span className="text-[var(--theme-text-content-60)] text-xs">
                                                             +
                                                             {option
                                                               .choicesSettings
@@ -336,7 +337,7 @@ const ProductGridContent = () => {
                                           )}
 
                                         {description && (
-                                          <p className="text-white/60 text-sm mb-3 line-clamp-2">
+                                          <p className="text-[var(--theme-text-content-60)] text-sm mb-3 line-clamp-2">
                                             {description}
                                           </p>
                                         )}
@@ -345,22 +346,20 @@ const ProductGridContent = () => {
                                           <div className="space-y-1">
                                             {compareAtPrice && parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 ? (
                                               <>
-                                                <div className="text-xl font-bold text-white">
+                                                <div className="text-xl font-bold text-[var(--theme-text-content)]">
                                                   {price}
                                                 </div>
                                                 <div className="flex items-center justify-between">
-                                                  <div className="text-sm font-medium text-white/50 line-through">
+                                                  <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
                                                     {compareAtPrice}
                                                   </div>
                                                   <div className="flex items-center gap-2">
                                                     {available ? (
-                                                      <span className="text-green-400 text-sm flex items-center gap-1">
-                                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                      <span className="text-[var(--theme-text-success)] text-sm">
                                                         In Stock
                                                       </span>
                                                     ) : (
-                                                      <span className="text-red-400 text-sm flex items-center gap-1">
-                                                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                                                      <span className="text-[var(--theme-text-error)] text-sm">
                                                         Out of Stock
                                                       </span>
                                                     )}
@@ -369,18 +368,16 @@ const ProductGridContent = () => {
                                               </>
                                             ) : (
                                               <div className="flex items-center justify-between">
-                                                <div className="text-xl font-bold text-white">
+                                                <div className="text-xl font-bold text-[var(--theme-text-content)]">
                                                   {price}
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                   {available ? (
-                                                    <span className="text-green-400 text-sm flex items-center gap-1">
-                                                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                    <span className="text-[var(--theme-text-success)] text-sm">
                                                       In Stock
                                                     </span>
                                                   ) : (
-                                                    <span className="text-red-400 text-sm flex items-center gap-1">
-                                                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                                                    <span className="text-[var(--theme-text-error)] text-sm">
                                                       Out of Stock
                                                     </span>
                                                   )}
@@ -396,7 +393,16 @@ const ProductGridContent = () => {
                                               "/store/products/",
                                               "/store/example-2/"
                                             )}
-                                            className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm"
+                                            className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                            style={{
+                                              background: 'var(--theme-btn-primary)'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                              e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                              e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                                            }}
                                           >
                                             View Product
                                             <svg
@@ -462,7 +468,20 @@ const LoadMoreSection = () => {
                       <button
                         onClick={loadMore}
                         disabled={isLoading}
-                        className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                        className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        style={{
+                          background: isLoading ? 'linear-gradient(to right, #6b7280, #374151)' : 'var(--theme-btn-primary)'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isLoading) {
+                            e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isLoading) {
+                            e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                          }
+                        }}
                       >
                         {isLoading ? (
                           <span className="flex items-center gap-2">
@@ -495,21 +514,33 @@ const LoadMoreSection = () => {
                       <button
                         onClick={refresh}
                         disabled={isLoading}
-                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+                        className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          background: 'var(--theme-btn-secondary)'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isLoading) {
+                            e.currentTarget.style.background = 'var(--theme-btn-secondary-hover)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isLoading) {
+                            e.currentTarget.style.background = 'var(--theme-btn-secondary)';
+                          }
+                        }}
                       >
                         Refresh Products
                       </button>
                     </div>
-
-                    <p className="text-white/60 text-sm mt-4">
+                    <p className="text-[var(--theme-text-content-60)] text-sm mt-4">
                       Advanced store experience • {totalProducts} products loaded
                     </p>
                   </div>
                 )}
               </>
             ),
-          "Collection.LoadMore",
-          "/docs/components/collection#loadmore"
+          "FilteredCollection.LoadMore",
+          "/docs/components/filtered-collection#loadmore"
         )}
       </FilteredCollection.LoadMore>
     </FilteredCollection.Provider>
@@ -526,7 +557,7 @@ export default function StoreExample2Page({
     if (typeof window !== "undefined") {
       const basePath = '/store/example-2';
       let newPath;
-      
+
       if (categoryId === null) {
         // No category selected - fallback to base path  
         newPath = basePath;
@@ -538,8 +569,7 @@ export default function StoreExample2Page({
         const categorySlug = category?.slug || categoryId;
         newPath = `${basePath}/category/${categorySlug}`;
       }
-      
-      // Navigate immediately - pulse animation will show during page load
+
       window.location.href = newPath;
     }
   };
@@ -587,23 +617,23 @@ export default function StoreExample2Page({
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-5xl font-bold text-white mb-4">
-                <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
+                <span style={{ background: 'var(--theme-hero-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   Advanced Store
                 </span>
               </h1>
-              <p className="text-white/80 text-xl max-w-2xl mx-auto">
+              <p className="text-[var(--theme-text-content-80)] text-xl max-w-2xl mx-auto">
                 Experience our next-generation e-commerce platform with enhanced
                 interactions and modern design patterns
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-2xl border border-white/10 p-6 mb-12">
+            <div className="backdrop-blur-lg rounded-2xl border border-[var(--theme-border-card)] p-6 mb-12" style={{ background: 'var(--theme-hero-card-gradient)' }}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--theme-hero-feature-gradient)' }}>
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-[var(--theme-text-content)]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -616,15 +646,15 @@ export default function StoreExample2Page({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-white font-semibold mb-1">Enhanced UI</h3>
-                  <p className="text-white/60 text-sm">
+                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">Enhanced UI</h3>
+                  <p className="text-[var(--theme-text-content-60)] text-sm">
                     Modern design patterns
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--theme-hero-feature-gradient)' }}>
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-[var(--theme-text-content)]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -637,15 +667,15 @@ export default function StoreExample2Page({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-white font-semibold mb-1">
+                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
                     Smart Interactions
                   </h3>
-                  <p className="text-white/60 text-sm">Advanced user flows</p>
+                  <p className="text-[var(--theme-text-content-60)] text-sm">Advanced user flows</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--theme-hero-feature-gradient)' }}>
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-[var(--theme-text-content)]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -658,10 +688,10 @@ export default function StoreExample2Page({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-white font-semibold mb-1">
+                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
                     Headless Components
                   </h3>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-[var(--theme-text-content-60)] text-sm">
                     Built with Collection & CurrentCart
                   </p>
                 </div>

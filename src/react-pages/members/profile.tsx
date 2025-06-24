@@ -1,3 +1,4 @@
+import "../../styles/theme-1.css";
 import {
   createServicesManager,
   createServicesMap,
@@ -78,7 +79,7 @@ export function ProfilePage({
         {/* Centered Profile Layout */}
         <div className="flex items-center justify-center min-h-screen p-4 lg:p-6">
           {/* User Profile Panel */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6 lg:p-8 w-full lg:max-w-md flex flex-col">
+          <div className="bg-[var(--theme-bg-options)] backdrop-blur-lg rounded-3xl shadow-2xl border border-[var(--theme-border-primary-20)] p-6 lg:p-8 w-full lg:max-w-md flex flex-col">
             {/* Profile Section */}
             <div className="text-center mb-6 lg:mb-8">
               <CurrentMemberProfile.ProfilePhoto>
@@ -88,26 +89,33 @@ export function ProfilePage({
                       <img
                         src={photoUrl}
                         alt={altText}
-                        className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl object-cover"
+                        className="w-24 h-24 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-2xl object-cover"
                       />
                     ) : (
-                      <div className="w-24 h-24 rounded-full border-4 border-white/30 shadow-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                        <UserIcon className="w-12 h-12 text-white" />
+                      <div className="w-24 h-24 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-2xl flex items-center justify-center" style={{ background: 'var(--theme-gradient-primary)' }}>
+                        <UserIcon className="w-12 h-12 text-[var(--theme-text-content)]" />
                       </div>
                     )}
                     {/* Edit Photo Button */}
                     <button
                       onClick={() => setShowPhotoDialog(true)}
-                      className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full border-3 border-white flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
+                      className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-3 border-[var(--theme-text-content)] flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
+                      style={{ background: 'var(--theme-primary-500)' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'var(--theme-primary-600)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'var(--theme-primary-500)';
+                      }}
                       title="Change profile photo"
                     >
-                      <CameraIcon className="w-4 h-4 text-white" />
+                      <CameraIcon className="w-4 h-4 text-[var(--theme-text-content)]" />
                     </button>
                     {/* Status Badge */}
                     <CurrentMemberProfile.ActivityStatus>
                       {({ isActive }) => (
-                        <div className="absolute -bottom-1 -left-2 w-6 h-6 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
-                          <CheckIcon className="w-3 h-3 text-white" />
+                        <div className="absolute -bottom-1 -left-2 w-6 h-6 bg-[var(--theme-text-success)] rounded-full border-2 border-[var(--theme-text-content)] flex items-center justify-center">
+                          <CheckIcon className="w-3 h-3 text-[var(--theme-text-content)]" />
                         </div>
                       )}
                     </CurrentMemberProfile.ActivityStatus>
@@ -117,7 +125,7 @@ export function ProfilePage({
 
               <CurrentMemberProfile.Nickname>
                 {({ displayName }) => (
-                  <h1 className="text-3xl font-bold text-white mb-2">
+                  <h1 className="text-3xl font-bold text-[var(--theme-text-content)] mb-2">
                     Welcome back, {displayName}!
                   </h1>
                 )}
@@ -127,7 +135,7 @@ export function ProfilePage({
                 {({ hasFullName, fullName }) => (
                   <>
                     {hasFullName && (
-                      <p className="text-white/80 text-lg mb-2">{fullName}</p>
+                      <p className="text-[var(--theme-text-content-80)] text-lg mb-2">{fullName}</p>
                     )}
                   </>
                 )}
@@ -137,11 +145,11 @@ export function ProfilePage({
                 {({ hasEmail, email, isVerified }) => (
                   <>
                     {hasEmail && (
-                      <p className="text-white/60 text-sm mb-4 flex items-center justify-center gap-2">
+                      <p className="text-[var(--theme-text-content-60)] text-sm mb-4 flex items-center justify-center gap-2">
                         <MailIcon className="w-4 h-4" />
                         {email}
                         {isVerified && (
-                          <CheckCircleIcon className="w-4 h-4 text-green-400" />
+                          <CheckCircleIcon className="w-4 h-4 text-[var(--theme-text-success)]" />
                         )}
                       </p>
                     )}
@@ -153,7 +161,7 @@ export function ProfilePage({
                 {({ hasLastLogin, formattedDate }) => (
                   <>
                     {hasLastLogin && (
-                      <p className="text-white/50 text-xs">
+                      <p className="text-[var(--theme-text-content-50)] text-xs">
                         Last login: {formattedDate}
                       </p>
                     )}
@@ -166,21 +174,21 @@ export function ProfilePage({
             <div className="grid grid-cols-2 gap-4 mb-6">
               <CurrentMemberProfile.ActivityStatus>
                 {({ displayStatus }) => (
-                  <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-white mb-1">
+                  <div className="bg-[var(--theme-bg-options)] rounded-xl p-4 text-center backdrop-blur-sm">
+                    <div className="text-2xl font-bold text-[var(--theme-text-content)] mb-1">
                       {displayStatus}
                     </div>
-                    <div className="text-white/60 text-sm">Status</div>
+                    <div className="text-[var(--theme-text-content-60)] text-sm">Status</div>
                   </div>
                 )}
               </CurrentMemberProfile.ActivityStatus>
               <CurrentMemberProfile.DaysMember>
                 {({ daysMember }) => (
-                  <div className="bg-white/5 rounded-xl p-4 text-center backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-white mb-1">
+                  <div className="bg-[var(--theme-bg-options)] rounded-xl p-4 text-center backdrop-blur-sm">
+                    <div className="text-2xl font-bold text-[var(--theme-text-content)] mb-1">
                       {daysMember}
                     </div>
-                    <div className="text-white/60 text-sm">Days Member</div>
+                    <div className="text-[var(--theme-text-content-60)] text-sm">Days Member</div>
                   </div>
                 )}
               </CurrentMemberProfile.DaysMember>
@@ -190,7 +198,14 @@ export function ProfilePage({
             <div className="mb-6">
               <button
                 onClick={() => setShowUpdateDialog(true)}
-                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold py-3 lg:py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl"
+                className="w-full text-[var(--theme-text-content)] font-semibold py-3 lg:py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl"
+                style={{ background: 'var(--theme-btn-primary)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                }}
               >
                 <span className="flex items-center justify-center gap-3">
                   <PencilIcon className="w-5 lg:w-6 h-5 lg:h-6" />
@@ -208,25 +223,32 @@ export function ProfilePage({
               >
                 <button
                   type="submit"
-                  className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-white bg-gradient-to-r from-red-500 via-pink-500 to-orange-500 hover:from-red-600 hover:via-pink-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                  className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-[var(--theme-text-content)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--theme-text-error)] transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                  style={{ background: 'var(--theme-btn-secondary)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--theme-btn-secondary-hover)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'var(--theme-btn-secondary)';
+                  }}
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-6">
-                    <SignOutIcon className="h-5 lg:h-6 w-5 lg:w-6 text-white/80 group-hover:text-white transition-colors" />
+                    <SignOutIcon className="h-5 lg:h-6 w-5 lg:w-6 text-[var(--theme-text-content-80)] group-hover:text-[var(--theme-text-content)] transition-colors" />
                   </span>
                   Sign Out
                 </button>
               </form>
 
               <div className="text-center">
-                <p className="text-white/60 text-sm">
+                <p className="text-[var(--theme-text-content-60)] text-sm">
                   Secure logout powered by Wix
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 lg:mt-8 pt-6 border-t border-white/20">
+            <div className="mt-6 lg:mt-8 pt-6 border-t border-[var(--theme-border-primary-20)]">
               <div className="text-center">
-                <p className="text-white/60 text-sm">
+                <p className="text-[var(--theme-text-content-60)] text-sm">
                   Thanks for being a member! Click above to sign out when you're
                   done.
                 </p>

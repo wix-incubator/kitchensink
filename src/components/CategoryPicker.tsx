@@ -25,7 +25,7 @@ function CategoryPicker({
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
+        <h3 className="text-[var(--theme-text-content)] font-semibold text-sm uppercase tracking-wide">
           Shop by Category
         </h3>
       </div>
@@ -39,9 +39,14 @@ function CategoryPicker({
             onClick={() => onCategorySelect(category._id || null)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               selectedCategory === category._id
-                ? "bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg transform scale-105"
-                : "bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
+                ? "text-[var(--theme-text-content)] shadow-lg transform scale-105"
+                : "bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] hover:bg-[var(--theme-bg-primary-10)] hover:text-[var(--theme-text-content)]"
             }`}
+            style={
+              selectedCategory === category._id
+                ? { background: 'var(--theme-btn-primary)' }
+                : {}
+            }
           >
             {category.name}
           </button>

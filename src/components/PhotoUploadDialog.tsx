@@ -23,15 +23,15 @@ export default function PhotoUploadDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 bg-[var(--theme-bg-tooltip)] backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* Dialog Container */}
       <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 w-full max-w-2xl">
+        <div className="bg-[var(--theme-bg-options)] backdrop-blur-lg rounded-3xl shadow-2xl border border-[var(--theme-border-primary-20)] w-full max-w-2xl">
           {/* Dialog Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/20">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+          <div className="flex items-center justify-between p-6 border-b border-[var(--theme-border-primary-20)]">
+            <h2 className="text-2xl font-bold text-[var(--theme-text-content)] flex items-center gap-3">
               <svg
                 className="w-7 h-7"
                 fill="none"
@@ -49,7 +49,7 @@ export default function PhotoUploadDialog({
             </h2>
             <button
               onClick={onClose}
-              className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
+              className="text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors p-2 hover:bg-[var(--theme-bg-options)] rounded-lg"
             >
               <svg
                 className="w-6 h-6"
@@ -71,7 +71,7 @@ export default function PhotoUploadDialog({
           <div className="p-6">
             {/* Current Photo Preview */}
             <div className="text-center mb-6">
-              <p className="text-white/80 text-sm mb-4">
+              <p className="text-[var(--theme-text-content-80)] text-sm mb-4">
                 Current Profile Photo
               </p>
               <div className="relative inline-block">
@@ -81,12 +81,12 @@ export default function PhotoUploadDialog({
                       <img
                         src={photoUrl}
                         alt={altText}
-                        className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl object-cover"
+                        className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl object-cover"
                       />
                     ) : (
-                      <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                      <div className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl flex items-center justify-center" style={{ background: 'var(--theme-gradient-primary)' }}>
                         <svg
-                          className="w-16 h-16 text-white"
+                          className="w-16 h-16 text-[var(--theme-text-content)]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -119,8 +119,8 @@ export default function PhotoUploadDialog({
                     <div
                       className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-200 cursor-pointer group ${
                         dragOver
-                          ? "border-blue-400 bg-blue-500/10"
-                          : "border-white/30 bg-white/5 hover:bg-white/10"
+                          ? "border-[var(--theme-primary-500)] bg-[var(--theme-bg-primary-10)]"
+                          : "border-[var(--theme-border-primary-30)] bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)]"
                       }`}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
@@ -134,7 +134,7 @@ export default function PhotoUploadDialog({
                               {!hasPreview ? (
                                 <div>
                                   <svg
-                                    className="w-16 h-16 text-white/60 mx-auto mb-4 group-hover:text-white/80 transition-colors"
+                                    className="w-16 h-16 text-[var(--theme-text-content-60)] mx-auto mb-4 group-hover:text-[var(--theme-text-content-80)] transition-colors"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -146,14 +146,14 @@ export default function PhotoUploadDialog({
                                       d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                                     />
                                   </svg>
-                                  <h3 className="text-xl font-semibold text-white mb-2">
+                                  <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-2">
                                     Upload New Photo
                                   </h3>
-                                  <p className="text-white/60 mb-4">
+                                  <p className="text-[var(--theme-text-content-60)] mb-4">
                                     Drag & drop your image here or click to
                                     browse
                                   </p>
-                                  <p className="text-white/50 text-sm">
+                                  <p className="text-[var(--theme-text-content-50)] text-sm">
                                     Supports: JPG, PNG, GIF (Max 10MB)
                                   </p>
                                 </div>
@@ -163,13 +163,13 @@ export default function PhotoUploadDialog({
                                     <img
                                       src={previewUrl}
                                       alt="New photo preview"
-                                      className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-white/30"
+                                      className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-[var(--theme-border-primary-30)]"
                                     />
                                   )}
-                                  <p className="text-white/80 font-medium mb-2">
+                                  <p className="text-[var(--theme-text-content-80)] font-medium mb-2">
                                     New Photo Selected
                                   </p>
-                                  <p className="text-white/60 text-sm">
+                                  <p className="text-[var(--theme-text-content-60)] text-sm">
                                     {selectedFile?.name}
                                   </p>
                                 </div>
@@ -204,15 +204,15 @@ export default function PhotoUploadDialog({
                   <>
                     {hasMessage && (
                       <div className="mb-6">
-                        <div className="bg-white/5 rounded-xl p-4">
+                        <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
                           <div className="flex items-center gap-3">
                             <div>
                               {uploadState.type === "loading" && (
-                                <div className="animate-spin w-6 h-6 border-2 border-white/30 border-t-blue-500 rounded-full"></div>
+                                <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
                               )}
                               {uploadState.type === "success" && (
                                 <svg
-                                  className="w-6 h-6 text-green-400"
+                                  className="w-6 h-6 text-[var(--theme-text-success)]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -227,7 +227,7 @@ export default function PhotoUploadDialog({
                               )}
                               {uploadState.type === "error" && (
                                 <svg
-                                  className="w-6 h-6 text-red-400"
+                                  className="w-6 h-6 text-[var(--theme-text-error)]"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -241,7 +241,7 @@ export default function PhotoUploadDialog({
                                 </svg>
                               )}
                             </div>
-                            <p className="text-white font-medium">
+                            <p className="text-[var(--theme-text-content)] font-medium">
                               {uploadState.message}
                             </p>
                           </div>
@@ -269,7 +269,21 @@ export default function PhotoUploadDialog({
                       <button
                         onClick={handleUploadPhoto}
                         disabled={!canUpload}
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
+                        className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
+                        style={{
+                          background: canUpload ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
+                          cursor: !canUpload ? 'not-allowed' : 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (canUpload) {
+                            e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (canUpload) {
+                            e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                          }
+                        }}
                       >
                         <span className="flex items-center justify-center gap-3">
                           <svg
@@ -291,7 +305,7 @@ export default function PhotoUploadDialog({
                       <button
                         type="button"
                         onClick={onClose}
-                        className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-200"
+                        className="px-8 py-4 bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] text-[var(--theme-text-content)] font-semibold rounded-xl transition-all duration-200"
                       >
                         Cancel
                       </button>
