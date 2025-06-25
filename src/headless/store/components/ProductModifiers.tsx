@@ -171,8 +171,14 @@ export const ModifierChoice = (props: ModifierChoiceProps) => {
   const { modifier, choice } = props;
 
   const modifierName = modifier.name || "";
-  const choiceValue = choice.name || "";
-  const value = choiceValue;
+  const renderType = modifier.modifierRenderType;
+  
+  // For TEXT_CHOICES, use choice.key; for SWATCH_CHOICES, use choice.name
+  const choiceValue = renderType === "TEXT_CHOICES" 
+    ? ((choice as any).key || choice.name || "")
+    : (choice.name || "");
+    
+  const value = choice.name || ""; // Display name is always choice.name
   const description = (choice as any).description;
   const colorCode = (choice as any).colorCode;
   

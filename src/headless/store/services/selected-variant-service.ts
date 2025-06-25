@@ -330,12 +330,51 @@ export const SelectedVariantService = implementService.withConfig<{
         options: variant?._id ? { variantId: variant._id } : undefined,
       };
 
-      // Add modifiers to catalog reference if they exist
+      // Transform and add modifiers to catalog reference if they exist
       if (modifiers && Object.keys(modifiers).length > 0) {
-        catalogReference.options = {
-          ...catalogReference.options,
-          customizations: modifiers,
-        };
+        const options: Record<string, string> = {};
+        const customTextFields: Record<string, string> = {};
+
+        // Get product modifiers to determine types and keys
+        const productModifiers = prod.modifiers || [];
+
+        Object.values(modifiers).forEach((modifierValue: any) => {
+          const modifierName = modifierValue.modifierName;
+          const productModifier = productModifiers.find(m => m.name === modifierName);
+
+          if (!productModifier) return;
+
+          const renderType = productModifier.modifierRenderType;
+
+          if (renderType === "TEXT_CHOICES" || renderType === "SWATCH_CHOICES") {
+            // For choice modifiers, use the modifier key and choice value
+            const modifierKey = (productModifier as any).key || modifierName;
+            if (modifierValue.choiceValue) {
+              options[modifierKey] = modifierValue.choiceValue;
+            }
+          } else if (renderType === "FREE_TEXT") {
+            // For free text modifiers, use the freeTextSettings key
+            const freeTextKey = (productModifier.freeTextSettings as any)?.key || modifierName;
+            if (modifierValue.freeTextValue) {
+              customTextFields[freeTextKey] = modifierValue.freeTextValue;
+            }
+          }
+        });
+
+        // Add formatted modifiers to catalog reference
+        if (Object.keys(options).length > 0) {
+          catalogReference.options = {
+            ...catalogReference.options,
+            options,
+          };
+        }
+
+        if (Object.keys(customTextFields).length > 0) {
+          catalogReference.options = {
+            ...catalogReference.options,
+            customTextFields,
+          };
+        }
       }
 
       const lineItems = [
