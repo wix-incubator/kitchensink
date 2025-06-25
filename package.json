@@ -26,6 +26,7 @@
     "@wix/members": "^1.0.298",
     "@wix/redirects": "^1.0.83",
     "@wix/sdk": "^1.15.23",
+    "@wix/seo": "^1.0.1",
     "@wix/services-definitions": "^0.1.1",
     "@wix/services-manager": "^0.2.8",
     "@wix/services-manager-react": "^0.1.21",

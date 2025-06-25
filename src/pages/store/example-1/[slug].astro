@@ -5,6 +5,9 @@ import { loadProductServiceConfig } from "../../../headless/store/services/produ
 import { loadCurrentCartServiceConfig } from "../../../headless/store/services/current-cart-service";
 import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
 import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
+import { seoTags } from "@wix/seo";
+import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
+import { SEO } from "../../../headless/seo/components/SEO";
 
 const { slug } = Astro.params;
 
@@ -26,11 +29,23 @@ const productMediaGalleryServiceConfig =
   await loadProductMediaGalleryServiceConfig(slug);
 const selectedVariantServiceConfig =
   await loadSelectedVariantServiceConfig(slug);
+const pageURL = Astro.url.href;
+const itemType = seoTags.ItemType.STORES_PRODUCT;
+
+// Essential for rendering SEO tags in SSR
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageURL,
+  itemData: { slug },
+  itemType,
+});
 
 // Load product modifiers service configuration if product has modifiers
 let productModifiersServiceConfig = null;
 try {
-  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+  if (
+    productServiceConfig.product.modifiers &&
+    productServiceConfig.product.modifiers.length > 0
+  ) {
     productModifiersServiceConfig = {
       product: productServiceConfig.product,
     };
@@ -38,14 +53,14 @@ try {
 } catch (error) {
   console.warn("Could not load product modifiers service:", error);
 }
-
-const productName = productServiceConfig.product.name || "Product";
 ---
 
 <BaseLayout>
-  <title>{productName} - Store - Kitchensink</title>
-  <meta name="description" content={`View details for ${productName}`} />
-
+  <SEO
+    seoTagsServiceConfig={seoTagsServiceConfig}
+    itemType={itemType}
+    itemData={{ slug }}
+  />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}
