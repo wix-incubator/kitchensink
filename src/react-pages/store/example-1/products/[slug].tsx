@@ -6,7 +6,7 @@ import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { ProductActionButtons } from "./ProductActionButtons";
 import WixMediaImage from "../../../../headless/media/components/Image";
-import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
+import { CurrentCart } from "../../../../headless/ecom/components/CurrentCart";
 import { Product } from "../../../../headless/store/components/Product";
 import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
 import { ProductModifiers } from "../../../../headless/store/components/ProductModifiers";
@@ -14,7 +14,7 @@ import { ProductVariantSelector } from "../../../../headless/store/components/Pr
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/store/services/current-cart-service";
+} from "../../../../headless/ecom/services/current-cart-service";
 import {
   ProductMediaGalleryService,
   ProductMediaGalleryServiceDefinition,
@@ -712,7 +712,14 @@ export default function ProductDetailPage({
                 {/* Add to Cart */}
                 <div className="space-y-4">
                   <ProductVariantSelector.Trigger quantity={quantity}>
-                    {({ onAddToCart, canAddToCart, isLoading, error, isPreOrderEnabled, inStock }) => (
+                    {({
+                      onAddToCart,
+                      canAddToCart,
+                      isLoading,
+                      error,
+                      isPreOrderEnabled,
+                      inStock,
+                    }) => (
                       <div className="space-y-4">
                         {error && (
                           <div className="bg-[var(--theme-text-error)]/10 border border-[var(--theme-text-error)]/20 rounded-lg p-3">
@@ -737,33 +744,40 @@ export default function ProductDetailPage({
 
                   {/* Stock Status */}
                   <ProductVariantSelector.Stock>
-                    {({ inStock, isPreOrderEnabled, status, quantity, trackInventory, currentVariantId }) => (
+                    {({
+                      inStock,
+                      isPreOrderEnabled,
+                      status,
+                      quantity,
+                      trackInventory,
+                      currentVariantId,
+                    }) =>
                       currentVariantId && (
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${
-                            inStock || isPreOrderEnabled
-                              ? "bg-[var(--theme-text-success)]"
-                              : "bg-[var(--theme-text-error)]"
-                          }`}
-                        ></div>
-                        <span
-                          className={`text-sm ${
-                            inStock || isPreOrderEnabled
-                              ? "text-[var(--theme-text-success)]"
-                              : "text-[var(--theme-text-error)]"
-                          }`}
-                        >
-                          {status}
-                          {trackInventory && quantity !== null && (
-                            <span className="text-[var(--theme-text-content-60)] ml-1">
-                              ({quantity} available)
-                            </span>
-                          )}
-                        </span>
-                      </div>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-3 h-3 rounded-full ${
+                              inStock || isPreOrderEnabled
+                                ? "bg-[var(--theme-text-success)]"
+                                : "bg-[var(--theme-text-error)]"
+                            }`}
+                          ></div>
+                          <span
+                            className={`text-sm ${
+                              inStock || isPreOrderEnabled
+                                ? "text-[var(--theme-text-success)]"
+                                : "text-[var(--theme-text-error)]"
+                            }`}
+                          >
+                            {status}
+                            {trackInventory && quantity !== null && (
+                              <span className="text-[var(--theme-text-content-60)] ml-1">
+                                ({quantity} available)
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       )
-                    )}
+                    }
                   </ProductVariantSelector.Stock>
                 </div>
 

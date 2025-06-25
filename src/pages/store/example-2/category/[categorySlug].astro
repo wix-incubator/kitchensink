@@ -2,7 +2,7 @@
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import StoreCollectionPage from "../../../../react-pages/store/example-2/index";
 import { loadCollectionServiceConfig } from "../../../../headless/store/services/collection-service";
-import { loadCurrentCartServiceConfig } from "../../../../headless/store/services/current-cart-service";
+import { loadCurrentCartServiceConfig } from "../../../../headless/ecom/services/current-cart-service";
 import { loadCategoriesConfig } from "../../../../headless/store/services/category-service";
 
 // Get category slug from URL params
@@ -25,7 +25,7 @@ const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 
 // If category not found, return 404
 if (!selectedCategory) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 ---
 
@@ -40,7 +40,10 @@ if (!selectedCategory) {
     client:load
     filteredCollectionServiceConfig={filteredCollectionServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
-    categoriesConfig={{...categoriesConfig, initialCategoryId: selectedCategory._id}}
+    categoriesConfig={{
+      ...categoriesConfig,
+      initialCategoryId: selectedCategory._id,
+    }}
     slot="body"
   />
 </BaseLayout>

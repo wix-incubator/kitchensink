@@ -21,7 +21,7 @@ import {
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../headless/store/services/current-cart-service";
+} from "../../../headless/ecom/services/current-cart-service";
 import {
   CategoryService,
   CategoryServiceDefinition,
