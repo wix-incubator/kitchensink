@@ -1,18 +1,9 @@
 import React from "react";
 import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import {
-  withDocsWrapper,
-  PageDocsRegistration,
-} from "../../components/DocsMode";
 
 export default function StoreIntroPage() {
   return (
     <KitchensinkLayout>
-      <PageDocsRegistration
-        title="Wix Stores Overview"
-        description="Complete e-commerce solution with product catalog, shopping cart, and order management across multiple implementation patterns and examples."
-        docsUrl="/docs/components/stores-overview"
-      />
       <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900">
         {/* Hero Section */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">

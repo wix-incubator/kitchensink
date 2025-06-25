@@ -1,9 +1,6 @@
 import React from "react";
 import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import {
-  withDocsWrapper,
-  PageDocsRegistration,
-} from "../../components/DocsMode";
+import { PageDocsRegistration } from "../../components/DocsMode";
 
 interface BookingsIntroPageProps {
   bookingServicesConfig: any;
@@ -371,7 +368,7 @@ export default function BookingsIntroPage({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="2"
-                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 00-2 2v2m0 0V9a2 2 0 012-2m0 2h14m-6 0a2 2 0 00-2-2v0a2 2 0 00-2 2m2 0V7a2 2 0 012-2v0a2 2 0 012 2v2M7 7V5a2 2 0 012-2v0a2 2 0 012 2v2m0 0v2a2 2 0 002 2v0a2 2 0 002-2V7m0 0a2 2 0 00-2-2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 00-2 2v2m0 0V9a2 2 0 012-2m0 2h14m-6 0a2 2 0 00-2-2v0a2 2 0 00-2 2m2 0V7a2 2 0 012-2v0a2 2 0 012 2v2M7 7V5a2 2 0 012-2v0a2 2 0 012 2v2m0 0v2a2 2 0 002 2v0a2 2 0 002-2"
                       />
                     </svg>
                   </div>

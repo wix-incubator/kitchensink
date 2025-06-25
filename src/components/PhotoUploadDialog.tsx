@@ -5,7 +5,6 @@ import {
   UploadProgress,
   UploadTrigger,
 } from "../headless/members/components/PhotoUpload";
-import { withDocsWrapper } from "./DocsMode";
 import { CurrentMemberProfile } from "../headless/members/components/CurrentMemberProfile";
 
 interface PhotoUploadDialogProps {
@@ -84,7 +83,10 @@ export default function PhotoUploadDialog({
                         className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl object-cover"
                       />
                     ) : (
-                      <div className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl flex items-center justify-center" style={{ background: 'var(--theme-gradient-primary)' }}>
+                      <div
+                        className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl flex items-center justify-center"
+                        style={{ background: "var(--theme-gradient-primary)" }}
+                      >
                         <svg
                           className="w-16 h-16 text-[var(--theme-text-content)]"
                           fill="none"
@@ -107,214 +109,201 @@ export default function PhotoUploadDialog({
 
             {/* Upload Area */}
             <FileSelector>
-              {withDocsWrapper(
-                ({
-                  dragOver,
-                  handleDragOver,
-                  handleDragLeave,
-                  handleDrop,
-                  handleFileSelect,
-                }) => (
-                  <div className="mb-6">
-                    <div
-                      className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-200 cursor-pointer group ${
-                        dragOver
-                          ? "border-[var(--theme-primary-500)] bg-[var(--theme-bg-primary-10)]"
-                          : "border-[var(--theme-border-primary-30)] bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)]"
-                      }`}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <PreviewImage>
-                        {withDocsWrapper(
-                          ({ hasPreview, previewUrl, selectedFile }) => (
-                            <>
-                              {!hasPreview ? (
-                                <div>
-                                  <svg
-                                    className="w-16 h-16 text-[var(--theme-text-content-60)] mx-auto mb-4 group-hover:text-[var(--theme-text-content-80)] transition-colors"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth="2"
-                                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                    />
-                                  </svg>
-                                  <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-2">
-                                    Upload New Photo
-                                  </h3>
-                                  <p className="text-[var(--theme-text-content-60)] mb-4">
-                                    Drag & drop your image here or click to
-                                    browse
-                                  </p>
-                                  <p className="text-[var(--theme-text-content-50)] text-sm">
-                                    Supports: JPG, PNG, GIF (Max 10MB)
-                                  </p>
-                                </div>
-                              ) : (
-                                <div>
-                                  {previewUrl && (
-                                    <img
-                                      src={previewUrl}
-                                      alt="New photo preview"
-                                      className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-[var(--theme-border-primary-30)]"
-                                    />
-                                  )}
-                                  <p className="text-[var(--theme-text-content-80)] font-medium mb-2">
-                                    New Photo Selected
-                                  </p>
-                                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                                    {selectedFile?.name}
-                                  </p>
-                                </div>
+              {({
+                dragOver,
+                handleDragOver,
+                handleDragLeave,
+                handleDrop,
+                handleFileSelect,
+              }) => (
+                <div className="mb-6">
+                  <div
+                    className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-200 cursor-pointer group ${
+                      dragOver
+                        ? "border-[var(--theme-primary-500)] bg-[var(--theme-bg-primary-10)]"
+                        : "border-[var(--theme-border-primary-30)] bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)]"
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <PreviewImage>
+                      {({ hasPreview, previewUrl, selectedFile }) => (
+                        <>
+                          {!hasPreview ? (
+                            <div>
+                              <svg
+                                className="w-16 h-16 text-[var(--theme-text-content-60)] mx-auto mb-4 group-hover:text-[var(--theme-text-content-80)] transition-colors"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                />
+                              </svg>
+                              <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-2">
+                                Upload New Photo
+                              </h3>
+                              <p className="text-[var(--theme-text-content-60)] mb-4">
+                                Drag & drop your image here or click to browse
+                              </p>
+                              <p className="text-[var(--theme-text-content-50)] text-sm">
+                                Supports: JPG, PNG, GIF (Max 10MB)
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              {previewUrl && (
+                                <img
+                                  src={previewUrl}
+                                  alt="New photo preview"
+                                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-[var(--theme-border-primary-30)]"
+                                />
                               )}
-                            </>
-                          ),
-                          "PhotoUpload.PreviewImage",
-                          "/docs/components/photo-upload#previewimage"
-                        )}
-                      </PreviewImage>
-                    </div>
-
-                    {/* Hidden File Input */}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleFileSelect}
-                    />
+                              <p className="text-[var(--theme-text-content-80)] font-medium mb-2">
+                                New Photo Selected
+                              </p>
+                              <p className="text-[var(--theme-text-content-60)] text-sm">
+                                {selectedFile?.name}
+                              </p>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </PreviewImage>
                   </div>
-                ),
-                "PhotoUpload.FileSelector",
-                "/docs/components/photo-upload#fileselector"
+
+                  {/* Hidden File Input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileSelect}
+                  />
+                </div>
               )}
             </FileSelector>
 
             {/* Upload Status */}
             <UploadProgress>
-              {withDocsWrapper(
-                ({ uploadState, hasMessage }) => (
-                  <>
-                    {hasMessage && (
-                      <div className="mb-6">
-                        <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
-                          <div className="flex items-center gap-3">
-                            <div>
-                              {uploadState.type === "loading" && (
-                                <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
-                              )}
-                              {uploadState.type === "success" && (
-                                <svg
-                                  className="w-6 h-6 text-[var(--theme-text-success)]"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                              )}
-                              {uploadState.type === "error" && (
-                                <svg
-                                  className="w-6 h-6 text-[var(--theme-text-error)]"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
-                              )}
-                            </div>
-                            <p className="text-[var(--theme-text-content)] font-medium">
-                              {uploadState.message}
-                            </p>
+              {({ uploadState, hasMessage }) => (
+                <>
+                  {hasMessage && (
+                    <div className="mb-6">
+                      <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
+                        <div className="flex items-center gap-3">
+                          <div>
+                            {uploadState.type === "loading" && (
+                              <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
+                            )}
+                            {uploadState.type === "success" && (
+                              <svg
+                                className="w-6 h-6 text-[var(--theme-text-success)]"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                            {uploadState.type === "error" && (
+                              <svg
+                                className="w-6 h-6 text-[var(--theme-text-error)]"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            )}
                           </div>
+                          <p className="text-[var(--theme-text-content)] font-medium">
+                            {uploadState.message}
+                          </p>
                         </div>
                       </div>
-                    )}
-                  </>
-                ),
-                "PhotoUpload.UploadProgress",
-                "/docs/components/photo-upload#uploadprogress"
+                    </div>
+                  )}
+                </>
               )}
             </UploadProgress>
 
             {/* Form Actions */}
             <UploadTrigger>
-              {withDocsWrapper(
-                ({ uploadPhoto, canUpload, isUploading }) => {
-                  const handleUploadPhoto = async () => {
-                    await uploadPhoto();
-                    onClose();
-                  };
+              {({ uploadPhoto, canUpload, isUploading }) => {
+                const handleUploadPhoto = async () => {
+                  await uploadPhoto();
+                  onClose();
+                };
 
-                  return (
-                    <div className="flex gap-4">
-                      <button
-                        onClick={handleUploadPhoto}
-                        disabled={!canUpload}
-                        className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
-                        style={{
-                          background: canUpload ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
-                          cursor: !canUpload ? 'not-allowed' : 'pointer'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (canUpload) {
-                            e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (canUpload) {
-                            e.currentTarget.style.background = 'var(--theme-btn-primary)';
-                          }
-                        }}
-                      >
-                        <span className="flex items-center justify-center gap-3">
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                            />
-                          </svg>
-                          {isUploading ? "Uploading..." : "Update Photo"}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onClose}
-                        className="px-8 py-4 bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] text-[var(--theme-text-content)] font-semibold rounded-xl transition-all duration-200"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  );
-                },
-                "PhotoUpload.UploadTrigger",
-                "/docs/components/photo-upload#uploadtrigger"
-              )}
+                return (
+                  <div className="flex gap-4">
+                    <button
+                      onClick={handleUploadPhoto}
+                      disabled={!canUpload}
+                      className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
+                      style={{
+                        background: canUpload
+                          ? "var(--theme-btn-primary)"
+                          : "var(--theme-bg-options)",
+                        cursor: !canUpload ? "not-allowed" : "pointer",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (canUpload) {
+                          e.currentTarget.style.background =
+                            "var(--theme-btn-primary-hover)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (canUpload) {
+                          e.currentTarget.style.background =
+                            "var(--theme-btn-primary)";
+                        }
+                      }}
+                    >
+                      <span className="flex items-center justify-center gap-3">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                          />
+                        </svg>
+                        {isUploading ? "Uploading..." : "Update Photo"}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="px-8 py-4 bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] text-[var(--theme-text-content)] font-semibold rounded-xl transition-all duration-200"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                );
+              }}
             </UploadTrigger>
           </div>
         </div>

@@ -5,5 +5,5 @@
 - [ ] Make sure the server actions factories functions pattern is documented properly in the main doc
 - [ ] in file uploads and media, explain in the docs about it and site visitor uploads vs admin uploads, and generally how the media works
 - [ ] start using wix image in this project
-- [ ] find a better solution for withDocsWrapper so it won't be in the pages code
+- [x] find a better solution for withDocsWrapper so it won't be in the pages code
 - [ ] Make sure it's explained that headless components should be namespaced under one root component that acts as the composite that the component is describing

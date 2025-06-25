@@ -10,10 +10,7 @@ import {
 } from "../../../headless/bookings/services/booking-services-service";
 import { BookingServices } from "../../../headless/bookings/components/BookingServices";
 import WixMediaImage from "../../../headless/media/components/Image";
-import {
-  withDocsWrapper,
-  PageDocsRegistration,
-} from "../../../components/DocsMode";
+import { PageDocsRegistration } from "../../../components/DocsMode";
 
 interface BookingsHomePageProps {
   bookingServicesConfig: any;
@@ -110,143 +107,122 @@ const ServicesPreviewSection = () => {
   return (
     <div className="bg-gradient-to-br from-slate-100 to-blue-50 py-16">
       <BookingServices.ServicesList>
-        {withDocsWrapper(
-          ({ services, isLoading, hasServices }) => {
-            if (isLoading) {
-              return (
-                <div className="max-w-7xl mx-auto px-5">
-                  <div className="w-9 h-[2px] bg-black mb-2 my-8"></div>
-                  <h2 className="mb-7 mt-10 tracking-tighter text-4xl font-bold max-w-xs">
-                    How I Can Help You
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                    {[...Array(3)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse"
-                      >
-                        <div className="w-full h-48 bg-gray-300"></div>
-                        <div className="p-6">
-                          <div className="h-6 bg-gray-300 rounded mb-4"></div>
-                          <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
-
-            if (!hasServices) {
-              return null;
-            }
-
-            // Show only first 3 services as featured
-            const featuredServices = services.slice(0, 3);
-
+        {({ services, isLoading, hasServices }) => {
+          if (isLoading) {
             return (
               <div className="max-w-7xl mx-auto px-5">
                 <div className="w-9 h-[2px] bg-black mb-2 my-8"></div>
                 <h2 className="mb-7 mt-10 tracking-tighter text-4xl font-bold max-w-xs">
                   How I Can Help You
                 </h2>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                  {featuredServices.map((service) => (
-                    <BookingServices.ServiceListItem
-                      key={service._id}
-                      service={service}
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse"
                     >
-                      {withDocsWrapper(
-                        ({
-                          serviceId,
-                          name,
-                          tagLine,
-                          price,
-                          duration,
-                          image,
-                        }) => (
-                          <div className="w-full bg-white overflow-hidden mx-auto border border-gray-200 relative h-full min-h-[500px] shadow-lg hover:shadow-xl transition-shadow">
-                            <a href={`/bookings/example-2/${serviceId}`}>
-                              <div className="w-full h-48 overflow-hidden">
-                                {image ? (
-                                  <WixMediaImage
-                                    media={image}
-                                    displayMode="fit"
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center">
-                                    <svg
-                                      className="w-16 h-16 text-white/60"
-                                      fill="currentColor"
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                        clipRule="evenodd"
-                                      />
-                                    </svg>
-                                  </div>
-                                )}
-                              </div>
-                            </a>
-                            <div className="px-6 py-4 text-center pb-20">
-                              <a
-                                href={`/bookings/example-2/${serviceId}`}
-                                className="font-bold text-xl mb-2 hover:text-gray-700 block"
-                              >
-                                {name}
-                              </a>
-                              <div className="text-sm">
-                                {tagLine && (
-                                  <p className="my-3 text-gray-600">
-                                    {tagLine}
-                                  </p>
-                                )}
-                                {duration && (
-                                  <p className="leading-8">
-                                    {duration} minutes
-                                  </p>
-                                )}
-                                <p className="leading-8 font-semibold">
-                                  {price}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="w-full mx-auto pb-8 absolute bottom-0 text-center">
-                              <a
-                                href={`/bookings/example-2/${serviceId}`}
-                                className="inline-block bg-black text-white border-2 border-black px-5 py-2 text-sm font-medium hover:bg-white hover:text-gray-900 transition-colors"
-                              >
-                                Book Now
-                              </a>
-                            </div>
-                          </div>
-                        ),
-                        "Service Preview Card",
-                        "/docs/components/bookings-services#servicelistitem"
-                      )}
-                    </BookingServices.ServiceListItem>
+                      <div className="w-full h-48 bg-gray-300"></div>
+                      <div className="p-6">
+                        <div className="h-6 bg-gray-300 rounded mb-4"></div>
+                        <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      </div>
+                    </div>
                   ))}
-                </div>
-
-                <div className="flex my-8 justify-center">
-                  <a
-                    className="inline-block bg-black text-white border-2 border-black px-5 py-2 text-sm font-medium hover:bg-white hover:text-gray-900 transition-colors"
-                    href="/bookings/example-2/services"
-                  >
-                    More Services
-                  </a>
                 </div>
               </div>
             );
-          },
-          "Services Preview",
-          "/docs/components/bookings-services#service-preview-section"
-        )}
+          }
+
+          if (!hasServices) {
+            return null;
+          }
+
+          // Show only first 3 services as featured
+          const featuredServices = services.slice(0, 3);
+
+          return (
+            <div className="max-w-7xl mx-auto px-5">
+              <div className="w-9 h-[2px] bg-black mb-2 my-8"></div>
+              <h2 className="mb-7 mt-10 tracking-tighter text-4xl font-bold max-w-xs">
+                How I Can Help You
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                {featuredServices.map((service) => (
+                  <BookingServices.ServiceListItem
+                    key={service._id}
+                    service={service}
+                  >
+                    {({ serviceId, name, tagLine, duration, price, image }) => (
+                      <div className="w-full bg-white overflow-hidden mx-auto border border-gray-200 relative h-full min-h-[500px] shadow-lg hover:shadow-xl transition-shadow">
+                        <a href={`/bookings/example-2/${serviceId}`}>
+                          <div className="w-full h-48 overflow-hidden">
+                            {image ? (
+                              <WixMediaImage
+                                media={image}
+                                displayMode="fit"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center">
+                                <svg
+                                  className="w-16 h-16 text-white/60"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </a>
+                        <div className="px-6 py-4 text-center pb-20">
+                          <a
+                            href={`/bookings/example-2/${serviceId}`}
+                            className="font-bold text-xl mb-2 hover:text-gray-700 block"
+                          >
+                            {name}
+                          </a>
+                          <div className="text-sm">
+                            {tagLine && (
+                              <p className="my-3 text-gray-600">{tagLine}</p>
+                            )}
+                            {duration && (
+                              <p className="leading-8">{duration} minutes</p>
+                            )}
+                            <p className="leading-8 font-semibold">{price}</p>
+                          </div>
+                        </div>
+                        <div className="w-full mx-auto pb-8 absolute bottom-0 text-center">
+                          <a
+                            href={`/bookings/example-2/${serviceId}`}
+                            className="inline-block bg-black text-white border-2 border-black px-5 py-2 text-sm font-medium hover:bg-white hover:text-gray-900 transition-colors"
+                          >
+                            Book Now
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </BookingServices.ServiceListItem>
+                ))}
+              </div>
+
+              <div className="flex my-8 justify-center">
+                <a
+                  className="inline-block bg-black text-white border-2 border-black px-5 py-2 text-sm font-medium hover:bg-white hover:text-gray-900 transition-colors"
+                  href="/bookings/example-2/services"
+                >
+                  More Services
+                </a>
+              </div>
+            </div>
+          );
+        }}
       </BookingServices.ServicesList>
     </div>
   );
