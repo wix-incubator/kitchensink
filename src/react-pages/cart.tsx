@@ -302,6 +302,28 @@ const CartContent = () => {
                               Order Summary
                             </h2>
 
+                            {/* Order Notes */}
+                            <div className="mb-6">
+                              <CurrentCart.Notes>
+                                {({ notes, onNotesChange }) => (
+                                  <div>
+                                    <label className="block text-sm font-medium text-white mb-2">
+                                      Notes:
+                                    </label>
+                                    <textarea
+                                      value={notes}
+                                      onChange={(e) =>
+                                        onNotesChange(e.target.value)
+                                      }
+                                      placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+                                      rows={3}
+                                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors duration-200 resize-vertical"
+                                    />
+                                  </div>
+                                )}
+                              </CurrentCart.Notes>
+                            </div>
+
                             <CurrentCart.Summary>
                               {({
                                 subtotal,

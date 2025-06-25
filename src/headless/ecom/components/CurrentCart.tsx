@@ -377,6 +377,40 @@ export const Checkout = (props: CheckoutProps) => {
   });
 };
 
+/**
+ * Props for Notes headless component
+ */
+export interface NotesProps {
+  /** Render prop function that receives notes data */
+  children: (props: NotesRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Notes component
+ */
+export interface NotesRenderProps {
+  /** Current notes value */
+  notes: string;
+  /** Function to update notes */
+  onNotesChange: (notes: string) => Promise<void>;
+}
+
+/**
+ * Headless component for notes
+ */
+export const Notes = (props: NotesProps) => {
+  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
+    typeof CurrentCartServiceDefinition
+  >;
+
+  const notes = service.buyerNotes.get();
+
+  return props.children({
+    notes,
+    onNotesChange: service.setBuyerNotes,
+  });
+};
+
 export const CurrentCart = {
   Trigger,
   Content,
@@ -385,4 +419,5 @@ export const CurrentCart = {
   Summary,
   Checkout,
   Clear,
+  Notes,
 } as const;

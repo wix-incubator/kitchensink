@@ -15,6 +15,7 @@ export interface CurrentCartServiceAPI {
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   cartCount: ReadOnlySignal<number>;
+  buyerNotes: Signal<string>;
 
   addToCart: (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
@@ -29,6 +30,7 @@ export interface CurrentCartServiceAPI {
   openCart: () => void;
   closeCart: () => void;
   clearCart: () => Promise<void>;
+  setBuyerNotes: (notes: string) => Promise<void>;
   proceedToCheckout: () => Promise<void>;
 }
 
@@ -46,6 +48,7 @@ export const CurrentCartService = implementService.withConfig<{
   const isOpen: Signal<boolean> = signalsService.signal(false as any);
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
+  const buyerNotes: Signal<string> = signalsService.signal("" as any);
 
   const cartCount: ReadOnlySignal<number> = signalsService.computed(() => {
     const currentCart = cart.get();
@@ -163,10 +166,28 @@ export const CurrentCartService = implementService.withConfig<{
     }
   };
 
+  const setBuyerNotes = async (notes: string) => {
+    buyerNotes.set(notes);
+  };
+
   const proceedToCheckout = async () => {
     try {
       isLoading.set(true);
       error.set(null);
+
+      const notes = buyerNotes.get();
+      if (notes) {
+        try {
+          const updatedCart = await currentCart.updateCurrentCart({
+            cartInfo: {
+              buyerNote: notes,
+            },
+          });
+          cart.set(updatedCart);
+        } catch (noteError) {
+          console.warn("Failed to add buyer notes to cart:", noteError);
+        }
+      }
 
       const checkoutResult = await currentCart.createCheckoutFromCurrentCart({
         channelType: checkout.ChannelType.WEB,
@@ -203,6 +224,7 @@ export const CurrentCartService = implementService.withConfig<{
     cartCount,
     isLoading,
     error,
+    buyerNotes,
     addToCart,
     removeLineItem,
     updateLineItemQuantity,
@@ -211,6 +233,7 @@ export const CurrentCartService = implementService.withConfig<{
     openCart,
     closeCart,
     clearCart,
+    setBuyerNotes,
     proceedToCheckout,
   };
 });

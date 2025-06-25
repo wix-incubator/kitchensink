@@ -233,6 +233,22 @@ export function StoreLayout({
                   </div>
 
                   <div className="border-t border-white/10 p-6">
+                    <CurrentCart.Notes>
+                      {({ notes, onNotesChange }) => (
+                        <div>
+                          <label className="block text-xs font-medium text-white/80 mb-2">
+                            Notes:
+                          </label>
+                          <textarea
+                            value={notes}
+                            onChange={(e) => onNotesChange(e.target.value)}
+                            placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+                            rows={2}
+                            className="w-full px-2 py-1 text-xs bg-white/10 border border-white/20 rounded text-white placeholder-white/60 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors duration-200 resize-vertical mb-4"
+                          />
+                        </div>
+                      )}
+                    </CurrentCart.Notes>
                     <CurrentCart.Summary>
                       {({ subtotal, itemCount }) => (
                         <div className="space-y-4">
