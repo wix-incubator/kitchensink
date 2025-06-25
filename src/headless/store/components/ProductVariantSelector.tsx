@@ -215,7 +215,13 @@ export const Trigger = (props: TriggerProps) => {
   const error = variantService.error.get();
 
   const quantity = props.quantity || 1;
-  const canAddToCart = inStock && !isLoading;
+  
+  // Check if all required modifiers are filled
+  const areAllRequiredModifiersFilled = modifiersService 
+    ? modifiersService.areAllRequiredModifiersFilled()
+    : true; // If no modifiers service, assume no required modifiers
+  
+  const canAddToCart = inStock && !isLoading && areAllRequiredModifiersFilled;
 
   const onAddToCart = async () => {
     // Get modifiers data if available
