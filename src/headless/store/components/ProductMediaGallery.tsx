@@ -97,6 +97,11 @@ export interface ThumbnailRenderProps {
  * Headless component for individual media thumbnail
  */
 export const Thumbnail = (props: ThumbnailProps) => {
+
+  const selectedVariantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
+  typeof SelectedVariantServiceDefinition
+>;
+
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
@@ -105,9 +110,26 @@ export const Thumbnail = (props: ThumbnailProps) => {
   const currentIndex = mediaService.selectedImageIndex.get();
   const productName = mediaService.productName.get();
 
-  // Use actual v3 media structure - for now, only show main image
-  // Most v3 products seem to have only media.main, not itemsInfo.items
-  const src = props.index === 0 ? product?.media?.main?.image || null : null;
+ 
+  const selectedChoices = selectedVariantService.selectedChoices?.get();
+  const selectedVariant = selectedVariantService.currentVariant?.get();
+
+  // Get images based on selected choices if available
+  let selectedChoicesImages: string[] = [];
+  
+  Object.keys(selectedChoices).forEach((choiceKey) => {
+    const productOption = product?.options?.find((option: any) => option.name === choiceKey)?.choicesSettings?.choices?.find((choice: any) => choice.name === selectedChoices[choiceKey]);
+    if (productOption) {
+      selectedChoicesImages.push(...(productOption?.linkedMedia?.map((media: any) => media.image) || []));
+    }
+  });
+  
+ 
+  let src = selectedVariant?.media?.image || product?.media?.itemsInfo?.items?.[props.index]?.image || null;
+  if (selectedChoicesImages.length > 0) {
+    src = selectedChoicesImages[props.index] || null;
+  }
+  
   const isActive = currentIndex === props.index;
   const alt = `${productName || "Product"} image ${props.index + 1}`;
 
@@ -115,10 +137,6 @@ export const Thumbnail = (props: ThumbnailProps) => {
     mediaService.setSelectedImageIndex(props.index);
   };
 
-  // Only show thumbnail for index 0 (main image)
-  if (props.index > 0) {
-    return null;
-  }
 
   return props.children({
     item: product?.media?.main || null,

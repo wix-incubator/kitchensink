@@ -52,8 +52,25 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
 
     const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
-      const prod = productService.product.get();
-      return prod?.media?.itemsInfo?.items?.length || 0;
+
+      const product = productService.product.get();
+      const selectedChoices = selectedVariantService.selectedChoices?.get() || {};
+
+       // Get images based on selected choices if available
+      let selectedChoicesImages: string[] = [];
+      
+      Object.keys(selectedChoices).forEach((choiceKey) => {
+        const productOption = product?.options?.find((option: any) => option.name === choiceKey)?.choicesSettings?.choices?.find((choice: any) => choice.name === selectedChoices[choiceKey]);
+        if (productOption) {
+          selectedChoicesImages.push(...(productOption?.linkedMedia?.map((media: any) => media.image) || []));
+        }
+      });
+
+      if (selectedChoicesImages?.length) {
+        return selectedChoicesImages.length;
+      }
+
+      return product?.media?.itemsInfo?.items?.length || 0;
     });
 
     const productName: ReadOnlySignal<string> = signalsService.computed(() => {
