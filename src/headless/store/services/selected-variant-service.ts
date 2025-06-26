@@ -51,6 +51,7 @@ export interface SelectedVariantServiceAPI {
   getAvailableChoicesForOption: (optionName: string) => string[];
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
+  allChoicesSelected: () => boolean;
 }
 
 export const SelectedVariantServiceDefinition =
@@ -112,6 +113,8 @@ export const SelectedVariantService = implementService.withConfig<{
     if (variant) {
       const inStock = variant.inventoryStatus?.inStock ?? true;
       quantityAvailable.set(inStock ? 999 : 0);
+    } else {
+      quantityAvailable.set(0);
     }
   };
 
@@ -193,6 +196,7 @@ export const SelectedVariantService = implementService.withConfig<{
   }
 
   const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
+
     signalsService.computed<any>((() => {
       const prod = v3Product.get();
       const choices = selectedChoices.get();
@@ -202,6 +206,8 @@ export const SelectedVariantService = implementService.withConfig<{
       return (
         prod.variantsInfo.variants.find((variant: any) => {
           const variantChoices = processVariantChoices(variant);
+
+          if (Object.keys(choices).length !== Object.keys(variantChoices).length) return false;
           return Object.entries(choices).every(([optionName, optionValue]) => {
             return variantChoices[optionName] === optionValue;
           });
@@ -237,7 +243,7 @@ export const SelectedVariantService = implementService.withConfig<{
       rawAmount = prod.actualPriceRange.minValue.amount;
     }
 
-    return rawAmount ? `$${rawAmount}` : "$0.00";
+    return rawAmount ? `$${rawAmount}` : "";
   });
 
   const currentCompareAtPrice: ReadOnlySignal<string | null> = signalsService.computed(() => {
@@ -267,13 +273,12 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
-    const prod = v3Product.get();
 
     if (variant) {
       return variant.inventoryStatus?.inStock ?? false;
+    } else {
+      return false;
     }
-
-    return prod?.inventory?.availabilityStatus === "IN_STOCK";
   });
 
   const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
@@ -292,7 +297,7 @@ export const SelectedVariantService = implementService.withConfig<{
   const selectedVariant = (): productsV3.Variant | null => {
     const variantId = selectedVariantId.get();
     const variantsList = variants.get();
-    return variantsList.find((v) => v._id === variantId) || getDefaultVariant();
+    return variantsList.find((v) => v._id === variantId) || null;
   };
 
   const finalPrice = (): number => {
@@ -416,9 +421,7 @@ export const SelectedVariantService = implementService.withConfig<{
   };
 
   const resetSelections = () => {
-    selectedChoices.set({});
-    const defaultVariant = getDefaultVariant();
-    updateQuantityFromVariant(defaultVariant);
+    selectedChoices.set({});   
   };
 
   // New methods for smart variant selection
@@ -455,6 +458,7 @@ export const SelectedVariantService = implementService.withConfig<{
     return Object.keys(currentChoices).length > 0;
   };
 
+
   return {
     selectedChoices,
     selectedVariantId,
@@ -486,7 +490,7 @@ export const SelectedVariantService = implementService.withConfig<{
     // New methods for smart variant selection
     getAvailableChoicesForOption,
     isChoiceAvailable,
-    hasAnySelections,
+    hasAnySelections,    
 
     selectedVariant,
     finalPrice,

@@ -274,7 +274,7 @@ export default function ProductDetailPage({
                 <ProductMediaGallery.Indicator>
                   {({ total }) => (
                     <div className="grid grid-cols-4 gap-4">
-                      {Array.from({ length: total || 4 }).map((_, i) => (
+                      {Array.from({ length: total}).map((_, i) => (
                         <ProductMediaGallery.Thumbnail key={i} index={i}>
                           {({ src, isActive, onSelect, alt }) => (
                             <div
@@ -789,7 +789,8 @@ export default function ProductDetailPage({
 
                   {/* Stock Status */}
                   <ProductVariantSelector.Stock>
-                    {({ inStock, status, quantity, trackInventory }) => (
+                    {({ inStock, status, quantity, trackInventory, currentVariantId }) => (
+                      currentVariantId && (
                       <div className="flex items-center gap-2">
                         <div
                           className={`w-3 h-3 rounded-full ${
@@ -813,6 +814,7 @@ export default function ProductDetailPage({
                           )}
                         </span>
                       </div>
+                      )
                     )}
                   </ProductVariantSelector.Stock>
                 </div>

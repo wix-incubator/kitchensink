@@ -53,7 +53,7 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
 
     const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
       const prod = productService.product.get();
-      return prod?.media?.main ? 1 : 0;
+      return prod?.media?.itemsInfo?.items?.length || 0;
     });
 
     const productName: ReadOnlySignal<string> = signalsService.computed(() => {
@@ -70,16 +70,39 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     subscribeToVariantChanges();
 
     const setSelectedImageIndex = (index: number) => {
-      const validIndex = index === 0 ? 0 : 0;
+      const prod = productService.product.get();
+      if (!prod?.media?.itemsInfo?.items) return;
+
+      const maxIndex = prod.media.itemsInfo.items.length - 1;
+
+      const validIndex = Math.max(0, Math.min(index, maxIndex));
       selectedImageIndex.set(validIndex);
     };
 
     const nextImage = () => {
-      selectedImageIndex.set(0);
+      const prod = productService.product.get();
+      const currentIndex = selectedImageIndex.get();
+  
+      if (!prod?.media?.itemsInfo?.items) return;
+  
+      const nextIndex =
+        currentIndex >= prod.media.itemsInfo.items.length - 1
+          ? 0
+          : currentIndex + 1;
+      selectedImageIndex.set(nextIndex);
     };
 
     const previousImage = () => {
-      selectedImageIndex.set(0);
+      const prod = productService.product.get();
+      const currentIndex = selectedImageIndex.get();
+  
+      if (!prod?.media?.itemsInfo?.items) return;
+  
+      const prevIndex =
+        currentIndex <= 0
+          ? prod.media.itemsInfo.items.length - 1
+          : currentIndex - 1;
+      selectedImageIndex.set(prevIndex);
     };
 
     return {

@@ -1,6 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "../services/product-media-gallery-service";
+import  { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
 
 /**
  * Props for Viewport headless component
@@ -35,6 +36,12 @@ export const Viewport = (props: ViewportProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  
+
+  const variantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
+    typeof SelectedVariantServiceDefinition
+  >;
+  const selectedVariant = variantService.currentVariant?.get();
 
   const selectedImage = mediaService.selectedImage.get();
   const currentIndex = mediaService.selectedImageIndex.get();
@@ -44,7 +51,8 @@ export const Viewport = (props: ViewportProps) => {
 
   // Use actual v3 media structure - images are in media.main.image
   const product = mediaService.product.get();
-  const src = product?.media?.main?.image || null;
+  let src =  selectedVariant?.media?.image || product?.media?.main?.image || null;
+
   const alt = productName || "Product image";
 
   return props.children({

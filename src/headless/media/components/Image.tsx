@@ -44,8 +44,10 @@ export default function WixMediaImage({
     originalHeight = 320,
   } = parseMediaFromUrl(media?.image!);
 
+
   return (
     <Image
+      key={uri}
       uri={uri}
       width={width || originalWidth}
       height={height || originalHeight}

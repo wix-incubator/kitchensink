@@ -311,6 +311,9 @@ export interface StockRenderProps {
   quantity: number | null;
   /** Whether stock tracking is enabled */
   trackInventory: boolean;
+  /** Current variant id */
+  currentVariantId: string | null;
+  
 }
 
 /**
@@ -322,8 +325,8 @@ export const Stock = (props: StockProps) => {
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
   const inStock = variantService.isInStock.get();
-  const currentVariant = variantService.currentVariant.get();
-  const product = variantService.product.get();
+  const currentVariantId = variantService.selectedVariantId.get();
+
 
   const trackInventory = false; // V3 API has different inventory structure
   const quantity = null; // Not directly available in v3 API
@@ -332,6 +335,7 @@ export const Stock = (props: StockProps) => {
 
   return props.children({
     inStock,
+    currentVariantId,
     status,
     quantity,
     trackInventory,
