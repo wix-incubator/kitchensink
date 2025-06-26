@@ -9,9 +9,7 @@ Wix Bookings is a comprehensive appointment scheduling and service management pl
 ## Quick Start
 
 ```tsx
-import { BookingServices } from "../headless/bookings/BookingServices";
-import { BookingAvailability } from "../headless/bookings/BookingAvailability";
-import { BookingSelection } from "../headless/bookings/BookingSelection";
+import { BookingServices, BookingAvailability, BookingSelection } from "../headless/bookings/components";
 
 // Basic booking flow
 function BookingFlow() {
@@ -112,6 +110,8 @@ Handle the booking process and state management:
 Perfect for businesses with simple services and quick booking needs:
 
 ```tsx
+import { BookingServices } from "../headless/bookings/components";
+
 function SimpleBookingFlow() {
   return (
     <BookingServices.ServicesList>
@@ -143,6 +143,8 @@ function SimpleBookingFlow() {
 Ideal for complex services requiring detailed information:
 
 ```tsx
+import { BookingServices } from "../headless/bookings/components";
+
 function ServiceDetailPattern({ serviceId }) {
   return (
     <BookingServices.ServicesList>
@@ -176,6 +178,8 @@ function ServiceDetailPattern({ serviceId }) {
 Complete booking experience on a single page:
 
 ```tsx
+import { BookingServices, BookingAvailability, BookingSelection } from "../headless/bookings/components";
+
 function IntegratedBookingFlow({ serviceId }) {
   return (
     <div className="booking-flow">
@@ -219,6 +223,8 @@ function IntegratedBookingFlow({ serviceId }) {
 Guided booking process with clear progression:
 
 ```tsx
+import { BookingServices, BookingAvailability, BookingSelection } from "../headless/bookings/components";
+
 function StepByStepBooking() {
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -297,6 +303,8 @@ export async function getStaticProps() {
 Use the Services Manager to provide consistent state across components:
 
 ```tsx
+import { BookingServices, BookingAvailability, BookingSelection } from "../headless/bookings/components";
+
 import {
   createServicesManager,
   createServicesMap,
@@ -414,6 +422,8 @@ All components provide comprehensive error handling:
 All components use render props, giving you complete control over styling:
 
 ```tsx
+import { BookingServices } from "../headless/bookings/components";
+
 <BookingServices.ServiceListItem service={service}>
   {(props) => (
     <YourCustomServiceCard
@@ -442,6 +452,8 @@ const config = await loadBookingAvailabilityServiceConfig(
 Components work with your existing systems:
 
 ```tsx
+import { BookingSelection } from "../headless/bookings/components";
+
 <BookingSelection.BookingSummary>
   {({ proceedToCheckout, summary }) => (
     <button

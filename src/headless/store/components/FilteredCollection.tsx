@@ -21,9 +21,7 @@ interface FilteredCollectionProviderProps {
   children: ReactNode;
 }
 
-export const FilteredCollectionProvider: React.FC<
-  FilteredCollectionProviderProps
-> = ({ children }) => {
+export const Provider: React.FC<FilteredCollectionProviderProps> = ({ children }) => {
   const filter = useService(FilterServiceDefinition);
   const collection = useService(CollectionServiceDefinition);
 
@@ -75,7 +73,7 @@ interface FilteredGridProps {
   }) => ReactNode;
 }
 
-export const FilteredGrid: React.FC<FilteredGridProps> = ({ children }) => {
+export const Grid: React.FC<FilteredGridProps> = ({ children }) => {
   const { collection } = useFilteredCollection();
 
   const products = collection!.products.get() || [];
@@ -113,7 +111,7 @@ interface FilteredItemProps {
   }) => ReactNode;
 }
 
-export const FilteredItem: React.FC<FilteredItemProps> = ({
+export const Item: React.FC<FilteredItemProps> = ({
   product,
   children,
 }) => {
@@ -163,7 +161,7 @@ interface FilteredLoadMoreProps {
   }) => ReactNode;
 }
 
-export const FilteredLoadMore: React.FC<FilteredLoadMoreProps> = ({
+export const LoadMore: React.FC<FilteredLoadMoreProps> = ({
   children,
 }) => {
   const { collection } = useFilteredCollection();
@@ -201,7 +199,7 @@ interface FilteredFiltersProps {
   }) => ReactNode;
 }
 
-export const FilteredFilters: React.FC<FilteredFiltersProps> = ({
+export const Filters: React.FC<FilteredFiltersProps> = ({
   children,
 }) => {
   const { collection, filter } = useFilteredCollection();
@@ -228,13 +226,4 @@ export const FilteredFilters: React.FC<FilteredFiltersProps> = ({
       })}
     </>
   );
-};
-
-// Export the main collection object for easier usage
-export const FilteredCollection = {
-  Provider: FilteredCollectionProvider,
-  Grid: FilteredGrid,
-  Item: FilteredItem,
-  LoadMore: FilteredLoadMore,
-  Filters: FilteredFilters,
 };

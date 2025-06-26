@@ -9,7 +9,7 @@ The `ProductVariantSelector` namespace contains headless components for managing
 ## Overview
 
 ```tsx
-import { ProductVariantSelector } from "../headless/store/ProductVariantSelector";
+import { ProductVariantSelector } from "../headless/store/components";
 
 // All available components
 const {
@@ -484,7 +484,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render } from "@testing-library/react";
-import { ProductVariantSelector } from "../headless/store/ProductVariantSelector";
+import { ProductVariantSelector } from "../headless/store/components";
 
 test("ProductOptions renders correctly", () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

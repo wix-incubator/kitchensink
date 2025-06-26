@@ -124,8 +124,3 @@ export const Item = (props: ItemProps) => {
     onQuickAdd: handleQuickAdd,
   });
 };
-
-export const RelatedProducts = {
-  List,
-  Item,
-} as const;

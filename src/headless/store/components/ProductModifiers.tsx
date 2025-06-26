@@ -134,19 +134,19 @@ export const Modifier = (props: ModifierProps) => {
 /**
  * Props for ModifierChoice headless component
  */
-export interface ModifierChoiceProps {
+export interface ChoiceProps {
   /** Product modifier data */
   modifier: productsV3.ConnectedModifier;
   /** Choice data */
   choice: productsV3.ConnectedModifierChoice;
   /** Render prop function that receives choice data */
-  children: (props: ModifierChoiceRenderProps) => React.ReactNode;
+  children: (props: ChoiceRenderProps) => React.ReactNode;
 }
 
 /**
  * Render props for ModifierChoice component
  */
-export interface ModifierChoiceRenderProps {
+export interface ChoiceRenderProps {
   /** Choice value to display */
   value: string;
   /** Choice description (for color options) */
@@ -166,7 +166,7 @@ export interface ModifierChoiceRenderProps {
 /**
  * Headless component for individual modifier choice selection
  */
-export const ModifierChoice = (props: ModifierChoiceProps) => {
+export const Choice = (props: ChoiceProps) => {
   const modifiersService = useModifiersService();
   const { modifier, choice } = props;
 
@@ -203,17 +203,17 @@ export const ModifierChoice = (props: ModifierChoiceProps) => {
 /**
  * Props for ModifierFreeText headless component
  */
-export interface ModifierFreeTextProps {
+export interface FreeTextProps {
   /** Product modifier data */
   modifier: productsV3.ConnectedModifier;
   /** Render prop function that receives free text data */
-  children: (props: ModifierFreeTextRenderProps) => React.ReactNode;
+  children: (props: FreeTextRenderProps) => React.ReactNode;
 }
 
 /**
  * Render props for ModifierFreeText component
  */
-export interface ModifierFreeTextRenderProps {
+export interface FreeTextRenderProps {
   /** Current text value */
   value: string;
   /** Function to update text value */
@@ -235,7 +235,7 @@ export interface ModifierFreeTextRenderProps {
 /**
  * Headless component for free text modifier input
  */
-export const ModifierFreeText = (props: ModifierFreeTextProps) => {
+export const FreeText = (props: FreeTextProps) => {
   const modifiersService = useModifiersService();
   const { modifier } = props;
   
@@ -270,17 +270,17 @@ export const ModifierFreeText = (props: ModifierFreeTextProps) => {
 /**
  * Props for ModifierToggleFreeText headless component  
  */
-export interface ModifierToggleFreeTextProps {
+export interface ToggleFreeTextProps {
   /** Product modifier data */
   modifier: productsV3.ConnectedModifier;
   /** Render prop function that receives toggle data */
-  children: (props: ModifierToggleFreeTextRenderProps) => React.ReactNode;
+  children: (props: ToggleFreeTextRenderProps) => React.ReactNode;
 }
 
 /**
  * Render props for ModifierToggleFreeText component
  */
-export interface ModifierToggleFreeTextRenderProps {
+export interface ToggleFreeTextRenderProps {
   /** Whether the text input is shown */
   isTextInputShown: boolean;
   /** Function to toggle text input visibility */
@@ -295,7 +295,7 @@ export interface ModifierToggleFreeTextRenderProps {
  * Headless component for toggling free text modifier input
  * Used for optional free text modifiers where a checkbox shows/hides the input
  */
-export const ModifierToggleFreeText = (props: ModifierToggleFreeTextProps) => {
+export const ToggleFreeText = (props: ToggleFreeTextProps) => {
   const modifiersService = useModifiersService();
   const { modifier } = props;
   
@@ -319,11 +319,3 @@ export const ModifierToggleFreeText = (props: ModifierToggleFreeTextProps) => {
     modifierName,
   });
 };
-
-export const ProductModifiers = {
-  Modifiers,
-  Modifier,
-  Choice: ModifierChoice,
-  FreeText: ModifierFreeText,
-  ToggleFreeText: ModifierToggleFreeText,
-} as const; 

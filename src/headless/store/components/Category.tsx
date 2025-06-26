@@ -17,7 +17,7 @@ interface CategoryProviderProps {
   children: ReactNode;
 }
 
-export const CategoryProvider: React.FC<CategoryProviderProps> = ({
+export const Provider: React.FC<CategoryProviderProps> = ({
   children,
 }) => {
   const service = useService(CategoryServiceDefinition);
@@ -46,7 +46,7 @@ interface CategoryListProps {
   }) => ReactNode;
 }
 
-export const CategoryList: React.FC<CategoryListProps> = ({ children }) => {
+export const List: React.FC<CategoryListProps> = ({ children }) => {
   const service = useCategory();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     service.selectedCategory.get()
@@ -67,10 +67,4 @@ export const CategoryList: React.FC<CategoryListProps> = ({ children }) => {
       })}
     </>
   );
-};
-
-// Export the main collection object for easier usage
-export const Category = {
-  Provider: CategoryProvider,
-  List: CategoryList,
 };

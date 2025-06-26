@@ -9,7 +9,7 @@ import {
   CurrentCartServiceDefinition,
   CurrentCartService,
 } from "../headless/store/services/current-cart-service";
-import { CurrentCart } from "../headless/store/components/CurrentCart";
+import { CurrentCart } from "../headless/store/components";
 import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
 
 interface CartPageProps {

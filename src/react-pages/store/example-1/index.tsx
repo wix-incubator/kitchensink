@@ -9,8 +9,7 @@ import StoreHeader from "../../../components/StoreHeader";
 import WixMediaImage from "../../../headless/media/components/Image";
 import {
   FilteredCollection,
-  FiltersLoading,
-} from "../../../headless/store/components/FilteredCollection";
+} from "../../../headless/store/components";
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
@@ -93,7 +92,7 @@ const ProductGridContent = () => {
                     {/* Filters Sidebar */}
                     <div className="w-80 flex-shrink-0">
                       <div className="sticky top-6">
-                        <FiltersLoading>
+                        <FilteredCollection.FiltersLoading>
                           {({ isFullyLoaded }) => (
                             <div className="relative">
                               <ProductFilters
@@ -127,7 +126,7 @@ const ProductGridContent = () => {
                               )}
                             </div>
                           )}
-                        </FiltersLoading>
+                        </FilteredCollection.FiltersLoading>
                       </div>
                     </div>
 

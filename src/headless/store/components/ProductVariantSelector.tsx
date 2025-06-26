@@ -337,12 +337,3 @@ export const Stock = (props: StockProps) => {
     trackInventory,
   });
 };
-
-export const ProductVariantSelector = {
-  Options,
-  Option,
-  Choice,
-  Trigger,
-  Price,
-  Stock,
-} as const;
