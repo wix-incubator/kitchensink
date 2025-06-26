@@ -275,6 +275,207 @@ export function StoreLayout({
                         </div>
                       )}
                     </CurrentCart.Summary>
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <CurrentCart.Items>
+                        {({ hasItems, items }) => (
+                          <>
+                            {hasItems ? (
+                              <div className="space-y-4">
+                                {items.map((item) => (
+                                  <CurrentCart.Item key={item._id} item={item}>
+                                    {({
+                                      title,
+                                      image,
+                                      price,
+                                      quantity,
+                                      selectedOptions,
+                                      onIncrease,
+                                      onDecrease,
+                                      onRemove,
+                                    }) => (
+                                      <div className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                        <div className="w-16 h-16 bg-white/10 rounded-lg overflow-hidden flex-shrink-0">
+                                          {image && (
+                                            <WixMediaImage
+                                              media={{
+                                                image,
+                                              }}
+                                              width={64}
+                                              height={64}
+                                            />
+                                          )}
+                                        </div>
+
+                                        <div className="flex-1 min-w-0">
+                                          <h3 className="text-white font-medium text-sm truncate">
+                                            {title}
+                                          </h3>
+
+                                          {/* Selected Options */}
+                                          {selectedOptions.length > 0 && (
+                                            <div className="mt-1 mb-2">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedOptions.map(
+                                                  (option, index) => {
+                                                    const isColor =
+                                                      typeof option.value ===
+                                                      "object";
+                                                    const text = isColor
+                                                      ? (option.value as any)
+                                                          .name
+                                                      : option.value;
+                                                    const color = isColor
+                                                      ? (option.value as any)
+                                                          .code
+                                                      : null;
+
+                                                    return (
+                                                      <div
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-xs text-white/70"
+                                                      >
+                                                        <span>
+                                                          {option.name}:
+                                                        </span>
+                                                        <div className="flex items-center gap-1">
+                                                          {color && (
+                                                            <div
+                                                              className="w-3 h-3 rounded-full border border-white/30"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  color,
+                                                              }}
+                                                              title={text}
+                                                            />
+                                                          )}
+                                                          <span className="font-medium">
+                                                            {text}
+                                                          </span>
+                                                        </div>
+                                                        {index <
+                                                          selectedOptions.length -
+                                                            1 && (
+                                                          <span className="text-white/40">
+                                                            ,
+                                                          </span>
+                                                        )}
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          <p className="text-teal-400 font-semibold text-sm mt-1">
+                                            {price}
+                                          </p>
+
+                                          <div className="flex items-center justify-between mt-3">
+                                            <div className="flex items-center gap-2">
+                                              <button
+                                                onClick={onDecrease}
+                                                className="w-6 h-6 rounded bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+                                              >
+                                                -
+                                              </button>
+                                              <span className="text-white text-sm w-6 text-center">
+                                                {quantity}
+                                              </span>
+                                              <button
+                                                onClick={onIncrease}
+                                                className="w-6 h-6 rounded bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+                                              >
+                                                +
+                                              </button>
+                                            </div>
+
+                                            <button
+                                              onClick={onRemove}
+                                              className="text-red-400 hover:text-red-300 text-xs transition-colors"
+                                            >
+                                              Remove
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </CurrentCart.Item>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-8">
+                                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                  <svg
+                                    className="w-8 h-8 text-white/60"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
+                                    />
+                                  </svg>
+                                </div>
+                                <p className="text-white/60">
+                                  Your cart is empty
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </CurrentCart.Items>
+                    </div>
+
+                    <div className="border-t border-white/10 p-6 space-y-4">
+                      {/* Order Notes */}
+                      <CurrentCart.Notes>
+                        {({ notes, onNotesChange }) => (
+                          <div>
+                            <label className="block text-xs font-medium text-white/80 mb-2">
+                              Notes:
+                            </label>
+                            <textarea
+                              value={notes}
+                              onChange={(e) => onNotesChange(e.target.value)}
+                              placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+                              rows={2}
+                              className="w-full px-2 py-1 text-xs bg-white/10 border border-white/20 rounded text-white placeholder-white/60 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors duration-200 resize-vertical"
+                            />
+                          </div>
+                        )}
+                      </CurrentCart.Notes>
+
+                      <CurrentCart.Summary>
+                        {({ subtotal, itemCount }) => (
+                          <div className="space-y-4">
+                            <div className="flex justify-between">
+                              <span className="text-white/80">
+                                Items ({itemCount})
+                              </span>
+                              <span className="text-white font-semibold">
+                                {subtotal}
+                              </span>
+                            </div>
+
+                            <CurrentCart.Checkout>
+                              {({ onProceed, canCheckout }) => (
+                                <button
+                                  onClick={onProceed}
+                                  disabled={!canCheckout}
+                                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                >
+                                  Proceed to Checkout
+                                </button>
+                              )}
+                            </CurrentCart.Checkout>
+                          </div>
+                        )}
+                      </CurrentCart.Summary>
+                    </div>
                   </div>
                 </div>
               </div>
