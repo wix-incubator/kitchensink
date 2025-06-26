@@ -3,7 +3,7 @@ import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-2.css";
 import { PageDocsRegistration } from "../../../components/DocsMode";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import ProductFilters from "../../../components/ProductFilters";
 import { FilteredCollection } from "../../../headless/store/components";
 import {

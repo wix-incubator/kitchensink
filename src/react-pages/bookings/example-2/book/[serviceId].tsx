@@ -11,7 +11,7 @@ import {
 import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
 import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
 import { BookingServices, BookingAvailability, BookingSelection } from "../../../../headless/bookings/components";
-import WixMediaImage from "../../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../../headless/media/components";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { BookingAvailabilityServiceDefinition } from "../../../../headless/bookings/services/booking-availability-service";

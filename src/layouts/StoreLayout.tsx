@@ -9,7 +9,7 @@ import {
   CurrentCartService,
 } from "../headless/store/services/current-cart-service";
 import { CurrentCart } from "../headless/store/components";
-import WixMediaImage from "../headless/media/components/Image";
+import { WixMediaImage } from "../headless/media/components";
 
 interface StoreLayoutProps {
   children: ReactNode;

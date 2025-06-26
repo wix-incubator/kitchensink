@@ -4,7 +4,7 @@ import {
 } from "@wix/services-manager";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
-import WixMediaImage from "../../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../../headless/media/components";
 import { Product, ProductMediaGallery, ProductModifiers, ProductVariantSelector, CurrentCart } from "../../../../headless/store/components";
 import {
   CurrentCartService,

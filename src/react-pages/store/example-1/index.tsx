@@ -6,7 +6,7 @@ import { productsV3 } from "@wix/stores";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 import ProductFilters from "../../../components/ProductFilters";
 import StoreHeader from "../../../components/StoreHeader";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import {
   FilteredCollection,
 } from "../../../headless/store/components";

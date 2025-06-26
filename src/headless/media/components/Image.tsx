@@ -4,7 +4,7 @@ import { Image, type FittingType } from "@wix/image";
 
 type MediaItem = services.MediaItem;
 
-export const parseMediaFromUrl = (url: string) => {
+const parseMediaFromUrl = (url: string) => {
   if (!url)
     return { uri: url, originalWidth: undefined, originalHeight: undefined };
 
@@ -21,7 +21,7 @@ export const parseMediaFromUrl = (url: string) => {
   };
 };
 
-export default function WixMediaImage({
+export function WixMediaImage({
   media,
   width,
   height,

@@ -9,7 +9,7 @@ import {
   BookingServicesServiceDefinition,
 } from "../../../headless/bookings/services/booking-services-service";
 import { BookingServices } from "../../../headless/bookings/components";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
 interface BookingsHomePageProps {

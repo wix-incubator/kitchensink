@@ -9,7 +9,7 @@ import {
   BookingServiceServiceDefinition,
 } from "../../../headless/bookings/services/booking-service-service";
 import { BookingService } from "../../../headless/bookings/components";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
