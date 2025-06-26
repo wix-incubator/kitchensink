@@ -270,13 +270,3 @@ export const BookingError = (props: BookingErrorProps) => {
   });
 };
 
-/**
- * BookingSelection namespace containing all booking selection headless components
- */
-export const BookingSelection = {
-  BookingSummary,
-  ServiceSelector,
-  SlotSelector,
-  BookingProgress,
-  BookingError,
-} as const;
