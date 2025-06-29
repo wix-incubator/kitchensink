@@ -42,10 +42,11 @@ interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
   currentCartServiceConfig: any;
   categoriesConfig: any;
+  productPageRoute: string;
   onCategoryChange?: (categoryId: string | null, category: any) => void;
 }
 
-const ProductGridContent = () => {
+const ProductGridContent = ({ productPageRoute }: { productPageRoute: string }) => {
   return (
     <FilteredCollection.Provider>
       <FilteredCollection.Grid>
@@ -417,7 +418,7 @@ const ProductGridContent = () => {
 
                                     <div className="flex gap-2">
                                       <a
-                                        href={`/store/composites/${slug}`}
+                                        href={`${productPageRoute}/${slug}`}
                                         className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                                         style={{
                                           background: 'var(--theme-btn-primary)'
@@ -564,6 +565,7 @@ export default function StoreCollectionPage({
   currentCartServiceConfig,
   categoriesConfig,
   onCategoryChange = () => { },
+  productPageRoute,
 }: StoreCollectionPageProps) {
   const servicesManager = createServicesManager(
     createServicesMap()
@@ -599,7 +601,7 @@ export default function StoreCollectionPage({
       servicesManager={servicesManager}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <ProductGridContent />
+        <ProductGridContent productPageRoute={productPageRoute} />
         <LoadMoreSection />
       </div>
     </StoreLayout>

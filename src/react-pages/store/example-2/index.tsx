@@ -46,6 +46,7 @@ export default function StoreExample2Page({
         currentCartServiceConfig={currentCartServiceConfig}
         categoriesConfig={categoriesConfig}
         onCategoryChange={handleCategoryChange}
+        productPageRoute={'/store/example-2'}
       />
     </KitchensinkLayout>
   );

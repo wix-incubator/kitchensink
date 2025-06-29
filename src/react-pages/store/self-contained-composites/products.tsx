@@ -18,7 +18,7 @@ const ProductCardSkeleton = () => (
 );
 
 
-export default function SelfContainedProductsPage() {
+export default function SelfContainedProductsPage({ productPageRoute }: { productPageRoute: string }) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [filteredCollectionServiceConfig, setFilteredCollectionServiceConfig] = useState<any>(null);
@@ -49,6 +49,7 @@ export default function SelfContainedProductsPage() {
         filteredCollectionServiceConfig={filteredCollectionServiceConfig}
         currentCartServiceConfig={currentCartServiceConfig}
         categoriesConfig={categoriesConfig}
+        productPageRoute={productPageRoute}
       />
       }
     </>
