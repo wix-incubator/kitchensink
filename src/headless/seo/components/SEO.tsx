@@ -70,6 +70,7 @@ function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
  * @example
  * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
  * import { SEO } from "@wix/seo/components";
+ * import { seoTags } from "@wix/seo";
  * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
  *   pageURL: url,
  *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
@@ -77,11 +78,7 @@ function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
  * });
  *
  * <head>
- *   <SEO.Tags
- *     seoTagsServiceConfig={seoTagsServiceConfig}
- *     itemType={seoTags.ItemType.<YOUR_ITEM_TYPE>}
- *     itemData={{ slug: "<YOUR_ITEM_SLUG>" }}
- *   />
+ *   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} />
  * </head>
  */
 
