@@ -238,11 +238,3 @@ export const Indicator = (props: IndicatorProps) => {
     hasImages: totalImages > 0,
   });
 };
-
-export const ProductMediaGallery = {
-  Viewport,
-  Thumbnail,
-  Next,
-  Previous,
-  Indicator,
-} as const;

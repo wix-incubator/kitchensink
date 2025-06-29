@@ -376,13 +376,3 @@ export const Checkout = (props: CheckoutProps) => {
     error,
   });
 };
-
-export const CurrentCart = {
-  Trigger,
-  Content,
-  Items,
-  Item,
-  Summary,
-  Checkout,
-  Clear,
-} as const;

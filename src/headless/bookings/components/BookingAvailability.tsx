@@ -283,13 +283,3 @@ export const AvailabilityHeader = (props: AvailabilityHeaderProps) => {
     summaryText,
   });
 };
-
-/**
- * BookingAvailability namespace containing all booking availability headless components
- */
-export const BookingAvailability = {
-  Calendar,
-  TimeSlots,
-  TimeSlot,
-  AvailabilityHeader,
-} as const;

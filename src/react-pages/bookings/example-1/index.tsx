@@ -12,10 +12,12 @@ import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/services/booking-selection-service";
-import { BookingServices } from "../../../headless/bookings/components/BookingServices";
-import { BookingSelection } from "../../../headless/bookings/components/BookingSelection";
+import {
+  BookingServices,
+  BookingSelection,
+} from "../../../headless/bookings/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
 interface BookingsPageProps {

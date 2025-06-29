@@ -445,12 +445,4 @@ const ProfilePhoto = (props: ProfilePhotoProps) => {
  * </CurrentMemberProfile.FullName>
  * ```
  */
-export const CurrentMemberProfile = {
-  FullName,
-  Nickname,
-  Email,
-  LastLoginDate,
-  ActivityStatus,
-  DaysMember,
-  ProfilePhoto,
-} as const;
+export { FullName, Nickname, Email, LastLoginDate, ActivityStatus, DaysMember, ProfilePhoto };

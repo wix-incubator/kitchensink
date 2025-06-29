@@ -205,12 +205,3 @@ export const ServicesHeader = (props: ServicesHeaderProps) => {
     summaryText,
   });
 };
-
-/**
- * BookingServices namespace containing all booking service headless components
- */
-export const BookingServices = {
-  ServicesList,
-  ServiceListItem,
-  ServicesHeader,
-} as const;

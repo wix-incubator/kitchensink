@@ -12,16 +12,16 @@ const SortContext = createContext<SortContextValue | null>(null);
 export function useSortContext() {
   const context = useContext(SortContext);
   if (!context) {
-    throw new Error("useSortContext must be used within a Sort.Provider");
+    throw new Error("useSortContext must be used within a Sort.SortProvider");
   }
   return context;
 }
 
-interface SortProviderProps {
+interface ProviderProps {
   children: React.ReactNode;
 }
 
-function SortProvider({ children }: SortProviderProps) {
+export function Provider({ children }: ProviderProps) {
   const sortService = useService(SortServiceDefinition);
   const [currentSort, setCurrentSort] = useState<SortBy>("");
 
@@ -50,16 +50,11 @@ function SortProvider({ children }: SortProviderProps) {
   );
 }
 
-interface SortControllerProps {
+interface ControllerProps {
   children: (props: SortContextValue) => React.ReactNode;
 }
 
-function SortController({ children }: SortControllerProps) {
+export function Controller({ children }: ControllerProps) {
   const context = useSortContext();
   return <>{children(context)}</>;
 }
-
-export const Sort = {
-  Provider: SortProvider,
-  Controller: SortController,
-};

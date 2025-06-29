@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Headless Component Compositions Structure
+
+- **Short, Descriptive Exports:**  
+  All headless components must be exported from their module using concise, descriptive names (e.g., `Provider`, `List`, `Name`, `Description`).  
+  **Do not prefix component names with the module or namespace name.**  
+  _Example: Use `export const Provider = ...` instead of `export const CategoryProvider = ...`._
+
+- **Barrel File Pattern:**  
+  The barrel file (`index.tsx`) for each group must re-export all components using the ES module namespace pattern:  
+  ```ts
+  export * as Category from "./Category";
+  export * as Product from "./Product";
+  // etc.
+  ```
+  **Do not use aliasing in the barrel file.**  
+  If a component needs a shorter name, rename it in its source file.
+
+- **Consuming Usage:**  
+  Always use the namespace and short component name in consuming code:  
+  - `<Category.Provider>` (not `<Category.CategoryProvider>`)
+  - `<Category.List>` (not `<Category.CategoryList>`)
+  - `<Product.Name>` (not `<Product.ProductName>`)
+  - `<ProductModifiers.FreeText>` (not `<ProductModifiers.ModifierFreeText>`)
+
+- **Import Consistency:**  
+  Never import individual components directly from submodules.  
+  **Always import the namespace from the barrel file:**  
+  ```ts
+  import { Category, Product } from "headless/store/components";
+  ```
+
+- **No Aliasing:**  
+  Do not use `as` to alias exports in the barrel file.  
+  The component's name in its source file must match the desired short name.
+
+- **Discoverability & Consistency:**  
+  This structure ensures all headless components are easily discoverable, consistently named, and simple to use in all consuming code.
+
+---
+
+**Summary:**  
+_Export all headless components with short names, use the namespace pattern in the barrel file, and always consume as `Namespace.Component`. Never alias or import directly from submodules._
+
+

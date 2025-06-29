@@ -9,7 +9,7 @@ The `BookingSelection` namespace contains headless components for managing the b
 ## Overview
 
 ```tsx
-import { BookingSelection } from "../headless/bookings/BookingSelection";
+import { BookingSelection } from "headless/bookings/components";
 
 // All available components
 const {
@@ -401,7 +401,7 @@ Displays and manages booking error states.
 Here's a complete example showing how to use multiple BookingSelection components together:
 
 ```tsx
-import { BookingSelection } from "../headless/bookings/BookingSelection";
+import { BookingSelection } from "headless/bookings/components";
 
 function CompleteBookingFlow({ services, timeSlots }) {
   return (
@@ -457,7 +457,7 @@ function CompleteBookingFlow({ services, timeSlots }) {
 The BookingSelection components work with a service that needs to be configured:
 
 ```tsx
-import { BookingSelectionService } from "../headless/bookings/booking-selection-service";
+import { BookingSelectionService } from "headless/bookings/booking-selection-service";
 
 // Configure the service
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig(

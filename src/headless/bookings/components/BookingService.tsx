@@ -3,14 +3,17 @@ import { useService } from "@wix/services-manager-react";
 import { BookingServiceServiceDefinition } from "../services/booking-service-service";
 import { services } from "@wix/bookings";
 
+export type ServicePropsChildren = (props: ServiceRenderProps) => React.ReactNode;
 /**
  * Props for Service headless component
  */
 export interface ServiceProps {
   /** Render prop function that receives service data */
-  children: (props: ServiceRenderProps) => React.ReactNode;
+  children: ServicePropsChildren;
 }
 
+export type LoadService = (serviceId: string) => Promise<void>;
+export type RefreshService = () => Promise<void>;
 /**
  * Render props for Service component
  */
@@ -24,15 +27,16 @@ export interface ServiceRenderProps {
   /** Whether service is loaded */
   hasService: boolean;
   /** Function to load a service by ID */
-  loadService: (serviceId: string) => Promise<void>;
+  loadService: LoadService;
   /** Function to refresh the current service */
-  refreshService: () => Promise<void>;
+  refreshService: RefreshService;
 }
 
 /**
  * Service - Loads and provides a single service by ID
+ * @component
  */
-export const Service = (props: ServiceProps) => {
+export const Service = (props: ServiceProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -52,12 +56,13 @@ export const Service = (props: ServiceProps) => {
   });
 };
 
+export type ServiceHeaderChildren = (props: ServiceHeaderRenderProps) => React.ReactNode;
 /**
  * Props for ServiceHeader headless component
  */
 export interface ServiceHeaderProps {
   /** Render prop function that receives service header data */
-  children: (props: ServiceHeaderRenderProps) => React.ReactNode;
+  children: ServiceHeaderChildren;
 }
 
 /**
@@ -78,8 +83,9 @@ export interface ServiceHeaderRenderProps {
 
 /**
  * ServiceHeader - Renders header information for the service
+ * @component
  */
-export const ServiceHeader = (props: ServiceHeaderProps) => {
+export const ServiceHeader = (props: ServiceHeaderProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -99,12 +105,13 @@ export const ServiceHeader = (props: ServiceHeaderProps) => {
   });
 };
 
+export type ServiceDescriptionChildren = (props: ServiceDescriptionRenderProps) => React.ReactNode;
 /**
  * Props for ServiceDescription headless component
  */
 export interface ServiceDescriptionProps {
   /** Render prop function that receives service description data */
-  children: (props: ServiceDescriptionRenderProps) => React.ReactNode;
+  children: ServiceDescriptionChildren;
 }
 
 /**
@@ -119,8 +126,9 @@ export interface ServiceDescriptionRenderProps {
 
 /**
  * ServiceDescription - Renders description information for the service
+ * @component
  */
-export const ServiceDescription = (props: ServiceDescriptionProps) => {
+export const ServiceDescription = (props: ServiceDescriptionProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -140,12 +148,13 @@ export const ServiceDescription = (props: ServiceDescriptionProps) => {
   });
 };
 
+export type ServiceMediaChildren = (props: ServiceMediaRenderProps) => React.ReactNode;
 /**
  * Props for ServiceMedia headless component
  */
 export interface ServiceMediaProps {
   /** Render prop function that receives service media data */
-  children: (props: ServiceMediaRenderProps) => React.ReactNode;
+  children: ServiceMediaChildren;
 }
 
 /**
@@ -164,8 +173,9 @@ export interface ServiceMediaRenderProps {
 
 /**
  * ServiceMedia - Renders media information for the service
+ * @component
  */
-export const ServiceMedia = (props: ServiceMediaProps) => {
+export const ServiceMedia = (props: ServiceMediaProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -187,12 +197,14 @@ export const ServiceMedia = (props: ServiceMediaProps) => {
   });
 };
 
+export type ServiceDetailsChildren = (props: ServiceDetailsRenderProps) => React.ReactNode;
+
 /**
  * Props for ServiceDetails headless component
  */
 export interface ServiceDetailsProps {
   /** Render prop function that receives service details data */
-  children: (props: ServiceDetailsRenderProps) => React.ReactNode;
+  children: ServiceDetailsChildren;
 }
 
 /**
@@ -215,8 +227,9 @@ export interface ServiceDetailsRenderProps {
 
 /**
  * ServiceDetails - Renders detail information for the service
+ * @component
  */
-export const ServiceDetails = (props: ServiceDetailsProps) => {
+export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -268,12 +281,13 @@ export const ServiceDetails = (props: ServiceDetailsProps) => {
   });
 };
 
+export type ServiceLocationsChildren = (props: ServiceLocationsRenderProps) => React.ReactNode;
 /**
  * Props for ServiceLocations headless component
  */
 export interface ServiceLocationsProps {
   /** Render prop function that receives service locations data */
-  children: (props: ServiceLocationsRenderProps) => React.ReactNode;
+  children: ServiceLocationsChildren;
 }
 
 /**
@@ -290,8 +304,9 @@ export interface ServiceLocationsRenderProps {
 
 /**
  * ServiceLocations - Renders location information for the service
+ * @component
  */
-export const ServiceLocations = (props: ServiceLocationsProps) => {
+export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -319,12 +334,13 @@ export const ServiceLocations = (props: ServiceLocationsProps) => {
   });
 };
 
+export type ServiceActionsChildren = (props: ServiceActionsRenderProps) => React.ReactNode;
 /**
  * Props for ServiceActions headless component
  */
 export interface ServiceActionsProps {
   /** Render prop function that receives service actions data */
-  children: (props: ServiceActionsRenderProps) => React.ReactNode;
+  children: ServiceActionsChildren;
 }
 
 /**
@@ -343,8 +359,9 @@ export interface ServiceActionsRenderProps {
 
 /**
  * ServiceActions - Renders action information for the service
+ * @component
  */
-export const ServiceActions = (props: ServiceActionsProps) => {
+export const ServiceActions = (props: ServiceActionsProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -369,12 +386,14 @@ export const ServiceActions = (props: ServiceActionsProps) => {
   });
 };
 
+export type ServiceDetailChildren = (props: ServiceDetailRenderProps) => React.ReactNode;
+
 /**
  * Props for ServiceDetail headless component
  */
 export interface ServiceDetailProps {
   /** Render prop function that receives service detail data */
-  children: (props: ServiceDetailRenderProps) => React.ReactNode;
+  children: ServiceDetailChildren;
 }
 
 /**
@@ -409,8 +428,9 @@ export interface ServiceDetailRenderProps {
 
 /**
  * ServiceDetail - Renders detailed data for the loaded service (comprehensive component)
+ * @component
  */
-export const ServiceDetail = (props: ServiceDetailProps) => {
+export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -481,12 +501,13 @@ export const ServiceDetail = (props: ServiceDetailProps) => {
   });
 };
 
+export type ServiceStatusChildren = (props: ServiceStatusRenderProps) => React.ReactNode
 /**
  * Props for ServiceStatus headless component
  */
 export interface ServiceStatusProps {
   /** Render prop function that receives service status data */
-  children: (props: ServiceStatusRenderProps) => React.ReactNode;
+  children: ServiceStatusChildren;
 }
 
 /**
@@ -506,9 +527,26 @@ export interface ServiceStatusRenderProps {
 }
 
 /**
- * ServiceStatus - Provides loading and error state information
+ * A headless component that provides service status functionality using the render props pattern.
+ *
+ * This component manages the state and actions for service status checking, allowing consumers
+ * to render their own UI while accessing the underlying service status functionality.
+ * @example
+ * ```tsx
+ * <ServiceStatus>
+ *   {({ isLoading, hasService, error, hasError, notFound }) => (
+ *     <div>
+ *       {isLoading && <div>Loading service...</div>}
+ *       {hasError && <div className="error">{error}</div>}
+ *       {notFound && <div>Service not found</div>}
+ *       {hasService && <div>Service is available</div>}
+ *     </div>
+ *   )}
+ * </ServiceStatus>
+ * ```
+ * @component
  */
-export const ServiceStatus = (props: ServiceStatusProps) => {
+export const ServiceStatus = (props: ServiceStatusProps): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -529,18 +567,3 @@ export const ServiceStatus = (props: ServiceStatusProps) => {
     notFound,
   });
 };
-
-/**
- * BookingService namespace containing all single service headless components
- */
-export const BookingService = {
-  Service,
-  ServiceHeader,
-  ServiceDescription,
-  ServiceMedia,
-  ServiceDetails,
-  ServiceLocations,
-  ServiceActions,
-  ServiceDetail,
-  ServiceStatus,
-} as const;

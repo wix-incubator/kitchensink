@@ -21,7 +21,7 @@ import {
   CurrentMemberServiceDefinition,
   type CurrentMemberServiceConfig,
 } from "../../headless/members/services/current-member-service";
-import { CurrentMemberProfile } from "../../headless/members/components/CurrentMemberProfile";
+import { CurrentMemberProfile } from "../../headless/members/components";
 import {
   ProfileUpdateService,
   ProfileUpdateServiceDefinition,

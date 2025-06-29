@@ -346,11 +346,3 @@ export const Actions = (props: ActionsProps) => {
     });
   }
 };
-
-export const Collection = {
-  Grid,
-  Item,
-  LoadMore,
-  Header,
-  Actions,
-} as const;
