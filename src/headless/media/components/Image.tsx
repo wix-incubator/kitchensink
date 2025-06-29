@@ -8,16 +8,24 @@ export const parseMediaFromUrl = (url: string) => {
   if (!url)
     return { uri: url, originalWidth: undefined, originalHeight: undefined };
 
-  const uri = url.replace("wix:image://v1/", "").split("#")[0].split("/")[0];
+  const wixImagePrefix = "wix:image://v1/";
 
-  const params = new URLSearchParams(url.split("#")[1] || "");
-  const originalWidth = params.get("originWidth");
-  const originalHeight = params.get("originHeight");
+  if (url.startsWith(wixImagePrefix)) {
+    const uri = url.replace(wixImagePrefix, "").split("#")[0].split("/")[0];
+
+    const params = new URLSearchParams(url.split("#")[1] || "");
+    const originalWidth = params.get("originWidth");
+    const originalHeight = params.get("originHeight");
+
+    return {
+      uri,
+      originalWidth: originalWidth ? parseInt(originalWidth, 10) : undefined,
+      originalHeight: originalHeight ? parseInt(originalHeight, 10) : undefined,
+    };
+  }
 
   return {
-    uri,
-    originalWidth: originalWidth ? parseInt(originalWidth, 10) : undefined,
-    originalHeight: originalHeight ? parseInt(originalHeight, 10) : undefined,
+    uri: url,
   };
 };
 
