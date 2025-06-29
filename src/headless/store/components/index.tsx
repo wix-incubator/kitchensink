@@ -5,7 +5,6 @@ export * as ProductVariantSelector from "./ProductVariantSelector";
 export * as RelatedProducts from "./RelatedProducts";
 export * as SocialSharing from "./SocialSharing";
 export * as Collection from "./Collection";
-export * as CurrentCart from "./CurrentCart";
 export * as Product from "./Product";
 export * as ProductMediaGallery from "./ProductMediaGallery";
 export * as ProductModifiers from "./ProductModifiers"; 

@@ -21,7 +21,7 @@ import {
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../headless/store/services/current-cart-service";
+} from "../../../headless/ecom/services/current-cart-service";
 import {
   CategoryService,
   CategoryServiceDefinition,
@@ -45,7 +45,6 @@ interface StoreExample2PageProps {
   currentCartServiceConfig: any;
   categoriesConfig: any;
 }
-
 const ProductGridContent = () => {
   return (
     <FilteredCollection.Provider>
@@ -326,49 +325,81 @@ const ProductGridContent = () => {
 
                                   <div className="mt-auto mb-3">
                                     <div className="space-y-1">
-                                      {compareAtPrice &&
-                                      parseFloat(
-                                        compareAtPrice.replace(/[^\d.]/g, "")
-                                      ) > 0 ? (
-                                        <>
-                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                            {price}
-                                          </div>
+                                      {(() => {
+                                        const status =
+                                          product?.inventory
+                                            ?.availabilityStatus;
+                                        const stockInfo =
+                                          status === "IN_STOCK"
+                                            ? {
+                                                status: "In Stock",
+                                                color:
+                                                  "text-[var(--theme-text-success)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-success)]",
+                                              }
+                                            : status ===
+                                              "PARTIALLY_OUT_OF_STOCK"
+                                            ? {
+                                                status:
+                                                  "Partially out of stock",
+                                                color:
+                                                  "text-[var(--theme-text-warning)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-warning)]",
+                                              }
+                                            : {
+                                                status: "Out of Stock",
+                                                color:
+                                                  "text-[var(--theme-text-error)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-error)]",
+                                              };
+                                        return compareAtPrice &&
+                                          parseFloat(
+                                            compareAtPrice.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            )
+                                          ) > 0 ? (
+                                          <>
+                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                              {price}
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                              <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
+                                                {compareAtPrice}
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                <span
+                                                  className={`${stockInfo.color} text-sm flex items-center gap-1`}
+                                                >
+                                                  <div
+                                                    className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
+                                                  ></div>
+                                                  {stockInfo.status}
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </>
+                                        ) : (
                                           <div className="flex items-center justify-between">
-                                            <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
-                                              {compareAtPrice}
+                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                              {price}
                                             </div>
                                             <div className="flex items-center gap-2">
-                                              {available ? (
-                                                <span className="text-[var(--theme-text-success)] text-sm">
-                                                  In Stock
-                                                </span>
-                                              ) : (
-                                                <span className="text-[var(--theme-text-error)] text-sm">
-                                                  Out of Stock
-                                                </span>
-                                              )}
+                                              <span
+                                                className={`${stockInfo.color} text-sm flex items-center gap-1`}
+                                              >
+                                                <div
+                                                  className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
+                                                ></div>
+                                                {stockInfo.status}
+                                              </span>
                                             </div>
                                           </div>
-                                        </>
-                                      ) : (
-                                        <div className="flex items-center justify-between">
-                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                            {price}
-                                          </div>
-                                          <div className="flex items-center gap-2">
-                                            {available ? (
-                                              <span className="text-[var(--theme-text-success)] text-sm">
-                                                In Stock
-                                              </span>
-                                            ) : (
-                                              <span className="text-[var(--theme-text-error)] text-sm">
-                                                Out of Stock
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-                                      )}
+                                        );
+                                      })()}
                                     </div>
                                   </div>
 
@@ -553,6 +584,7 @@ export default function StoreExample2Page({
         newPath = `${basePath}/category/${categorySlug}`;
       }
 
+      // Navigate immediately - pulse animation will show during page load
       window.location.href = newPath;
     }
   };

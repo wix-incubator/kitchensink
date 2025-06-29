@@ -121,14 +121,21 @@ export const Item: React.FC<FilteredItemProps> = ({
   const price =
     product.actualPriceRange?.minValue?.formattedAmount ||
     product.actualPriceRange?.maxValue?.formattedAmount ||
-    (product.actualPriceRange?.minValue?.amount ? `$${product.actualPriceRange.minValue.amount}` : "$0.00");
-  
+    (product.actualPriceRange?.minValue?.amount
+      ? `$${product.actualPriceRange.minValue.amount}`
+      : "$0.00");
+
   // Add compare at price
-  const compareAtPrice = 
+  const compareAtPrice =
     product.compareAtPriceRange?.minValue?.formattedAmount ||
-    (product.compareAtPriceRange?.minValue?.amount ? `$${product.compareAtPriceRange.minValue.amount}` : null);
-  
-  const available = product.inventory?.availabilityStatus === "IN_STOCK";
+    (product.compareAtPriceRange?.minValue?.amount
+      ? `$${product.compareAtPriceRange.minValue.amount}`
+      : null);
+
+  const availabilityStatus = product.inventory?.availabilityStatus;
+  const available =
+    availabilityStatus === "IN_STOCK" ||
+    availabilityStatus === "PARTIALLY_OUT_OF_STOCK";
   const href = `/store/products/${String(product.slug || product._id || "")}`;
   const description = product.plainDescription
     ? String(product.plainDescription)

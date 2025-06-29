@@ -7,8 +7,8 @@ import {
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/store/services/current-cart-service";
-import { CurrentCart } from "../headless/store/components";
+} from "../headless/ecom/services/current-cart-service";
+import { CurrentCart } from "../headless/ecom/components";
 import { WixMediaImage } from "../headless/media/components";
 
 interface StoreLayoutProps {
@@ -159,7 +159,8 @@ export function StoreLayout({
                                         {image && (
                                           <WixMediaImage
                                             media={{ image: image }}
-                                            className="w-full h-full object-cover"
+                                            width={64}
+                                            height={64}
                                           />
                                         )}
                                       </div>

@@ -4,12 +4,14 @@ import {
 } from "@wix/services-manager";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
+import { ProductActionButtons } from "./ProductActionButtons";
 import { WixMediaImage } from "../../../../headless/media/components";
-import { Product, ProductMediaGallery, ProductModifiers, ProductVariantSelector, CurrentCart } from "../../../../headless/store/components";
+import { CurrentCart } from "../../../../headless/ecom/components";
+import { Product, ProductMediaGallery, ProductModifiers, ProductVariantSelector } from "../../../../headless/store/components";
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/store/services/current-cart-service";
+} from "../../../../headless/ecom/services/current-cart-service";
 import {
   ProductMediaGalleryService,
   ProductMediaGalleryServiceDefinition,
@@ -270,7 +272,7 @@ export default function ProductDetailPage({
                 <ProductMediaGallery.Indicator>
                   {({ total }) => (
                     <div className="grid grid-cols-4 gap-4">
-                      {Array.from({ length: total || 4 }).map((_, i) => (
+                      {Array.from({ length: total }).map((_, i) => (
                         <ProductMediaGallery.Thumbnail key={i} index={i}>
                           {({ src, isActive, onSelect, alt }) => (
                             <div
@@ -707,7 +709,14 @@ export default function ProductDetailPage({
                 {/* Add to Cart */}
                 <div className="space-y-4">
                   <ProductVariantSelector.Trigger quantity={quantity}>
-                    {({ onAddToCart, canAddToCart, isLoading, error }) => (
+                    {({
+                      onAddToCart,
+                      canAddToCart,
+                      isLoading,
+                      error,
+                      isPreOrderEnabled,
+                      inStock,
+                    }) => (
                       <div className="space-y-4">
                         {error && (
                           <div className="bg-[var(--theme-text-error)]/10 border border-[var(--theme-text-error)]/20 rounded-lg p-3">
@@ -717,99 +726,55 @@ export default function ProductDetailPage({
                           </div>
                         )}
 
-                        <button
-                          onClick={async () => {
-                            await onAddToCart();
-                            setShowSuccessMessage(true);
-                            setTimeout(
-                              () => setShowSuccessMessage(false),
-                              3000
-                            );
-                          }}
-                          disabled={!canAddToCart || isLoading}
-                          className="w-full text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
-                          style={{
-                            background: canAddToCart
-                              ? "var(--theme-btn-primary)"
-                              : "var(--theme-bg-options)",
-                            cursor:
-                              !canAddToCart || isLoading
-                                ? "not-allowed"
-                                : "pointer",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (canAddToCart && !isLoading) {
-                              e.currentTarget.style.background =
-                                "var(--theme-btn-primary-hover)";
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (canAddToCart && !isLoading) {
-                              e.currentTarget.style.background =
-                                "var(--theme-btn-primary)";
-                            }
-                          }}
-                        >
-                          {isLoading ? (
-                            <>
-                              <span className="opacity-0">Add to Cart</span>
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <svg
-                                  className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                  ></circle>
-                                  <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  ></path>
-                                </svg>
-                              </div>
-                            </>
-                          ) : (
-                            "Add to Cart"
-                          )}
-                        </button>
+                        <ProductActionButtons
+                          onAddToCart={onAddToCart}
+                          canAddToCart={canAddToCart}
+                          isLoading={isLoading}
+                          isPreOrderEnabled={isPreOrderEnabled}
+                          inStock={inStock}
+                          servicesManager={servicesManager}
+                          onShowSuccessMessage={setShowSuccessMessage}
+                        />
                       </div>
                     )}
                   </ProductVariantSelector.Trigger>
 
                   {/* Stock Status */}
                   <ProductVariantSelector.Stock>
-                    {({ inStock, status, quantity, trackInventory }) => (
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${
-                            inStock
-                              ? "bg-[var(--theme-text-success)]"
-                              : "bg-[var(--theme-text-error)]"
-                          }`}
-                        ></div>
-                        <span
-                          className={`text-sm ${
-                            inStock
-                              ? "text-[var(--theme-text-success)]"
-                              : "text-[var(--theme-text-error)]"
-                          }`}
-                        >
-                          {status}
-                          {trackInventory && quantity !== null && (
-                            <span className="text-[var(--theme-text-content-60)] ml-1">
-                              ({quantity} available)
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                    )}
+                    {({
+                      inStock,
+                      isPreOrderEnabled,
+                      status,
+                      quantity,
+                      trackInventory,
+                      currentVariantId,
+                    }) =>
+                      currentVariantId && (
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-3 h-3 rounded-full ${
+                              inStock || isPreOrderEnabled
+                                ? "bg-[var(--theme-text-success)]"
+                                : "bg-[var(--theme-text-error)]"
+                            }`}
+                          ></div>
+                          <span
+                            className={`text-sm ${
+                              inStock || isPreOrderEnabled
+                                ? "text-[var(--theme-text-success)]"
+                                : "text-[var(--theme-text-error)]"
+                            }`}
+                          >
+                            {status}
+                            {trackInventory && quantity !== null && (
+                              <span className="text-[var(--theme-text-content-60)] ml-1">
+                                ({quantity} available)
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      )
+                    }
                   </ProductVariantSelector.Stock>
                 </div>
 

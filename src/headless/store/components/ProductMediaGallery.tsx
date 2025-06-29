@@ -35,20 +35,19 @@ export const Viewport = (props: ViewportProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
-
-  const selectedImage = mediaService.selectedImage.get();
+  
   const currentIndex = mediaService.selectedImageIndex.get();
   const isLoading = mediaService.isLoading.get();
   const totalImages = mediaService.totalImages.get();
   const productName = mediaService.productName.get();
+  const relevantImages = mediaService.relevantImages.get();
 
-  // Use actual v3 media structure - images are in media.main.image
-  const product = mediaService.product.get();
-  const src = product?.media?.main?.image || null;
+  // Get the current image from the relevant images array
+  const src = relevantImages[currentIndex] || null;
   const alt = productName || "Product image";
 
   return props.children({
-    image: selectedImage,
+    image: src,
     src,
     alt,
     isLoading,
@@ -96,21 +95,17 @@ export const Thumbnail = (props: ThumbnailProps) => {
   const product = mediaService.product.get();
   const currentIndex = mediaService.selectedImageIndex.get();
   const productName = mediaService.productName.get();
+  const relevantImages = mediaService.relevantImages.get();
 
-  // Use actual v3 media structure - for now, only show main image
-  // Most v3 products seem to have only media.main, not itemsInfo.items
-  const src = props.index === 0 ? product?.media?.main?.image || null : null;
+  // Get the image source from the centralized relevant images
+  const src = relevantImages[props.index] || null;
+  
   const isActive = currentIndex === props.index;
   const alt = `${productName || "Product"} image ${props.index + 1}`;
 
   const onSelect = () => {
     mediaService.setSelectedImageIndex(props.index);
   };
-
-  // Only show thumbnail for index 0 (main image)
-  if (props.index > 0) {
-    return null;
-  }
 
   return props.children({
     item: product?.media?.main || null,
