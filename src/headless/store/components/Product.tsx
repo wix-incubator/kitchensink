@@ -1,6 +1,7 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductServiceDefinition } from "../services/product-service";
+import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
 
 /**
  * Props for ProductName headless component
@@ -110,16 +111,15 @@ export interface ProductDetailsRenderProps {
  * Headless component for product details display
  */
 export const ProductDetails = (props: ProductDetailsProps) => {
-  const service = useService(ProductServiceDefinition) as ServiceAPI<
-    typeof ProductServiceDefinition
+  const selectedVariantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
+    typeof SelectedVariantServiceDefinition
   >;
 
-  const product = service.product.get();
+  const selectedVariant = selectedVariantService.currentVariant?.get();
 
-  // Handle v3 product structure
-  const sku = product?.variantsInfo?.variants?.[0]?.sku || null;
-  const weight = null; // Weight not available in current v3 API structure
-  const dimensions = null; // Not available in basic product data
+  let sku: string | null =  selectedVariant?.sku || null  ;
+  let weight: string | null = selectedVariant?.physicalProperties?.weight?.toString() || null;
+  let dimensions: string | null = null;
 
   return props.children({
     sku,
