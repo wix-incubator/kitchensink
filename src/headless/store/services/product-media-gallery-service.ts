@@ -11,7 +11,7 @@ import { ProductServiceDefinition } from "./product-service";
 
 export interface ProductMediaGalleryServiceAPI {
   selectedImageIndex: Signal<number>;
-  selectedImage: ReadOnlySignal<any | null>;
+  relevantImages: ReadOnlySignal<string[]>;
 
   product: ReadOnlySignal<productsV3.V3Product | null>;
   isLoading: ReadOnlySignal<boolean>;
@@ -35,25 +35,43 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
 
     const selectedImageIndex: Signal<number> = signalsService.signal(0 as any);
 
-    const selectedImage: ReadOnlySignal<any | null> =
-      signalsService.computed<any>(() => {
-        const prod = productService.product.get();
-        const imageIndex = selectedImageIndex.get();
+    const relevantImages: ReadOnlySignal<string[]> = signalsService.computed(() => {
+      const product = productService.product.get();
+      const selectedChoices = selectedVariantService.selectedChoices?.get() || {};
 
-        if (imageIndex === 0 && prod?.media?.main) {
-          return prod.media.main;
+      // Get images based on selected choices if available
+      let selectedChoicesImages: string[] = [];
+      
+      Object.keys(selectedChoices).forEach((choiceKey) => {
+        const productOption = product?.options?.find((option: any) => option.name === choiceKey)?.choicesSettings?.choices?.find((choice: any) => choice.name === selectedChoices[choiceKey]);
+        if (productOption) {
+          selectedChoicesImages.push(...(productOption?.linkedMedia?.map((media: any) => media.image) || []));
         }
-
-        return null;
       });
+
+      if (selectedChoicesImages?.length) {
+        return selectedChoicesImages;
+      }
+
+      const productItemsImages =  product?.media?.itemsInfo?.items?.map((item: any) => item.image).filter(Boolean);
+      if (productItemsImages?.length) {
+        return productItemsImages;
+      }
+
+      if (product?.media?.main) {
+        return [product.media.main.image];
+      }
+
+      return [];
+    });
+
 
     const product: ReadOnlySignal<productsV3.V3Product | null> =
       productService.product;
     const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
 
     const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
-      const prod = productService.product.get();
-      return prod?.media?.main ? 1 : 0;
+      return relevantImages.get().length;
     });
 
     const productName: ReadOnlySignal<string> = signalsService.computed(() => {
@@ -70,21 +88,43 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     subscribeToVariantChanges();
 
     const setSelectedImageIndex = (index: number) => {
-      const validIndex = index === 0 ? 0 : 0;
+      const images = relevantImages.get();
+      if (!images.length) return;
+
+      const maxIndex = images.length - 1;
+      const validIndex = Math.max(0, Math.min(index, maxIndex));
       selectedImageIndex.set(validIndex);
     };
 
     const nextImage = () => {
-      selectedImageIndex.set(0);
+      const images = relevantImages.get();
+      const currentIndex = selectedImageIndex.get();
+  
+      if (!images.length) return;
+  
+      const nextIndex =
+        currentIndex >= images.length - 1
+          ? 0
+          : currentIndex + 1;
+      selectedImageIndex.set(nextIndex);
     };
 
     const previousImage = () => {
-      selectedImageIndex.set(0);
+      const images = relevantImages.get();
+      const currentIndex = selectedImageIndex.get();
+  
+      if (!images.length) return;
+  
+      const prevIndex =
+        currentIndex <= 0
+          ? images.length - 1
+          : currentIndex - 1;
+      selectedImageIndex.set(prevIndex);
     };
 
     return {
       selectedImageIndex,
-      selectedImage,
+      relevantImages,
 
       setSelectedImageIndex,
       nextImage,
