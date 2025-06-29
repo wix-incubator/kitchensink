@@ -18,7 +18,9 @@ const ProductCardSkeleton = () => (
 );
 
 
-export default function SelfContainedProductsPage({ productPageRoute }: { productPageRoute: string }) {
+export default function SelfContainedProductsPage({ 
+  productPageRoute 
+}: { productPageRoute: string }) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [filteredCollectionServiceConfig, setFilteredCollectionServiceConfig] = useState<any>(null);
@@ -27,11 +29,15 @@ export default function SelfContainedProductsPage({ productPageRoute }: { produc
 
   useEffect(() => {
     const fetchData = async () => {
-      const [categoriesConfig, filteredCollectionServiceConfig, currentCartServiceConfig] = await Promise.all([
+      const [
+        categoriesConfig,
+        filteredCollectionServiceConfig,
+        currentCartServiceConfig
+      ] = await Promise.all([
         loadCategoriesConfig(),
         loadCollectionServiceConfig(undefined, undefined),
         loadCurrentCartServiceConfig()
-      ])
+      ]);
       setCategoriesConfig(categoriesConfig);
       setFilteredCollectionServiceConfig(filteredCollectionServiceConfig);
       setCurrentCartServiceConfig(currentCartServiceConfig);
