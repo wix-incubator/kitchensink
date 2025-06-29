@@ -4,6 +4,7 @@ import {
 } from "@wix/services-manager";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
+import { ProductActionButtons } from "./ProductActionButtons";
 import WixMediaImage from "../../../../headless/media/components/Image";
 import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
 import { Product } from "../../../../headless/store/components/Product";
@@ -721,124 +722,15 @@ export default function ProductDetailPage({
                           </div>
                         )}
 
-                        <div className="flex gap-3">
-                          <button
-                            onClick={async () => {
-                              await onAddToCart();
-                              setShowSuccessMessage(true);
-                              setTimeout(
-                                () => setShowSuccessMessage(false),
-                                3000
-                              );
-
-                              if (isPreOrderEnabled) {
-                                window.location.href = "/cart";
-                              }
-
-                            }}
-                            disabled={!canAddToCart || isLoading}
-                            className="flex-1 text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
-                            style={{
-                              background: canAddToCart
-                                ? "var(--theme-btn-primary)"
-                                : "var(--theme-bg-options)",
-                              cursor:
-                                !canAddToCart || isLoading
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
-                            onMouseEnter={(e) => {
-                              if (canAddToCart && !isLoading) {
-                                e.currentTarget.style.background =
-                                  "var(--theme-btn-primary-hover)";
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (canAddToCart && !isLoading) {
-                                e.currentTarget.style.background =
-                                  "var(--theme-btn-primary)";
-                              }
-                            }}
-                          >
-                            {isLoading ? (
-                              <>
-                                <span className="opacity-0">
-                                  {!inStock && isPreOrderEnabled ? "Pre Order" : "Add to Cart"}
-                                </span>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <svg
-                                    className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                    ></circle>
-                                    <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                  </svg>
-                                </div>
-                              </>
-                            ) : (
-                              !inStock && isPreOrderEnabled ? "Pre Order" : "Add to Cart"
-                            )}
-                          </button>
-                          
-                          {/* Buy Now / Pay Now Button - Only show for in-stock items */}
-                          {inStock && (
-                            <button
-                              onClick={async () => {
-                                try {
-                                  const cartService = servicesManager.getService(
-                                    CurrentCartServiceDefinition
-                                  );
-                                  await cartService.clearCart();
-                                  await onAddToCart();
-                                  await cartService.proceedToCheckout();
-                                } catch (error) {
-                                  console.error("Buy now failed:", error);
-                                }
-                              }}
-                              disabled={!canAddToCart || isLoading}
-                              className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
-                            >
-                              {isLoading ? (
-                                <span className="flex items-center justify-center gap-2">
-                                  <svg
-                                    className="animate-spin w-4 h-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                    ></circle>
-                                    <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                  </svg>
-                                  Processing...
-                                </span>
-                              ) : (
-                                "Buy Now"
-                              )}
-                            </button>
-                          )}
-                        </div>
+                        <ProductActionButtons
+                          onAddToCart={onAddToCart}
+                          canAddToCart={canAddToCart}
+                          isLoading={isLoading}
+                          isPreOrderEnabled={isPreOrderEnabled}
+                          inStock={inStock}
+                          servicesManager={servicesManager}
+                          onShowSuccessMessage={setShowSuccessMessage}
+                        />
                       </div>
                     )}
                   </ProductVariantSelector.Trigger>
