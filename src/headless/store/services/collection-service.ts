@@ -15,11 +15,11 @@ const searchProducts = async (searchOptions: any) => {
   const searchParams = {
     filter: searchOptions.search?.filter,
     sort: searchOptions.search?.sort,
-    ...(searchOptions.paging && { cursorPaging: searchOptions.paging })
+    ...(searchOptions.paging && { cursorPaging: searchOptions.paging }),
   };
 
   const options = {
-    fields: searchOptions.fields || []
+    fields: searchOptions.fields || [],
   };
 
   return await productsV3.searchProducts(searchParams, options);
@@ -37,17 +37,22 @@ export interface CollectionServiceAPI {
 }
 
 // Helper to build search options with supported filters
-const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, sortBy?: SortBy, categories?: any[]) => {
+const buildSearchOptions = (
+  filters?: Filter,
+  selectedCategory?: string | null,
+  sortBy?: SortBy,
+  categories?: any[]
+) => {
   const searchOptions: any = {
     search: {},
     fields: [
-      'PLAIN_DESCRIPTION',
-      'MEDIA_ITEMS_INFO',
-      'CURRENCY',
-      'THUMBNAIL',
-      'URL',
-      'ALL_CATEGORIES_INFO'
-    ]
+      "PLAIN_DESCRIPTION",
+      "MEDIA_ITEMS_INFO",
+      "CURRENCY",
+      "THUMBNAIL",
+      "URL",
+      "ALL_CATEGORIES_INFO",
+    ],
   };
 
   // Build filter conditions array
@@ -56,7 +61,7 @@ const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, 
   // Add category filter if selected
   if (selectedCategory) {
     filterConditions.push({
-      'allCategoriesInfo.categories': {
+      "allCategoriesInfo.categories": {
         $matchItems: [
           {
             id: {
@@ -73,25 +78,40 @@ const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, 
     const { min, max } = filters.priceRange;
     if (min > 0) {
       filterConditions.push({
-        "actualPriceRange.minValue.amount": { "$gte": min.toString() }
+        "actualPriceRange.minValue.amount": { $gte: min.toString() },
       });
     }
     if (max > 0 && max < 999999) {
       filterConditions.push({
-        "actualPriceRange.maxValue.amount": { "$lte": max.toString() }
+        "actualPriceRange.maxValue.amount": { $lte: max.toString() },
       });
     }
   }
 
   // Add product options filter if provided
-  if (filters?.selectedOptions && Object.keys(filters.selectedOptions).length > 0) {
-    for (const [optionId, choiceIds] of Object.entries(filters.selectedOptions)) {
+  if (
+    filters?.selectedOptions &&
+    Object.keys(filters.selectedOptions).length > 0
+  ) {
+    for (const [optionId, choiceIds] of Object.entries(
+      filters.selectedOptions
+    )) {
       if (choiceIds.length > 0) {
-        filterConditions.push({
-          "options.choicesSettings.choices.choiceId": {
-            "$hasSome": choiceIds
-          }
-        });
+        // Handle inventory filter separately
+        if (optionId === "inventory-filter") {
+          filterConditions.push({
+            "inventory.availabilityStatus": {
+              $in: choiceIds,
+            },
+          });
+        } else {
+          // Regular product options filter
+          filterConditions.push({
+            "options.choicesSettings.choices.choiceId": {
+              $hasSome: choiceIds,
+            },
+          });
+        }
       }
     }
   }
@@ -104,7 +124,7 @@ const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, 
     } else {
       // Multiple conditions - use $and
       searchOptions.search.filter = {
-        $and: filterConditions
+        $and: filterConditions,
       };
     }
   }
@@ -112,17 +132,21 @@ const buildSearchOptions = (filters?: Filter, selectedCategory?: string | null, 
   // Add sort if provided
   if (sortBy) {
     switch (sortBy) {
-      case 'name-asc':
-        searchOptions.search.sort = [{ fieldName: 'name', order: 'ASC' }];
+      case "name-asc":
+        searchOptions.search.sort = [{ fieldName: "name", order: "ASC" }];
         break;
-      case 'name-desc':
-        searchOptions.search.sort = [{ fieldName: 'name', order: 'DESC' }];
+      case "name-desc":
+        searchOptions.search.sort = [{ fieldName: "name", order: "DESC" }];
         break;
-      case 'price-asc':
-        searchOptions.search.sort = [{ fieldName: 'actualPriceRange.minValue.amount', order: 'ASC' }];
+      case "price-asc":
+        searchOptions.search.sort = [
+          { fieldName: "actualPriceRange.minValue.amount", order: "ASC" },
+        ];
         break;
-      case 'price-desc':
-        searchOptions.search.sort = [{ fieldName: 'actualPriceRange.minValue.amount', order: 'DESC' }];
+      case "price-desc":
+        searchOptions.search.sort = [
+          { fieldName: "actualPriceRange.minValue.amount", order: "DESC" },
+        ];
         break;
     }
   }
@@ -166,7 +190,7 @@ export const CollectionService = implementService.withConfig<{
 
   const pageSize = config.pageSize || 12;
   let allProducts: productsV3.V3Product[] = initialProducts;
-  
+
   // Debouncing mechanism to prevent multiple simultaneous refreshes
   let refreshTimeout: NodeJS.Timeout | null = null;
   let isRefreshing = false;
@@ -183,7 +207,12 @@ export const CollectionService = implementService.withConfig<{
       error.set(null);
 
       // For loadMore, use no filters or sorting to work with cursor pagination
-      const searchOptions = buildSearchOptions(undefined, undefined, undefined, undefined);
+      const searchOptions = buildSearchOptions(
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
 
       // Add pagination
       searchOptions.paging = { limit: pageSize };
@@ -212,7 +241,7 @@ export const CollectionService = implementService.withConfig<{
       const additionalProducts = productResults.products || [];
       productsList.set([...currentProducts, ...additionalProducts]);
       totalProducts.set(currentProducts.length + additionalProducts.length);
-      hasProducts.set((currentProducts.length + additionalProducts.length) > 0);
+      hasProducts.set(currentProducts.length + additionalProducts.length > 0);
     } catch (err) {
       error.set(
         err instanceof Error ? err.message : "Failed to load more products"
@@ -224,7 +253,7 @@ export const CollectionService = implementService.withConfig<{
 
   const refresh = async (setTotalProducts: boolean = true) => {
     if (isRefreshing) return;
-    
+
     try {
       isRefreshing = true;
       isLoading.set(true);
@@ -234,7 +263,12 @@ export const CollectionService = implementService.withConfig<{
       const selectedCategory = categoryService.selectedCategory.get();
       const sortBy = sortService.currentSort.get();
       const categories = config.categories || categoryService.categories.get();
-      const searchOptions = buildSearchOptions(filters, selectedCategory, sortBy, categories);
+      const searchOptions = buildSearchOptions(
+        filters,
+        selectedCategory,
+        sortBy,
+        categories
+      );
 
       // Add pagination
       searchOptions.paging = { limit: pageSize };
@@ -269,13 +303,15 @@ export const CollectionService = implementService.withConfig<{
       isRefreshing = false;
     }
   };
-  
+
   // Debounced refresh function
-  const debouncedRefresh = async (setTotalProducts: boolean = true): Promise<void> => {
+  const debouncedRefresh = async (
+    setTotalProducts: boolean = true
+  ): Promise<void> => {
     if (refreshTimeout) {
       clearTimeout(refreshTimeout);
     }
-    
+
     return new Promise<void>((resolve) => {
       refreshTimeout = setTimeout(async () => {
         await refresh(setTotalProducts);
@@ -297,12 +333,14 @@ export const CollectionService = implementService.withConfig<{
   // Initialize catalog data when the service starts
   const initializeCatalogData = async () => {
     const selectedCategory = categoryService.selectedCategory.get();
-    await collectionFilters.loadCatalogPriceRange(selectedCategory || undefined);
+    await collectionFilters.loadCatalogPriceRange(
+      selectedCategory || undefined
+    );
     await collectionFilters.loadCatalogOptions(selectedCategory || undefined);
     // Reset flag to allow filter changes to trigger refreshes
     isInitializingCatalogData = false;
   };
-  
+
   // Load catalog data on initialization
   void initializeCatalogData();
 
@@ -331,7 +369,7 @@ function parseURLParams(
     priceRange: { min: 0, max: 0 },
     selectedOptions: {},
   };
-  
+
   if (!searchParams) {
     return { initialSort: "" as SortBy, initialFilters: defaultFilters };
   }
@@ -348,9 +386,9 @@ function parseURLParams(
   const initialSort = sortMap[urlParams.sort as string] || ("" as SortBy);
 
   // Check if there are any filter parameters (excluding sort)
-  const filterParams = Object.keys(urlParams).filter(key => key !== 'sort');
-  
-  if (filterParams.length === 0) {
+  const filterParams = Object.keys(urlParams).filter((key) => key !== "sort");
+
+  if (filterParams.length === 0 || products.length === 0) {
     return { initialSort, initialFilters: defaultFilters };
   }
 
@@ -375,71 +413,102 @@ function parseURLParams(
   const optionsMap = buildOptionsMap(products);
   parseOptionFilters(urlParams, optionsMap, initialFilters);
 
+  // Parse inventory filter from 'availability' URL parameter
+  if (urlParams.availability) {
+    const availabilityValues = Array.isArray(urlParams.availability)
+      ? urlParams.availability
+      : [urlParams.availability];
+
+    const inventoryStatusValues = availabilityValues.map((value) =>
+      value.replace(/\s+/g, "_").toUpperCase()
+    );
+
+    initialFilters.selectedOptions["inventory-filter"] = inventoryStatusValues;
+  }
+
   return { initialSort, initialFilters };
 }
 
 // Helper function to calculate price range from products
-function calculatePriceRange(products: productsV3.V3Product[]): { min: number; max: number } {
+function calculatePriceRange(products: productsV3.V3Product[]): {
+  min: number;
+  max: number;
+} {
   if (products.length === 0) {
-    return { min: 0, max: 0 };
+    return { min: 0, max: 1000 };
   }
 
   let minPrice = Infinity;
   let maxPrice = 0;
-  
+
   products.forEach((product) => {
     const min = parseFloat(product.actualPriceRange?.minValue?.amount || "0");
     const max = parseFloat(product.actualPriceRange?.maxValue?.amount || "0");
     if (min > 0) minPrice = Math.min(minPrice, min);
     if (max > 0) maxPrice = Math.max(maxPrice, max);
   });
-  
-  // If no valid prices found, return zero range
-  if (minPrice === Infinity) minPrice = 0;
-  
+
+  // If no valid prices found, return default range
+  if (minPrice === Infinity) {
+    minPrice = 0;
+    maxPrice = 1000;
+  }
+
   return { min: minPrice, max: maxPrice };
 }
 
 // Helper function to build options map from products
 function buildOptionsMap(products: productsV3.V3Product[]) {
-  const optionsMap = new Map<string, { id: string; choices: { id: string; name: string }[] }>();
-  
+  const optionsMap = new Map<
+    string,
+    { id: string; choices: { id: string; name: string }[] }
+  >();
+
   products.forEach((product) => {
     product.options?.forEach((option) => {
       if (!option._id || !option.name) return;
-      
+
       if (!optionsMap.has(option.name)) {
         optionsMap.set(option.name, { id: option._id, choices: [] });
       }
-      
+
       const optionData = optionsMap.get(option.name)!;
       option.choicesSettings?.choices?.forEach((choice) => {
-        if (choice.choiceId && choice.name && !optionData.choices.find(c => c.id === choice.choiceId)) {
+        if (
+          choice.choiceId &&
+          choice.name &&
+          !optionData.choices.find((c) => c.id === choice.choiceId)
+        ) {
           optionData.choices.push({ id: choice.choiceId, name: choice.name });
         }
       });
     });
   });
-  
+
   return optionsMap;
 }
 
 // Helper function to parse option filters from URL parameters
 function parseOptionFilters(
   urlParams: Record<string, string | string[]>,
-  optionsMap: Map<string, { id: string; choices: { id: string; name: string }[] }>,
+  optionsMap: Map<
+    string,
+    { id: string; choices: { id: string; name: string }[] }
+  >,
   filters: Filter
 ) {
   Object.entries(urlParams).forEach(([key, value]) => {
     if (["sort", "minPrice", "maxPrice"].includes(key)) return;
-    
+
     const option = optionsMap.get(key);
     if (option) {
       const values = Array.isArray(value) ? value : [value];
-      const matchingChoices = option.choices.filter(choice => values.includes(choice.name));
-      
+      const matchingChoices = option.choices.filter((choice) =>
+        values.includes(choice.name)
+      );
+
       if (matchingChoices.length > 0) {
-        filters.selectedOptions[option.id] = matchingChoices.map(c => c.id);
+        filters.selectedOptions[option.id] = matchingChoices.map((c) => c.id);
       }
     }
   });
@@ -458,12 +527,17 @@ export async function loadCollectionServiceConfig(
 > {
   try {
     // Load categories for service configuration
-    const { loadCategoriesConfig } = await import('./category-service');
+    const { loadCategoriesConfig } = await import("./category-service");
     const categoriesConfig = await loadCategoriesConfig();
     const categories = categoriesConfig.categories;
 
     // Build search options with category filter
-    const searchOptions = buildSearchOptions(undefined, categoryId, undefined, categories);
+    const searchOptions = buildSearchOptions(
+      undefined,
+      categoryId,
+      undefined,
+      categories
+    );
     const pageSize = 12;
     searchOptions.paging = { limit: pageSize };
 
