@@ -21,6 +21,9 @@ function CategoryPicker({
   if (categories.length === 0) {
     return null; // No categories to show
   }
+  if (selectedCategory === null) {
+    onCategorySelect(categories[0]._id || null);
+  }
 
   return (
     <div>

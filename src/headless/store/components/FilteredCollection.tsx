@@ -108,7 +108,7 @@ interface FilteredItemProps {
     price: string;
     compareAtPrice: string | null;
     available: boolean;
-    href: string;
+    slug: string;
     description?: string;
   }) => ReactNode;
 }
@@ -138,7 +138,7 @@ export const FilteredItem: React.FC<FilteredItemProps> = ({
   const available =
     availabilityStatus === "IN_STOCK" ||
     availabilityStatus === "PARTIALLY_OUT_OF_STOCK";
-  const href = `/store/products/${String(product.slug || product._id || "")}`;
+  const slug = String(product.slug || product._id || "");
   const description = product.plainDescription
     ? String(product.plainDescription)
     : undefined;
@@ -151,7 +151,7 @@ export const FilteredItem: React.FC<FilteredItemProps> = ({
         price: String(price),
         compareAtPrice,
         available,
-        href,
+        slug,
         description,
       })}
     </>
