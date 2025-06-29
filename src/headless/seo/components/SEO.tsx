@@ -98,6 +98,36 @@ export interface UpdateTagsTrigger {
 
 /**
  * UpdateTagsTrigger - Handles updating SEO tags
+ * 
+ * @example
+ * ```tsx
+ * import { seoTags } from "@wix/seo";
+ * import { SEO } from "@wix/seo/components";
+ * import { SEOTagsServiceDefinition, SEOTagsService } from "@wix/seo/services/seo-tags-service";
+ * import { createServicesManager, createServicesMap } from "@wix/services-manager";
+ * 
+ * const seoTagsServiceManager = createServicesManager(
+ *   createServicesMap().addService(
+ *     SEOTagsServiceDefinition,
+ *     SEOTagsService,
+ *     seoTagsServiceConfig
+ *   )
+ * );
+ * 
+ * <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
+ *   <SEO.UpdateTagsTrigger>
+ *     {({ updateSeoTags }) => (
+ *       <a href="https://your-domain.com/items/different-item" 
+ *         onClick={() => 
+ *           updateSeoTags(seoTags.ItemType.<YOUR_ITEM_TYPE>, { slug: "<YOUR_ITEM_SLUG>" })
+ *         }
+ *       >
+ *         Go to different item
+ *       </a>
+ *     )}
+ *   </SEO.UpdateTagsTrigger>
+ * </ServicesManagerProvider>
+ * ```
  */
 export const UpdateTagsTrigger = (props: UpdateTagsTrigger) => {
   const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
