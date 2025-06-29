@@ -6,7 +6,7 @@ import {
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
-import { CurrentCartServiceDefinition } from "./current-cart-service";
+import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
