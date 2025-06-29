@@ -34,7 +34,12 @@ import {
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-1.css";
+import { SEOTagsService } from "../../../../headless/seo/services/seo-tags-service";
 
+import { SEOTagsServiceDefinition } from "../../../../headless/seo/services/seo-tags-service";
+import { SEO } from "../../../../headless/seo/components";
+import { seoTags } from "@wix/seo";
+import { ServicesManagerProvider } from "@wix/services-manager-react";
 // Helper hook to safely access modifiers service
 const useModifiersService = (servicesManager: any) => {
   try {
@@ -88,6 +93,7 @@ interface ProductDetailPageProps {
   productMediaGalleryServiceConfig: any;
   selectedVariantServiceConfig: any;
   productModifiersServiceConfig?: any;
+  seoTagsServiceConfig: any;
 }
 
 export default function ProductDetailPage({
@@ -96,6 +102,7 @@ export default function ProductDetailPage({
   productMediaGalleryServiceConfig,
   selectedVariantServiceConfig,
   productModifiersServiceConfig,
+  seoTagsServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -132,6 +139,21 @@ export default function ProductDetailPage({
 
   return (
     <KitchensinkLayout>
+      <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
+        {({ updateSeoTags }) => (
+          <>
+            <button
+              onClick={() =>
+                updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
+                  slug: "urban-street-sneakers",
+                })
+              }
+            >
+              Update SEO Tags
+            </button>
+          </>
+        )}
+      </SEO.UpdateTagsTrigger>
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
         servicesManager={servicesManager}

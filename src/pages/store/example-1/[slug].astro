@@ -5,6 +5,9 @@ import { loadProductServiceConfig } from "../../../headless/store/services/produ
 import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
 import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
 import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
+import { seoTags } from "@wix/seo";
+import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
+import { SEO } from "../../../headless/seo/components";
 
 const { slug } = Astro.params;
 
@@ -27,10 +30,19 @@ const productMediaGalleryServiceConfig =
 const selectedVariantServiceConfig =
   await loadSelectedVariantServiceConfig(slug);
 
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: { slug },
+  itemType: seoTags.ItemType.STORES_PRODUCT,
+});
+
 // Load product modifiers service configuration if product has modifiers
 let productModifiersServiceConfig = null;
 try {
-  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+  if (
+    productServiceConfig.product.modifiers &&
+    productServiceConfig.product.modifiers.length > 0
+  ) {
     productModifiersServiceConfig = {
       product: productServiceConfig.product,
     };
@@ -38,14 +50,10 @@ try {
 } catch (error) {
   console.warn("Could not load product modifiers service:", error);
 }
-
-const productName = productServiceConfig.product.name || "Product";
 ---
 
 <BaseLayout>
-  <title>{productName} - Store - Kitchensink</title>
-  <meta name="description" content={`View details for ${productName}`} />
-
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}
@@ -53,6 +61,7 @@ const productName = productServiceConfig.product.name || "Product";
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
     productModifiersServiceConfig={productModifiersServiceConfig}
+    seoTagsServiceConfig={seoTagsServiceConfig}
     slot="body"
   />
 </BaseLayout>
