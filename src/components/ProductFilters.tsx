@@ -188,7 +188,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Price Range Filter - Only show if valid price range is available */}
         {priceRange.min < priceRange.max && priceRange.max > 0 && (
           <div>
-            <h4 className="text-[var(--theme-text-content)] font-medium mb-4">Price Range</h4>
+            <h4 className="text-[var(--theme-text-content)] font-medium mb-4">
+              Price Range
+            </h4>
             <div className="space-y-4">
               {/* Price Range Display */}
               <div className="flex items-center justify-between text-sm text-[var(--theme-text-content-70)]">
@@ -202,7 +204,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <div
                     className="absolute h-2 rounded-full"
                     style={{
-                      background: 'var(--theme-gradient-primary)',
+                      background: "var(--theme-gradient-primary)",
                       left: `${
                         ((tempPriceRange.min - priceRange.min) /
                           (priceRange.max - priceRange.min)) *
@@ -265,13 +267,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
               {/* Manual Price Input */}
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-<<<<<<< HEAD
-                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Min</label>
-=======
-                  <label className="block text-xs text-white/60 mb-1">
+                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">
                     Min
                   </label>
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                   <input
                     type="number"
                     value={tempPriceRange.min}
@@ -287,13 +285,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   />
                 </div>
                 <div className="flex-1">
-<<<<<<< HEAD
-                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">Max</label>
-=======
-                  <label className="block text-xs text-white/60 mb-1">
+                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">
                     Max
                   </label>
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                   <input
                     type="number"
                     value={tempPriceRange.max}
@@ -350,7 +344,8 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                           : "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
                       }`}
                       style={{
-                        backgroundColor: choice.colorCode || "var(--theme-text-content-40)",
+                        backgroundColor:
+                          choice.colorCode || "var(--theme-text-content-40)",
                       }}
                     />
                     <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-[var(--theme-text-content-70)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">

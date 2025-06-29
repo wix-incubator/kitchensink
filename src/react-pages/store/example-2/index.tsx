@@ -62,7 +62,6 @@ const ProductGridContent = () => {
                 <div className="min-h-screen">
                   <StoreHeader className="mb-6" />
 
-<<<<<<< HEAD
                   {/* Main Layout with Sidebar and Content */}
                   <div className="flex gap-8">
                     {/* Filters Sidebar */}
@@ -95,42 +94,6 @@ const ProductGridContent = () => {
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-=======
-                      {/* Main Layout with Sidebar and Content */}
-                      <div className="flex gap-8">
-                        {/* Filters Sidebar */}
-                        <div className="w-80 flex-shrink-0">
-                          <div className="sticky top-6">
-                            <FiltersLoading>
-                              {({ isFullyLoaded }) => (
-                                <div className="relative">
-                                  <ProductFilters
-                                    availableOptions={availableOptions}
-                                    onFiltersChange={applyFilters}
-                                    clearFilters={clearFilters}
-                                    currentFilters={currentFilters}
-                                    isFiltered={isFiltered}
-                                  />
-
-                                  {/* Pulse Loading Overlay */}
-                                  {!isFullyLoaded && (
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl">
-                                      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-xl">
-                                        <div className="p-6 space-y-4">
-                                          <div className="h-6 bg-white/20 rounded w-32"></div>
-                                          <div className="space-y-3">
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-16 bg-white/15 rounded"></div>
-                                          </div>
-                                          <div className="h-6 bg-white/20 rounded w-24"></div>
-                                          <div className="space-y-2">
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                          </div>
-                                        </div>
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                                       </div>
                                     </div>
                                   </div>
