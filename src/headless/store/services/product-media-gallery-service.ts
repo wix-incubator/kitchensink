@@ -11,7 +11,7 @@ import { ProductServiceDefinition } from "./product-service";
 
 export interface ProductMediaGalleryServiceAPI {
   selectedImageIndex: Signal<number>;
-  selectedImage: ReadOnlySignal<any | null>;
+  relevantImages: ReadOnlySignal<string[]>;
 
   product: ReadOnlySignal<productsV3.V3Product | null>;
   isLoading: ReadOnlySignal<boolean>;
@@ -35,28 +35,11 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
 
     const selectedImageIndex: Signal<number> = signalsService.signal(0 as any);
 
-    const selectedImage: ReadOnlySignal<any | null> =
-      signalsService.computed<any>(() => {
-        const prod = productService.product.get();
-        const imageIndex = selectedImageIndex.get();
-
-        if (imageIndex === 0 && prod?.media?.main) {
-          return prod.media.main;
-        }
-
-        return null;
-      });
-
-    const product: ReadOnlySignal<productsV3.V3Product | null> =
-      productService.product;
-    const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
-
-    const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
-
+    const relevantImages: ReadOnlySignal<string[]> = signalsService.computed(() => {
       const product = productService.product.get();
       const selectedChoices = selectedVariantService.selectedChoices?.get() || {};
 
-       // Get images based on selected choices if available
+      // Get images based on selected choices if available
       let selectedChoicesImages: string[] = [];
       
       Object.keys(selectedChoices).forEach((choiceKey) => {
@@ -67,10 +50,28 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
       });
 
       if (selectedChoicesImages?.length) {
-        return selectedChoicesImages.length;
+        return selectedChoicesImages;
       }
 
-      return product?.media?.itemsInfo?.items?.length || 0;
+      const productItemsImages =  product?.media?.itemsInfo?.items?.map((item: any) => item.image).filter(Boolean);
+      if (productItemsImages?.length) {
+        return productItemsImages;
+      }
+
+      if (product?.media?.main) {
+        return [product.media.main.image];
+      }
+
+      return [];
+    });
+
+
+    const product: ReadOnlySignal<productsV3.V3Product | null> =
+      productService.product;
+    const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
+
+    const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
+      return relevantImages.get().length;
     });
 
     const productName: ReadOnlySignal<string> = signalsService.computed(() => {
@@ -87,44 +88,43 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     subscribeToVariantChanges();
 
     const setSelectedImageIndex = (index: number) => {
-      const prod = productService.product.get();
-      if (!prod?.media?.itemsInfo?.items) return;
+      const images = relevantImages.get();
+      if (!images.length) return;
 
-      const maxIndex = prod.media.itemsInfo.items.length - 1;
-
+      const maxIndex = images.length - 1;
       const validIndex = Math.max(0, Math.min(index, maxIndex));
       selectedImageIndex.set(validIndex);
     };
 
     const nextImage = () => {
-      const prod = productService.product.get();
+      const images = relevantImages.get();
       const currentIndex = selectedImageIndex.get();
   
-      if (!prod?.media?.itemsInfo?.items) return;
+      if (!images.length) return;
   
       const nextIndex =
-        currentIndex >= prod.media.itemsInfo.items.length - 1
+        currentIndex >= images.length - 1
           ? 0
           : currentIndex + 1;
       selectedImageIndex.set(nextIndex);
     };
 
     const previousImage = () => {
-      const prod = productService.product.get();
+      const images = relevantImages.get();
       const currentIndex = selectedImageIndex.get();
   
-      if (!prod?.media?.itemsInfo?.items) return;
+      if (!images.length) return;
   
       const prevIndex =
         currentIndex <= 0
-          ? prod.media.itemsInfo.items.length - 1
+          ? images.length - 1
           : currentIndex - 1;
       selectedImageIndex.set(prevIndex);
     };
 
     return {
       selectedImageIndex,
-      selectedImage,
+      relevantImages,
 
       setSelectedImageIndex,
       nextImage,

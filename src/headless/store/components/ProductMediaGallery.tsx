@@ -1,7 +1,6 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductMediaGalleryServiceDefinition } from "../services/product-media-gallery-service";
-import  { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
 
 /**
  * Props for Viewport headless component
@@ -37,26 +36,18 @@ export const Viewport = (props: ViewportProps) => {
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
   
-
-  const variantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
-    typeof SelectedVariantServiceDefinition
-  >;
-  const selectedVariant = variantService.currentVariant?.get();
-
-  const selectedImage = mediaService.selectedImage.get();
   const currentIndex = mediaService.selectedImageIndex.get();
   const isLoading = mediaService.isLoading.get();
   const totalImages = mediaService.totalImages.get();
   const productName = mediaService.productName.get();
+  const relevantImages = mediaService.relevantImages.get();
 
-  // Use actual v3 media structure - images are in media.main.image
-  const product = mediaService.product.get();
-  let src =  selectedVariant?.media?.image || product?.media?.main?.image || null;
-
+  // Get the current image from the relevant images array
+  const src = relevantImages[currentIndex] || null;
   const alt = productName || "Product image";
 
   return props.children({
-    image: selectedImage,
+    image: src,
     src,
     alt,
     isLoading,
@@ -97,11 +88,6 @@ export interface ThumbnailRenderProps {
  * Headless component for individual media thumbnail
  */
 export const Thumbnail = (props: ThumbnailProps) => {
-
-  const selectedVariantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
-  typeof SelectedVariantServiceDefinition
->;
-
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
@@ -109,26 +95,10 @@ export const Thumbnail = (props: ThumbnailProps) => {
   const product = mediaService.product.get();
   const currentIndex = mediaService.selectedImageIndex.get();
   const productName = mediaService.productName.get();
+  const relevantImages = mediaService.relevantImages.get();
 
- 
-  const selectedChoices = selectedVariantService.selectedChoices?.get();
-  const selectedVariant = selectedVariantService.currentVariant?.get();
-
-  // Get images based on selected choices if available
-  let selectedChoicesImages: string[] = [];
-  
-  Object.keys(selectedChoices).forEach((choiceKey) => {
-    const productOption = product?.options?.find((option: any) => option.name === choiceKey)?.choicesSettings?.choices?.find((choice: any) => choice.name === selectedChoices[choiceKey]);
-    if (productOption) {
-      selectedChoicesImages.push(...(productOption?.linkedMedia?.map((media: any) => media.image) || []));
-    }
-  });
-  
- 
-  let src = selectedVariant?.media?.image || product?.media?.itemsInfo?.items?.[props.index]?.image || null;
-  if (selectedChoicesImages.length > 0) {
-    src = selectedChoicesImages[props.index] || null;
-  }
+  // Get the image source from the centralized relevant images
+  const src = relevantImages[props.index] || null;
   
   const isActive = currentIndex === props.index;
   const alt = `${productName || "Product"} image ${props.index + 1}`;
@@ -136,7 +106,6 @@ export const Thumbnail = (props: ThumbnailProps) => {
   const onSelect = () => {
     mediaService.setSelectedImageIndex(props.index);
   };
-
 
   return props.children({
     item: product?.media?.main || null,
