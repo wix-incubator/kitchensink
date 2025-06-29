@@ -225,7 +225,7 @@ const ProductGridContent = () => {
                                 price,
                                 compareAtPrice,
                                 available,
-                                href,
+                                slug,
                                 description,
                               }: {
                                 title: string;
@@ -233,7 +233,7 @@ const ProductGridContent = () => {
                                 price: string;
                                 compareAtPrice: string | null;
                                 available: boolean;
-                                href: string;
+                                slug: string;
                                 description?: string;
                               }) => (
                                 <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
@@ -406,10 +406,7 @@ const ProductGridContent = () => {
 
                                   <div className="flex gap-2">
                                     <a
-                                      href={href.replace(
-                                        "/store/products/",
-                                        "/store/example-1/"
-                                      )}
+                                      href={`/store/example-1/${slug}`}
                                       className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                                       style={{
                                         background: "var(--theme-btn-primary)",

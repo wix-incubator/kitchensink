@@ -4,6 +4,7 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import "../styles/theme-1.css";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
@@ -108,7 +109,8 @@ export function StoreLayout({
     <ServicesManagerProvider servicesManager={servicesManager}>
       {/* Success Message */}
       {actualShowSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-xl shadow-lg border border-green-400/30 animate-pulse">
+        <div className="fixed top-4 right-4 z-50 backdrop-blur-sm text-[var(--theme-text-content)] px-6 py-3 rounded-xl shadow-lg border border-[var(--theme-border-primary-30)] animate-pulse"
+             style={{ background: 'var(--theme-text-success)' }}>
           <div className="flex items-center gap-2">
             <svg
               className="w-5 h-5"
@@ -134,7 +136,7 @@ export function StoreLayout({
           {({ onOpen, itemCount }) => (
             <button
               onClick={onOpen}
-              className="relative p-2 text-white hover:text-teal-300 transition-colors"
+              className="relative p-2 text-[var(--theme-text-content)] hover:text-[var(--theme-text-primary-300)] transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -150,7 +152,8 @@ export function StoreLayout({
                 />
               </svg>
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-teal-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 text-[var(--theme-text-content)] text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                      style={{ background: 'var(--theme-primary-500)' }}>
                   {itemCount}
                 </span>
               )}
@@ -167,17 +170,17 @@ export function StoreLayout({
         {({ isOpen, onClose }) => (
           <>
             {isOpen && (
-              <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-                <div className="fixed right-0 top-0 h-full w-full max-w-md bg-slate-900 shadow-xl">
+              <div className="fixed inset-0 z-50 bg-[var(--theme-bg-tooltip)] backdrop-blur-sm">
+                <div className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--theme-bg-mini-cart)] shadow-xl">
                   <CurrentCart.Summary>
                     {({ itemCount }) => (
-                      <div className="flex items-center justify-between p-6 border-b border-white/10">
-                        <h2 className="text-xl font-bold text-white">
+                      <div className="flex items-center justify-between p-6 border-b border-[var(--theme-border-card)]">
+                        <h2 className="text-xl font-bold text-[var(--theme-text-content)]">
                           Shopping Cart ({itemCount})
                         </h2>
                         <button
                           onClick={onClose}
-                          className="p-2 text-white hover:text-teal-300 transition-colors"
+                          className="p-2 text-[var(--theme-text-content)] hover:text-[var(--theme-text-primary-300)] transition-colors"
                         >
                           <svg
                             className="w-6 h-6"
@@ -215,8 +218,8 @@ export function StoreLayout({
                                     onDecrease,
                                     onRemove,
                                   }) => (
-                                    <div className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
-                                      <div className="w-16 h-16 bg-white/10 rounded-lg overflow-hidden flex-shrink-0">
+                                    <div className="flex gap-4 p-4 bg-[var(--theme-bg-card)] rounded-xl border border-[var(--theme-border-card)]">
+                                      <div className="w-16 h-16 bg-[var(--theme-bg-options)] rounded-lg overflow-hidden flex-shrink-0">
                                         {image && (
                                           <WixMediaImage
                                             media={{ image: image }}
@@ -227,7 +230,7 @@ export function StoreLayout({
                                       </div>
 
                                       <div className="flex-1 min-w-0">
-                                        <h3 className="text-white font-medium text-sm truncate">
+                                        <h3 className="text-[var(--theme-text-content)] font-medium text-sm truncate">
                                           {title}
                                         </h3>
                                         {selectedOptions.length > 0 && (
@@ -284,7 +287,7 @@ export function StoreLayout({
                                               </div>
                                             </div>
                                           )}
-                                        <p className="text-teal-400 font-semibold text-sm mt-1">
+                                        <p className="text-[var(--theme-text-primary-400)] font-semibold text-sm mt-1">
                                           {price}
                                         </p>
 
@@ -292,16 +295,16 @@ export function StoreLayout({
                                           <div className="flex items-center gap-2">
                                             <button
                                               onClick={onDecrease}
-                                              className="w-6 h-6 rounded bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+                                              className="w-6 h-6 rounded bg-[var(--theme-bg-options)] text-[var(--theme-text-content)] text-sm hover:bg-[var(--theme-bg-primary-20)] transition-colors"
                                             >
                                               -
                                             </button>
-                                            <span className="text-white text-sm w-6 text-center">
+                                            <span className="text-[var(--theme-text-content)] text-sm w-6 text-center">
                                               {quantity}
                                             </span>
                                             <button
                                               onClick={onIncrease}
-                                              className="w-6 h-6 rounded bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+                                              className="w-6 h-6 rounded bg-[var(--theme-bg-options)] text-[var(--theme-text-content)] text-sm hover:bg-[var(--theme-bg-primary-20)] transition-colors"
                                             >
                                               +
                                             </button>
@@ -309,7 +312,7 @@ export function StoreLayout({
 
                                           <button
                                             onClick={onRemove}
-                                            className="text-red-400 hover:text-red-300 text-xs transition-colors"
+                                            className="text-[var(--theme-text-error)] hover:text-[var(--theme-text-error)]/80 text-xs transition-colors"
                                           >
                                             Remove
                                           </button>
@@ -322,9 +325,9 @@ export function StoreLayout({
                             </div>
                           ) : (
                             <div className="text-center py-8">
-                              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                              <div className="w-16 h-16 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg
-                                  className="w-8 h-8 text-white/60"
+                                  className="w-8 h-8 text-[var(--theme-text-content-60)]"
                                   fill="none"
                                   stroke="currentColor"
                                   viewBox="0 0 24 24"
@@ -337,7 +340,7 @@ export function StoreLayout({
                                   />
                                 </svg>
                               </div>
-                              <p className="text-white/60">
+                              <p className="text-[var(--theme-text-content-60)]">
                                 Your cart is empty
                               </p>
                             </div>
@@ -347,7 +350,7 @@ export function StoreLayout({
                     </CurrentCart.Items>
                   </div>
 
-                  <div className="border-t border-white/10 p-6">
+                  <div className="border-t border-[var(--theme-border-card)] p-6">
                     <CurrentCart.Notes>
                       {({ notes, onNotesChange }) => (
                         <div>
@@ -432,11 +435,11 @@ export function StoreLayout({
                           <div className="space-y-4">
                             <div className="space-y-2">
                               <div className="flex justify-between">
-                                <span className="text-white/80">
+                                <span className="text-[var(--theme-text-content-80)]">
                                   Subtotal ({itemCount}{" "}
                                   {itemCount === 1 ? "item" : "items"})
                                 </span>
-                                <span className="text-white font-semibold">
+                                <span className="text-[var(--theme-text-content)] font-semibold">
                                   <LoadingOrValue>
                                     {subtotal}
                                   </LoadingOrValue>
@@ -491,7 +494,21 @@ export function StoreLayout({
                                 <button
                                   onClick={onProceed}
                                   disabled={!canCheckout}
-                                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                  className="w-full text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{
+                                  background: canCheckout ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
+                                  cursor: !canCheckout ? 'not-allowed' : 'pointer'
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (canCheckout) {
+                                    e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (canCheckout) {
+                                    e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                                  }
+                                }}
                                 >
                                   Proceed to Checkout
                                 </button>

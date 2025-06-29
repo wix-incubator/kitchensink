@@ -330,6 +330,10 @@ export const CollectionService = implementService.withConfig<{
     debouncedRefresh(false);
   });
 
+  categoryService.selectedCategory.subscribe(() => {
+    debouncedRefresh(true);
+  });
+
   // Initialize catalog data when the service starts
   const initializeCatalogData = async () => {
     const selectedCategory = categoryService.selectedCategory.get();
