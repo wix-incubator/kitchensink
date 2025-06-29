@@ -1,11 +1,17 @@
-import { useService } from "@wix/services-manager-react";
 import {
+  ServicesManagerProvider,
+  useService,
+} from "@wix/services-manager-react";
+import {
+  SEOTagsService,
   SEOTagsServiceDefinition,
   type SEOTagsServiceConfig,
 } from "../services/seo-tags-service";
 import type { ServiceAPI } from "@wix/services-manager/types";
 import type { seoTags } from "@wix/seo";
 import { useEffect } from "react";
+import { createServicesMap } from "@wix/services-manager";
+import { createServicesManager } from "@wix/services-manager";
 
 interface SEOTagsProps {
   tags: seoTags.Tag[];
@@ -98,27 +104,16 @@ export interface UpdateTagsTrigger {
 
 /**
  * UpdateTagsTrigger - Handles updating SEO tags
- * 
+ *
  * @example
  * ```tsx
- * import { seoTags } from "@wix/seo";
  * import { SEO } from "@wix/seo/components";
- * import { SEOTagsServiceDefinition, SEOTagsService } from "@wix/seo/services/seo-tags-service";
- * import { createServicesManager, createServicesMap } from "@wix/services-manager";
- * 
- * const seoTagsServiceManager = createServicesManager(
- *   createServicesMap().addService(
- *     SEOTagsServiceDefinition,
- *     SEOTagsService,
- *     seoTagsServiceConfig
- *   )
- * );
- * 
- * <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
- *   <SEO.UpdateTagsTrigger>
+ * import { seoTags } from "@wix/seo";
+
+ *   <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
  *     {({ updateSeoTags }) => (
- *       <a href="https://your-domain.com/items/different-item" 
- *         onClick={() => 
+ *       <a href="https://your-domain.com/items/different-item"
+ *         onClick={() =>
  *           updateSeoTags(seoTags.ItemType.<YOUR_ITEM_TYPE>, { slug: "<YOUR_ITEM_SLUG>" })
  *         }
  *       >
@@ -126,10 +121,27 @@ export interface UpdateTagsTrigger {
  *       </a>
  *     )}
  *   </SEO.UpdateTagsTrigger>
- * </ServicesManagerProvider>
  * ```
  */
-export const UpdateTagsTrigger = (props: UpdateTagsTrigger) => {
+export const UpdateTagsTrigger = ({
+  seoTagsServiceConfig,
+  ...props
+}: UpdateTagsTrigger & { seoTagsServiceConfig: SEOTagsServiceConfig }) => {
+  const seoTagsServiceManager = createServicesManager(
+    createServicesMap().addService(
+      SEOTagsServiceDefinition,
+      SEOTagsService,
+      seoTagsServiceConfig
+    )
+  );
+  return (
+    <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
+      <UpdateTagsTriggerRender {...props} />  
+    </ServicesManagerProvider>
+  );
+};
+
+function UpdateTagsTriggerRender(props: UpdateTagsTrigger) {
   const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
     typeof SEOTagsServiceDefinition
   >;
@@ -142,7 +154,7 @@ export const UpdateTagsTrigger = (props: UpdateTagsTrigger) => {
   return props.children({
     updateSeoTags: service.updateSeoTags,
   });
-};
+}
 
 function appendNewTags(tags: seoTags.Tag[]) {
   const newTagElements: HTMLElement[] = [];

@@ -137,32 +137,23 @@ export default function ProductDetailPage({
 
   const servicesManager = createServicesManager(servicesMap);
 
-  const seoTagsServiceManager = createServicesManager(
-    createServicesMap().addService(
-      SEOTagsServiceDefinition,
-      SEOTagsService,
-      seoTagsServiceConfig
-    )
-  );
   return (
     <KitchensinkLayout>
-      <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
-        <SEO.UpdateTagsTrigger>
-          {({ updateSeoTags }) => (
-            <>
-              <button
-                onClick={() =>
-                  updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
-                    slug: "urban-street-sneakers",
-                  })
-                }
-              >
-                Update SEO Tags
-              </button>
-            </>
-          )}
-        </SEO.UpdateTagsTrigger>
-      </ServicesManagerProvider>
+      <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
+        {({ updateSeoTags }) => (
+          <>
+            <button
+              onClick={() =>
+                updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
+                  slug: "urban-street-sneakers",
+                })
+              }
+            >
+              Update SEO Tags
+            </button>
+          </>
+        )}
+      </SEO.UpdateTagsTrigger>
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
         servicesManager={servicesManager}
