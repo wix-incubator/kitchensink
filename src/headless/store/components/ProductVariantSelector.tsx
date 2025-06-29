@@ -188,6 +188,8 @@ export interface TriggerRenderProps {
   price: string;
   /** Whether product is in stock */
   inStock: boolean;
+  /** Whether pre-order is enabled */
+  isPreOrderEnabled: boolean;
   /** Error message if any */
   error: string | null;
 }
@@ -211,6 +213,7 @@ export const Trigger = (props: TriggerProps) => {
 
   const price = variantService.currentPrice.get();
   const inStock = variantService.isInStock.get();
+  const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
   const isLoading = variantService.isLoading.get();
   const error = variantService.error.get();
 
@@ -221,7 +224,7 @@ export const Trigger = (props: TriggerProps) => {
     ? modifiersService.areAllRequiredModifiersFilled()
     : true; // If no modifiers service, assume no required modifiers
   
-  const canAddToCart = inStock && !isLoading && areAllRequiredModifiersFilled;
+  const canAddToCart = (inStock || isPreOrderEnabled) && !isLoading && areAllRequiredModifiersFilled;
 
   const onAddToCart = async () => {
     // Get modifiers data if available
@@ -242,6 +245,7 @@ export const Trigger = (props: TriggerProps) => {
     isLoading,
     price,
     inStock,
+    isPreOrderEnabled,
     error,
   });
 };
@@ -305,6 +309,8 @@ export interface StockProps {
 export interface StockRenderProps {
   /** Whether product is in stock */
   inStock: boolean;
+  /** Whether pre-order is enabled */
+  isPreOrderEnabled: boolean;
   /** Stock status message */
   status: string;
   /** Stock quantity (if available) */
@@ -325,16 +331,25 @@ export const Stock = (props: StockProps) => {
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
 
   const inStock = variantService.isInStock.get();
+  const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
   const currentVariantId = variantService.selectedVariantId.get();
-
 
   const trackInventory = false; // V3 API has different inventory structure
   const quantity = null; // Not directly available in v3 API
 
-  const status = inStock ? "In Stock" : "Out of Stock";
+  // Determine status based on stock and pre-order availability
+  let status: string;
+  if (inStock) {
+    status = "In Stock";
+  } else if (isPreOrderEnabled) {
+    status = "Available for Pre-Order";
+  } else {
+    status = "Out of Stock";
+  }
 
   return props.children({
     inStock,
+    isPreOrderEnabled,
     currentVariantId,
     status,
     quantity,
