@@ -274,7 +274,7 @@ export default function ProductDetailPage({
                 <ProductMediaGallery.Indicator>
                   {({ total }) => (
                     <div className="grid grid-cols-4 gap-4">
-                      {Array.from({ length: total}).map((_, i) => (
+                      {Array.from({ length: total }).map((_, i) => (
                         <ProductMediaGallery.Thumbnail key={i} index={i}>
                           {({ src, isActive, onSelect, alt }) => (
                             <div
@@ -721,45 +721,90 @@ export default function ProductDetailPage({
                           </div>
                         )}
 
-                        <button
-                          onClick={async () => {
-                            await onAddToCart();
-                            setShowSuccessMessage(true);
-                            setTimeout(
-                              () => setShowSuccessMessage(false),
-                              3000
-                            );
-                          }}
-                          disabled={!canAddToCart || isLoading}
-                          className="w-full text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
-                          style={{
-                            background: canAddToCart
-                              ? "var(--theme-btn-primary)"
-                              : "var(--theme-bg-options)",
-                            cursor:
-                              !canAddToCart || isLoading
-                                ? "not-allowed"
-                                : "pointer",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (canAddToCart && !isLoading) {
-                              e.currentTarget.style.background =
-                                "var(--theme-btn-primary-hover)";
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (canAddToCart && !isLoading) {
-                              e.currentTarget.style.background =
-                                "var(--theme-btn-primary)";
-                            }
-                          }}
-                        >
-                          {isLoading ? (
-                            <>
-                              <span className="opacity-0">Add to Cart</span>
-                              <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="flex gap-3">
+                          <button
+                            onClick={async () => {
+                              await onAddToCart();
+                              setShowSuccessMessage(true);
+                              setTimeout(
+                                () => setShowSuccessMessage(false),
+                                3000
+                              );
+                            }}
+                            disabled={!canAddToCart || isLoading}
+                            className="flex-1 text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative"
+                            style={{
+                              background: canAddToCart
+                                ? "var(--theme-btn-primary)"
+                                : "var(--theme-bg-options)",
+                              cursor:
+                                !canAddToCart || isLoading
+                                  ? "not-allowed"
+                                  : "pointer",
+                            }}
+                            onMouseEnter={(e) => {
+                              if (canAddToCart && !isLoading) {
+                                e.currentTarget.style.background =
+                                  "var(--theme-btn-primary-hover)";
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (canAddToCart && !isLoading) {
+                                e.currentTarget.style.background =
+                                  "var(--theme-btn-primary)";
+                              }
+                            }}
+                          >
+                            {isLoading ? (
+                              <>
+                                <span className="opacity-0">Add to Cart</span>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg
+                                    className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                  </svg>
+                                </div>
+                              </>
+                            ) : (
+                              "Add to Cart"
+                            )}
+                          </button>
+                          <button
+                            onClick={async () => {
+                              try {
+                                const cartService = servicesManager.getService(
+                                  CurrentCartServiceDefinition
+                                );
+                                await cartService.clearCart();
+                                await onAddToCart();
+                                await cartService.proceedToCheckout();
+                              } catch (error) {
+                                console.error("Buy now failed:", error);
+                                window.location.href = "/cart";
+                              }
+                            }}
+                            disabled={!canAddToCart || isLoading}
+                            className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
+                          >
+                            {isLoading ? (
+                              <span className="flex items-center justify-center gap-2">
                                 <svg
-                                  className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
+                                  className="animate-spin w-5 h-5"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                 >
@@ -777,45 +822,52 @@ export default function ProductDetailPage({
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                   ></path>
                                 </svg>
-                              </div>
-                            </>
-                          ) : (
-                            "Add to Cart"
-                          )}
-                        </button>
+                                Processing...
+                              </span>
+                            ) : (
+                              "Buy Now"
+                            )}
+                          </button>
+                        </div>
                       </div>
                     )}
                   </ProductVariantSelector.Trigger>
 
                   {/* Stock Status */}
                   <ProductVariantSelector.Stock>
-                    {({ inStock, status, quantity, trackInventory, currentVariantId }) => (
+                    {({
+                      inStock,
+                      status,
+                      quantity,
+                      trackInventory,
+                      currentVariantId,
+                    }) =>
                       currentVariantId && (
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${
-                            inStock
-                              ? "bg-[var(--theme-text-success)]"
-                              : "bg-[var(--theme-text-error)]"
-                          }`}
-                        ></div>
-                        <span
-                          className={`text-sm ${
-                            inStock
-                              ? "text-[var(--theme-text-success)]"
-                              : "text-[var(--theme-text-error)]"
-                          }`}
-                        >
-                          {status}
-                          {trackInventory && quantity !== null && (
-                            <span className="text-[var(--theme-text-content-60)] ml-1">
-                              ({quantity} available)
-                            </span>
-                          )}
-                        </span>
-                      </div>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-3 h-3 rounded-full ${
+                              inStock
+                                ? "bg-[var(--theme-text-success)]"
+                                : "bg-[var(--theme-text-error)]"
+                            }`}
+                          ></div>
+                          <span
+                            className={`text-sm ${
+                              inStock
+                                ? "text-[var(--theme-text-success)]"
+                                : "text-[var(--theme-text-error)]"
+                            }`}
+                          >
+                            {status}
+                            {trackInventory && quantity !== null && (
+                              <span className="text-[var(--theme-text-content-60)] ml-1">
+                                ({quantity} available)
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       )
-                    )}
+                    }
                   </ProductVariantSelector.Stock>
                 </div>
 
