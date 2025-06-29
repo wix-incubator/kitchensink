@@ -285,6 +285,9 @@ const ProductInfo = ({
                   {compareAtPrice}
                 </div>
               )}
+            {currency && (
+              <p className="text-white/60 text-sm">Currency: {currency}</p>
+            )}
           </div>
         )}
       </ProductVariantSelector.Price>
