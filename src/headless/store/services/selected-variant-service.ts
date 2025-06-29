@@ -7,7 +7,6 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "./current-cart-service";
-import { ProductModifiersServiceDefinition } from "./product-modifiers-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
@@ -19,6 +18,7 @@ export interface SelectedVariantServiceAPI {
   currentPrice: ReadOnlySignal<string>;
   currentCompareAtPrice: ReadOnlySignal<string | null>;
   isInStock: ReadOnlySignal<boolean>;
+  isPreOrderEnabled: ReadOnlySignal<boolean>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 
@@ -51,7 +51,7 @@ export interface SelectedVariantServiceAPI {
   getAvailableChoicesForOption: (optionName: string) => string[];
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
-  allChoicesSelected: () => boolean;
+  
 }
 
 export const SelectedVariantServiceDefinition =
@@ -112,7 +112,9 @@ export const SelectedVariantService = implementService.withConfig<{
   const updateQuantityFromVariant = (variant: productsV3.Variant | null) => {
     if (variant) {
       const inStock = variant.inventoryStatus?.inStock ?? true;
-      quantityAvailable.set(inStock ? 999 : 0);
+      const preOrderEnabled = variant.inventoryStatus?.preorderEnabled ?? false;
+      // If in stock, allow 999. If out of stock but pre-order enabled, allow 999. Otherwise 0.
+      quantityAvailable.set(inStock || preOrderEnabled ? 999 : 0);
     } else {
       quantityAvailable.set(0);
     }
@@ -281,6 +283,12 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   });
 
+
+  const isPreOrderEnabled: ReadOnlySignal<boolean> = signalsService.computed(() => {
+    const variant = currentVariant.get();
+    return variant?.inventoryStatus?.preorderEnabled ?? false;
+  });
+
   const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
 
   const productOptions: ReadOnlySignal<productsV3.ConnectedOption[]> =
@@ -332,7 +340,7 @@ export const SelectedVariantService = implementService.withConfig<{
       const catalogReference: any = {
         catalogItemId: prod._id,
         appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-        options: variant?._id ? { variantId: variant._id } : undefined,
+        options: variant?._id ? { variantId: variant._id, preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled } : undefined,
       };
 
       // Transform and add modifiers to catalog reference if they exist
@@ -466,6 +474,7 @@ export const SelectedVariantService = implementService.withConfig<{
     currentPrice,
     currentCompareAtPrice,
     isInStock,
+    isPreOrderEnabled,
     isLoading,
     error,
 
