@@ -7,7 +7,7 @@ import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/se
 import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
 import { seoTags } from "@wix/seo";
 import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
-import { SEO } from "../../../headless/seo/components/SEO";
+import { SEO } from "../../../headless/seo/components";
 
 const { slug } = Astro.params;
 
@@ -29,14 +29,11 @@ const productMediaGalleryServiceConfig =
   await loadProductMediaGalleryServiceConfig(slug);
 const selectedVariantServiceConfig =
   await loadSelectedVariantServiceConfig(slug);
-const pageURL = Astro.url.href;
-const itemType = seoTags.ItemType.STORES_PRODUCT;
 
-// Essential for rendering SEO tags in SSR
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageURL,
+  pageUrl: Astro.url.href,
   itemData: { slug },
-  itemType,
+  itemType: seoTags.ItemType.STORES_PRODUCT,
 });
 
 // Load product modifiers service configuration if product has modifiers
@@ -56,11 +53,7 @@ try {
 ---
 
 <BaseLayout>
-  <SEO
-    seoTagsServiceConfig={seoTagsServiceConfig}
-    itemType={itemType}
-    itemData={{ slug }}
-  />
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}
@@ -68,6 +61,7 @@ try {
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
     productModifiersServiceConfig={productModifiersServiceConfig}
+    seoTagsServiceConfig={seoTagsServiceConfig}
     slot="body"
   />
 </BaseLayout>

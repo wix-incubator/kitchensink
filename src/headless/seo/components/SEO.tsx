@@ -1,52 +1,46 @@
 import { useService } from "@wix/services-manager-react";
 import {
-  SEOTagsService,
   SEOTagsServiceDefinition,
   type SEOTagsServiceConfig,
 } from "../services/seo-tags-service";
 import type { ServiceAPI } from "@wix/services-manager/types";
-import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import type { seoTags } from "@wix/seo";
 import { useEffect } from "react";
-import { seoTags } from "@wix/seo";
 
 interface SEOTagsProps {
-  itemType: seoTags.ItemType;
-  itemData: seoTags.SlugData | seoTags.PageNameData;
+  tags: seoTags.Tag[];
 }
 
-function SEOTags({ itemType, itemData }: SEOTagsProps): React.ReactNode {
-  const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
-    typeof SEOTagsServiceDefinition
-  >;
-  const tags = service.seoTags.get();
-
-  useEffect(() => {
-    service.updateSeoTags(itemType, itemData);
-  }, []);
-
+function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
   return (
     <>
       {tags
         .filter((tag) => !tag.disabled)
-        .map((tag) => {
+        .map((tag, index) => {
+          const dataAttr = { "wix-seo-tags": "true" };
           if (tag.type === "title") {
-            return <title>{tag.children}</title>;
+            return (
+              <title key={`title-${index}`} {...dataAttr}>
+                {tag.children}
+              </title>
+            );
           }
           if (tag.type === "meta") {
-            return <meta {...tag.props} />;
+            return <meta key={`meta-${index}`} {...tag.props} {...dataAttr} />;
           }
 
           if (tag.type === "link") {
-            return <link {...tag.props} />;
+            return <link key={`link-${index}`} {...tag.props} {...dataAttr} />;
           }
 
           if (tag.type === "script") {
             return (
-              <script {...tag.props} {...tag.meta}>
+              <script
+                key={`script-${index}`}
+                {...tag.props}
+                {...tag.meta}
+                {...dataAttr}
+              >
                 {tag.children}
               </script>
             );
@@ -68,18 +62,16 @@ function SEOTags({ itemType, itemData }: SEOTagsProps): React.ReactNode {
  * @param {seoTags.SlugData | seoTags.PageNameData} props.itemData - Data for the item (slug or page name).
  *
  * @example
- * // SSR usage:
- * import { loadSEOTagsServiceConfig } from "...";
+ * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
+ * import { SEO } from "@wix/seo/components";
  * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
  *   pageURL: url,
  *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
  *   itemType: seoTags.ItemType.<YOUR_ITEM_TYPE>,
  * });
  *
- * // Client usage:
- * import { SEO } from "...";
  * <head>
- *   <SEO
+ *   <SEO.Tags
  *     seoTagsServiceConfig={seoTagsServiceConfig}
  *     itemType={seoTags.ItemType.<YOUR_ITEM_TYPE>}
  *     itemData={{ slug: "<YOUR_ITEM_SLUG>" }}
@@ -87,29 +79,83 @@ function SEOTags({ itemType, itemData }: SEOTagsProps): React.ReactNode {
  * </head>
  */
 
-export interface SEOProps {
+export interface TagsProps {
   seoTagsServiceConfig: SEOTagsServiceConfig;
-  itemType: seoTags.ItemType;
-  itemData: seoTags.SlugData | seoTags.PageNameData;
 }
 
-export function SEO({
-  seoTagsServiceConfig,
-  itemType,
-  itemData,
-}: SEOProps): React.ReactNode {
-  // Create services manager with both booking services
-  const servicesManager = createServicesManager(
-    createServicesMap().addService(
-      SEOTagsServiceDefinition,
-      SEOTagsService,
-      seoTagsServiceConfig
-    )
-  );
+export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
+  return <SEOTags tags={seoTagsServiceConfig.initialSeoTags} />;
+}
 
-  return (
-    <ServicesManagerProvider servicesManager={servicesManager}>
-      <SEOTags itemType={itemType} itemData={itemData} />
-    </ServicesManagerProvider>
-  );
+export interface UpdateTagsTrigger {
+  children: (props: {
+    updateSeoTags: (
+      itemType: seoTags.ItemType,
+      itemData: seoTags.SlugData | seoTags.PageNameData
+    ) => Promise<void>;
+  }) => React.ReactNode;
+}
+
+/**
+ * UpdateTagsTrigger - Handles updating SEO tags
+ */
+export const UpdateTagsTrigger = (props: UpdateTagsTrigger) => {
+  const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
+    typeof SEOTagsServiceDefinition
+  >;
+
+  useEffect(() => {
+    const tags = service.seoTags.get().filter((tag) => !tag.disabled);
+    appendNewTags(tags);
+  }, [service.seoTags.get()]);
+
+  return props.children({
+    updateSeoTags: service.updateSeoTags,
+  });
+};
+
+function appendNewTags(tags: seoTags.Tag[]) {
+  const newTagElements: HTMLElement[] = [];
+  try {
+    tags.forEach((tag) => {
+      const el = createTagElement(tag);
+      if (el) newTagElements.push(el);
+    });
+
+    document.head
+      .querySelectorAll('[wix-seo-tags="true"]')
+      .forEach((el) => el.remove());
+
+    newTagElements.forEach((el) => document.head.appendChild(el));
+  } catch (err) {
+    console.error("SEO tag update failed", err);
+  }
+
+  function createTagElement(tag: any): HTMLElement | null {
+    let el: HTMLElement | null = null;
+    if (tag.type === "title") {
+      el = document.createElement("title");
+      el.textContent = tag.children || "";
+    } else if (tag.type === "meta") {
+      el = document.createElement("meta");
+      setAttributes(el, tag.props);
+    } else if (tag.type === "link") {
+      el = document.createElement("link");
+      setAttributes(el, tag.props);
+    } else if (tag.type === "script") {
+      el = document.createElement("script");
+      setAttributes(el, tag.props);
+      setAttributes(el, tag.meta);
+      if (tag.children) el.textContent = tag.children;
+    }
+    if (el) el.setAttribute("wix-seo-tags", "true");
+    return el;
+  }
+
+  function setAttributes(el: HTMLElement, attrs?: Record<string, any>) {
+    if (!attrs) return;
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (v !== undefined) el.setAttribute(k, v as string);
+    });
+  }
 }
