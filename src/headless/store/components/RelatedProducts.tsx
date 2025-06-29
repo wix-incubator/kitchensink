@@ -103,10 +103,7 @@ export const Item = (props: ItemProps) => {
   // Create formatted price from raw amount since formattedAmount may not be available
   const rawPrice = product.actualPriceRange?.minValue?.amount;
   const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
-  const availabilityStatus = product.inventory?.availabilityStatus;
-  const available =
-    availabilityStatus === "IN_STOCK" ||
-    availabilityStatus === "PARTIALLY_OUT_OF_STOCK";
+  const available = product.inventory?.availabilityStatus === "IN_STOCK";
   const href = `/store/example-2/${product.slug}`;
   const description =
     typeof product.description === "string" ? product.description : "";
