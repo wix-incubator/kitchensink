@@ -1,5 +1,5 @@
 import React from "react";
-import { CurrentCartServiceDefinition } from "../../../../headless/store/services/current-cart-service";
+import { CurrentCartServiceDefinition } from "../../../../headless/ecom/services/current-cart-service";
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -40,8 +40,9 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   inStock,
   className = "",
 }) => {
-  const buttonText = !inStock && isPreOrderEnabled ? "Pre Order" : "Add to Cart";
-  
+  const buttonText =
+    !inStock && isPreOrderEnabled ? "Pre Order" : "Add to Cart";
+
   return (
     <button
       onClick={onClick}
@@ -106,7 +107,9 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
 }) => {
   const handleBuyNow = async () => {
     try {
-      const cartService = servicesManager.getService(CurrentCartServiceDefinition);
+      const cartService = servicesManager.getService(
+        CurrentCartServiceDefinition
+      );
       await cartService.clearCart();
       await onAddToCart();
       await cartService.proceedToCheckout();
@@ -123,11 +126,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">
-          <svg
-            className="animate-spin w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
+          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
               cx="12"
@@ -195,4 +194,4 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   );
 };
 
-export default ProductActionButtons; 
+export default ProductActionButtons;

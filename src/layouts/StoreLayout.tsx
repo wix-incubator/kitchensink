@@ -7,8 +7,8 @@ import {
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/store/services/current-cart-service";
-import { CurrentCart } from "../headless/store/components/CurrentCart";
+} from "../headless/ecom/services/current-cart-service";
+import { CurrentCart } from "../headless/ecom/components/CurrentCart";
 import WixMediaImage from "../headless/media/components/Image";
 
 interface StoreLayoutProps {

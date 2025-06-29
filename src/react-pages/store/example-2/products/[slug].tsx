@@ -7,7 +7,7 @@ import { useService } from "@wix/services-manager-react";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import WixMediaImage from "../../../../headless/media/components/Image";
-import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
+import { CurrentCart } from "../../../../headless/ecom/components/CurrentCart";
 import { Product } from "../../../../headless/store/components/Product";
 import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
 import { ProductModifiers } from "../../../../headless/store/components/ProductModifiers";
@@ -17,7 +17,7 @@ import { SocialSharing } from "../../../../headless/store/components/SocialShari
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/store/services/current-cart-service";
+} from "../../../../headless/ecom/services/current-cart-service";
 import {
   ProductMediaGalleryService,
   ProductMediaGalleryServiceDefinition,
@@ -285,6 +285,9 @@ const ProductInfo = ({
                   {compareAtPrice}
                 </div>
               )}
+            {currency && (
+              <p className="text-white/60 text-sm">Currency: {currency}</p>
+            )}
           </div>
         )}
       </ProductVariantSelector.Price>
