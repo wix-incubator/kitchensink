@@ -20,7 +20,6 @@ import {
   CatalogPriceRangeServiceDefinition,
 } from "../../../headless/store/services/catalog-price-range-service";
 import {
-<<<<<<< HEAD
   CategoryService,
   CategoryServiceDefinition,
 } from "../../../headless/store/services/category-service";
@@ -43,13 +42,6 @@ import {
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-1.css";
-
-=======
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from "../../../headless/store/services/catalog-options-service";
-import { FiltersLoading } from "../../../headless/store/components/FilteredCollection";
->>>>>>> df7cac6 (feat: support inventory filter (#19))
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
   currentCartServiceConfig: any;
@@ -94,7 +86,6 @@ const ProductGridContent = () => {
                 <div className="min-h-screen">
                   <StoreHeader className="mb-6" />
 
-<<<<<<< HEAD
                   {/* Main Layout with Sidebar and Content */}
                   <div className="flex gap-8">
                     {/* Filters Sidebar */}
@@ -127,42 +118,6 @@ const ProductGridContent = () => {
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                         <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-=======
-                      {/* Main Layout with Sidebar and Content */}
-                      <div className="flex gap-8">
-                        {/* Filters Sidebar */}
-                        <div className="w-80 flex-shrink-0">
-                          <div className="sticky top-6">
-                            <FiltersLoading>
-                              {({ isFullyLoaded }) => (
-                                <div className="relative">
-                                  <ProductFilters
-                                    availableOptions={availableOptions}
-                                    onFiltersChange={applyFilters}
-                                    clearFilters={clearFilters}
-                                    currentFilters={currentFilters}
-                                    isFiltered={isFiltered}
-                                  />
-
-                                  {/* Pulse Loading Overlay */}
-                                  {!isFullyLoaded && (
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl">
-                                      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-xl">
-                                        <div className="p-6 space-y-4">
-                                          <div className="h-6 bg-white/20 rounded w-32"></div>
-                                          <div className="space-y-3">
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-10 bg-white/15 rounded"></div>
-                                            <div className="h-16 bg-white/15 rounded"></div>
-                                          </div>
-                                          <div className="h-6 bg-white/20 rounded w-24"></div>
-                                          <div className="space-y-2">
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                            <div className="h-8 bg-white/15 rounded"></div>
-                                          </div>
-                                        </div>
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                                       </div>
                                     </div>
                                   </div>
@@ -170,83 +125,93 @@ const ProductGridContent = () => {
                               )}
                             </div>
                           )}
-<<<<<<< HEAD
                         </FiltersLoading>
-=======
+                      </div>
+                    </div>
 
-                          {/* Filter Status Bar */}
-                          {isFiltered && (
-                            <div className="flex items-center justify-between bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6">
-                              <div className="flex items-center gap-2">
-                                <svg
-                                  className="w-5 h-5 text-blue-400"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                                  />
-                                </svg>
-                                <span className="text-blue-300">
-                                  Showing {String(products.length)} of{" "}
-                                  {totalProducts} products
-                                </span>
-                              </div>
-                              <button
-                                onClick={clearFilters}
-                                className="text-blue-400 hover:text-blue-300 transition-colors text-sm"
-                              >
-                                Clear Filters
-                              </button>
-                            </div>
-                          )}
+                    {/* Main Content Area */}
+                    <div className="flex-1 min-w-0">
+                      {error && (
+                        <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-4 mb-6">
+                          <p className="text-[var(--theme-text-error)]">
+                            {error}
+                          </p>
+                        </div>
+                      )}
 
-                          {isLoading && products.length === 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                              {Array.from({ length: 8 }).map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="bg-white/5 rounded-xl p-4 animate-pulse"
-                                >
-                                  <div className="aspect-square bg-white/10 rounded-lg mb-4"></div>
-                                  <div className="h-4 bg-white/10 rounded mb-2"></div>
-                                  <div className="h-3 bg-white/10 rounded w-2/3"></div>
-                                </div>
-                              ))}
+                      {/* Filter Status Bar */}
+                      {isFiltered && (
+                        <div className="flex items-center justify-between bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] rounded-xl p-4 mb-6">
+                          <div className="flex items-center gap-2">
+                            <svg
+                              className="w-5 h-5 text-[var(--theme-text-primary-400)]"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                              />
+                            </svg>
+                            <span className="text-[var(--theme-text-primary-300)]">
+                              Showing {String(products.length)} of{" "}
+                              {totalProducts} products
+                            </span>
+                          </div>
+                          <button
+                            onClick={clearFilters}
+                            className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors text-sm"
+                          >
+                            Clear Filters
+                          </button>
+                        </div>
+                      )}
+
+                      {isLoading && products.length === 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {Array.from({ length: 8 }).map((_, i) => (
+                            <div
+                              key={i}
+                              className="bg-[var(--theme-bg-card)] rounded-xl p-4 animate-pulse"
+                            >
+                              <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4"></div>
+                              <div className="h-4 bg-[var(--theme-bg-options)] rounded mb-2"></div>
+                              <div className="h-3 bg-[var(--theme-bg-options)] rounded w-2/3"></div>
                             </div>
-                          ) : isEmpty ? (
-                            <div className="text-center py-16">
-                              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg
-                                  className="w-12 h-12 text-white/60"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                  />
-                                </svg>
-                              </div>
-                              <h2 className="text-2xl font-bold text-white mb-4">
-                                {isFiltered
-                                  ? "No Products Match Your Filters"
-                                  : "No Products Found"}
-                              </h2>
-                              <p className="text-white/70">
-                                {isFiltered
-                                  ? "Try adjusting your filters to see more products."
-                                  : "We couldn't find any products to display."}
-                              </p>
-                            </div>
-                          ) : (
+                          ))}
+                        </div>
+                      ) : isEmpty ? (
+                        <div className="text-center py-16">
+                          <div className="w-24 h-24 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg
+                              className="w-12 h-12 text-[var(--theme-text-content-60)]"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 009.586 13H7"
+                              />
+                            </svg>
+                          </div>
+                          <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
+                            {isFiltered
+                              ? "No Products Match Your Filters"
+                              : "No Products Found"}
+                          </h2>
+                          <p className="text-[var(--theme-text-content-70)]">
+                            {isFiltered
+                              ? "Try adjusting your filters to see more products."
+                              : "We couldn't find any products to display."}
+                          </p>
+                        </div>
+                      ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                               {products.map((product) => (
                                 <FilteredCollection.Item

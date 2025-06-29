@@ -41,7 +41,10 @@ export interface SelectedVariantServiceAPI {
   isLowStock: (threshold?: number) => boolean;
 
   setSelectedChoices: (choices: Record<string, string>) => void;
-  addToCart: (quantity?: number, modifiers?: Record<string, any>) => Promise<void>;
+  addToCart: (
+    quantity?: number,
+    modifiers?: Record<string, any>
+  ) => Promise<void>;
   setOption: (group: string, value: string) => void;
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
@@ -199,7 +202,6 @@ export const SelectedVariantService = implementService.withConfig<{
   }
 
   const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
-
     signalsService.computed<any>((() => {
       const prod = v3Product.get();
       const choices = selectedChoices.get();
@@ -210,7 +212,10 @@ export const SelectedVariantService = implementService.withConfig<{
         prod.variantsInfo.variants.find((variant: any) => {
           const variantChoices = processVariantChoices(variant);
 
-          if (Object.keys(choices).length !== Object.keys(variantChoices).length) return false;
+          if (
+            Object.keys(choices).length !== Object.keys(variantChoices).length
+          )
+            return false;
           return Object.entries(choices).every(([optionName, optionValue]) => {
             return variantChoices[optionName] === optionValue;
           });
@@ -283,12 +288,9 @@ export const SelectedVariantService = implementService.withConfig<{
     } else {
       return false;
     }
-<<<<<<< HEAD
-=======
 
     const status = prod?.inventory?.availabilityStatus;
     return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
->>>>>>> df7cac6 (feat: support inventory filter (#19))
   });
 
   const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
@@ -326,7 +328,10 @@ export const SelectedVariantService = implementService.withConfig<{
     updateQuantityFromVariant(matchingVariant);
   };
 
-  const addToCart = async (quantity: number = 1, modifiers?: Record<string, any>) => {
+  const addToCart = async (
+    quantity: number = 1,
+    modifiers?: Record<string, any>
+  ) => {
     try {
       isLoading.set(true);
       error.set(null);
@@ -355,13 +360,18 @@ export const SelectedVariantService = implementService.withConfig<{
 
         Object.values(modifiers).forEach((modifierValue: any) => {
           const modifierName = modifierValue.modifierName;
-          const productModifier = productModifiers.find(m => m.name === modifierName);
+          const productModifier = productModifiers.find(
+            (m) => m.name === modifierName
+          );
 
           if (!productModifier) return;
 
           const renderType = productModifier.modifierRenderType;
 
-          if (renderType === "TEXT_CHOICES" || renderType === "SWATCH_CHOICES") {
+          if (
+            renderType === "TEXT_CHOICES" ||
+            renderType === "SWATCH_CHOICES"
+          ) {
             // For choice modifiers, use the modifier key and choice value
             const modifierKey = (productModifier as any).key || modifierName;
             if (modifierValue.choiceValue) {
@@ -369,7 +379,8 @@ export const SelectedVariantService = implementService.withConfig<{
             }
           } else if (renderType === "FREE_TEXT") {
             // For free text modifiers, use the freeTextSettings key
-            const freeTextKey = (productModifier.freeTextSettings as any)?.key || modifierName;
+            const freeTextKey =
+              (productModifier.freeTextSettings as any)?.key || modifierName;
             if (modifierValue.freeTextValue) {
               customTextFields[freeTextKey] = modifierValue.freeTextValue;
             }
@@ -431,7 +442,7 @@ export const SelectedVariantService = implementService.withConfig<{
   };
 
   const resetSelections = () => {
-    selectedChoices.set({});   
+    selectedChoices.set({});
   };
 
   // New methods for smart variant selection
@@ -471,7 +482,6 @@ export const SelectedVariantService = implementService.withConfig<{
     return Object.keys(currentChoices).length > 0;
   };
 
-
   return {
     selectedChoices,
     selectedVariantId,
@@ -503,7 +513,7 @@ export const SelectedVariantService = implementService.withConfig<{
     // New methods for smart variant selection
     getAvailableChoicesForOption,
     isChoiceAvailable,
-    hasAnySelections,    
+    hasAnySelections,
 
     selectedVariant,
     finalPrice,
