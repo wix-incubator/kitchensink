@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProductDetailPage from "../../../react-pages/store/example-1/products/[slug]";
+import { loadProductServiceConfig } from "../../../headless/store/services/product-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/store/services/current-cart-service";
+import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
+import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect("/store");
+}
+
+// Load initial data for services
+const productServiceConfigResult = await loadProductServiceConfig(slug);
+
+if (productServiceConfigResult.type === "notFound") {
+  return Astro.redirect("/404");
+}
+
+const productServiceConfig = productServiceConfigResult.config;
+
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
+const productMediaGalleryServiceConfig =
+  await loadProductMediaGalleryServiceConfig(slug);
+const selectedVariantServiceConfig =
+  await loadSelectedVariantServiceConfig(slug);
+
+// Load product modifiers service configuration if product has modifiers
+let productModifiersServiceConfig = null;
+try {
+  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+    productModifiersServiceConfig = {
+      product: productServiceConfig.product,
+    };
+  }
+} catch (error) {
+  console.warn("Could not load product modifiers service:", error);
+}
+
+const productName = productServiceConfig.product.name || "Product";
+---
+
+<BaseLayout>
+  <title>{productName} - Store - Kitchensink</title>
+  <meta name="description" content={`View details for ${productName}`} />
+
+  <ProductDetailPage
+    client:load
+    productServiceConfig={productServiceConfig}
+    currentCartServiceConfig={currentCartServiceConfig}
+    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+    selectedVariantServiceConfig={selectedVariantServiceConfig}
+    productModifiersServiceConfig={productModifiersServiceConfig}
+    slot="body"
+  />
+</BaseLayout>
