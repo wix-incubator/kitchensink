@@ -41,15 +41,12 @@ export interface SelectedVariantServiceAPI {
   isLowStock: (threshold?: number) => boolean;
 
   setSelectedChoices: (choices: Record<string, string>) => void;
-  addToCart: (
-    quantity?: number,
-    modifiers?: Record<string, any>
-  ) => Promise<void>;
+  addToCart: (quantity?: number, modifiers?: Record<string, any>) => Promise<void>;
   setOption: (group: string, value: string) => void;
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
-
+  
   // New methods for smart variant selection
   getAvailableChoicesForOption: (optionName: string) => string[];
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
@@ -190,10 +187,7 @@ export const SelectedVariantService = implementService.withConfig<{
           compareAtPrice: configProduct.compareAtPriceRange?.minValue,
         },
         inventoryStatus: {
-          inStock:
-            configProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-            configProduct.inventory?.availabilityStatus ===
-              "PARTIALLY_OUT_OF_STOCK",
+          inStock: configProduct.inventory?.availabilityStatus === "IN_STOCK",
           preorderEnabled:
             configProduct.inventory?.preorderStatus === "ENABLED",
         },
@@ -204,6 +198,7 @@ export const SelectedVariantService = implementService.withConfig<{
   }
 
   const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
+
     signalsService.computed<any>((() => {
       const prod = v3Product.get();
       const choices = selectedChoices.get();
@@ -214,10 +209,7 @@ export const SelectedVariantService = implementService.withConfig<{
         prod.variantsInfo.variants.find((variant: any) => {
           const variantChoices = processVariantChoices(variant);
 
-          if (
-            Object.keys(choices).length !== Object.keys(variantChoices).length
-          )
-            return false;
+          if (Object.keys(choices).length !== Object.keys(variantChoices).length) return false;
           return Object.entries(choices).every(([optionName, optionValue]) => {
             return variantChoices[optionName] === optionValue;
           });
@@ -256,31 +248,30 @@ export const SelectedVariantService = implementService.withConfig<{
     return rawAmount ? `$${rawAmount}` : "";
   });
 
-  const currentCompareAtPrice: ReadOnlySignal<string | null> =
-    signalsService.computed(() => {
-      const variant = currentVariant.get();
-      const prod = v3Product.get();
+  const currentCompareAtPrice: ReadOnlySignal<string | null> = signalsService.computed(() => {
+    const variant = currentVariant.get();
+    const prod = v3Product.get();
 
-      // Try to get formatted compare-at price first
-      if (variant?.price?.compareAtPrice?.formattedAmount) {
-        return variant.price.compareAtPrice.formattedAmount;
-      }
+    // Try to get formatted compare-at price first
+    if (variant?.price?.compareAtPrice?.formattedAmount) {
+      return variant.price.compareAtPrice.formattedAmount;
+    }
 
-      if (prod?.compareAtPriceRange?.minValue?.formattedAmount) {
-        return prod.compareAtPriceRange.minValue.formattedAmount;
-      }
+    if (prod?.compareAtPriceRange?.minValue?.formattedAmount) {
+      return prod.compareAtPriceRange.minValue.formattedAmount;
+    }
 
-      // Fallback: create our own formatted price from amount
-      let rawAmount = null;
+    // Fallback: create our own formatted price from amount
+    let rawAmount = null;
 
-      if (variant?.price?.compareAtPrice?.amount) {
-        rawAmount = variant.price.compareAtPrice.amount;
-      } else if (prod?.compareAtPriceRange?.minValue?.amount) {
-        rawAmount = prod.compareAtPriceRange.minValue.amount;
-      }
+    if (variant?.price?.compareAtPrice?.amount) {
+      rawAmount = variant.price.compareAtPrice.amount;
+    } else if (prod?.compareAtPriceRange?.minValue?.amount) {
+      rawAmount = prod.compareAtPriceRange.minValue.amount;
+    }
 
-      return rawAmount ? `$${rawAmount}` : null;
-    });
+    return rawAmount ? `$${rawAmount}` : null;
+  });
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
@@ -290,9 +281,6 @@ export const SelectedVariantService = implementService.withConfig<{
     } else {
       return false;
     }
-
-    const status = prod?.inventory?.availabilityStatus;
-    return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
   });
 
 
@@ -336,10 +324,7 @@ export const SelectedVariantService = implementService.withConfig<{
     updateQuantityFromVariant(matchingVariant);
   };
 
-  const addToCart = async (
-    quantity: number = 1,
-    modifiers?: Record<string, any>
-  ) => {
+  const addToCart = async (quantity: number = 1, modifiers?: Record<string, any>) => {
     try {
       isLoading.set(true);
       error.set(null);
@@ -368,18 +353,13 @@ export const SelectedVariantService = implementService.withConfig<{
 
         Object.values(modifiers).forEach((modifierValue: any) => {
           const modifierName = modifierValue.modifierName;
-          const productModifier = productModifiers.find(
-            (m) => m.name === modifierName
-          );
+          const productModifier = productModifiers.find(m => m.name === modifierName);
 
           if (!productModifier) return;
 
           const renderType = productModifier.modifierRenderType;
 
-          if (
-            renderType === "TEXT_CHOICES" ||
-            renderType === "SWATCH_CHOICES"
-          ) {
+          if (renderType === "TEXT_CHOICES" || renderType === "SWATCH_CHOICES") {
             // For choice modifiers, use the modifier key and choice value
             const modifierKey = (productModifier as any).key || modifierName;
             if (modifierValue.choiceValue) {
@@ -387,8 +367,7 @@ export const SelectedVariantService = implementService.withConfig<{
             }
           } else if (renderType === "FREE_TEXT") {
             // For free text modifiers, use the freeTextSettings key
-            const freeTextKey =
-              (productModifier.freeTextSettings as any)?.key || modifierName;
+            const freeTextKey = (productModifier.freeTextSettings as any)?.key || modifierName;
             if (modifierValue.freeTextValue) {
               customTextFields[freeTextKey] = modifierValue.freeTextValue;
             }
@@ -450,37 +429,34 @@ export const SelectedVariantService = implementService.withConfig<{
   };
 
   const resetSelections = () => {
-    selectedChoices.set({});
+    selectedChoices.set({});   
   };
 
   // New methods for smart variant selection
   const getAvailableChoicesForOption = (optionName: string): string[] => {
     const currentChoices = selectedChoices.get();
     const variantsList = variants.get();
-
+    
     // Get all possible choices for this option that result in valid variants
     const availableChoices = new Set<string>();
-
-    variantsList.forEach((variant) => {
+    
+    variantsList.forEach(variant => {
       const variantChoices = processVariantChoices(variant);
-
+      
       // Check if this variant matches all currently selected choices (except for the option we're checking)
       const matchesOtherChoices = Object.entries(currentChoices)
         .filter(([key]) => key !== optionName)
         .every(([key, value]) => variantChoices[key] === value);
-
+      
       if (matchesOtherChoices && variantChoices[optionName]) {
         availableChoices.add(variantChoices[optionName]);
       }
     });
-
+    
     return Array.from(availableChoices);
   };
 
-  const isChoiceAvailable = (
-    optionName: string,
-    choiceValue: string
-  ): boolean => {
+  const isChoiceAvailable = (optionName: string, choiceValue: string): boolean => {
     const availableChoices = getAvailableChoicesForOption(optionName);
     return availableChoices.includes(choiceValue);
   };
@@ -489,6 +465,7 @@ export const SelectedVariantService = implementService.withConfig<{
     const currentChoices = selectedChoices.get();
     return Object.keys(currentChoices).length > 0;
   };
+
 
   return {
     selectedChoices,
@@ -518,11 +495,11 @@ export const SelectedVariantService = implementService.withConfig<{
     selectVariantById,
     loadProductVariants,
     resetSelections,
-
+    
     // New methods for smart variant selection
     getAvailableChoicesForOption,
     isChoiceAvailable,
-    hasAnySelections,
+    hasAnySelections,    
 
     selectedVariant,
     finalPrice,
