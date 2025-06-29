@@ -241,7 +241,6 @@ const ProductGridContent = () => {
                                     {title}
                                   </h3>
 
-<<<<<<< HEAD
                                   {/* Product Options */}
                                   {product.options &&
                                     product.options.length > 0 && (
@@ -311,106 +310,6 @@ const ProductGridContent = () => {
                                                     .choices.length - 3}{" "}
                                                   more
                                                 </span>
-=======
-                                        {product.ribbon?.name && (
-                                          <div className="absolute top-2 left-2">
-                                            <span className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                                              {product.ribbon.name}
-                                            </span>
-                                          </div>
-                                        )}
-
-                                        <h3 className="text-white font-semibold mb-2 line-clamp-2">
-                                          {title}
-                                        </h3>
-
-                                        {/* Product Options */}
-                                        {product.options &&
-                                          product.options.length > 0 && (
-                                            <div className="mb-3 space-y-2">
-                                              {product.options.map(
-                                                (option: any) => (
-                                                  <div
-                                                    key={option._id}
-                                                    className="space-y-1"
-                                                  >
-                                                    <span className="text-white/80 text-xs font-medium">
-                                                      {String(option.name)}:
-                                                    </span>
-                                                    <div className="flex flex-wrap gap-1">
-                                                      {option.choicesSettings?.choices
-                                                        ?.slice(0, 3)
-                                                        .map((choice: any) => {
-                                                          // Check if this is a color option and if choice has color data
-                                                          const isColorOption =
-                                                            String(option.name)
-                                                              .toLowerCase()
-                                                              .includes(
-                                                                "color"
-                                                              );
-                                                          const hasColorCode =
-                                                            choice.colorCode ||
-                                                            choice.media?.image;
-
-                                                          if (
-                                                            isColorOption &&
-                                                            (choice.colorCode ||
-                                                              hasColorCode)
-                                                          ) {
-                                                            return (
-                                                              <div
-                                                                key={
-                                                                  choice.choiceId
-                                                                }
-                                                                className="relative group/color"
-                                                              >
-                                                                <div
-                                                                  className="w-6 h-6 rounded-full border-2 border-teal-300/40 hover:border-teal-300/80 transition-colors cursor-pointer"
-                                                                  style={{
-                                                                    backgroundColor:
-                                                                      choice.colorCode ||
-                                                                      "#000000",
-                                                                  }}
-                                                                />
-                                                                {/* Tooltip */}
-                                                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                                  {String(
-                                                                    choice.name
-                                                                  )}
-                                                                </div>
-                                                              </div>
-                                                            );
-                                                          } else {
-                                                            return (
-                                                              <span
-                                                                key={
-                                                                  choice.choiceId
-                                                                }
-                                                                className="inline-flex items-center px-2 py-1 bg-teal-500/20 text-teal-300 text-xs rounded border border-teal-500/30"
-                                                              >
-                                                                {String(
-                                                                  choice.name
-                                                                )}
-                                                              </span>
-                                                            );
-                                                          }
-                                                        })}
-                                                      {option.choicesSettings
-                                                        ?.choices?.length >
-                                                        3 && (
-                                                        <span className="text-white/60 text-xs">
-                                                          +
-                                                          {option
-                                                            .choicesSettings
-                                                            .choices.length -
-                                                            3}{" "}
-                                                          more
-                                                        </span>
-                                                      )}
-                                                    </div>
-                                                  </div>
-                                                )
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                                               )}
                                             </div>
                                           </div>
@@ -424,125 +323,83 @@ const ProductGridContent = () => {
                                     </p>
                                   )}
 
-<<<<<<< HEAD
                                   <div className="mt-auto mb-3">
                                     <div className="space-y-1">
-                                      {compareAtPrice &&
-                                      parseFloat(
-                                        compareAtPrice.replace(/[^\d.]/g, "")
-                                      ) > 0 ? (
-                                        <>
-                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                            {price}
-                                          </div>
+                                      {(() => {
+                                        const status =
+                                          product?.inventory
+                                            ?.availabilityStatus;
+                                        const stockInfo =
+                                          status === "IN_STOCK"
+                                            ? {
+                                                status: "In Stock",
+                                                color:
+                                                  "text-[var(--theme-text-success)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-success)]",
+                                              }
+                                            : status ===
+                                              "PARTIALLY_OUT_OF_STOCK"
+                                            ? {
+                                                status:
+                                                  "Partially out of stock",
+                                                color:
+                                                  "text-[var(--theme-text-warning)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-warning)]",
+                                              }
+                                            : {
+                                                status: "Out of Stock",
+                                                color:
+                                                  "text-[var(--theme-text-error)]",
+                                                dotColor:
+                                                  "bg-[var(--theme-text-error)]",
+                                              };
+                                        return compareAtPrice &&
+                                          parseFloat(
+                                            compareAtPrice.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            )
+                                          ) > 0 ? (
+                                          <>
+                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                              {price}
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                              <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
+                                                {compareAtPrice}
+                                              </div>
+                                              <div className="flex items-center gap-2">
+                                                <span
+                                                  className={`${stockInfo.color} text-sm flex items-center gap-1`}
+                                                >
+                                                  <div
+                                                    className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
+                                                  ></div>
+                                                  {stockInfo.status}
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </>
+                                        ) : (
                                           <div className="flex items-center justify-between">
-                                            <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
-                                              {compareAtPrice}
+                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                              {price}
                                             </div>
                                             <div className="flex items-center gap-2">
-                                              {available ? (
-                                                <span className="text-[var(--theme-text-success)] text-sm">
-                                                  In Stock
-                                                </span>
-                                              ) : (
-                                                <span className="text-[var(--theme-text-error)] text-sm">
-                                                  Out of Stock
-                                                </span>
-                                              )}
+                                              <span
+                                                className={`${stockInfo.color} text-sm flex items-center gap-1`}
+                                              >
+                                                <div
+                                                  className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
+                                                ></div>
+                                                {stockInfo.status}
+                                              </span>
                                             </div>
                                           </div>
-                                        </>
-                                      ) : (
-                                        <div className="flex items-center justify-between">
-                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                            {price}
-                                          </div>
-                                          <div className="flex items-center gap-2">
-                                            {available ? (
-                                              <span className="text-[var(--theme-text-success)] text-sm">
-                                                In Stock
-                                              </span>
-                                            ) : (
-                                              <span className="text-[var(--theme-text-error)] text-sm">
-                                                Out of Stock
-                                              </span>
-                                            )}
-=======
-                                        <div className="mt-auto mb-3">
-                                          <div className="space-y-1">
-                                            {(() => {
-                                              const status =
-                                                product?.inventory
-                                                  ?.availabilityStatus;
-                                              const stockInfo =
-                                                status === "IN_STOCK"
-                                                  ? {
-                                                      status: "In Stock",
-                                                      color: "text-green-400",
-                                                      dotColor: "bg-green-500",
-                                                    }
-                                                  : status ===
-                                                    "PARTIALLY_OUT_OF_STOCK"
-                                                  ? {
-                                                      status:
-                                                        "Partially out of stock",
-                                                      color: "text-yellow-400",
-                                                      dotColor: "bg-yellow-500",
-                                                    }
-                                                  : {
-                                                      status: "Out of Stock",
-                                                      color: "text-red-400",
-                                                      dotColor: "bg-red-500",
-                                                    };
-                                              return compareAtPrice &&
-                                                parseFloat(
-                                                  compareAtPrice.replace(
-                                                    /[^\d.]/g,
-                                                    ""
-                                                  )
-                                                ) > 0 ? (
-                                                <>
-                                                  <div className="text-xl font-bold text-white">
-                                                    {price}
-                                                  </div>
-                                                  <div className="flex items-center justify-between">
-                                                    <div className="text-sm font-medium text-white/50 line-through">
-                                                      {compareAtPrice}
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                      <span
-                                                        className={`${stockInfo.color} text-sm flex items-center gap-1`}
-                                                      >
-                                                        <div
-                                                          className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
-                                                        ></div>
-                                                        {stockInfo.status}
-                                                      </span>
-                                                    </div>
-                                                  </div>
-                                                </>
-                                              ) : (
-                                                <div className="flex items-center justify-between">
-                                                  <div className="text-xl font-bold text-white">
-                                                    {price}
-                                                  </div>
-                                                  <div className="flex items-center gap-2">
-                                                    <span
-                                                      className={`${stockInfo.color} text-sm flex items-center gap-1`}
-                                                    >
-                                                      <div
-                                                        className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
-                                                      ></div>
-                                                      {stockInfo.status}
-                                                    </span>
-                                                  </div>
-                                                </div>
-                                              );
-                                            })()}
->>>>>>> df7cac6 (feat: support inventory filter (#19))
-                                          </div>
-                                        </div>
-                                      )}
+                                        );
+                                      })()}
                                     </div>
                                   </div>
 
@@ -666,7 +523,6 @@ const LoadMoreSection = () => {
                       )}
                     </button>
 
-<<<<<<< HEAD
                     <button
                       onClick={refresh}
                       disabled={isLoading}
@@ -689,21 +545,6 @@ const LoadMoreSection = () => {
                     >
                       Refresh Products
                     </button>
-=======
-                      <button
-                        onClick={refresh}
-                        disabled={isLoading}
-                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                      >
-                        Refresh Products
-                      </button>
-                    </div>
-
-                    <p className="text-white/60 text-sm mt-4">
-                      Advanced store experience • {totalProducts} products
-                      loaded
-                    </p>
->>>>>>> df7cac6 (feat: support inventory filter (#19))
                   </div>
                   <p className="text-[var(--theme-text-content-60)] text-sm mt-4">
                     Advanced store experience • {totalProducts} products loaded
@@ -743,10 +584,7 @@ export default function StoreExample2Page({
         newPath = `${basePath}/category/${categorySlug}`;
       }
 
-<<<<<<< HEAD
-=======
       // Navigate immediately - pulse animation will show during page load
->>>>>>> df7cac6 (feat: support inventory filter (#19))
       window.location.href = newPath;
     }
   };
