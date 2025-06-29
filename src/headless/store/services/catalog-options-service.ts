@@ -28,17 +28,30 @@ export interface CatalogOptionsServiceAPI {
 }
 
 // Helper functions
-const extractAggregationValues = (aggregationResponse: any, name: string): string[] => {
-  const aggregation = aggregationResponse.aggregations?.[name] || 
-    aggregationResponse.aggregationData?.results?.find((r: any) => r.name === name);
+const extractAggregationValues = (
+  aggregationResponse: any,
+  name: string
+): string[] => {
+  const aggregation =
+    aggregationResponse.aggregations?.[name] ||
+    aggregationResponse.aggregationData?.results?.find(
+      (r: any) => r.name === name
+    );
   return aggregation?.values?.results?.map((item: any) => item.value) || [];
 };
 
-const matchesAggregationName = (name: string, aggregationNames: string[]): boolean => {
-  return aggregationNames.some(aggName => aggName.toLowerCase() === name.toLowerCase());
+const matchesAggregationName = (
+  name: string,
+  aggregationNames: string[]
+): boolean => {
+  return aggregationNames.some(
+    (aggName) => aggName.toLowerCase() === name.toLowerCase()
+  );
 };
 
-const sortChoicesIntelligently = (choices: ProductChoice[]): ProductChoice[] => {
+const sortChoicesIntelligently = (
+  choices: ProductChoice[]
+): ProductChoice[] => {
   return [...choices].sort((a, b) => {
     const aIsNumber = /^\d+$/.test(a.name);
     const bIsNumber = /^\d+$/.test(b.name);
@@ -48,7 +61,7 @@ const sortChoicesIntelligently = (choices: ProductChoice[]): ProductChoice[] => 
     }
     if (aIsNumber && !bIsNumber) return -1;
     if (!aIsNumber && bIsNumber) return 1;
-    
+
     return a.name.localeCompare(b.name);
   });
 };
@@ -60,9 +73,9 @@ const buildCategoryFilter = (categoryId?: string) => {
 
   return {
     visible: true,
-    'allCategoriesInfo.categories': {
-      $matchItems: [{ _id: { $in: [categoryId] } }]
-    }
+    "allCategoriesInfo.categories": {
+      $matchItems: [{ _id: { $in: [categoryId] } }],
+    },
   };
 };
 
@@ -74,7 +87,8 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
   ({ getService }) => {
     const signalsService = getService(SignalsServiceDefinition);
 
-    const catalogOptions: Signal<ProductOption[] | null> = signalsService.signal(null as any);
+    const catalogOptions: Signal<ProductOption[] | null> =
+      signalsService.signal(null as any);
     const isLoading: Signal<boolean> = signalsService.signal(false as any);
     const error: Signal<string | null> = signalsService.signal(null as any);
 
@@ -87,72 +101,128 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
         const aggregationRequest = {
           aggregations: [
             {
-              name: 'optionNames',
-              fieldPath: 'options.name',
-              type: 'VALUE' as const,
-              value: { limit: 20, sortType: 'VALUE' as const, sortDirection: 'ASC' as const }
+              name: "optionNames",
+              fieldPath: "options.name",
+              type: "VALUE" as const,
+              value: {
+                limit: 20,
+                sortType: "VALUE" as const,
+                sortDirection: "ASC" as const,
+              },
             },
             {
-              name: 'choiceNames', 
-              fieldPath: 'options.choicesSettings.choices.name',
-              type: 'VALUE' as const,
-              value: { limit: 50, sortType: 'VALUE' as const, sortDirection: 'ASC' as const }
-            }
+              name: "choiceNames",
+              fieldPath: "options.choicesSettings.choices.name",
+              type: "VALUE" as const,
+              value: {
+                limit: 50,
+                sortType: "VALUE" as const,
+                sortDirection: "ASC" as const,
+              },
+            },
+            {
+              name: "inventoryStatus",
+              fieldPath: "inventory.availabilityStatus",
+              type: "VALUE" as const,
+              value: {
+                limit: 10,
+                sortType: "VALUE" as const,
+                sortDirection: "ASC" as const,
+              },
+            },
           ],
           filter: buildCategoryFilter(categoryId),
           includeProducts: false,
-          cursorPaging: { limit: 0 }
+          cursorPaging: { limit: 0 },
         };
 
-        const aggregationResponse = await productsV3.searchProducts(aggregationRequest as any);
-        
-        const optionNames = extractAggregationValues(aggregationResponse, 'optionNames');
-        const choiceNames = extractAggregationValues(aggregationResponse, 'choiceNames');
+        const aggregationResponse = await productsV3.searchProducts(
+          aggregationRequest as any
+        );
 
-        if (optionNames.length === 0) {
-          catalogOptions.set([]);
-          return;
-        }
+        const optionNames = extractAggregationValues(
+          aggregationResponse,
+          "optionNames"
+        );
+        const choiceNames = extractAggregationValues(
+          aggregationResponse,
+          "choiceNames"
+        );
+        const inventoryStatuses = extractAggregationValues(
+          aggregationResponse,
+          "inventoryStatus"
+        );
 
         // Step 2: Get option structure from customizations API
-        const customizationsResponse = await customizationsV3.queryCustomizations().find();
+        const customizationsResponse = await customizationsV3
+          .queryCustomizations()
+          .find();
         const customizations = customizationsResponse.items || [];
 
         // Step 3: Build options by matching customizations with aggregation data
         const options: ProductOption[] = customizations
-          .filter(customization => 
-            customization.name && 
-            customization._id && 
-            customization.customizationType === 'PRODUCT_OPTION' &&
-            matchesAggregationName(customization.name, optionNames)
+          .filter(
+            (customization) =>
+              customization.name &&
+              customization._id &&
+              customization.customizationType === "PRODUCT_OPTION" &&
+              matchesAggregationName(customization.name, optionNames)
           )
-          .map(customization => {
-            const choices: ProductChoice[] = (customization.choicesSettings?.choices || [])
-              .filter(choice => 
-                choice._id && 
-                choice.name && 
-                matchesAggregationName(choice.name, choiceNames)
+          .map((customization) => {
+            const choices: ProductChoice[] = (
+              customization.choicesSettings?.choices || []
+            )
+              .filter(
+                (choice) =>
+                  choice._id &&
+                  choice.name &&
+                  matchesAggregationName(choice.name, choiceNames)
               )
-              .map(choice => ({
+              .map((choice) => ({
                 id: choice._id!,
                 name: choice.name!,
-                colorCode: choice.colorCode
+                colorCode: choice.colorCode,
               }));
 
             return {
               id: customization._id!,
               name: customization.name!,
               choices: sortChoicesIntelligently(choices),
-              optionRenderType: customization.customizationRenderType
+              optionRenderType: customization.customizationRenderType,
             };
           })
-          .filter(option => option.choices.length > 0);
-        
-        catalogOptions.set(options);
+          .filter((option) => option.choices.length > 0);
 
+        // Step 4: Add inventory filter if there are multiple inventory statuses
+        if (inventoryStatuses.length > 1) {
+          const inventoryChoices: ProductChoice[] = inventoryStatuses.map(
+            (status) => ({
+              id: status.toUpperCase(), // Use uppercase to match actual availabilityStatus values
+              name:
+                status.toUpperCase() === "IN_STOCK"
+                  ? "In Stock"
+                  : status.toUpperCase() === "OUT_OF_STOCK"
+                  ? "Out of Stock"
+                  : status.toUpperCase() === "PARTIALLY_OUT_OF_STOCK"
+                  ? "Partially out of stock"
+                  : status,
+            })
+          );
+
+          options.push({
+            id: "inventory-filter",
+            name: "Availability",
+            choices: inventoryChoices,
+            optionRenderType: "TEXT_CHOICES",
+          });
+        }
+
+        catalogOptions.set(options);
       } catch (err) {
-        console.error('Failed to load catalog options:', err);
-        error.set(err instanceof Error ? err.message : 'Failed to load catalog options');
+        console.error("Failed to load catalog options:", err);
+        error.set(
+          err instanceof Error ? err.message : "Failed to load catalog options"
+        );
         catalogOptions.set([]);
       } finally {
         isLoading.set(false);
@@ -172,4 +242,4 @@ export async function loadCatalogOptionsServiceConfig(): Promise<
   ServiceFactoryConfig<typeof CatalogOptionsService>
 > {
   return {};
-} 
+}
