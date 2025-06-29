@@ -3,33 +3,33 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { useState } from "react";
-import WixMediaImage from "../../../../headless/media/components/Image";
-import { CurrentCart } from "../../../../headless/store/components/CurrentCart";
-import { Product } from "../../../../headless/store/components/Product";
-import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
-import { ProductModifiers } from "../../../../headless/store/components/ProductModifiers";
-import { ProductVariantSelector } from "../../../../headless/store/components/ProductVariantSelector";
+import WixMediaImage from "../../../headless/media/components/Image";
+import { CurrentCart } from "../../../headless/store/components/CurrentCart";
+import { Product } from "../../../headless/store/components/Product";
+import { ProductMediaGallery } from "../../../headless/store/components/ProductMediaGallery";
+import { ProductModifiers } from "../../../headless/store/components/ProductModifiers";
+import { ProductVariantSelector } from "../../../headless/store/components/ProductVariantSelector";
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/store/services/current-cart-service";
+} from "../../../headless/ecom/services/current-cart-service";
 import {
   ProductMediaGalleryService,
   ProductMediaGalleryServiceDefinition,
-} from "../../../../headless/store/services/product-media-gallery-service";
+} from "../../../headless/store/services/product-media-gallery-service";
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from "../../../../headless/store/services/product-modifiers-service";
+} from "../../../headless/store/services/product-modifiers-service";
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../../../headless/store/services/product-service";
+} from "../../../headless/store/services/product-service";
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from "../../../../headless/store/services/selected-variant-service";
-import { StoreLayout } from "../../../../layouts/StoreLayout";
+} from "../../../headless/store/services/selected-variant-service";
+import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../../styles/theme-vibe.css";
 
 // Reusable FreeText Input Component

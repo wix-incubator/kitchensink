@@ -2,7 +2,6 @@ import React from "react";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import StoreCollectionPage from "../composites/products";
 import "../../../styles/theme-2.css";
-
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
   currentCartServiceConfig: any;

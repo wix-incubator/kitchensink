@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import ProductGridContent from "../composites/products";
 import { loadCategoriesConfig } from "../../../headless/store/services/category-service";
 import { loadCollectionServiceConfig } from "../../../headless/store/services/collection-service";
-import { loadCurrentCartServiceConfig } from "../../../headless/store/services/current-cart-service";
+import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
 import '../../../styles/theme-vibe.css';
 import '../../../styles/global.css';
 
