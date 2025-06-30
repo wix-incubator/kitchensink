@@ -30,7 +30,10 @@ const selectedVariantServiceConfig =
 // Load product modifiers service configuration if product has modifiers
 let productModifiersServiceConfig = null;
 try {
-  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+  if (
+    productServiceConfig.product.modifiers &&
+    productServiceConfig.product.modifiers.length > 0
+  ) {
     productModifiersServiceConfig = {
       product: productServiceConfig.product,
     };
@@ -42,17 +45,11 @@ try {
 const productName = productServiceConfig.product.name || "Product";
 ---
 
-<BaseLayout>
-  <title>{productName} - Store - Kitchensink</title>
-  <meta name="description" content={`View details for ${productName}`} />
-
-  <ProductDetailPage
-    client:load
-    productServiceConfig={productServiceConfig}
-    currentCartServiceConfig={currentCartServiceConfig}
-    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
-    selectedVariantServiceConfig={selectedVariantServiceConfig}
-    productModifiersServiceConfig={productModifiersServiceConfig}
-    slot="body"
-  />
-</BaseLayout>
+<ProductDetailPage
+  client:load
+  productServiceConfig={productServiceConfig}
+  currentCartServiceConfig={currentCartServiceConfig}
+  productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+  selectedVariantServiceConfig={selectedVariantServiceConfig}
+  productModifiersServiceConfig={productModifiersServiceConfig}
+/>
