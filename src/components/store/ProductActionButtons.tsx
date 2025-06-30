@@ -46,30 +46,16 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${className}`}
-      style={{
-        background: !disabled
-          ? "var(--theme-btn-primary)"
-          : "var(--theme-bg-options)",
-        cursor: disabled ? "not-allowed" : "pointer",
-      }}
-      onMouseEnter={(e) => {
-        if (!disabled) {
-          e.currentTarget.style.background = "var(--theme-btn-primary-hover)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!disabled) {
-          e.currentTarget.style.background = "var(--theme-btn-primary)";
-        }
-      }}
+      className={`flex-1 text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
+        disabled ? "bg-surface-primary cursor-not-allowed" : "btn-primary"
+      } ${className}`}
     >
       {isLoading ? (
         <>
           <span className="opacity-0">{buttonText}</span>
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
-              className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
+              className="animate-spin w-5 h-5 text-content-primary"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -120,7 +106,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
     <button
       onClick={handleBuyNow}
       disabled={disabled}
-      className={`flex-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
+      className={`flex-1 btn-warning disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">

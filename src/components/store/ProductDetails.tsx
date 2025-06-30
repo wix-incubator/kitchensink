@@ -31,14 +31,14 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
             freeTextPlaceholder || `Enter custom ${name.toLowerCase()}...`
           }
           maxLength={maxChars}
-          className="w-full p-3 border border-[var(--theme-border-primary-20)] rounded-lg bg-[var(--theme-bg-options)] text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-40)] focus:border-[var(--theme-border-primary-30)] focus:outline-none resize-none"
+          className="w-full p-3 border border-brand-light rounded-lg bg-surface-primary text-content-primary placeholder-text-content-subtle focus:border-brand-medium focus:outline-none resize-none"
           rows={3}
         />
         {maxChars && (
           <div
             className={`text-xs text-right ${isOverLimit
-              ? "text-[var(--theme-text-error)]"
-              : "text-[var(--theme-text-content-60)]"
+              ? "text-status-error"
+              : "text-content-muted"
               }`}
           >
             {charCount}/{maxChars} characters
@@ -60,7 +60,7 @@ export default function ProductDetails({
         {/* Product Images */}
         <div className="space-y-4">
           {/* Main Image */}
-          <div className="aspect-square bg-[var(--theme-bg-options)] rounded-2xl overflow-hidden border border-[var(--theme-border-primary-10)] relative">
+          <div className="aspect-square bg-surface-primary rounded-2xl overflow-hidden border border-brand-subtle relative">
             <ProductMediaGallery.Viewport>
               {({ src, currentIndex, totalImages }) => (
                 <>
@@ -72,7 +72,7 @@ export default function ProductDetails({
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <svg
-                        className="w-24 h-24 text-[var(--theme-text-content-40)]"
+                        className="w-24 h-24 text-content-subtle"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -95,7 +95,7 @@ export default function ProductDetails({
                           <button
                             onClick={onPrevious}
                             disabled={!canGoPrevious}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-[var(--theme-bg-tooltip)] hover:bg-[var(--theme-bg-tooltip)]/90 text-[var(--theme-text-content)] p-2 rounded-full transition-all disabled:opacity-30"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
                           >
                             <svg
                               className="w-4 h-4"
@@ -119,7 +119,7 @@ export default function ProductDetails({
                           <button
                             onClick={onNext}
                             disabled={!canGoNext}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-[var(--theme-bg-tooltip)] hover:bg-[var(--theme-bg-tooltip)]/90 text-[var(--theme-text-content)] p-2 rounded-full transition-all disabled:opacity-30"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
                           >
                             <svg
                               className="w-4 h-4"
@@ -144,7 +144,7 @@ export default function ProductDetails({
                   {totalImages > 1 && (
                     <ProductMediaGallery.Indicator>
                       {({ current, total }) => (
-                        <div className="absolute bottom-4 right-4 bg-[var(--theme-bg-tooltip)] text-[var(--theme-text-content)] px-3 py-1 rounded-full text-sm">
+                        <div className="absolute bottom-4 right-4 bg-surface-tooltip text-content-primary px-3 py-1 rounded-full text-sm">
                           {current} / {total}
                         </div>
                       )}
@@ -164,9 +164,9 @@ export default function ProductDetails({
                     {({ src, isActive, onSelect, alt }) => (
                       <div
                         onClick={onSelect}
-                        className={`aspect-square bg-[var(--theme-bg-options)] rounded-lg border cursor-pointer transition-all ${isActive
-                          ? "border-[var(--theme-border-primary-30)] ring-2 ring-[var(--theme-border-primary-20)]"
-                          : "border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)]"
+                        className={`aspect-square bg-surface-primary rounded-lg border cursor-pointer transition-all ${isActive
+                          ? "border-brand-medium ring-2 ring-brand-light"
+                          : "border-brand-subtle hover:border-brand-light"
                           }`}
                       >
                         {src ? (
@@ -177,7 +177,7 @@ export default function ProductDetails({
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <svg
-                              className="w-6 h-6 text-[var(--theme-text-content-40)]"
+                              className="w-6 h-6 text-content-subtle"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -206,7 +206,7 @@ export default function ProductDetails({
           <div>
             <Product.Name>
               {({ name }) => (
-                <h1 className="text-4xl font-bold text-[var(--theme-text-content)] mb-4">
+                <h1 className="text-4xl font-bold text-content-primary mb-4">
                   {name}
                 </h1>
               )}
@@ -214,13 +214,13 @@ export default function ProductDetails({
             <SelectedVariant.Price>
               {({ price, compareAtPrice }) => (
                 <div className="space-y-1">
-                  <div className="text-3xl font-bold text-[var(--theme-text-content)]">
+                  <div className="text-3xl font-bold text-content-primary">
                     {price}
                   </div>
                   {compareAtPrice &&
                     parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) >
                     0 && (
-                      <div className="text-lg font-medium text-[var(--theme-text-content-50)] line-through">
+                      <div className="text-lg font-medium text-content-faded line-through">
                         {compareAtPrice}
                       </div>
                     )}
@@ -235,12 +235,12 @@ export default function ProductDetails({
               <>
                 {plainDescription && (
                   <div>
-                    <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-3">
+                    <h3 className="text-xl font-semibold text-content-primary mb-3">
                       Description
                     </h3>
                     {
                       <p
-                        className="text-[var(--theme-text-content-80)] leading-relaxed"
+                        className="text-content-secondary leading-relaxed"
                         dangerouslySetInnerHTML={{
                           __html: plainDescription,
                         }}
@@ -258,7 +258,7 @@ export default function ProductDetails({
               <>
                 {hasOptions && (
                   <div className="space-y-6">
-                    <h3 className="text-lg font-semibold text-[var(--theme-text-content)]">
+                    <h3 className="text-lg font-semibold text-content-primary">
                       Product Options
                     </h3>
 
@@ -267,7 +267,7 @@ export default function ProductDetails({
                         <ProductVariantSelector.Option option={option}>
                           {({ name, choices, hasChoices }) => (
                             <>
-                              <h3 className="text-lg font-semibold text-[var(--theme-text-content)] mb-3">
+                              <h3 className="text-lg font-semibold text-content-primary mb-3">
                                 {name}
                               </h3>
                               {hasChoices && (
@@ -306,8 +306,8 @@ export default function ProductDetails({
                                                   onClick={onSelect}
                                                   title={value}
                                                   className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
-                                                    ? "border-[var(--theme-primary-500)] shadow-lg scale-110 ring-2 ring-[var(--theme-primary-500)]/30"
-                                                    : "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
+                                                    ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
+                                                    : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
                                                     } ${!isInStock
                                                       ? "grayscale"
                                                       : ""
@@ -321,7 +321,7 @@ export default function ProductDetails({
                                                 {!isInStock && (
                                                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                     <svg
-                                                      className="w-6 h-6 text-[var(--theme-text-error)]"
+                                                      className="w-6 h-6 text-status-error"
                                                       fill="none"
                                                       viewBox="0 0 24 24"
                                                       stroke="currentColor"
@@ -342,8 +342,8 @@ export default function ProductDetails({
                                                 <button
                                                   onClick={onSelect}
                                                   className={`px-4 py-2 border rounded-lg transition-all duration-200 ${isSelected
-                                                    ? "bg-[var(--theme-bg-primary-20)] border-[var(--theme-border-primary-30)] text-[var(--theme-text-primary-300)]"
-                                                    : "bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)] text-[var(--theme-text-content)]"
+                                                    ? "product-option-active"
+                                                    : "product-option-inactive"
                                                     }`}
                                                 >
                                                   {value}
@@ -351,7 +351,7 @@ export default function ProductDetails({
                                                 {!isInStock && (
                                                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                     <svg
-                                                      className="w-6 h-6 text-[var(--theme-text-error)]"
+                                                      className="w-6 h-6 text-status-error"
                                                       fill="none"
                                                       viewBox="0 0 24 24"
                                                       stroke="currentColor"
@@ -392,7 +392,7 @@ export default function ProductDetails({
                               );
                             variantService.resetSelections();
                           }}
-                          className="text-sm text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors"
+                          className="text-sm text-brand-primary hover:text-brand-light transition-colors"
                         >
                           Reset Selections
                         </button>
@@ -410,7 +410,7 @@ export default function ProductDetails({
               <>
                 {hasModifiers && (
                   <div className="space-y-6">
-                    <h3 className="text-lg font-semibold text-[var(--theme-text-content)]">
+                    <h3 className="text-lg font-semibold text-content-primary">
                       Product Modifiers
                     </h3>
 
@@ -427,10 +427,10 @@ export default function ProductDetails({
                           mandatory,
                         }) => (
                           <div className="space-y-3">
-                            <h4 className="text-md font-medium text-[var(--theme-text-content)]">
+                            <h4 className="text-md font-medium text-content-primary">
                               {name}{" "}
                               {mandatory && (
-                                <span className="text-[var(--theme-text-error)]">
+                                <span className="text-status-error">
                                   *
                                 </span>
                               )}
@@ -454,8 +454,8 @@ export default function ProductDetails({
                                         <button
                                           onClick={onSelect}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
-                                            ? "border-[var(--theme-text-primary-400)] shadow-lg scale-110 ring-2 ring-[var(--theme-text-primary-400)]/30"
-                                            : "border-[var(--theme-border-primary-20)] hover:border-[var(--theme-border-primary-30)] hover:scale-105"
+                                            ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
+                                            : "border-brand-light hover:border-brand-medium hover:scale-105"
                                             }`}
                                           style={{
                                             backgroundColor:
@@ -486,8 +486,8 @@ export default function ProductDetails({
                                       <button
                                         onClick={onSelect}
                                         className={`px-4 py-2 border rounded-lg transition-all duration-200 ${isSelected
-                                          ? "bg-[var(--theme-bg-primary-20)] border-[var(--theme-border-primary-30)] text-[var(--theme-text-primary-300)]"
-                                          : "bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)] text-[var(--theme-text-content)]"
+                                          ? "product-option-active"
+                                          : "product-option-inactive"
                                           }`}
                                       >
                                         {value}
@@ -519,9 +519,9 @@ export default function ProductDetails({
                                             type="checkbox"
                                             checked={isTextInputShown}
                                             onChange={onToggle}
-                                            className="w-4 h-4 text-[var(--theme-text-primary-400)] rounded border-[var(--theme-border-primary-20)] focus:ring-[var(--theme-text-primary-400)]"
+                                            className="w-4 h-4 text-brand-primary rounded border-brand-light focus:ring-brand-primary"
                                           />
-                                          <span className="text-[var(--theme-text-content)]">
+                                          <span className="text-content-primary">
                                             Enable
                                           </span>
                                         </label>
@@ -549,7 +549,7 @@ export default function ProductDetails({
 
           {/* Quantity Selector */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[var(--theme-text-content)]">
+            <h3 className="text-lg font-semibold text-content-primary">
               Quantity
             </h3>
             <ProductVariantSelector.Stock>
@@ -559,34 +559,34 @@ export default function ProductDetails({
 
                 return (
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-[var(--theme-border-primary-20)] rounded-lg">
+                    <div className="flex items-center border border-brand-light rounded-lg">
                       <button
                         onClick={() => variantService.decrementQuantity()}
                         disabled={selectedQuantity <= 1 || (!inStock && !isPreOrderEnabled)}
-                        className="px-3 py-2 text-[var(--theme-text-content)] hover:bg-[var(--theme-bg-options)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="px-3 py-2 text-content-primary hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         -
                       </button>
-                      <span className="px-4 py-2 text-[var(--theme-text-content)] border-x border-[var(--theme-border-primary-20)] min-w-[3rem] text-center">
+                      <span className="px-4 py-2 text-content-primary border-x border-brand-light min-w-[3rem] text-center">
                         {selectedQuantity}
                       </span>
                       <button
                         onClick={() => variantService.incrementQuantity()}
                         disabled={!!availableQuantity && selectedQuantity >= availableQuantity || (!inStock && !isPreOrderEnabled)}
-                        className="px-3 py-2 text-[var(--theme-text-content)] hover:bg-[var(--theme-bg-options)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 py-2 text-content-primary hover:bg-surface-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         +
                       </button>
                     </div>
                     {/* Show max quantity only when out of stock AND preorder enabled */}
                     {!inStock && isPreOrderEnabled && availableQuantity && (
-                      <span className="text-[var(--theme-text-content-60)] text-sm">
+                      <span className="text-content-muted text-sm">
                         Max: {availableQuantity} Pre Order
                       </span>
                     )}
                     {/* Show stock message when in stock but available quantity < 10 */}
                     {inStock && availableQuantity && availableQuantity < 10 && (
-                      <span className="text-[var(--theme-text-content-60)] text-sm">
+                      <span className="text-content-muted text-sm">
                         Only {availableQuantity} left in stock
                       </span>
                     )}
@@ -609,8 +609,8 @@ export default function ProductDetails({
               }) => (
                 <div className="space-y-4">
                   {error && (
-                    <div className="bg-[var(--theme-text-error)]/10 border border-[var(--theme-text-error)]/20 rounded-lg p-3">
-                      <p className="text-[var(--theme-text-error)] text-sm">
+                    <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
+                      <p className="text-status-error text-sm">
                         {error}
                       </p>
                     </div>
@@ -642,19 +642,19 @@ export default function ProductDetails({
                   <div className="flex items-center gap-2">
                     <div
                       className={`w-3 h-3 rounded-full ${inStock || isPreOrderEnabled
-                        ? "bg-[var(--theme-text-success)]"
-                        : "bg-[var(--theme-text-error)]"
+                        ? "status-dot-success"
+                        : "status-dot-danger"
                         }`}
                     ></div>
                     <span
                       className={`text-sm ${inStock || isPreOrderEnabled
-                        ? "text-[var(--theme-text-success)]"
-                        : "text-[var(--theme-text-error)]"
+                        ? "text-status-success"
+                        : "text-status-error"
                         }`}
                     >
                       {status}
                       {trackInventory && availableQuantity !== null && (
-                        <span className="text-[var(--theme-text-content-60)] ml-1">
+                        <span className="text-content-muted ml-1">
                           ({availableQuantity} available)
                         </span>
                       )}
@@ -668,11 +668,11 @@ export default function ProductDetails({
           {/* Product Details */}
           <SelectedVariant.Details>
             {({ sku, weight }) => (
-              <div className="border-t border-[var(--theme-border-primary-20)] pt-8">
-                <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-4">
+              <div className="border-t border-brand-light pt-8">
+                <h3 className="text-xl font-semibold text-content-primary mb-4">
                   Product Details
                 </h3>
-                <div className="space-y-3 text-[var(--theme-text-content-80)]">
+                <div className="space-y-3 text-content-secondary">
                   <div className="flex justify-between">
                     <span>SKU:</span>
                     <span>{sku ? sku : "N/A"}</span>
@@ -689,37 +689,26 @@ export default function ProductDetails({
       </div>
 
       {/* Current Cart Summary */}
-      <div className="mt-12 pt-8 border-t border-[var(--theme-border-primary-10)]">
+      <div className="mt-12 pt-8 border-t border-brand-subtle">
         <CurrentCart.Summary>
           {({ subtotal, itemCount }) => (
             <>
               {itemCount > 0 && (
-                <div className="bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl p-6 border border-[var(--theme-border-primary-10)]">
-                  <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-4">
+                <div className="bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle">
+                  <h3 className="text-xl font-semibold text-content-primary mb-4">
                     Cart Summary
                   </h3>
                   <div className="flex items-center justify-between">
-                    <span className="text-[var(--theme-text-content-80)]">
+                    <span className="text-content-secondary">
                       {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
                     </span>
-                    <span className="text-xl font-bold text-[var(--theme-text-content)]">
+                    <span className="text-xl font-bold text-content-primary">
                       {subtotal}
                     </span>
                   </div>
                   <a
                     href="/cart"
-                    className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                    style={{
-                      background: "var(--theme-btn-secondary)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background =
-                        "var(--theme-btn-secondary-hover)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background =
-                        "var(--theme-btn-secondary)";
-                    }}
+                    className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
                   >
                     View Cart
                     <svg

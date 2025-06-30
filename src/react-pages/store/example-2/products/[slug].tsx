@@ -49,6 +49,7 @@ import {
 } from "../../../../headless/store/services/social-sharing-service";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
+import "../../../../styles/theme-2.css";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;

@@ -18,34 +18,34 @@ function SortDropdownContent({
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[var(--theme-text-content)] font-semibold text-sm uppercase tracking-wide">
+        <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
           Sort by
         </h3>
       </div>
       <select
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value as SortBy)}
-        className="px-3 py-2 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] appearance-none min-w-[160px]"
+        className="px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary appearance-none min-w-[160px]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='${encodeURIComponent('var(--theme-dropdown-arrow-color)')}' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
           backgroundPosition: "right 8px center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "16px",
         }}
       >
-        <option value="" className="bg-[var(--theme-bg-options)] text-[var(--theme-text-content)]">
+        <option value="" className="bg-surface-primary text-content-primary">
           Latest Arrivals
         </option>
-        <option value="name-asc" className="bg-[var(--theme-bg-options)] text-[var(--theme-text-content)]">
+        <option value="name-asc" className="bg-surface-primary text-content-primary">
           Name (A-Z)
         </option>
-        <option value="name-desc" className="bg-[var(--theme-bg-options)] text-[var(--theme-text-content)]">
+        <option value="name-desc" className="bg-surface-primary text-content-primary">
           Name (Z-A)
         </option>
-        <option value="price-asc" className="bg-[var(--theme-bg-options)] text-[var(--theme-text-content)]">
+        <option value="price-asc" className="bg-surface-primary text-content-primary">
           Price (Low to High)
         </option>
-        <option value="price-desc" className="bg-[var(--theme-bg-options)] text-[var(--theme-text-content)]">
+        <option value="price-desc" className="bg-surface-primary text-content-primary">
           Price (High to Low)
         </option>
       </select>

@@ -6,6 +6,32 @@
   --theme-secondary-600: #00bcd4; /* Darker variant of secondary color used for hover state gradients */
   --theme-secondary-700: #0097a7; /* Darkest variant of secondary color used for intense hover states */
 
+  /* Status Colors - Material Design */
+  --theme-warning-500: #ff9800; /* Material Design orange for warnings */
+  --theme-warning-600: #f57c00; /* Darker Material Design orange for hover states */
+  --theme-warning-400: #ffb74d; /* Lighter Material Design orange for text */
+  --theme-warning-300: #ffcc80; /* Light Material Design orange for text */
+  
+  --theme-info-500: #1976d2; /* Material Design blue matching theme primary */
+  --theme-info-600: #1565c0; /* Darker Material Design blue for hover states */
+  --theme-info-400: #42a5f5; /* Lighter Material Design blue for text */
+  
+  --theme-danger-500: #f44336; /* Material Design red for error states */
+  --theme-danger-600: #d32f2f; /* Darker Material Design red for hover states */
+  --theme-danger-400: #ef5350; /* Lighter Material Design red for text */
+  --theme-danger-300: #e57373; /* Light Material Design red for text */
+  
+  --theme-success-500: #4caf50; /* Material Design green for positive states */
+  --theme-success-600: #388e3c; /* Darker Material Design green for hover states */
+  --theme-success-400: #66bb6a; /* Lighter Material Design green for text */
+  
+  --theme-accent-500: #03dac6; /* Material Design teal accent matching secondary */
+  --theme-accent-600: #00bcd4; /* Darker Material Design teal accent */
+  --theme-accent-400: #26c6da; /* Lighter Material Design teal accent */
+  
+  --theme-amber-500: #ffc107; /* Material Design amber for special highlights */
+  --theme-amber-600: #ffa000; /* Darker Material Design amber */
+
   /* Background Colors with Opacity */
   --theme-bg-primary-10: rgba(25, 118, 210, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
   --theme-bg-primary-20: rgba(25, 118, 210, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
@@ -15,6 +41,18 @@
   --theme-bg-error: rgba(244, 67, 54, 0.1); /* Light red background for error messages */
   --theme-bg-tooltip: rgba(33, 33, 33, 0.9); /* Dark background for tooltips and overlays */
 
+  /* Status Background Colors */
+  --theme-bg-warning-10: rgba(255, 152, 0, 0.1); /* Light Material warning background */
+  --theme-bg-warning-20: rgba(255, 152, 0, 0.2); /* Medium Material warning background */
+  --theme-bg-info-10: rgba(25, 118, 210, 0.1); /* Light Material info background */
+  --theme-bg-info-20: rgba(25, 118, 210, 0.2); /* Medium Material info background */
+  --theme-bg-success-10: rgba(76, 175, 80, 0.1); /* Light Material success background */
+  --theme-bg-success-20: rgba(76, 175, 80, 0.2); /* Medium Material success background */
+  --theme-bg-danger-10: rgba(244, 67, 54, 0.1); /* Light Material danger background */
+  --theme-bg-danger-20: rgba(244, 67, 54, 0.2); /* Medium Material danger background */
+  --theme-bg-accent-10: rgba(3, 218, 198, 0.1); /* Light Material accent background */
+  --theme-bg-accent-20: rgba(3, 218, 198, 0.2); /* Medium Material accent background */
+
   /* Border Colors */
   --theme-border-primary-10: rgba(25, 118, 210, 0.1); /* Very subtle primary-colored border for filter status bars */
   --theme-border-primary-20: rgba(25, 118, 210, 0.2); /* More visible primary-colored border for emphasized elements */
@@ -22,6 +60,18 @@
   --theme-border-card: rgba(0, 0, 0, 0.12); /* Light border for cards and product items */
   --theme-border-card-hover: rgba(0, 0, 0, 0.2); /* Medium border for card hover states */
   --theme-border-error: rgba(244, 67, 54, 0.2); /* Red border for error messages */
+
+  /* Status Border Colors */
+  --theme-border-warning-20: rgba(255, 152, 0, 0.2); /* Material warning border */
+  --theme-border-warning-30: rgba(255, 152, 0, 0.3); /* Stronger Material warning border */
+  --theme-border-info-20: rgba(25, 118, 210, 0.2); /* Material info border */
+  --theme-border-info-30: rgba(25, 118, 210, 0.3); /* Stronger Material info border */
+  --theme-border-success-20: rgba(76, 175, 80, 0.2); /* Material success border */
+  --theme-border-success-30: rgba(76, 175, 80, 0.3); /* Stronger Material success border */
+  --theme-border-danger-20: rgba(244, 67, 54, 0.2); /* Material danger border */
+  --theme-border-danger-30: rgba(244, 67, 54, 0.3); /* Stronger Material danger border */
+  --theme-border-accent-20: rgba(3, 218, 198, 0.2); /* Material accent border */
+  --theme-border-accent-30: rgba(3, 218, 198, 0.3); /* Stronger Material accent border */
 
   /* Text Colors - Material Design Light Theme */
   --theme-text-primary-300: #1976d2; /* Primary color used for filter status text and active filter labels */
@@ -37,20 +87,41 @@
   --theme-text-success: #4caf50; /* Material Green color used for "In Stock" status indicators */
   --theme-text-error: #f44336; /* Material Red color used for "Out of Stock" status and error messages */
 
+  /* Status Text Colors */
+  --theme-text-warning: #ffb74d; /* Material warning text color */
+  --theme-text-info: #42a5f5; /* Material info text color */
+  --theme-text-danger: #ef5350; /* Material danger text color */
+  --theme-text-accent: #26c6da; /* Material accent text color */
+
   /* Color Picker Border Colors */
   --theme-color-border-40: rgba(25, 118, 210, 0.4); /* Default border color for product color option circles */
   --theme-color-border-80: rgba(25, 118, 210, 0.8); /* Hover border color for product color option circles */
+
+  /* Fallback Colors */
+  --theme-fallback-color: #424242; /* Material Design grey for fallback elements */
+  --theme-dropdown-arrow-color: #757575; /* Material Design grey for dropdown arrows */
 
   /* Gradient Colors - Material Design */
   --theme-gradient-primary: linear-gradient(to right, #1976d2, #03dac6); /* Main brand gradient used for primary buttons and CTAs */
   --theme-gradient-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Darker gradient used for button hover states */
   --theme-gradient-ribbon: linear-gradient(to right, #1976d2, #03dac6); /* Gradient used for product ribbon/badge backgrounds */
+  --theme-gradient-warning: linear-gradient(to right, #ff9800, #f44336); /* Material warning gradient */
+  --theme-gradient-warning-hover: linear-gradient(to right, #f57c00, #d32f2f); /* Material warning gradient hover */
+  --theme-gradient-success: linear-gradient(to right, #4caf50, #388e3c); /* Material success gradient */
+  --theme-gradient-info: linear-gradient(to right, #1976d2, #1565c0); /* Material info gradient */
+  --theme-gradient-accent: linear-gradient(to right, #03dac6, #00bcd4); /* Material accent gradient */
 
   /* Button Gradients */
   --theme-btn-primary: linear-gradient(to right, #1976d2, #03dac6); /* Primary button background gradient for main actions */
   --theme-btn-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Primary button hover state gradient */
   --theme-btn-secondary: linear-gradient(to right, #1976d2, #03dac6); /* Secondary button background gradient */
   --theme-btn-secondary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Secondary button hover state gradient */
+  --theme-btn-warning: linear-gradient(to right, #ff9800, #f44336); /* Material warning button gradient */
+  --theme-btn-warning-hover: linear-gradient(to right, #f57c00, #d32f2f); /* Material warning button hover gradient */
+  --theme-btn-success: linear-gradient(to right, #4caf50, #388e3c); /* Material success button gradient */
+  --theme-btn-info: linear-gradient(to right, #1976d2, #1565c0); /* Material info button gradient */
+  --theme-btn-danger: linear-gradient(to right, #f44336, #d32f2f); /* Material danger button gradient */
+  --theme-btn-accent: linear-gradient(to right, #03dac6, #00bcd4); /* Material accent button gradient */
 
   /* Hero Section Gradients */
   --theme-hero-text-gradient: linear-gradient(to right, #1976d2, #03dac6); /* Text gradient used for hero section main headlines */

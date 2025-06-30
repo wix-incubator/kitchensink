@@ -64,20 +64,20 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
   
                                 {/* Pulse Loading Overlay */}
                                 {!isFullyLoaded && (
-                                  <div className="absolute inset-0 bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl">
-                                    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[var(--theme-bg-card)] via-[var(--theme-bg-options)] to-[var(--theme-bg-card)] rounded-xl">
+                                  <div className="absolute inset-0 bg-surface-primary backdrop-blur-sm rounded-xl">
+                                    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-bg-surface-card via-bg-surface-primary to-bg-surface-card rounded-xl">
                                       <div className="p-6 space-y-4">
-                                        <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-32"></div>
+                                        <div className="h-6 bg-brand-medium rounded w-32"></div>
                                         <div className="space-y-3">
-                                          <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
-                                          <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
-                                          <div className="h-16 bg-[var(--theme-bg-loading)] rounded"></div>
+                                          <div className="h-10 bg-surface-loading rounded"></div>
+                                          <div className="h-10 bg-surface-loading rounded"></div>
+                                          <div className="h-16 bg-surface-loading rounded"></div>
                                         </div>
-                                        <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-24"></div>
+                                        <div className="h-6 bg-brand-medium rounded w-24"></div>
                                         <div className="space-y-2">
-                                          <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-                                          <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-                                          <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
+                                          <div className="h-8 bg-surface-loading rounded"></div>
+                                          <div className="h-8 bg-surface-loading rounded"></div>
+                                          <div className="h-8 bg-surface-loading rounded"></div>
                                         </div>
                                       </div>
                                     </div>
@@ -92,8 +92,8 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                       {/* Main Content Area */}
                       <div className="flex-1 min-w-0">
                         {error && (
-                          <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-4 mb-6">
-                            <p className="text-[var(--theme-text-error)]">
+                          <div className="bg-surface-error border border-status-error rounded-xl p-4 mb-6">
+                            <p className="text-status-error">
                               {error}
                             </p>
                           </div>
@@ -101,10 +101,10 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
   
                         {/* Filter Status Bar */}
                         {isFiltered && (
-                          <div className="flex items-center justify-between bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] rounded-xl p-4 mb-6">
+                          <div className="flex items-center justify-between filter-status-bar rounded-xl p-4 mb-6">
                             <div className="flex items-center gap-2">
                               <svg
-                                className="w-5 h-5 text-[var(--theme-text-primary-400)]"
+                                className="w-5 h-5 text-brand-primary"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -116,14 +116,14 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                   d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                                 />
                               </svg>
-                              <span className="text-[var(--theme-text-primary-300)]">
+                              <span className="text-brand-light">
                                 Showing {String(products.length)} of{" "}
                                 {totalProducts} products
                               </span>
                             </div>
                             <button
                               onClick={clearFilters}
-                              className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors text-sm"
+                              className="text-brand-primary hover:text-brand-light transition-colors text-sm"
                             >
                               Clear Filters
                             </button>
@@ -135,19 +135,19 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                             {Array.from({ length: 8 }).map((_, i) => (
                               <div
                                 key={i}
-                                className="bg-[var(--theme-bg-card)] rounded-xl p-4 animate-pulse"
+                                className="bg-surface-card rounded-xl p-4 animate-pulse"
                               >
-                                <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4"></div>
-                                <div className="h-4 bg-[var(--theme-bg-options)] rounded mb-2"></div>
-                                <div className="h-3 bg-[var(--theme-bg-options)] rounded w-2/3"></div>
+                                <div className="aspect-square bg-surface-primary rounded-lg mb-4"></div>
+                                <div className="h-4 bg-surface-primary rounded mb-2"></div>
+                                <div className="h-3 bg-surface-primary rounded w-2/3"></div>
                               </div>
                             ))}
                           </div>
                         ) : isEmpty ? (
                           <div className="text-center py-16">
-                            <div className="w-24 h-24 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-6">
+                            <div className="w-24 h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-6">
                               <svg
-                                className="w-12 h-12 text-[var(--theme-text-content-60)]"
+                                className="w-12 h-12 text-content-muted"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -160,12 +160,12 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                 />
                               </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
+                            <h2 className="text-2xl font-bold text-content-primary mb-4">
                               {isFiltered
                                 ? "No Products Match Your Filters"
                                 : "No Products Found"}
                             </h2>
-                            <p className="text-[var(--theme-text-content-70)]">
+                            <p className="text-content-light">
                               {isFiltered
                                 ? "Try adjusting your filters to see more products."
                                 : "We couldn't find any products to display."}
@@ -187,8 +187,8 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                   slug,
                                   description,
                                 }) => (
-                                  <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
-                                    <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4 overflow-hidden relative">
+                                  <div className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col">
+                                    <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                                       {image ? (
                                         <WixMediaImage
                                           media={{ image: image }}
@@ -197,7 +197,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       ) : (
                                         <div className="w-full h-full flex items-center justify-center">
                                           <svg
-                                            className="w-12 h-12 text-[var(--theme-text-content-40)]"
+                                            className="w-12 h-12 text-content-subtle"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -215,13 +215,13 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
   
                                     {product.ribbon?.name && (
                                       <div className="absolute top-2 left-2">
-                                        <span className="bg-[var(--theme-gradient-ribbon)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded-full font-medium">
+                                        <span className="bg-gradient-ribbon text-content-primary text-xs px-2 py-1 rounded-full font-medium">
                                           {product.ribbon.name}
                                         </span>
                                       </div>
                                     )}
   
-                                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-2 line-clamp-2">
+                                    <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
                                       {title}
                                     </h3>
   
@@ -234,7 +234,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                               key={option._id}
                                               className="space-y-1"
                                             >
-                                              <span className="text-[var(--theme-text-content-80)] text-xs font-medium">
+                                              <span className="text-content-secondary text-xs font-medium">
                                                 {String(option.name)}:
                                               </span>
                                               <div className="flex flex-wrap gap-1">
@@ -262,15 +262,15 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                                           className="relative group/color"
                                                         >
                                                           <div
-                                                            className="w-6 h-6 rounded-full border-2 border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] transition-colors cursor-pointer"
+                                                            className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
                                                             style={{
                                                               backgroundColor:
                                                                 choice.colorCode ||
-                                                                "#000000",
+                                                                "var(--theme-fallback-color)",
                                                             }}
                                                           />
                                                           {/* Tooltip */}
-                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-[var(--theme-bg-tooltip)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                                             {String(choice.name)}
                                                           </div>
                                                         </div>
@@ -279,7 +279,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                                       return (
                                                         <span
                                                           key={choice.choiceId}
-                                                          className="inline-flex items-center px-2 py-1 bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] text-xs rounded border border-[var(--theme-border-primary-30)]"
+                                                          className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium"
                                                         >
                                                           {String(choice.name)}
                                                         </span>
@@ -288,7 +288,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                                   })}
                                                 {option.choicesSettings?.choices
                                                   ?.length > 3 && (
-                                                  <span className="text-[var(--theme-text-content-60)] text-xs">
+                                                  <span className="text-content-muted text-xs">
                                                     +
                                                     {option.choicesSettings
                                                       .choices.length - 3}{" "}
@@ -302,7 +302,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       )}
   
                                     {description && (
-                                      <p className="text-[var(--theme-text-content-60)] text-sm mb-3 line-clamp-2">
+                                      <p className="text-content-muted text-sm mb-3 line-clamp-2">
                                         {description}
                                       </p>
                                     )}
@@ -314,20 +314,20 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                           compareAtPrice.replace(/[^\d.]/g, "")
                                         ) > 0 ? (
                                           <>
-                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                            <div className="text-xl font-bold text-content-primary">
                                               {price}
                                             </div>
                                             <div className="flex items-center justify-between">
-                                              <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
+                                              <div className="text-sm font-medium text-content-faded line-through">
                                                 {compareAtPrice}
                                               </div>
                                               <div className="flex items-center gap-2">
                                                 {available ? (
-                                                  <span className="text-[var(--theme-text-success)] text-sm">
+                                                  <span className="text-status-success text-sm">
                                                     In Stock
                                                   </span>
                                                 ) : (
-                                                  <span className="text-[var(--theme-text-error)] text-sm">
+                                                  <span className="text-status-error text-sm">
                                                     Out of Stock
                                                   </span>
                                                 )}
@@ -336,16 +336,16 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                           </>
                                         ) : (
                                           <div className="flex items-center justify-between">
-                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                            <div className="text-xl font-bold text-content-primary">
                                               {price}
                                             </div>
                                             <div className="flex items-center gap-2">
                                               {available ? (
-                                                <span className="text-[var(--theme-text-success)] text-sm">
+                                                <span className="text-status-success text-sm">
                                                   In Stock
                                                 </span>
                                               ) : (
-                                                <span className="text-[var(--theme-text-error)] text-sm">
+                                                <span className="text-status-error text-sm">
                                                   Out of Stock
                                                 </span>
                                               )}
@@ -358,18 +358,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     <div className="flex gap-2">
                                       <a
                                         href={`${productPageRoute}/${slug}`}
-                                        className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                                        style={{
-                                          background: "var(--theme-btn-primary)",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.background =
-                                            "var(--theme-btn-primary-hover)";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.background =
-                                            "var(--theme-btn-primary)";
-                                        }}
+                                        className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
                                       >
                                         View Product
                                         <svg
@@ -432,24 +421,9 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                       <button
                         onClick={loadMore}
                         disabled={isLoading}
-                        className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                        style={{
-                          background: isLoading
-                            ? "linear-gradient(to right, #6b7280, #374151)"
-                            : "var(--theme-btn-primary)",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isLoading) {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-primary-hover)";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isLoading) {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-primary)";
-                          }
-                        }}
+                        className={`text-content-primary font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 ${
+                          isLoading ? "bg-surface-loading" : "btn-primary"
+                        }`}
                       >
                         {isLoading ? (
                           <span className="flex items-center gap-2">
@@ -482,27 +456,12 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                       <button
                         onClick={refresh}
                         disabled={isLoading}
-                        className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          background: "var(--theme-btn-secondary)",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isLoading) {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-secondary-hover)";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isLoading) {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-secondary)";
-                          }
-                        }}
+                        className="text-content-primary font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed btn-secondary"
                       >
                         Refresh Products
                       </button>
                     </div>
-                    <p className="text-[var(--theme-text-content-60)] text-sm mt-4">
+                    <p className="text-content-muted text-sm mt-4">
                       {totalProducts} products loaded
                     </p>
                   </div>
