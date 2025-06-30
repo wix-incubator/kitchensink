@@ -364,9 +364,51 @@ export function StoreLayout({
                         </div>
                       )}
                     </CurrentCart.Notes>
+                    
+                    {/* Coupon Code */}
+                    <CurrentCart.Coupon>
+                      {({
+                        appliedCoupon,
+                        onApply,
+                        onRemove,
+                        isLoading,
+                        error,
+                      }) => (
+                        <div className="mb-4">
+                          {appliedCoupon ? (
+                            <div className="flex items-center justify-between p-2 bg-green-500/10 border border-green-500/20 rounded">
+                              <span className="text-green-400 text-xs font-medium">
+                                Coupon: {appliedCoupon}
+                              </span>
+                              <button
+                                onClick={onRemove}
+                                disabled={isLoading}
+                                className="text-red-400 hover:text-red-300 text-xs disabled:opacity-50"
+                              >
+                                {isLoading ? "Removing..." : "Remove"}
+                              </button>
+                            </div>
+                          ) : (
+                            <CouponFormMini
+                              onApply={onApply}
+                              isLoading={isLoading}
+                            />
+                          )}
+                          {error && error.includes("coupon") && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded p-2 mt-2">
+                              <p className="text-red-400 text-xs">
+                                {error}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </CurrentCart.Coupon>
                     <CurrentCart.Summary>
                       {({
                         subtotal,
+                        discount,
+                        appliedCoupon,
                         shipping,
                         tax,
                         total,
@@ -400,6 +442,18 @@ export function StoreLayout({
                                   </LoadingOrValue>
                                 </span>
                               </div>
+                                                             {appliedCoupon && discount && (
+                                 <div className="flex justify-between">
+                                   <span className="text-green-400">
+                                     Discount
+                                   </span>
+                                   <span className="text-green-400 font-semibold">
+                                     -<LoadingOrValue>
+                                       {discount}
+                                     </LoadingOrValue>
+                                   </span>
+                                 </div>
+                               )}
                               <div className="flex justify-between">
                                 <span className="text-white/80">
                                   Shipping
