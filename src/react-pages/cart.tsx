@@ -22,7 +22,7 @@ const CartContent = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-8">
         <CurrentCart.Content>
-          {({ cart, isLoading, error }) => (
+          {({ cart, isLoading }) => (
             <>
               {/* Header */}
               <div className="text-center mb-12">
@@ -69,15 +69,6 @@ const CartContent = () => {
                 </div>
               )}
 
-              {/* Error State */}
-              {error && (
-                <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-6 mb-8">
-                  <h2 className="text-xl font-semibold text-[var(--theme-text-error)] mb-2">
-                    Error
-                  </h2>
-                  <p className="text-[var(--theme-text-error)]">{error}</p>
-                </div>
-              )}
 
               {/* Empty Cart */}
               <CurrentCart.Items>
@@ -381,7 +372,6 @@ const CartContent = () => {
                                   onApply,
                                   onRemove,
                                   isLoading,
-                                  error,
                                 }) => (
                                   <div>
                                     {appliedCoupon ? (
@@ -424,13 +414,6 @@ const CartContent = () => {
                                            {isLoading ? "Applying..." : "Apply Coupon"}
                                          </button>
                                        </form>
-                                    )}
-                                    {error && error.includes("coupon") && (
-                                      <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-2">
-                                        <p className="text-red-400 text-sm">
-                                          {error}
-                                        </p>
-                                      </div>
                                     )}
                                   </div>
                                 )}
