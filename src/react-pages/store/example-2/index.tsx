@@ -3,10 +3,6 @@ import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import StoreCollectionPage from "../composites/products";
 import "../../../styles/theme-2.css";
 import { StoreLayout } from "../../../layouts/StoreLayout";
-import { PageDocsRegistration } from "../../../components/DocsMode";
-import WixMediaImage from "../../../headless/media/components/Image";
-import ProductFilters from "../../../components/ProductFilters";
-import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
 import {
   CollectionService,
   CollectionServiceDefinition,
@@ -27,7 +23,6 @@ import {
   CategoryService,
   CategoryServiceDefinition,
 } from "../../../headless/store/services/category-service";
-import StoreHeader from "../../../components/StoreHeader";
 import {
   SortService,
   SortServiceDefinition,
