@@ -96,21 +96,33 @@ async function resolveStaticPageSeoTags(
 }
 
 /**
- * This loader function is used to load the SEO tags service config.
- * For static pages, you don't need to pass itemType
+ * Loads the SEO tags service configuration for a given page.
  *
- * @param {string} pageURL - The full URL of the page where the SEO tags will be applied
- * @param {seoTags.ItemType} itemType - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST),Used for item pages, for static pages, pass undefined
- * @param {seoTags.SlugData | seoTags.PageNameData} itemData - Object containing metadata for the item (slug or page name)
- * @returns {Promise<seoTags.Tag[]>} Promise that resolves to an array of SEO tags
+ * @param {string} pageUrl - The full URL of the page where SEO tags will be applied.
+ * @param {seoTags.ItemType} itemType - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST) for item pages.
+ * @param {seoTags.SlugData | seoTags.PageNameData} itemData - Item metadata (slug for item pages or pageName for static pages).
+ * @returns {Promise<SEOTagsServiceConfig>} Promise resolving to SEO tags service configuration.
  *
  * @example
  * ```typescript
- * const seoTagsServiceConfig = await loadSEOTagsServiceConfig(
- *   pageURL: "https://mysite.com/store/product-123",
+ * // Static page configuration
+ * const config = await loadSEOTagsServiceConfig({
+ *   pageUrl: "https://mysite.com/store",
+ *   itemData: { 
+ *     pageName: "Store Home", 
+ *     seoData: { tags: [] } 
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Item page configuration
+ * const config = await loadSEOTagsServiceConfig({
+ *   pageUrl: "https://mysite.com/store/product-123",
  *   itemType: seoTags.ItemType.STORES_PRODUCT,
  *   itemData: { slug: "product-123" }
- * );
+ * });
  * ```
  */
 export async function loadSEOTagsServiceConfig({
@@ -124,6 +136,7 @@ export async function loadSEOTagsServiceConfig({
 }): Promise<ServiceFactoryConfig<typeof SEOTagsService>> {
   const isStaticPage =
     !itemType || itemType === seoTags.ItemType.UNKNOWN_ITEM_TYPE;
+
   let initialSeoTags: seoTags.Tag[] = [];
   if (isStaticPage) {
     initialSeoTags = await resolveStaticPageSeoTags(

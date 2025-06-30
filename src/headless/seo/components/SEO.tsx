@@ -62,15 +62,13 @@ function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
  *
  * Integrates with the Wix services manager and a custom SEO tags service to inject SEO-relevant tags.
  *
- * @param {Object} props
  * @param {SEOTagsServiceConfig} props.seoTagsServiceConfig - Configuration for the SEO tags service.
- * @param {seoTags.ItemType} props.itemType - The type of item for which to generate SEO tags.
- * @param {seoTags.SlugData | seoTags.PageNameData} props.itemData - Data for the item (slug or page name).
  *
  * @example
  * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
  * import { SEO } from "@wix/seo/components";
  * import { seoTags } from "@wix/seo";
+ * 
  * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
  *   pageURL: url,
  *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
@@ -90,6 +88,9 @@ export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
   return <SEOTags tags={seoTagsServiceConfig.initialSeoTags} />;
 }
 
+
+
+
 export interface UpdateTagsTrigger {
   children: (props: {
     updateSeoTags: (
@@ -100,24 +101,29 @@ export interface UpdateTagsTrigger {
 }
 
 /**
- * UpdateTagsTrigger - Handles updating SEO tags
+ * UpdateTagsTrigger - Handles updating SEO tags dynamically
+ *
+ * This component provides a way to update SEO tags on the client side without
+ * requiring a full page reload. It wraps content with the ability to trigger
+ * SEO tag updates.
  *
  * @example
  * ```tsx
  * import { SEO } from "@wix/seo/components";
  * import { seoTags } from "@wix/seo";
-
- *   <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
- *     {({ updateSeoTags }) => (
- *       <a href="https://your-domain.com/items/different-item"
- *         onClick={() =>
- *           updateSeoTags(seoTags.ItemType.<YOUR_ITEM_TYPE>, { slug: "<YOUR_ITEM_SLUG>" })
- *         }
- *       >
- *         Go to different item
- *       </a>
- *     )}
- *   </SEO.UpdateTagsTrigger>
+ *
+ * <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
+ *   {({ updateSeoTags }) => (
+ *     <a 
+ *       href="https://your-domain.com/items/different-item"
+ *       onClick={() =>
+ *         updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "product-slug" })
+ *       }
+ *     >
+ *       Go to a different item
+ *     </a>
+ *   )}
+ * </SEO.UpdateTagsTrigger>
  * ```
  */
 export const UpdateTagsTrigger = ({
