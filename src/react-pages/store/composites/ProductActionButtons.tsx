@@ -1,5 +1,6 @@
 import React from "react";
 import { CurrentCartServiceDefinition } from "../../../headless/ecom/services/current-cart-service";
+import { useService } from "@wix/services-manager-react";
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -16,7 +17,6 @@ interface AddToCartButtonProps extends BaseButtonProps {
 interface BuyNowButtonProps {
   disabled: boolean;
   isLoading: boolean;
-  servicesManager: any;
   onAddToCart: () => Promise<void>;
   className?: string;
 }
@@ -27,7 +27,6 @@ interface ProductActionButtonsProps {
   isLoading: boolean;
   isPreOrderEnabled: boolean;
   inStock: boolean;
-  servicesManager: any;
   onShowSuccessMessage: (show: boolean) => void;
 }
 
@@ -102,12 +101,11 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   disabled,
   isLoading,
   onAddToCart,
-  servicesManager,
   className = "",
 }) => {
   const handleBuyNow = async () => {
     try {
-      const cartService = servicesManager.getService(
+      const cartService = useService(
         CurrentCartServiceDefinition
       );
       await cartService.clearCart();
@@ -157,7 +155,6 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   isLoading,
   isPreOrderEnabled,
   inStock,
-  servicesManager,
   onShowSuccessMessage,
 }) => {
   const handleAddToCart = async () => {
@@ -187,7 +184,6 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
           disabled={!canAddToCart || isLoading}
           isLoading={isLoading}
           onAddToCart={onAddToCart}
-          servicesManager={servicesManager}
         />
       )}
     </div>
