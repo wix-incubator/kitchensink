@@ -13,8 +13,11 @@ export interface CurrentCartServiceAPI {
   cart: Signal<currentCart.Cart | null>;
   isOpen: Signal<boolean>;
   isLoading: Signal<boolean>;
+  isTotalsLoading: Signal<boolean>;
   error: Signal<string | null>;
   cartCount: ReadOnlySignal<number>;
+  buyerNotes: Signal<string>;
+  cartTotals: Signal<any | null>;
 
   addToCart: (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
@@ -29,6 +32,7 @@ export interface CurrentCartServiceAPI {
   openCart: () => void;
   closeCart: () => void;
   clearCart: () => Promise<void>;
+  setBuyerNotes: (notes: string) => Promise<void>;
   proceedToCheckout: () => Promise<void>;
 }
 
@@ -45,7 +49,10 @@ export const CurrentCartService = implementService.withConfig<{
   );
   const isOpen: Signal<boolean> = signalsService.signal(false as any);
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
+  const isTotalsLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
+  const buyerNotes: Signal<string> = signalsService.signal("" as any);
+  const cartTotals: Signal<any | null> = signalsService.signal(null as any);
 
   const cartCount: ReadOnlySignal<number> = signalsService.computed(() => {
     const currentCart = cart.get();
@@ -55,6 +62,19 @@ export const CurrentCartService = implementService.withConfig<{
       0
     );
   });
+
+  const estimateTotals = async () => {
+    try {
+      isTotalsLoading.set(true);
+      const totalsResponse = await currentCart.estimateCurrentCartTotals();
+      cartTotals.set(totalsResponse || null);
+    } catch (err) {
+      console.warn("Failed to estimate cart totals:", err);
+      cartTotals.set(null);
+    } finally {
+      isTotalsLoading.set(false);
+    }
+  };
 
   const addToCart = async (
     lineItems: currentCart.AddToCurrentCartRequest["lineItems"]
@@ -67,6 +87,9 @@ export const CurrentCartService = implementService.withConfig<{
         lineItems,
       });
       cart.set(updatedCart || null);
+      if (updatedCart?.lineItems?.length) {
+        estimateTotals();
+      }
     } catch (err) {
       error.set(err instanceof Error ? err.message : "Failed to add to cart");
     } finally {
@@ -82,6 +105,11 @@ export const CurrentCartService = implementService.withConfig<{
       const { cart: updatedCart } =
         await currentCart.removeLineItemsFromCurrentCart([lineItemId]);
       cart.set(updatedCart || null);
+      if (updatedCart?.lineItems?.length) {
+        estimateTotals();
+      } else {
+        cartTotals.set(null);
+      }
     } catch (err) {
       error.set(err instanceof Error ? err.message : "Failed to remove item");
     } finally {
@@ -105,6 +133,9 @@ export const CurrentCartService = implementService.withConfig<{
           },
         ]);
       cart.set(updatedCart || null);
+      if (updatedCart?.lineItems?.length) {
+        estimateTotals();
+      }
     } catch (err) {
       error.set(
         err instanceof Error ? err.message : "Failed to update quantity"
@@ -155,6 +186,11 @@ export const CurrentCartService = implementService.withConfig<{
         const { cart: updatedCart } =
           await currentCart.removeLineItemsFromCurrentCart(lineItemIds);
         cart.set(updatedCart || null);
+        if (updatedCart?.lineItems?.length) {
+          estimateTotals();
+        } else {
+          cartTotals.set(null);
+        }
       }
     } catch (err) {
       error.set(err instanceof Error ? err.message : "Failed to clear cart");
@@ -163,10 +199,28 @@ export const CurrentCartService = implementService.withConfig<{
     }
   };
 
+  const setBuyerNotes = async (notes: string) => {
+    buyerNotes.set(notes);
+  };
+
   const proceedToCheckout = async () => {
     try {
       isLoading.set(true);
       error.set(null);
+
+      const notes = buyerNotes.get();
+      if (notes) {
+        try {
+          const updatedCart = await currentCart.updateCurrentCart({
+            cartInfo: {
+              buyerNote: notes,
+            },
+          });
+          cart.set(updatedCart);
+        } catch (noteError) {
+          console.warn("Failed to add buyer notes to cart:", noteError);
+        }
+      }
 
       const checkoutResult = await currentCart.createCheckoutFromCurrentCart({
         channelType: checkout.ChannelType.WEB,
@@ -197,12 +251,20 @@ export const CurrentCartService = implementService.withConfig<{
     }
   };
 
+  // Initialize totals immediately for existing cart
+  if (config.initialCart?.lineItems?.length) {
+    estimateTotals();
+  }
+
   return {
     cart,
     isOpen,
     cartCount,
     isLoading,
+    isTotalsLoading,
     error,
+    buyerNotes,
+    cartTotals,
     addToCart,
     removeLineItem,
     updateLineItemQuantity,
@@ -211,6 +273,7 @@ export const CurrentCartService = implementService.withConfig<{
     openCart,
     closeCart,
     clearCart,
+    setBuyerNotes,
     proceedToCheckout,
   };
 });
@@ -219,9 +282,9 @@ export async function loadCurrentCartServiceConfig(): Promise<
   ServiceFactoryConfig<typeof CurrentCartService>
 > {
   try {
-    const cart = await currentCart.getCurrentCart();
+    const cartData = await currentCart.getCurrentCart();
     return {
-      initialCart: cart || null,
+      initialCart: cartData || null,
     };
   } catch (error) {
     console.warn("Failed to load initial cart:", error);

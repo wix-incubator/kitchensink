@@ -150,6 +150,7 @@ export function StoreLayout({
                                     image,
                                     price,
                                     quantity,
+                                    selectedOptions,
                                     onIncrease,
                                     onDecrease,
                                     onRemove,
@@ -169,6 +170,60 @@ export function StoreLayout({
                                         <h3 className="text-white font-medium text-sm truncate">
                                           {title}
                                         </h3>
+                                        {selectedOptions.length > 0 && (
+                                            <div className="mt-1 mb-2">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedOptions.map(
+                                                  (option, index) => {
+                                                    const isColor =
+                                                      typeof option.value ===
+                                                      "object";
+                                                    const text = isColor
+                                                      ? (option.value as any)
+                                                          .name
+                                                      : option.value;
+                                                    const color = isColor
+                                                      ? (option.value as any)
+                                                          .code
+                                                      : null;
+
+                                                    return (
+                                                      <div
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-xs text-white/70"
+                                                      >
+                                                        <span>
+                                                          {option.name}:
+                                                        </span>
+                                                        <div className="flex items-center gap-1">
+                                                          {color && (
+                                                            <div
+                                                              className="w-3 h-3 rounded-full border border-white/30"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  color,
+                                                              }}
+                                                              title={text}
+                                                            />
+                                                          )}
+                                                          <span className="font-medium">
+                                                            {text}
+                                                          </span>
+                                                        </div>
+                                                        {index <
+                                                          selectedOptions.length -
+                                                            1 && (
+                                                          <span className="text-white/40">
+                                                            ,
+                                                          </span>
+                                                        )}
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
                                         <p className="text-teal-400 font-semibold text-sm mt-1">
                                           {price}
                                         </p>
@@ -233,31 +288,100 @@ export function StoreLayout({
                   </div>
 
                   <div className="border-t border-white/10 p-6">
-                    <CurrentCart.Summary>
-                      {({ subtotal, itemCount }) => (
-                        <div className="space-y-4">
-                          <div className="flex justify-between">
-                            <span className="text-white/80">
-                              Items ({itemCount})
-                            </span>
-                            <span className="text-white font-semibold">
-                              {subtotal}
-                            </span>
-                          </div>
-
-                          <CurrentCart.Checkout>
-                            {({ onProceed, canCheckout }) => (
-                              <button
-                                onClick={onProceed}
-                                disabled={!canCheckout}
-                                className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
-                              >
-                                Proceed to Checkout
-                              </button>
-                            )}
-                          </CurrentCart.Checkout>
+                    <CurrentCart.Notes>
+                      {({ notes, onNotesChange }) => (
+                        <div>
+                          <label className="block text-xs font-medium text-white/80 mb-2">
+                            Notes:
+                          </label>
+                          <textarea
+                            value={notes}
+                            onChange={(e) => onNotesChange(e.target.value)}
+                            placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+                            rows={2}
+                            className="w-full px-2 py-1 text-xs bg-white/10 border border-white/20 rounded text-white placeholder-white/60 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors duration-200 resize-vertical mb-4"
+                          />
                         </div>
                       )}
+                    </CurrentCart.Notes>
+                    <CurrentCart.Summary>
+                      {({
+                        subtotal,
+                        shipping,
+                        tax,
+                        total,
+                        itemCount,
+                        isTotalsLoading,
+                      }) => {
+                        const LoadingOrValue = ({
+                          children,
+                        }: {
+                          children: string;
+                        }) =>
+                          isTotalsLoading ? (
+                            <span className="text-white/60">
+                              Calculating...
+                            </span>
+                          ) : (
+                            children
+                          );
+
+                        return (
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span className="text-white/80">
+                                  Subtotal ({itemCount}{" "}
+                                  {itemCount === 1 ? "item" : "items"})
+                                </span>
+                                <span className="text-white font-semibold">
+                                  <LoadingOrValue>
+                                    {subtotal}
+                                  </LoadingOrValue>
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-white/80">
+                                  Shipping
+                                </span>
+                                <span className="text-white font-semibold">
+                                  <LoadingOrValue>
+                                    {shipping}
+                                  </LoadingOrValue>
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-white/80">Tax</span>
+                                <span className="text-white font-semibold">
+                                  <LoadingOrValue>{tax}</LoadingOrValue>
+                                </span>
+                              </div>
+                              <div className="border-t border-white/20 pt-2">
+                                <div className="flex justify-between">
+                                  <span className="text-white font-bold">
+                                    Total
+                                  </span>
+                                  <span className="text-white font-bold text-lg">
+                                    <LoadingOrValue>{total}</LoadingOrValue>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <CurrentCart.Checkout>
+                              {({ onProceed, canCheckout }) => (
+                                <button
+                                  onClick={onProceed}
+                                  disabled={!canCheckout}
+                                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                >
+                                  Proceed to Checkout
+                                </button>
+                              )}
+                            </CurrentCart.Checkout>
+                          </div>
+                        );
+                      }}
                     </CurrentCart.Summary>
                   </div>
                 </div>
