@@ -8,7 +8,10 @@ import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { WixMediaImage } from "../../../../headless/media/components";
 import { CurrentCart } from "../../../../headless/ecom/components";
-import { Product } from "../../../../headless/store/components";
+import {
+  Product,
+  SelectedVariant,
+} from "../../../../headless/store/components";
 import {
   ProductMediaGallery,
   ProductModifiers,
@@ -61,10 +64,10 @@ const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
       <ProductMediaGallery.Viewport>
-        {({ src, isLoading, totalImages }) => {
+        {({ src, totalImages }) => {
           return (
             <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
-              {isLoading ? (
+              {src ? (
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
                 </div>
@@ -172,7 +175,7 @@ const ProductImageGallery = () => {
               <div className="flex gap-2 overflow-x-auto">
                 {Array.from({ length: total }).map((_, index) => (
                   <ProductMediaGallery.Thumbnail key={index} index={index}>
-                    {({ src, isActive, onSelect, alt }) => (
+                    {({ src, isActive, onSelect }) => (
                       <button
                         onClick={onSelect}
                         className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
@@ -253,32 +256,28 @@ const ProductInfo = ({
   return (
     <div className="space-y-6">
       <Product.Name>
-        {({ name, hasName }) =>
-          hasName ? (
+        {({ name }) =>
+          name ? (
             <h1 className="text-4xl font-bold text-white mb-2">{name}</h1>
           ) : null
         }
       </Product.Name>
 
       <Product.Description>
-        {({ description, hasDescription, isHtml }) =>
-          hasDescription ? (
-            <div className="text-white/80 text-lg">
-              {isHtml ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: description }}
-                  className="prose prose-invert max-w-none"
-                />
-              ) : (
-                <p>{description}</p>
-              )}
-            </div>
-          ) : null
-        }
+        {({ plainDescription }) => (
+          <div className="text-white/80 text-lg">
+            {
+              <div
+                dangerouslySetInnerHTML={{ __html: plainDescription }}
+                className="prose prose-invert max-w-none"
+              />
+            }
+          </div>
+        )}
       </Product.Description>
 
-      <ProductVariantSelector.Price>
-        {({ price, compareAtPrice, isVariantPrice, currency }) => (
+      <SelectedVariant.Price>
+        {({ price, compareAtPrice, currency }) => (
           <div className="space-y-1">
             <div className="text-3xl font-bold text-white">{price}</div>
             {compareAtPrice &&
@@ -292,7 +291,7 @@ const ProductInfo = ({
             )}
           </div>
         )}
-      </ProductVariantSelector.Price>
+      </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
         {({ inStock, status, quantity, trackInventory }) => {
@@ -850,19 +849,19 @@ const ProductInfo = ({
         )}
       </ProductVariantSelector.Trigger>
 
-      <Product.Details>
-        {({ sku, weight, hasSku, hasWeight }) =>
-          hasSku || hasWeight ? (
+      <SelectedVariant.Details>
+        {({ sku, weight }) =>
+          sku || weight ? (
             <div className="border-t border-white/10 pt-6 space-y-2">
               <h3 className="text-lg font-semibold text-white mb-3">
                 Product Details
               </h3>
-              {hasSku && (
+              {sku && (
                 <p className="text-white/60 text-sm">
                   <span className="font-medium">SKU:</span> {sku}
                 </p>
               )}
-              {hasWeight && (
+              {weight && (
                 <p className="text-white/60 text-sm">
                   <span className="font-medium">Weight:</span> {weight}
                 </p>
@@ -870,7 +869,7 @@ const ProductInfo = ({
             </div>
           ) : null
         }
-      </Product.Details>
+      </SelectedVariant.Details>
 
       <RelatedProducts.List>
         {({ products, isLoading, error, hasProducts }) => (

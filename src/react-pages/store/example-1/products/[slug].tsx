@@ -4,14 +4,19 @@ import {
 } from "@wix/services-manager";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
-import { ProductActionButtons } from "./ProductActionButtons";
-import { WixMediaImage } from "../../../../headless/media/components";
 import { CurrentCart } from "../../../../headless/ecom/components";
-import { Product, ProductMediaGallery, ProductModifiers, ProductVariantSelector } from "../../../../headless/store/components";
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
 } from "../../../../headless/ecom/services/current-cart-service";
+import { WixMediaImage } from "../../../../headless/media/components";
+import {
+  Product,
+  ProductMediaGallery,
+  ProductModifiers,
+  ProductVariantSelector,
+  SelectedVariant,
+} from "../../../../headless/store/components";
 import {
   ProductMediaGalleryService,
   ProductMediaGalleryServiceDefinition,
@@ -31,6 +36,7 @@ import {
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-1.css";
+import { ProductActionButtons } from "./ProductActionButtons";
 
 // Helper hook to safely access modifiers service
 const useModifiersService = (servicesManager: any) => {
@@ -175,7 +181,7 @@ export default function ProductDetailPage({
                 {/* Main Image */}
                 <div className="aspect-square bg-[var(--theme-bg-options)] rounded-2xl overflow-hidden border border-[var(--theme-border-primary-10)] relative">
                   <ProductMediaGallery.Viewport>
-                    {({ src, alt, isLoading, currentIndex, totalImages }) => (
+                    {({ src, currentIndex, totalImages }) => (
                       <>
                         {src ? (
                           <WixMediaImage
@@ -319,14 +325,14 @@ export default function ProductDetailPage({
                 {/* Product Name & Price */}
                 <div>
                   <Product.Name>
-                    {({ name, hasName }) => (
+                    {({ name }) => (
                       <h1 className="text-4xl font-bold text-[var(--theme-text-content)] mb-4">
-                        {hasName ? name : "Product Name"}
+                        {name}
                       </h1>
                     )}
                   </Product.Name>
-                  <ProductVariantSelector.Price>
-                    {({ price, compareAtPrice, isVariantPrice }) => (
+                  <SelectedVariant.Price>
+                    {({ price, compareAtPrice }) => (
                       <div className="space-y-1">
                         <div className="text-3xl font-bold text-[var(--theme-text-content)]">
                           {price}
@@ -340,30 +346,26 @@ export default function ProductDetailPage({
                           )}
                       </div>
                     )}
-                  </ProductVariantSelector.Price>
+                  </SelectedVariant.Price>
                 </div>
 
                 {/* Product Description */}
                 <Product.Description>
-                  {({ description, hasDescription, isHtml }) => (
+                  {({ description, plainDescription }) => (
                     <>
-                      {hasDescription && (
+                      {plainDescription && (
                         <div>
                           <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-3">
                             Description
                           </h3>
-                          {isHtml ? (
-                            <div
-                              className="text-[var(--theme-text-content-80)] leading-relaxed prose prose-invert prose-sm max-w-none"
+                          {
+                            <p
+                              className="text-[var(--theme-text-content-80)] leading-relaxed"
                               dangerouslySetInnerHTML={{
-                                __html: description,
+                                __html: plainDescription,
                               }}
                             />
-                          ) : (
-                            <p className="text-[var(--theme-text-content-80)] leading-relaxed">
-                              {description}
-                            </p>
-                          )}
+                          }
                         </div>
                       )}
                     </>
@@ -779,15 +781,8 @@ export default function ProductDetailPage({
                 </div>
 
                 {/* Product Details */}
-                <Product.Details>
-                  {({
-                    sku,
-                    weight,
-                    dimensions,
-                    hasSku,
-                    hasWeight,
-                    hasDimensions,
-                  }) => (
+                <SelectedVariant.Details>
+                  {({ sku, weight }) => (
                     <div className="border-t border-[var(--theme-border-primary-20)] pt-8">
                       <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-4">
                         Product Details
@@ -795,20 +790,16 @@ export default function ProductDetailPage({
                       <div className="space-y-3 text-[var(--theme-text-content-80)]">
                         <div className="flex justify-between">
                           <span>SKU:</span>
-                          <span>{hasSku ? sku : "N/A"}</span>
+                          <span>{sku ? sku : "N/A"}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Weight:</span>
-                          <span>{hasWeight ? weight : "N/A"}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Dimensions:</span>
-                          <span>{hasDimensions ? dimensions : "N/A"}</span>
+                          <span>{weight ? weight : "N/A"}</span>
                         </div>
                       </div>
                     </div>
                   )}
-                </Product.Details>
+                </SelectedVariant.Details>
               </div>
             </div>
 

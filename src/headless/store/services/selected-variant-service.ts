@@ -29,7 +29,6 @@ export interface SelectedVariantServiceAPI {
   isOnSale: Signal<boolean | null>;
   quantityAvailable: Signal<number>;
   productId: Signal<string>;
-  sku: Signal<string>;
   ribbonLabel: Signal<string | null>;
 
   product: ReadOnlySignal<productsV3.V3Product | null>;
@@ -54,7 +53,6 @@ export interface SelectedVariantServiceAPI {
   getAvailableChoicesForOption: (optionName: string) => string[];
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
-  
 }
 
 export const SelectedVariantServiceDefinition =
@@ -290,16 +288,14 @@ export const SelectedVariantService = implementService.withConfig<{
     } else {
       return false;
     }
-
-    const status = prod?.inventory?.availabilityStatus;
-    return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
   });
 
-
-  const isPreOrderEnabled: ReadOnlySignal<boolean> = signalsService.computed(() => {
-    const variant = currentVariant.get();
-    return variant?.inventoryStatus?.preorderEnabled ?? false;
-  });
+  const isPreOrderEnabled: ReadOnlySignal<boolean> = signalsService.computed(
+    () => {
+      const variant = currentVariant.get();
+      return variant?.inventoryStatus?.preorderEnabled ?? false;
+    }
+  );
 
   const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
 
@@ -355,7 +351,12 @@ export const SelectedVariantService = implementService.withConfig<{
       const catalogReference: any = {
         catalogItemId: prod._id,
         appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-        options: variant?._id ? { variantId: variant._id, preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled } : undefined,
+        options: variant?._id
+          ? {
+              variantId: variant._id,
+              preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled,
+            }
+          : undefined,
       };
 
       // Transform and add modifiers to catalog reference if they exist
@@ -508,7 +509,6 @@ export const SelectedVariantService = implementService.withConfig<{
     isOnSale,
     quantityAvailable,
     productId,
-    sku,
     ribbonLabel,
 
     setSelectedChoices,

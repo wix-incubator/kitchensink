@@ -14,14 +14,10 @@ export interface ViewportProps {
  * Render props for Viewport component
  */
 export interface ViewportRenderProps {
-  /** Current selected image */
-  image: any | null; // V3 media item structure
   /** Image URL */
   src: string | null;
   /** Alt text for image */
   alt: string;
-  /** Whether image is loading */
-  isLoading: boolean;
   /** Current image index */
   currentIndex: number;
   /** Total number of images */
@@ -35,9 +31,8 @@ export const Viewport = (props: ViewportProps) => {
   const mediaService = useService(
     ProductMediaGalleryServiceDefinition
   ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
-  
+
   const currentIndex = mediaService.selectedImageIndex.get();
-  const isLoading = mediaService.isLoading.get();
   const totalImages = mediaService.totalImages.get();
   const productName = mediaService.productName.get();
   const relevantImages = mediaService.relevantImages.get();
@@ -47,10 +42,8 @@ export const Viewport = (props: ViewportProps) => {
   const alt = productName || "Product image";
 
   return props.children({
-    image: src,
     src,
     alt,
-    isLoading,
     currentIndex,
     totalImages,
   });
@@ -99,7 +92,7 @@ export const Thumbnail = (props: ThumbnailProps) => {
 
   // Get the image source from the centralized relevant images
   const src = relevantImages[props.index] || null;
-  
+
   const isActive = currentIndex === props.index;
   const alt = `${productName || "Product"} image ${props.index + 1}`;
 

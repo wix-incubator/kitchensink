@@ -7,3 +7,14 @@
 - [ ] start using wix image in this project
 - [x] find a better solution for withDocsWrapper so it won't be in the pages code
 - [ ] Make sure it's explained that headless components should be namespaced under one root component that acts as the composite that the component is describing
+
+Components List:
+
+- [ ] Product
+  - [x] Product Name
+  - [x] Product Description
+  - [ ] InfoSections
+- [ ] Selected Variant
+  - [x] Details (sku, weight)
+  - [x] Price
+- [ ] Product Media Gallery

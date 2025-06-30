@@ -201,11 +201,15 @@ export const Trigger = (props: TriggerProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
-  
+
   // Try to get modifiers service - it may not exist for all products
-  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  let modifiersService: ServiceAPI<
+    typeof ProductModifiersServiceDefinition
+  > | null = null;
   try {
-    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+    modifiersService = useService(
+      ProductModifiersServiceDefinition
+    ) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
   } catch {
     // Modifiers service not available for this product
     modifiersService = null;
@@ -218,13 +222,16 @@ export const Trigger = (props: TriggerProps) => {
   const error = variantService.error.get();
 
   const quantity = props.quantity || 1;
-  
+
   // Check if all required modifiers are filled
-  const areAllRequiredModifiersFilled = modifiersService 
+  const areAllRequiredModifiersFilled = modifiersService
     ? modifiersService.areAllRequiredModifiersFilled()
     : true; // If no modifiers service, assume no required modifiers
-  
-  const canAddToCart = (inStock || isPreOrderEnabled) && !isLoading && areAllRequiredModifiersFilled;
+
+  const canAddToCart =
+    (inStock || isPreOrderEnabled) &&
+    !isLoading &&
+    areAllRequiredModifiersFilled;
 
   const onAddToCart = async () => {
     // Get modifiers data if available
@@ -235,7 +242,7 @@ export const Trigger = (props: TriggerProps) => {
         modifiersData = selectedModifiers;
       }
     }
-    
+
     await variantService.addToCart(quantity, modifiersData);
   };
 
@@ -247,51 +254,6 @@ export const Trigger = (props: TriggerProps) => {
     inStock,
     isPreOrderEnabled,
     error,
-  });
-};
-
-/**
- * Props for Price headless component
- */
-export interface PriceProps {
-  /** Render prop function that receives price data */
-  children: (props: PriceRenderProps) => React.ReactNode;
-}
-
-/**
- * Render props for Price component
- */
-export interface PriceRenderProps {
-  /** Current price (formatted) */
-  price: string;
-  /** Compare at price (formatted) - null if no compare price */
-  compareAtPrice: string | null;
-  /** Whether price is for a variant */
-  isVariantPrice: boolean;
-  /** Currency code */
-  currency: string;
-}
-
-/**
- * Headless component for product price display
- */
-export const Price = (props: PriceProps) => {
-  const variantService = useService(
-    SelectedVariantServiceDefinition
-  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
-
-  const price = variantService.currentPrice.get();
-  const compareAtPrice = variantService.currentCompareAtPrice.get();
-  const currentVariant = variantService.currentVariant.get();
-  const currency = variantService.currency.get();
-
-  const isVariantPrice = !!currentVariant;
-
-  return props.children({
-    price,
-    compareAtPrice,
-    isVariantPrice,
-    currency,
   });
 };
 
@@ -319,7 +281,6 @@ export interface StockRenderProps {
   trackInventory: boolean;
   /** Current variant id */
   currentVariantId: string | null;
-  
 }
 
 /**

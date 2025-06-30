@@ -8,7 +8,7 @@ import type { Signal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
 
 export interface ProductServiceAPI {
-  product: Signal<productsV3.V3Product | null>;
+  product: Signal<productsV3.V3Product>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 }
@@ -21,7 +21,7 @@ export const ProductService = implementService.withConfig<{
 }>()(ProductServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  const product: Signal<productsV3.V3Product | null> = signalsService.signal(
+  const product: Signal<productsV3.V3Product> = signalsService.signal(
     config.product as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
