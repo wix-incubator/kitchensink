@@ -448,9 +448,13 @@ export function StoreLayout({
                                      Discount
                                    </span>
                                    <span className="text-green-400 font-semibold">
-                                     -<LoadingOrValue>
-                                       {discount}
-                                     </LoadingOrValue>
+                                     {isTotalsLoading ? (
+                                       <span className="text-white/60">
+                                         Calculating...
+                                       </span>
+                                     ) : (
+                                       `-${discount}`
+                                     )}
                                    </span>
                                  </div>
                                )}
