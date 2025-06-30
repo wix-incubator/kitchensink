@@ -15,6 +15,7 @@ import { StoreLayout } from "../../../layouts/StoreLayout";
 
 export interface WixServicesLayoutProps {
     children: ReactNode;
+    // whether to show the cart icon in the header allowing the user to view the mini cart
     showCartIcon?: boolean;
 }
 
@@ -35,10 +36,14 @@ export default function WixServicesLayout({ children, showCartIcon = false }: Wi
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
-      { showCartIcon ? <StoreLayout 
-        currentCartServiceConfig={null}
-        servicesManager={servicesManager}
-        children={children} /> : children
+      { showCartIcon ? 
+        <StoreLayout 
+          currentCartServiceConfig={null}
+          servicesManager={servicesManager}
+        >
+          {children}
+        </StoreLayout> :
+        children
       }
     </ServicesManagerProvider>
   );
