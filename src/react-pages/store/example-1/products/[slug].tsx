@@ -714,7 +714,7 @@ export default function ProductDetailPage({
                                Max: {availableQuantity} Pre Order
                              </span>
                            )}
-                           {/* Show low stock warning when in stock but quantity < 5 */}
+                           {/* Show stock message when in stock but available quantity < 5 */}
                            {inStock && availableQuantity < 5 && availableQuantity > 0 && (
                              <span className="text-[var(--theme-text-content-60)] text-sm">
                                Only {availableQuantity} left in stock
