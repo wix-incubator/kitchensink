@@ -52,7 +52,6 @@ export interface SelectedVariantServiceAPI {
   incrementQuantity: () => void;
   decrementQuantity: () => void;
   selectVariantById: (id: string) => void;
-  loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
 
   // New methods for smart variant selection
@@ -488,13 +487,6 @@ export const SelectedVariantService = implementService.withConfig<{
     }
   };
 
-  const loadProductVariants = (data: productsV3.Variant[]) => {
-    variants.set(data);
-    if (data.length > 0) {
-      updateQuantityFromVariant(data[0]);
-    }
-  };
-
   const resetSelections = () => {
     selectedChoices.set({});
     selectedQuantity.set(1); // Reset quantity when resetting selections
@@ -584,7 +576,6 @@ export const SelectedVariantService = implementService.withConfig<{
 
     setOption,
     selectVariantById,
-    loadProductVariants,
     resetSelections,
 
     // New methods for smart variant selection

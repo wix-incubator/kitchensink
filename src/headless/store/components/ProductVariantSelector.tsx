@@ -184,9 +184,9 @@ export interface TriggerRenderProps {
   canAddToCart: boolean;
   /** Whether add to cart is currently loading */
   isLoading: boolean;
-  /** Current product price */
+  /** Current variant price */
   price: string;
-  /** Whether product is in stock */
+  /** Whether variant is in stock */
   inStock: boolean;
   /** Whether pre-order is enabled */
   isPreOrderEnabled: boolean;
