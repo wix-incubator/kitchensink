@@ -37,6 +37,7 @@ export interface CurrentCartServiceAPI {
   proceedToCheckout: () => Promise<void>;
   applyCoupon: (couponCode: string) => Promise<void>;
   removeCoupon: () => Promise<void>;
+  reloadCart: () => Promise<void>;
 }
 
 export const CurrentCartServiceDefinition =
@@ -314,12 +315,19 @@ export const CurrentCartService = implementService.withConfig<{
     }
   };
 
+  const reloadCart = async () => {
+    isLoading.set(true);
+    const { initialCart } = await loadCurrentCartServiceConfig();
+    cart.set(initialCart || null);
+    isLoading.set(false);
+  };
+
   // Initialize totals immediately for existing cart
   if (config.initialCart?.lineItems?.length) {
     estimateTotals();
   }
 
-      return {
+  return {
     cart,
     isOpen,
     cartCount,
@@ -341,6 +349,7 @@ export const CurrentCartService = implementService.withConfig<{
     proceedToCheckout,
     applyCoupon,
     removeCoupon,
+    reloadCart,
   };
 });
 

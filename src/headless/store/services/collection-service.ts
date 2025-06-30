@@ -330,6 +330,7 @@ export const CollectionService = implementService.withConfig<{
     debouncedRefresh(false);
   });
 
+
   // Initialize catalog data when the service starts
   const initializeCatalogData = async () => {
     const selectedCategory = categoryService.selectedCategory.get();
@@ -346,6 +347,12 @@ export const CollectionService = implementService.withConfig<{
 
   sortService.currentSort.subscribe(() => {
     debouncedRefresh(false);
+  });
+
+  categoryService.selectedCategory.subscribe(() => {
+    debouncedRefresh(true).then(() => {
+      initializeCatalogData();
+    });
   });
 
   return {
