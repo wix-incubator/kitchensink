@@ -223,8 +223,7 @@ export const Trigger = (props: TriggerProps) => {
   const isLoading = variantService.isLoading.get();
   const error = variantService.error.get();
   const availableQuantity = variantService.quantityAvailable.get();
-
-  const quantity = props.quantity || 1;
+  const quantity = variantService.selectedQuantity.get();
 
   // Check if all required modifiers are filled
   const areAllRequiredModifiersFilled = modifiersService

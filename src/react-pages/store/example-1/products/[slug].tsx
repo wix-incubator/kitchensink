@@ -709,13 +709,13 @@ export default function ProductDetailPage({
                               </button>
                             </div>
                            {/* Show max quantity only when out of stock AND preorder enabled */}
-                           {!inStock && isPreOrderEnabled && (
+                           {!inStock && isPreOrderEnabled && availableQuantity && (
                              <span className="text-[var(--theme-text-content-60)] text-sm">
                                Max: {availableQuantity} Pre Order
                              </span>
                            )}
                            {/* Show stock message when in stock but available quantity < 5 */}
-                           {inStock && availableQuantity < 5 && availableQuantity > 0 && (
+                           {inStock && availableQuantity && availableQuantity < 5 && (
                              <span className="text-[var(--theme-text-content-60)] text-sm">
                                Only {availableQuantity} left in stock
                              </span>
@@ -728,7 +728,7 @@ export default function ProductDetailPage({
 
                 {/* Add to Cart */}
                 <div className="space-y-4">
-                  <ProductVariantSelector.Trigger quantity={servicesManager.getService(SelectedVariantServiceDefinition).selectedQuantity.get()}>
+                  <ProductVariantSelector.Trigger>
                     {({
                       onAddToCart,
                       canAddToCart,

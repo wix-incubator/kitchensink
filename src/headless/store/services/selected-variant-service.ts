@@ -116,7 +116,7 @@ export const SelectedVariantService = implementService.withConfig<{
     return variantsList[0] || null;
   };
 
-  const fetchRealQuantity = async (variantId: string | null | undefined, inStock: boolean, preOrderEnabled: boolean) => {
+  const updateVariantInventoryQuantities = async (variantId: string | null | undefined, inStock: boolean, preOrderEnabled: boolean) => {
     if (!variantId) return;
     
     try {
@@ -145,7 +145,7 @@ export const SelectedVariantService = implementService.withConfig<{
     } catch (error) {
       console.error("Failed to fetch inventory quantity:", error);
       // Fallback on error
-      quantityAvailable.set(0);
+      quantityAvailable.set(null);
       trackQuantity.set(false);
     }
   };
@@ -155,8 +155,8 @@ export const SelectedVariantService = implementService.withConfig<{
       const inStock = variant.inventoryStatus?.inStock ?? true;
       const preOrderEnabled = variant.inventoryStatus?.preorderEnabled ?? false;
        
-      // Then fetch real quantity from inventory API
-      fetchRealQuantity(variant._id, inStock, preOrderEnabled);
+      // update the quantity available and tracking insication from the inventory API
+      updateVariantInventoryQuantities(variant._id, inStock, preOrderEnabled);
     } else {
       quantityAvailable.set(0);
       trackQuantity.set(false);
@@ -326,13 +326,9 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
-    const prod = v3Product.get();
 
     if (variant) {
       return variant.inventoryStatus?.inStock ?? false;
-    } else if (prod) {
-      const status = prod.inventory?.availabilityStatus;
-      return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
     } else {
       return false;
     }
