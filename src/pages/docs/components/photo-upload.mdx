@@ -14,7 +14,7 @@ import {
   PreviewImage,
   UploadProgress,
   UploadTrigger,
-} from "../headless/members/PhotoUpload";
+} from "headless/members/components";
 ```
 
 ## Components
@@ -213,7 +213,7 @@ import {
   PreviewImage,
   UploadProgress,
   UploadTrigger,
-} from "../headless/members/PhotoUpload";
+} from "headless/members/components";
 
 function PhotoUploadForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -417,7 +417,7 @@ Test these components by mocking the service and verifying render prop calls:
 
 ```tsx
 import { render, fireEvent } from "@testing-library/react";
-import { FileSelector } from "../headless/members/PhotoUpload";
+import { FileSelector } from "headless/members/components";
 
 test("FileSelector handles file selection", () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

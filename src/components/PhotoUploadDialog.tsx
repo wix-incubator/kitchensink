@@ -1,11 +1,6 @@
 import { useRef } from "react";
-import {
-  FileSelector,
-  PreviewImage,
-  UploadProgress,
-  UploadTrigger,
-} from "../headless/members/components/PhotoUpload";
-import { CurrentMemberProfile } from "../headless/members/components/CurrentMemberProfile";
+import { PhotoUpload, CurrentMemberProfile } from "../headless/members/components";
+import { FileUpload } from "../headless/media/components";
 
 interface PhotoUploadDialogProps {
   isOpen: boolean;
@@ -108,7 +103,7 @@ export default function PhotoUploadDialog({
             </div>
 
             {/* Upload Area */}
-            <FileSelector>
+            <PhotoUpload.FileSelector>
               {({
                 dragOver,
                 handleDragOver,
@@ -128,7 +123,7 @@ export default function PhotoUploadDialog({
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <PreviewImage>
+                    <PhotoUpload.PreviewImage>
                       {({ hasPreview, previewUrl, selectedFile }) => (
                         <>
                           {!hasPreview ? (
@@ -175,7 +170,7 @@ export default function PhotoUploadDialog({
                           )}
                         </>
                       )}
-                    </PreviewImage>
+                    </PhotoUpload.PreviewImage>
                   </div>
 
                   {/* Hidden File Input */}
@@ -188,10 +183,10 @@ export default function PhotoUploadDialog({
                   />
                 </div>
               )}
-            </FileSelector>
+            </PhotoUpload.FileSelector>
 
             {/* Upload Status */}
-            <UploadProgress>
+            <FileUpload.UploadProgress>
               {({ uploadState, hasMessage }) => (
                 <>
                   {hasMessage && (
@@ -242,13 +237,13 @@ export default function PhotoUploadDialog({
                   )}
                 </>
               )}
-            </UploadProgress>
+            </FileUpload.UploadProgress>
 
             {/* Form Actions */}
-            <UploadTrigger>
-              {({ uploadPhoto, canUpload, isUploading }) => {
+            <FileUpload.UploadTrigger>
+              {({ uploadFile, canUpload, isUploading }) => {
                 const handleUploadPhoto = async () => {
-                  await uploadPhoto();
+                  await uploadFile();
                   onClose();
                 };
 
@@ -304,7 +299,7 @@ export default function PhotoUploadDialog({
                   </div>
                 );
               }}
-            </UploadTrigger>
+            </FileUpload.UploadTrigger>
           </div>
         </div>
       </div>

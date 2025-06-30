@@ -9,7 +9,7 @@ The `BookingServices` namespace contains headless components for displaying and 
 ## Overview
 
 ```tsx
-import { BookingServices } from "../headless/bookings/BookingServices";
+import { BookingServices } from "headless/bookings/components";
 
 // All available components
 const { ServicesList, ServiceListItem, ServicesHeader } = BookingServices;
@@ -22,7 +22,7 @@ const { ServicesList, ServiceListItem, ServicesHeader } = BookingServices;
 For working with specific services by ID (recommended for service detail pages):
 
 ```tsx
-import { BookingService } from "../headless/bookings/BookingService";
+import { BookingService } from "headless/bookings/components";
 
 // All available single-service components
 const { Service, ServiceDetail, ServiceStatus } = BookingService;
@@ -391,7 +391,7 @@ Displays summary information about services including total count and loading st
 For service-specific pages, use the single-service components for better performance:
 
 ```tsx
-import { BookingService } from "../headless/bookings/BookingService";
+import { BookingService } from "headless/bookings/components";
 
 function ServiceDetailPage({ serviceId }) {
   return (
@@ -528,7 +528,7 @@ function ServiceDetailPage({ serviceId }) {
 ### Basic Service Listing
 
 ```tsx
-import { BookingServices } from "../headless/bookings/BookingServices";
+import { BookingServices } from "headless/bookings/components";
 
 function ServicesPage() {
   return (

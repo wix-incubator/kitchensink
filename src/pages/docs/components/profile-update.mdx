@@ -13,7 +13,7 @@ import {
   ProfileFormField,
   ProfileUpdateProgress,
   ProfileUpdateTrigger,
-} from "../headless/members/ProfileUpdate";
+} from "headless/members/components";
 ```
 
 ## Components
@@ -456,7 +456,7 @@ import type {
   ProfileUpdateProgressRenderProps,
   ProfileUpdateTriggerProps,
   ProfileUpdateTriggerRenderProps,
-} from "../headless/members/ProfileUpdate";
+} from "../headless/members/components";
 ```
 
 ## Testing
@@ -465,7 +465,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render, fireEvent } from "@testing-library/react";
-import { ProfileFormField } from "../headless/members/ProfileUpdate";
+import { ProfileFormField } from "../headless/members/components";
 
 test("ProfileFormField handles value changes", () => {
   const mockRenderProp = jest.fn().mockReturnValue(<input />);

@@ -10,10 +10,8 @@ import {
 } from "../../../../headless/bookings/services/booking-services-service";
 import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
 import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
-import { BookingServices } from "../../../../headless/bookings/components/BookingServices";
-import { BookingAvailability } from "../../../../headless/bookings/components/BookingAvailability";
-import { BookingSelection } from "../../../../headless/bookings/components/BookingSelection";
-import WixMediaImage from "../../../../headless/media/components/Image";
+import { BookingServices, BookingAvailability, BookingSelection } from "../../../../headless/bookings/components";
+import { WixMediaImage } from "../../../../headless/media/components";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { BookingAvailabilityServiceDefinition } from "../../../../headless/bookings/services/booking-availability-service";

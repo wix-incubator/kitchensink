@@ -9,7 +9,7 @@ The `BookingAvailability` namespace contains headless components for managing bo
 ## Overview
 
 ```tsx
-import { BookingAvailability } from "../headless/bookings/BookingAvailability";
+import { BookingAvailability } from "headless/bookings/components";
 
 // All available components
 const { Calendar, TimeSlots, TimeSlot, AvailabilityHeader } =
@@ -332,7 +332,7 @@ Displays header information for availability including selected date and slot co
 Here's a complete example showing how to use multiple BookingAvailability components together:
 
 ```tsx
-import { BookingAvailability } from "../headless/bookings/BookingAvailability";
+import { BookingAvailability } from "headless/bookings/components";
 
 function BookingCalendar() {
   return (
@@ -379,7 +379,7 @@ function BookingCalendar() {
 The BookingAvailability components work with a service that needs to be configured:
 
 ```tsx
-import { BookingAvailabilityService } from "../headless/bookings/booking-availability-service";
+import { BookingAvailabilityService } from "headless/bookings/booking-availability-service";
 
 // Configure the service with initial data
 const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(
