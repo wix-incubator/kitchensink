@@ -294,12 +294,12 @@ const ProductInfo = ({
       </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
-        {({ inStock, status, quantity, trackInventory }) => {
+        {({ inStock, status, availableQuantity, trackInventory }) => {
           const isLowStock =
             trackInventory &&
-            quantity !== null &&
-            quantity <= 5 &&
-            quantity > 0;
+            availableQuantity !== null &&
+            availableQuantity <= 5 &&
+            availableQuantity > 0;
           const isPreorder = status && status.toLowerCase().includes("pre");
           return (
             <div className="space-y-2">
@@ -327,8 +327,8 @@ const ProductInfo = ({
                   }`}
                 >
                   {status}
-                  {trackInventory && quantity !== null && (
-                    <span className="ml-1">({quantity} available)</span>
+                  {trackInventory && availableQuantity !== null && (
+                    <span className="ml-1">({availableQuantity} available)</span>
                   )}
                 </span>
               </div>
@@ -343,7 +343,7 @@ const ProductInfo = ({
               {isLowStock && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
                   <p className="text-yellow-300 text-xs">
-                    ⚡ Only {quantity} left in stock - order soon!
+                    ⚡ Only {availableQuantity} left in stock - order soon!
                   </p>
                 </div>
               )}
