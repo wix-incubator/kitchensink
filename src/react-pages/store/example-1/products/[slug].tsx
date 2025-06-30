@@ -27,7 +27,7 @@ import {
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-1.css";
-import ProductDetails from "../../composites/ProductDetails";
+import ProductDetails from "../../../../components/store/ProductDetails";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;

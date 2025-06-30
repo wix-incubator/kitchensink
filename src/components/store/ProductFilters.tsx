@@ -3,7 +3,7 @@ import {
   type AvailableOptions,
   type Filter,
   defaultFilter,
-} from "../headless/store/services/filter-service";
+} from "../../headless/store/services/filter-service";
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {

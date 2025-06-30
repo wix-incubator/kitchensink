@@ -1,10 +1,10 @@
 import { productsV3 } from "@wix/stores";
-import ProductFilters from "../../../components/ProductFilters";
-import StoreHeader from "../../../components/StoreHeader";
-import { WixMediaImage } from "../../../headless/media/components";
+import ProductFilters from "./ProductFilters";
+import StoreHeader from "./StoreHeader";
+import { WixMediaImage } from "../../headless/media/components";
 import {
   FilteredCollection,
-} from "../../../headless/store/components";
+} from "../../headless/store/components";
 
 
 export const ProductGridContent = ({productPageRoute}: {productPageRoute: string}) => {
@@ -33,12 +33,12 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                 availableOptions,
                 isFiltered,
               }: {
-                currentFilters: import("../../../headless/store/services/filter-service").Filter;
+                currentFilters: import("../../headless/store/services/filter-service").Filter;
                 applyFilters: (
-                  filters: import("../../../headless/store/services/filter-service").Filter
+                  filters: import("../../headless/store/services/filter-service").Filter
                 ) => void;
                 clearFilters: () => void;
-                availableOptions: import("../../../headless/store/services/filter-service").AvailableOptions;
+                availableOptions: import("../../headless/store/services/filter-service").AvailableOptions;
                 isFiltered: boolean;
                 allProducts: productsV3.V3Product[];
               }) => {

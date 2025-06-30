@@ -34,7 +34,7 @@ import {
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-1.css";
-import ProductList from "../composites/ProductList";
+import ProductList from "../../../components/store/ProductList";
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;

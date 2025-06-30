@@ -1,5 +1,5 @@
 import React from "react";
-import { CurrentCartServiceDefinition } from "../../../headless/ecom/services/current-cart-service";
+import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
 import { useService } from "@wix/services-manager-react";
 
 interface BaseButtonProps {

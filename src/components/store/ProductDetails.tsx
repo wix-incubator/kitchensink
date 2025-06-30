@@ -1,14 +1,14 @@
-import { WixMediaImage } from "../../../headless/media/components";
+import { WixMediaImage } from "../../headless/media/components";
 import {
   Product,
   ProductMediaGallery,
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
-} from "../../../headless/store/components";
-import { SelectedVariantServiceDefinition } from "../../../headless/store/services/selected-variant-service";
+} from "../../headless/store/components";
+import { SelectedVariantServiceDefinition } from "../../headless/store/services/selected-variant-service";
 import { ProductActionButtons } from "./ProductActionButtons";
-import { CurrentCart } from "../../../headless/ecom/components";
+import { CurrentCart } from "../../headless/ecom/components";
 import { useService } from "@wix/services-manager-react";
 
 
