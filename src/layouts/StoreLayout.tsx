@@ -8,8 +8,8 @@ import {
   CurrentCartServiceDefinition,
   CurrentCartService,
 } from "../headless/ecom/services/current-cart-service";
-import { CurrentCart } from "../headless/ecom/components/CurrentCart";
-import WixMediaImage from "../headless/media/components/Image";
+import { CurrentCart } from "../headless/ecom/components";
+import { WixMediaImage } from "../headless/media/components";
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({

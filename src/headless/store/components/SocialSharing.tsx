@@ -190,9 +190,3 @@ export const Platforms = (props: PlatformsProps) => {
     shareNative,
   });
 };
-
-export const SocialSharing = {
-  Root,
-  Platform,
-  Platforms,
-} as const;

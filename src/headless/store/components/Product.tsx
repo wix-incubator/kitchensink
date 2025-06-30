@@ -24,7 +24,7 @@ export interface ProductNameRenderProps {
 /**
  * Headless component for product name display
  */
-export const ProductName = (props: ProductNameProps) => {
+export const Name = (props: ProductNameProps) => {
   const service = useService(ProductServiceDefinition) as ServiceAPI<
     typeof ProductServiceDefinition
   >;
@@ -61,7 +61,7 @@ export interface ProductDescriptionRenderProps {
 /**
  * Headless component for product description display
  */
-export const ProductDescription = (props: ProductDescriptionProps) => {
+export const Description = (props: ProductDescriptionProps) => {
   const service = useService(ProductServiceDefinition) as ServiceAPI<
     typeof ProductServiceDefinition
   >;
@@ -110,7 +110,7 @@ export interface ProductDetailsRenderProps {
 /**
  * Headless component for product details display
  */
-export const ProductDetails = (props: ProductDetailsProps) => {
+export const Details = (props: ProductDetailsProps) => {
   const selectedVariantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
     typeof SelectedVariantServiceDefinition
   >;
@@ -130,9 +130,3 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     hasDimensions: false,
   });
 };
-
-export const Product = {
-  Name: ProductName,
-  Description: ProductDescription,
-  Details: ProductDetails,
-} as const;

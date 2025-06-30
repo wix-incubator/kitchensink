@@ -292,14 +292,3 @@ export const ValidationStatus = (props: ValidationStatusProps) => {
     validationRules: service.validationRules,
   });
 };
-
-/**
- * FileUpload namespace containing all file upload headless components
- */
-export const FileUpload = {
-  FileSelector,
-  UploadProgress,
-  UploadTrigger,
-  FilePreview,
-  ValidationStatus,
-} as const;

@@ -527,14 +527,3 @@ export const Coupon = (props: CouponProps) => {
   });
 };
 
-export const CurrentCart = {
-  Trigger,
-  Content,
-  Items,
-  Item,
-  Summary,
-  Checkout,
-  Clear,
-  Notes,
-  Coupon,
-} as const;

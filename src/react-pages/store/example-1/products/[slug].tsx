@@ -5,12 +5,9 @@ import {
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { ProductActionButtons } from "./ProductActionButtons";
-import WixMediaImage from "../../../../headless/media/components/Image";
-import { CurrentCart } from "../../../../headless/ecom/components/CurrentCart";
-import { Product } from "../../../../headless/store/components/Product";
-import { ProductMediaGallery } from "../../../../headless/store/components/ProductMediaGallery";
-import { ProductModifiers } from "../../../../headless/store/components/ProductModifiers";
-import { ProductVariantSelector } from "../../../../headless/store/components/ProductVariantSelector";
+import { WixMediaImage } from "../../../../headless/media/components";
+import { CurrentCart } from "../../../../headless/ecom/components";
+import { Product, ProductMediaGallery, ProductModifiers, ProductVariantSelector } from "../../../../headless/store/components";
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,

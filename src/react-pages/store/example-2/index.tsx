@@ -3,9 +3,9 @@ import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-2.css";
 import { PageDocsRegistration } from "../../../components/DocsMode";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components";
 import ProductFilters from "../../../components/ProductFilters";
-import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
+import { FilteredCollection } from "../../../headless/store/components";
 import {
   CollectionService,
   CollectionServiceDefinition,
@@ -39,7 +39,7 @@ import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
 } from "../../../headless/store/services/catalog-options-service";
-import { FiltersLoading } from "../../../headless/store/components/FilteredCollection";
+
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
   currentCartServiceConfig: any;
@@ -67,7 +67,7 @@ const ProductGridContent = () => {
                     {/* Filters Sidebar */}
                     <div className="w-80 flex-shrink-0">
                       <div className="sticky top-6">
-                        <FiltersLoading>
+                        <FilteredCollection.FiltersLoading>
                           {({ isFullyLoaded }) => (
                             <div className="relative">
                               <ProductFilters
@@ -101,7 +101,7 @@ const ProductGridContent = () => {
                               )}
                             </div>
                           )}
-                        </FiltersLoading>
+                        </FilteredCollection.FiltersLoading>
                       </div>
                     </div>
 

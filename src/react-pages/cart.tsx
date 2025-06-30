@@ -1,4 +1,3 @@
-import React from "react";
 import {
   createServicesManager,
   createServicesMap,
@@ -9,9 +8,9 @@ import {
   CurrentCartServiceDefinition,
   CurrentCartService,
 } from "../headless/ecom/services/current-cart-service";
-import { CurrentCart } from "../headless/ecom/components/CurrentCart";
+import { CurrentCart } from "../headless/ecom/components";
 import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
-import WixMediaImage from "../headless/media/components/Image";
+import { WixMediaImage } from "../headless/media/components";
 
 interface CartPageProps {
   data?: any;

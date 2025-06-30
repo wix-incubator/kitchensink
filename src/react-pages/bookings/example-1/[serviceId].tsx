@@ -16,9 +16,7 @@ import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/services/booking-selection-service";
-import { BookingService } from "../../../headless/bookings/components/BookingService";
-import { BookingAvailability } from "../../../headless/bookings/components/BookingAvailability";
-import { BookingSelection } from "../../../headless/bookings/components/BookingSelection";
+import { BookingService, BookingAvailability,  BookingSelection} from "../../../headless/bookings/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
