@@ -3,39 +3,30 @@ import { useService } from "@wix/services-manager-react";
 import { useState } from "react";
 import { WixMediaImage } from "../../../headless/media/components";
 import { CurrentCart } from "../../../headless/ecom/components";
-import { 
+import {
   Product,
   ProductMediaGallery,
   ProductModifiers,
   ProductVariantSelector,
   RelatedProducts,
   SocialSharing,
+  SelectedVariant,
 } from "../../../headless/store/components";
 import {
   CurrentCartServiceDefinition,
 } from "../../../headless/ecom/services/current-cart-service";
 import { SelectedVariantServiceDefinition } from "../../../headless/store/services/selected-variant-service";
 
-interface ProductDetailPageProps {
-  productServiceConfig: any;
-  currentCartServiceConfig: any;
-  productMediaGalleryServiceConfig: any;
-  selectedVariantServiceConfig: any;
-  socialSharingServiceConfig: any;
-  relatedProductsServiceConfig: any;
-  productModifiersServiceConfig?: any;
-}
-
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
       <ProductMediaGallery.Viewport>
-        {({ src, isLoading, totalImages }) => {
+        {({ src, totalImages }) => {
           return (
             <div className="relative aspect-square theme-bg-card rounded-2xl overflow-hidden group">
-              {isLoading ? (
+              {src ? (
                 <div className="w-full h-full flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 theme-text-content"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
                 </div>
               ) : src ? (
                 <WixMediaImage
@@ -45,7 +36,7 @@ const ProductImageGallery = () => {
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <svg
-                    className="w-24 h-24 text-[var(--theme-text-content-40)]"
+                    className="w-24 h-24 text-white/40"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -68,7 +59,7 @@ const ProductImageGallery = () => {
                         {canGoPrevious && (
                           <button
                             onClick={onPrevious}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 theme-bg-overlay theme-text-content p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                           >
                             <svg
                               className="w-6 h-6"
@@ -95,7 +86,7 @@ const ProductImageGallery = () => {
                         {canGoNext && (
                           <button
                             onClick={onNext}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 theme-bg-overlay theme-text-content p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                           >
                             <svg
                               className="w-6 h-6"
@@ -122,7 +113,7 @@ const ProductImageGallery = () => {
                 {({ current, total, hasImages }) => (
                   <>
                     {hasImages && total > 1 && (
-                      <div className="absolute bottom-4 left-4 theme-bg-overlay theme-text-content px-2 py-1 rounded text-sm">
+                      <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
                         {current} / {total}
                       </div>
                     )}
@@ -141,14 +132,13 @@ const ProductImageGallery = () => {
               <div className="flex gap-2 overflow-x-auto">
                 {Array.from({ length: total }).map((_, index) => (
                   <ProductMediaGallery.Thumbnail key={index} index={index}>
-                    {({ src, isActive, onSelect, alt }) => (
+                    {({ src, isActive, onSelect }) => (
                       <button
                         onClick={onSelect}
-                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                          isActive
-                            ? "theme-color-border-80 ring-2 ring-primary-500/30"
-                            : "theme-border-card theme-border-card-hover"
-                        }`}
+                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${isActive
+                            ? "border-teal-500 ring-2 ring-teal-500/30"
+                            : "border-white/20 hover:border-white/40"
+                          }`}
                       >
                         {src && (
                           <WixMediaImage
@@ -188,14 +178,13 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
             freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`
           }
           maxLength={textMaxChars}
-          className="w-full px-3 py-2 theme-bg-options border theme-border-card rounded-lg theme-text-content placeholder-theme-text-content-50 focus:theme-color-border-80 focus:ring-1 focus:ring-primary-500 resize-none"
+          className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
           rows={3}
         />
         {textMaxChars && (
           <p
-            className={`text-xs text-right ${
-              isOverLimit ? "theme-text-error" : "theme-text-content-60"
-            }`}
+            className={`text-xs text-right ${isOverLimit ? "text-red-400" : "text-white/60"
+              }`}
           >
             {charCount}/{textMaxChars}
           </p>
@@ -206,10 +195,8 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 );
 
 const ProductInfo = ({
-  onAddToCart,
   showRelatedProducts = false,
 }: {
-  onAddToCart: () => void;
   showRelatedProducts?: boolean;
 }) => {
   const [quantity, setQuantity] = useState(1);
@@ -225,46 +212,42 @@ const ProductInfo = ({
   return (
     <div className="space-y-6">
       <Product.Name>
-        {({ name, hasName }) =>
-          hasName ? (
-            <h1 className="text-4xl font-bold theme-text-content mb-2">{name}</h1>
+        {({ name }) =>
+          name ? (
+            <h1 className="text-4xl font-bold text-white mb-2">{name}</h1>
           ) : null
         }
       </Product.Name>
 
       <Product.Description>
-        {({ description, hasDescription, isHtml }) =>
-          hasDescription ? (
-            <div className="theme-text-content-80 text-lg">
-              {isHtml ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: description }}
-                  className="prose prose-invert max-w-none"
-                />
-              ) : (
-                <p>{description}</p>
-              )}
-            </div>
-          ) : null
-        }
+        {({ plainDescription }) => (
+          <div className="text-white/80 text-lg">
+            {
+              <div
+                dangerouslySetInnerHTML={{ __html: plainDescription }}
+                className="prose prose-invert max-w-none"
+              />
+            }
+          </div>
+        )}
       </Product.Description>
 
-      <ProductVariantSelector.Price>
-        {({ price, compareAtPrice, isVariantPrice, currency }) => (
+      <SelectedVariant.Price>
+        {({ price, compareAtPrice, currency }) => (
           <div className="space-y-1">
-            <div className="text-3xl font-bold theme-text-content">{price}</div>
+            <div className="text-3xl font-bold text-white">{price}</div>
             {compareAtPrice &&
               parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 && (
-                <div className="text-lg font-medium theme-text-content-50 line-through">
+                <div className="text-lg font-medium text-white/50 line-through">
                   {compareAtPrice}
                 </div>
               )}
             {currency && (
-              <p className="theme-text-content-60 text-sm">Currency: {currency}</p>
+              <p className="text-white/60 text-sm">Currency: {currency}</p>
             )}
           </div>
         )}
-      </ProductVariantSelector.Price>
+      </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
         {({ inStock, status, quantity, trackInventory }) => {
@@ -278,26 +261,24 @@ const ProductInfo = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div
-                  className={`w-2 h-2 rounded-full ${
-                    isPreorder
-                      ? "theme-status-preorder"
+                  className={`w-2 h-2 rounded-full ${isPreorder
+                      ? "bg-orange-500"
                       : inStock
-                      ? isLowStock
-                        ? "theme-status-warning"
-                        : "theme-status-success"
-                      : "theme-status-error"
-                  }`}
+                        ? isLowStock
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
+                        : "bg-red-500"
+                    }`}
                 ></div>
                 <span
-                  className={`text-sm ${
-                    isPreorder
-                      ? "theme-text-preorder"
+                  className={`text-sm ${isPreorder
+                      ? "text-orange-400"
                       : inStock
-                      ? isLowStock
-                        ? "theme-text-warning"
-                        : "theme-text-success"
-                      : "theme-text-error"
-                  }`}
+                        ? isLowStock
+                          ? "text-yellow-400"
+                          : "text-green-400"
+                        : "text-red-400"
+                    }`}
                 >
                   {status}
                   {trackInventory && quantity !== null && (
@@ -306,16 +287,16 @@ const ProductInfo = ({
                 </span>
               </div>
               {isPreorder && (
-                <div className="theme-bg-preorder theme-border-preorder border rounded-lg p-2">
-                  <p className="theme-text-preorder text-xs">
+                <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-2">
+                  <p className="text-orange-300 text-xs">
                     🚀 This item is available for pre-order and will ship when
                     available
                   </p>
                 </div>
               )}
               {isLowStock && (
-                <div className="theme-bg-warning theme-border-warning border rounded-lg p-2">
-                  <p className="theme-text-warning text-xs">
+                <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
+                  <p className="text-yellow-300 text-xs">
                     ⚡ Only {quantity} left in stock - order soon!
                   </p>
                 </div>
@@ -329,7 +310,7 @@ const ProductInfo = ({
         {({ options, hasOptions }) =>
           hasOptions ? (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold theme-text-content">
+              <h3 className="text-lg font-semibold text-white">
                 Product Options
               </h3>
               {options.map((option: any) => (
@@ -340,10 +321,10 @@ const ProductInfo = ({
                   {({ name, choices, selectedValue, hasChoices }) =>
                     hasChoices ? (
                       <div className="space-y-3">
-                        <h4 className="text-md font-medium theme-text-content-90">
+                        <h4 className="text-md font-medium text-white/90">
                           {name}
                           {selectedValue && (
-                            <span className="ml-2 text-sm theme-text-primary-400">
+                            <span className="ml-2 text-sm text-teal-400">
                               ({selectedValue})
                             </span>
                           )}
@@ -373,13 +354,12 @@ const ProductInfo = ({
                                           onClick={onSelect}
                                           disabled={!isAvailable}
                                           title={value}
-                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
-                                            isSelected
-                                              ? "theme-color-border-80 shadow-lg scale-110 ring-2 ring-primary-500/30"
+                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
+                                              ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
                                               : isAvailable
-                                              ? "theme-border-card hover:theme-border-card-hover hover:scale-105"
-                                              : "theme-border-card opacity-50 cursor-not-allowed"
-                                          } ${!isAvailable ? "grayscale" : ""}`}
+                                                ? "border-white/30 hover:border-white/60 hover:scale-105"
+                                                : "border-white/10 opacity-50 cursor-not-allowed"
+                                            } ${!isAvailable ? "grayscale" : ""}`}
                                           style={{
                                             backgroundColor:
                                               choice.colorCode || "#000000",
@@ -388,7 +368,7 @@ const ProductInfo = ({
                                         {!isAvailable && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
-                                              className="w-6 h-6 theme-text-error"
+                                              className="w-6 h-6 text-red-400"
                                               fill="none"
                                               viewBox="0 0 24 24"
                                               stroke="currentColor"
@@ -408,20 +388,19 @@ const ProductInfo = ({
                                         <button
                                           onClick={onSelect}
                                           disabled={!isAvailable}
-                                          className={`px-4 py-2 rounded-lg border transition-all ${
-                                            isSelected
-                                              ? "theme-btn-primary theme-color-border-80 theme-text-content ring-2 ring-primary-500/30"
+                                          className={`px-4 py-2 rounded-lg border transition-all ${isSelected
+                                              ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
                                               : isAvailable
-                                              ? "theme-bg-card theme-border-card theme-text-content hover:theme-border-card-hover hover:theme-bg-options"
-                                              : "theme-bg-card theme-border-card theme-text-content-30 cursor-not-allowed"
-                                          }`}
+                                                ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                                : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
+                                            }`}
                                         >
                                           {value}
                                         </button>
                                         {!isAvailable && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
-                                              className="w-6 h-6 theme-text-error"
+                                              className="w-6 h-6 text-red-400"
                                               fill="none"
                                               viewBox="0 0 24 24"
                                               stroke="currentColor"
@@ -452,7 +431,7 @@ const ProductInfo = ({
                 <div className="pt-2">
                   <button
                     onClick={() => variantService.resetSelections()}
-                    className="text-sm theme-text-primary-400 hover:theme-text-primary-300 transition-colors"
+                    className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
                   >
                     Reset Selections
                   </button>
@@ -472,7 +451,7 @@ const ProductInfo = ({
         }) =>
           hasModifiers ? (
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold theme-text-content">
+              <h3 className="text-lg font-semibold text-white">
                 Product Customizations
               </h3>
               {modifiers.map((modifier: any) => (
@@ -489,10 +468,10 @@ const ProductInfo = ({
                       placeholder,
                     }) => (
                       <div className="space-y-3">
-                        <h4 className="text-md font-medium theme-text-content">
+                        <h4 className="text-md font-medium text-white">
                           {name}
                           {mandatory && (
-                            <span className="theme-text-error ml-1">*</span>
+                            <span className="text-red-400 ml-1">*</span>
                           )}
                         </h4>
                         {isFreeText ? (
@@ -512,9 +491,9 @@ const ProductInfo = ({
                                         type="checkbox"
                                         checked={isTextInputShown}
                                         onChange={onToggle}
-                                        className="rounded theme-border-card theme-bg-options theme-text-primary-400 focus:ring-primary-500"
+                                        className="rounded border-white/20 bg-white/10 text-teal-500 focus:ring-teal-500"
                                       />
-                                      <span className="theme-text-content-80">
+                                      <span className="text-white/80">
                                         Enable
                                       </span>
                                     </label>
@@ -553,11 +532,10 @@ const ProductInfo = ({
                                         <button
                                           onClick={onSelect}
                                           title={value}
-                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
-                                            isSelected
-                                              ? "theme-color-border-80 shadow-lg scale-110 ring-2 ring-primary-500/30"
-                                              : "theme-border-card hover:theme-border-card-hover hover:scale-105"
-                                          }`}
+                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
+                                              ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
+                                              : "border-white/30 hover:border-white/60 hover:scale-105"
+                                            }`}
                                           style={{
                                             backgroundColor:
                                               colorCode || "#000000",
@@ -566,11 +544,10 @@ const ProductInfo = ({
                                       ) : (
                                         <button
                                           onClick={onSelect}
-                                          className={`px-4 py-2 rounded-lg border transition-all ${
-                                            isSelected
-                                              ? "theme-btn-primary theme-color-border-80 theme-text-content ring-2 ring-primary-500/30"
-                                              : "theme-bg-card theme-border-card theme-text-content hover:theme-border-card-hover hover:theme-bg-options"
-                                          }`}
+                                          className={`px-4 py-2 rounded-lg border transition-all ${isSelected
+                                              ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                              : "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                            }`}
                                         >
                                           {value}
                                         </button>
@@ -593,31 +570,31 @@ const ProductInfo = ({
       </ProductModifiers.Modifiers>
 
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold theme-text-content">Quantity</h3>
+        <h3 className="text-lg font-semibold text-white">Quantity</h3>
         <div className="flex items-center gap-3">
-                      <div className="flex items-center border theme-border-card rounded-lg">
+          <div className="flex items-center border border-white/20 rounded-lg">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
               disabled={quantity <= 1}
-              className="px-3 py-2 theme-text-content hover:theme-bg-options disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-2 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               -
             </button>
-            <span className="px-4 py-2 theme-text-content border-x theme-border-card min-w-[3rem] text-center">
+            <span className="px-4 py-2 text-white border-x border-white/20 min-w-[3rem] text-center">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity(quantity + 1)}
-              className="px-3 py-2 theme-text-content hover:theme-bg-options transition-colors"
+              className="px-3 py-2 text-white hover:bg-white/10 transition-colors"
             >
               +
             </button>
           </div>
-          <span className="theme-text-content-60 text-sm">Max: 10 per order</span>
+          <span className="text-white/60 text-sm">Max: 10 per order</span>
         </div>
         <button
           onClick={() => setQuantity(1)}
-          className="text-sm theme-text-primary-400 hover:theme-text-primary-300 transition-colors"
+          className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
         >
           Reset Quantity
         </button>
@@ -627,8 +604,8 @@ const ProductInfo = ({
         {({ onAddToCart, canAddToCart, isLoading, inStock, error }) => (
           <div className="space-y-4">
             {error && (
-              <div className="theme-bg-error theme-border-error border rounded-lg p-3">
-                <p className="theme-text-error text-sm">{error}</p>
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                <p className="text-red-400 text-sm">{error}</p>
               </div>
             )}
             <div className="flex flex-col gap-3">
@@ -638,7 +615,7 @@ const ProductInfo = ({
                     await onAddToCart();
                   }}
                   disabled={!canAddToCart || isLoading}
-                  className="flex-1 theme-btn-primary hover:theme-btn-primary-hover disabled:opacity-50 disabled:cursor-not-allowed theme-text-content font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                  className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -681,7 +658,7 @@ const ProductInfo = ({
                     }
                   }}
                   disabled={!canAddToCart || isLoading}
-                  className="flex-1 theme-btn-buy-now hover:theme-btn-buy-now-hover disabled:opacity-50 disabled:cursor-not-allowed theme-text-content font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -729,15 +706,15 @@ const ProductInfo = ({
                     }
                   };
                   return (
-                    <div className="flex items-center gap-2 pt-2 border-t theme-border-card">
-                      <span className="theme-text-content-60 text-sm">Share:</span>
+                    <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+                      <span className="text-white/60 text-sm">Share:</span>
                       <button
                         onClick={shareTwitter}
-                        className="p-2 rounded-full theme-bg-options hover:theme-bg-social-twitter hover:theme-text-social-twitter transition-all"
+                        className="p-2 rounded-full bg-white/10 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
                         title="Share on Twitter"
                       >
                         <svg
-                          className="w-4 h-4 theme-text-content-60 hover:theme-text-social-twitter transition-colors"
+                          className="w-4 h-4 text-white/60 hover:text-blue-400 transition-colors"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -746,11 +723,11 @@ const ProductInfo = ({
                       </button>
                       <button
                         onClick={shareFacebook}
-                        className="p-2 rounded-full theme-bg-options hover:theme-bg-social-facebook hover:theme-text-social-facebook transition-all"
+                        className="p-2 rounded-full bg-white/10 hover:bg-blue-600/20 hover:text-blue-500 transition-all"
                         title="Share on Facebook"
                       >
                         <svg
-                          className="w-4 h-4 theme-text-content-60 hover:theme-text-social-facebook transition-colors"
+                          className="w-4 h-4 text-white/60 hover:text-blue-500 transition-colors"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -759,11 +736,11 @@ const ProductInfo = ({
                       </button>
                       <button
                         onClick={shareLinkedIn}
-                        className="p-2 rounded-full theme-bg-options hover:theme-bg-social-linkedin hover:theme-text-social-linkedin transition-all"
+                        className="p-2 rounded-full bg-white/10 hover:bg-blue-700/20 hover:text-blue-600 transition-all"
                         title="Share on LinkedIn"
                       >
                         <svg
-                          className="w-4 h-4 theme-text-content-60 hover:theme-text-social-linkedin transition-colors"
+                          className="w-4 h-4 text-white/60 hover:text-blue-600 transition-colors"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -772,12 +749,12 @@ const ProductInfo = ({
                       </button>
                       <button
                         onClick={handleCopyLink}
-                        className="p-2 rounded-full theme-bg-options hover:theme-bg-social-twitter hover:theme-text-primary-400 transition-all relative"
+                        className="p-2 rounded-full bg-white/10 hover:bg-teal-500/20 hover:text-teal-400 transition-all relative"
                         title="Copy link"
                       >
                         {copySuccess ? (
                           <svg
-                            className="w-4 h-4 theme-text-primary-400"
+                            className="w-4 h-4 text-teal-400"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -791,7 +768,7 @@ const ProductInfo = ({
                           </svg>
                         ) : (
                           <svg
-                            className="w-4 h-4 theme-text-content-60 hover:theme-text-primary-400 transition-colors"
+                            className="w-4 h-4 text-white/60 hover:text-teal-400 transition-colors"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -806,7 +783,7 @@ const ProductInfo = ({
                         )}
                       </button>
                       {copySuccess && (
-                        <span className="theme-text-primary-400 text-xs ml-2 animate-fade-in">
+                        <span className="text-teal-400 text-xs ml-2 animate-fade-in">
                           Copied!
                         </span>
                       )}
@@ -819,32 +796,32 @@ const ProductInfo = ({
         )}
       </ProductVariantSelector.Trigger>
 
-      <Product.Details>
-        {({ sku, weight, hasSku, hasWeight }) =>
-          hasSku || hasWeight ? (
-            <div className="border-t theme-border-card pt-6 space-y-2">
-              <h3 className="text-lg font-semibold theme-text-content mb-3">
+      <SelectedVariant.Details>
+        {({ sku, weight }) =>
+          sku || weight ? (
+            <div className="border-t border-white/10 pt-6 space-y-2">
+              <h3 className="text-lg font-semibold text-white mb-3">
                 Product Details
               </h3>
-              {hasSku && (
-                <p className="theme-text-content-60 text-sm">
+              {sku && (
+                <p className="text-white/60 text-sm">
                   <span className="font-medium">SKU:</span> {sku}
                 </p>
               )}
-              {hasWeight && (
-                <p className="theme-text-content-60 text-sm">
+              {weight && (
+                <p className="text-white/60 text-sm">
                   <span className="font-medium">Weight:</span> {weight}
                 </p>
               )}
             </div>
           ) : null
         }
-      </Product.Details>
-      { showRelatedProducts && (
-        <RelatedProducts.List>
+      </SelectedVariant.Details>
+
+      <RelatedProducts.List>
         {({ products, isLoading, error, hasProducts }) => (
-          <div className="border-t theme-border-card pt-6">
-            <h3 className="text-lg font-semibold theme-text-content mb-4">
+          <div className="border-t border-white/10 pt-6">
+            <h3 className="text-lg font-semibold text-white mb-4">
               You might also like
             </h3>
             {isLoading && (
@@ -852,19 +829,19 @@ const ProductInfo = ({
                 {[1, 2, 3, 4].map((item) => (
                   <div
                     key={item}
-                    className="theme-bg-card rounded-lg p-4 border theme-border-card animate-pulse"
+                    className="bg-white/5 rounded-lg p-4 border border-white/10 animate-pulse"
                   >
-                    <div className="aspect-square theme-bg-loading rounded-lg mb-3"></div>
-                    <div className="h-4 theme-bg-loading rounded mb-2"></div>
-                    <div className="h-3 theme-bg-loading rounded mb-2 w-3/4"></div>
-                    <div className="h-4 theme-bg-loading rounded w-1/2"></div>
+                    <div className="aspect-square bg-white/10 rounded-lg mb-3"></div>
+                    <div className="h-4 bg-white/10 rounded mb-2"></div>
+                    <div className="h-3 bg-white/10 rounded mb-2 w-3/4"></div>
+                    <div className="h-4 bg-white/10 rounded w-1/2"></div>
                   </div>
                 ))}
               </div>
             )}
             {error && (
-              <div className="theme-bg-error border theme-border-error rounded-lg p-4">
-                <p className="theme-text-error text-sm">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                <p className="text-red-400 text-sm">
                   Failed to load related products: {error}
                 </p>
               </div>
@@ -884,9 +861,9 @@ const ProductInfo = ({
                       }) => (
                         <a
                           href={href}
-                          className="theme-bg-card rounded-lg p-4 border theme-border-card hover:theme-border-card-hover transition-all duration-200 group cursor-pointer block"
+                          className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
                         >
-                          <div className="aspect-square theme-bg-loading rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
+                          <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                             {image ? (
                               <WixMediaImage
                                 media={{ image: image }}
@@ -895,7 +872,7 @@ const ProductInfo = ({
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <svg
-                                  className="w-8 h-8 theme-text-content-40"
+                                  className="w-8 h-8 text-white/40"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -910,18 +887,18 @@ const ProductInfo = ({
                               </div>
                             )}
                           </div>
-                          <h4 className="theme-text-content font-medium text-sm mb-1 group-hover:theme-text-primary-400 transition-colors line-clamp-2">
+                          <h4 className="text-white font-medium text-sm mb-1 group-hover:text-teal-400 transition-colors line-clamp-2">
                             {title}
                           </h4>
                           {description && (
-                            <p className="theme-text-content-60 text-xs mb-2 line-clamp-2">
+                            <p className="text-white/60 text-xs mb-2 line-clamp-2">
                               {description}
                             </p>
                           )}
                           <div className="flex items-center justify-between">
-                            <p className="theme-text-content font-semibold">{price}</p>
+                            <p className="text-white font-semibold">{price}</p>
                             {!available && (
-                              <span className="theme-text-error text-xs">
+                              <span className="text-red-400 text-xs">
                                 Out of Stock
                               </span>
                             )}
@@ -936,7 +913,7 @@ const ProductInfo = ({
             {!isLoading && !hasProducts && !error && (
               <div className="text-center py-8">
                 <svg
-                  className="w-12 h-12 theme-text-content-30 mx-auto mb-3"
+                  className="w-12 h-12 text-white/20 mx-auto mb-3"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -948,7 +925,7 @@ const ProductInfo = ({
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                   />
                 </svg>
-                <p className="theme-text-content-60 text-sm">
+                <p className="text-white/60 text-sm">
                   No related products found
                 </p>
               </div>
@@ -956,78 +933,65 @@ const ProductInfo = ({
           </div>
         )}
       </RelatedProducts.List>
-      )}
     </div>
   );
 };
 
-export default function ProductDetailPage({
-  setShowSuccessMessage,
-  showRelatedProducts,
-}: {
-  setShowSuccessMessage: (show: boolean) => void
-  showRelatedProducts?: boolean;
-}) {
+export default function ProductDetails() {
   return (
-      <>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <ProductImageGallery />
-          </div>
-
-          <div>
-            <ProductInfo
-              showRelatedProducts={showRelatedProducts}
-              onAddToCart={() => {
-                setShowSuccessMessage(true);
-                setTimeout(() => setShowSuccessMessage(false), 3000);
-              }}
-            />
-          </div>
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div>
+          <ProductImageGallery />
         </div>
 
-        <div className="mt-12 pt-8 border-t theme-border-card">
-          <CurrentCart.Summary>
-            {({ subtotal, itemCount }) => (
-              <>
-                {itemCount > 0 && (
-                  <div className="theme-bg-card backdrop-blur-sm rounded-xl p-6 border theme-border-card">
-                    <h3 className="text-xl font-semibold theme-text-content mb-4">
-                      Cart Summary
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="theme-text-content-80">
-                        {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
-                      </span>
-                      <span className="text-xl font-bold theme-text-content">
-                        {subtotal}
-                      </span>
-                    </div>
-                    <a
-                      href="/cart"
-                      className="mt-4 w-full theme-btn-view-cart hover:theme-btn-view-cart-hover theme-text-content font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                    >
-                      View Cart
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </a>
+        <div>
+          <ProductInfo />
+        </div>
+      </div>
+
+      <div className="mt-12 pt-8 border-t border-white/10">
+        <CurrentCart.Summary>
+          {({ subtotal, itemCount }) => (
+            <>
+              {itemCount > 0 && (
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Cart Summary
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/80">
+                      {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
+                    </span>
+                    <span className="text-xl font-bold text-white">
+                      {subtotal}
+                    </span>
                   </div>
-                )}
-              </>
-            )}
-          </CurrentCart.Summary>
-        </div>
-      </>
+                  <a
+                    href="/cart"
+                    className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    View Cart
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              )}
+            </>
+          )}
+        </CurrentCart.Summary>
+      </div>
+    </>
   );
 }
