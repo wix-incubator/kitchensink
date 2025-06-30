@@ -8,7 +8,10 @@ import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
 import { WixMediaImage } from "../../../../headless/media/components";
 import { CurrentCart } from "../../../../headless/ecom/components";
-import { Product } from "../../../../headless/store/components";
+import {
+  Product,
+  SelectedVariant,
+} from "../../../../headless/store/components";
 import {
   ProductMediaGallery,
   ProductModifiers,
@@ -46,6 +49,7 @@ import {
 } from "../../../../headless/store/services/social-sharing-service";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
+import "../../../../styles/theme-2.css";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -54,17 +58,16 @@ interface ProductDetailPageProps {
   selectedVariantServiceConfig: any;
   socialSharingServiceConfig: any;
   relatedProductsServiceConfig: any;
-  productModifiersServiceConfig?: any;
 }
 
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
       <ProductMediaGallery.Viewport>
-        {({ src, isLoading, totalImages }) => {
+        {({ src, totalImages }) => {
           return (
             <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
-              {isLoading ? (
+              {src ? (
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
                 </div>
@@ -172,7 +175,7 @@ const ProductImageGallery = () => {
               <div className="flex gap-2 overflow-x-auto">
                 {Array.from({ length: total }).map((_, index) => (
                   <ProductMediaGallery.Thumbnail key={index} index={index}>
-                    {({ src, isActive, onSelect, alt }) => (
+                    {({ src, isActive, onSelect }) => (
                       <button
                         onClick={onSelect}
                         className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
@@ -253,32 +256,28 @@ const ProductInfo = ({
   return (
     <div className="space-y-6">
       <Product.Name>
-        {({ name, hasName }) =>
-          hasName ? (
+        {({ name }) =>
+          name ? (
             <h1 className="text-4xl font-bold text-white mb-2">{name}</h1>
           ) : null
         }
       </Product.Name>
 
       <Product.Description>
-        {({ description, hasDescription, isHtml }) =>
-          hasDescription ? (
-            <div className="text-white/80 text-lg">
-              {isHtml ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: description }}
-                  className="prose prose-invert max-w-none"
-                />
-              ) : (
-                <p>{description}</p>
-              )}
-            </div>
-          ) : null
-        }
+        {({ plainDescription }) => (
+          <div className="text-white/80 text-lg">
+            {
+              <div
+                dangerouslySetInnerHTML={{ __html: plainDescription }}
+                className="prose prose-invert max-w-none"
+              />
+            }
+          </div>
+        )}
       </Product.Description>
 
-      <ProductVariantSelector.Price>
-        {({ price, compareAtPrice, isVariantPrice, currency }) => (
+      <SelectedVariant.Price>
+        {({ price, compareAtPrice, currency }) => (
           <div className="space-y-1">
             <div className="text-3xl font-bold text-white">{price}</div>
             {compareAtPrice &&
@@ -292,15 +291,15 @@ const ProductInfo = ({
             )}
           </div>
         )}
-      </ProductVariantSelector.Price>
+      </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
-        {({ inStock, status, quantity, trackInventory }) => {
+        {({ inStock, status, availableQuantity, trackInventory }) => {
           const isLowStock =
             trackInventory &&
-            quantity !== null &&
-            quantity <= 5 &&
-            quantity > 0;
+            availableQuantity !== null &&
+            availableQuantity <= 5 &&
+            availableQuantity > 0;
           const isPreorder = status && status.toLowerCase().includes("pre");
           return (
             <div className="space-y-2">
@@ -328,8 +327,8 @@ const ProductInfo = ({
                   }`}
                 >
                   {status}
-                  {trackInventory && quantity !== null && (
-                    <span className="ml-1">({quantity} available)</span>
+                  {trackInventory && availableQuantity !== null && (
+                    <span className="ml-1">({availableQuantity} available)</span>
                   )}
                 </span>
               </div>
@@ -344,7 +343,7 @@ const ProductInfo = ({
               {isLowStock && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-2">
                   <p className="text-yellow-300 text-xs">
-                    ⚡ Only {quantity} left in stock - order soon!
+                    ⚡ Only {availableQuantity} left in stock - order soon!
                   </p>
                 </div>
               )}
@@ -391,29 +390,29 @@ const ProductInfo = ({
                                 {({
                                   value,
                                   isSelected,
-                                  isAvailable,
                                   onSelect,
+                                  isInStock,
                                 }) => (
                                   <>
                                     {isColorOption && hasColorCode ? (
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isAvailable}
+                                          disabled={!isInStock}
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
                                               ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                              : isAvailable
+                                              : isInStock
                                               ? "border-white/30 hover:border-white/60 hover:scale-105"
                                               : "border-white/10 opacity-50 cursor-not-allowed"
-                                          } ${!isAvailable ? "grayscale" : ""}`}
+                                          } ${!isInStock ? "grayscale" : ""}`}
                                           style={{
                                             backgroundColor:
                                               choice.colorCode || "#000000",
                                           }}
                                         />
-                                        {!isAvailable && (
+                                        {!isInStock && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -435,18 +434,18 @@ const ProductInfo = ({
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isAvailable}
+                                          disabled={!isInStock}
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
                                               ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                              : isAvailable
+                                              : isInStock
                                               ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
                                               : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                           }`}
                                         >
                                           {value}
                                         </button>
-                                        {!isAvailable && (
+                                        {!isInStock && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -850,19 +849,19 @@ const ProductInfo = ({
         )}
       </ProductVariantSelector.Trigger>
 
-      <Product.Details>
-        {({ sku, weight, hasSku, hasWeight }) =>
-          hasSku || hasWeight ? (
+      <SelectedVariant.Details>
+        {({ sku, weight }) =>
+          sku || weight ? (
             <div className="border-t border-white/10 pt-6 space-y-2">
               <h3 className="text-lg font-semibold text-white mb-3">
                 Product Details
               </h3>
-              {hasSku && (
+              {sku && (
                 <p className="text-white/60 text-sm">
                   <span className="font-medium">SKU:</span> {sku}
                 </p>
               )}
-              {hasWeight && (
+              {weight && (
                 <p className="text-white/60 text-sm">
                   <span className="font-medium">Weight:</span> {weight}
                 </p>
@@ -870,7 +869,7 @@ const ProductInfo = ({
             </div>
           ) : null
         }
-      </Product.Details>
+      </SelectedVariant.Details>
 
       <RelatedProducts.List>
         {({ products, isLoading, error, hasProducts }) => (
@@ -998,7 +997,6 @@ export default function ProductDetailPage({
   selectedVariantServiceConfig,
   socialSharingServiceConfig,
   relatedProductsServiceConfig,
-  productModifiersServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -1028,16 +1026,10 @@ export default function ProductDetailPage({
       RelatedProductsServiceDefinition,
       RelatedProductsService,
       relatedProductsServiceConfig
-    );
-
-  // Add product modifiers service if available
-  if (productModifiersServiceConfig) {
-    servicesMap = servicesMap.addService(
+    ).addService(
       ProductModifiersServiceDefinition,
       ProductModifiersService,
-      productModifiersServiceConfig
     );
-  }
 
   const servicesManager = createServicesManager(servicesMap);
 

@@ -3,7 +3,7 @@ import {
   type AvailableOptions,
   type Filter,
   defaultFilter,
-} from "../headless/store/services/filter-service";
+} from "../../headless/store/services/filter-service";
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
@@ -59,6 +59,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     },
     []
   );
+
+  useEffect(() => {
+    setTempPriceRange(priceRange);
+  }, [priceRange]); 
 
   useEffect(() => {
     setTempPriceRange(currentFilters.priceRange);
@@ -133,10 +137,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   return (
     <div
-      className={`bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl p-6 border border-[var(--theme-border-primary-10)] ${className}`}
+      className={`bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle ${className}`}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-[var(--theme-text-content)] flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-content-primary flex items-center gap-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -156,14 +160,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           {isFiltered && (
             <button
               onClick={clearFilters}
-              className="text-sm text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
+              className="text-sm text-content-muted hover:text-content-primary transition-colors"
             >
               Clear All
             </button>
           )}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="lg:hidden text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
+            className="lg:hidden text-content-muted hover:text-content-primary transition-colors"
           >
             <svg
               className={`w-5 h-5 transition-transform ${
@@ -188,23 +192,22 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Price Range Filter - Only show if valid price range is available */}
         {priceRange.min < priceRange.max && priceRange.max > 0 && (
           <div>
-            <h4 className="text-[var(--theme-text-content)] font-medium mb-4">
+            <h4 className="text-content-primary font-medium mb-4">
               Price Range
             </h4>
             <div className="space-y-4">
               {/* Price Range Display */}
-              <div className="flex items-center justify-between text-sm text-[var(--theme-text-content-70)]">
+              <div className="flex items-center justify-between text-sm text-content-light">
                 <span>${String(tempPriceRange.min)}</span>
                 <span>${String(tempPriceRange.max)}</span>
               </div>
 
               {/* Dual Range Slider */}
               <div className="relative h-6">
-                <div className="absolute top-2 left-0 right-0 h-2 bg-[var(--theme-bg-primary-20)] rounded-full">
+                <div className="absolute top-2 left-0 right-0 h-2 bg-brand-medium rounded-full">
                   <div
-                    className="absolute h-2 rounded-full"
+                    className="absolute h-2 rounded-full bg-gradient-primary"
                     style={{
-                      background: "var(--theme-gradient-primary)",
                       left: `${
                         ((tempPriceRange.min - priceRange.min) /
                           (priceRange.max - priceRange.min)) *
@@ -267,7 +270,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
               {/* Manual Price Input */}
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">
+                  <label className="block text-xs text-content-muted mb-1">
                     Min
                   </label>
                   <input
@@ -281,11 +284,11 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       setTempPriceRange({ ...tempPriceRange, min: value });
                     }}
                     onBlur={handlePriceRangeCommit}
-                    className="w-full px-3 py-2 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)]"
+                    className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-xs text-[var(--theme-text-content-60)] mb-1">
+                  <label className="block text-xs text-content-muted mb-1">
                     Max
                   </label>
                   <input
@@ -299,7 +302,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       setTempPriceRange({ ...tempPriceRange, max: value });
                     }}
                     onBlur={handlePriceRangeCommit}
-                    className="w-full px-3 py-2 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)]"
+                    className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
               </div>
@@ -310,7 +313,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         {/* Product Options Filters */}
         {productOptions.map((option) => (
           <div key={option.id}>
-            <h4 className="text-[var(--theme-text-content)] font-medium mb-3">
+            <h4 className="text-content-primary font-medium mb-3">
               {String(option.name)}
             </h4>
 
@@ -340,15 +343,15 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                     <div
                       className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
                         selectedOptions[option.id]?.includes(choice.id)
-                          ? "border-[var(--theme-text-content)] shadow-lg scale-110 ring-2 ring-[var(--theme-primary-500)]"
-                          : "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
+                          ? "border-content-primary shadow-lg scale-110 ring-2 ring-brand-primary"
+                          : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
                       }`}
                       style={{
                         backgroundColor:
                           choice.colorCode || "var(--theme-text-content-40)",
                       }}
                     />
-                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-[var(--theme-text-content-70)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-content-light opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       {String(choice.name)}
                     </span>
                   </label>
@@ -374,9 +377,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                           e.target.checked
                         )
                       }
-                      className="w-4 h-4 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-30)] rounded text-[var(--theme-primary-500)] focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:ring-offset-0"
+                      className="w-4 h-4 bg-surface-primary border border-brand-medium rounded text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-0"
                     />
-                    <span className="text-[var(--theme-text-content-80)] group-hover:text-[var(--theme-text-content)] transition-colors text-sm">
+                    <span className="text-content-secondary group-hover:text-content-primary transition-colors text-sm">
                       {String(choice.name)}
                     </span>
                   </label>
@@ -387,7 +390,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         ))}
 
         {productOptions.length === 0 && (
-          <div className="text-center py-4 text-[var(--theme-text-content-60)]">
+          <div className="text-center py-4 text-content-muted">
             <p>No filter options available</p>
           </div>
         )}

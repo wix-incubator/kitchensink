@@ -114,8 +114,10 @@ export interface ChoiceRenderProps {
   description: string | undefined;
   /** Whether this choice is currently selected */
   isSelected: boolean;
-  /** Whether this choice is available for selection */
-  isAvailable: boolean;
+  /** Whether this choice is visible */
+  isVisible: boolean;
+  /** Whether this choice is in stock */
+  isInStock: boolean;
   /** Function to select this choice */
   onSelect: () => void;
   /** Option name */
@@ -141,7 +143,10 @@ export const Choice = (props: ChoiceProps) => {
   const isSelected = selectedChoices[optionName] === choiceValue;
 
   // Check if this choice is available based on current selections
-  const isAvailable = variantService.isChoiceAvailable(optionName, choiceValue);
+  const isVisible = variantService.isChoiceAvailable(optionName, choiceValue);
+  
+  // Check if this choice results in an in-stock variant
+  const isInStock = variantService.isChoiceInStock(optionName, choiceValue);
 
   const value = choiceValue;
 
@@ -157,7 +162,8 @@ export const Choice = (props: ChoiceProps) => {
     value,
     description: undefined, // v3 choices don't have separate description field
     isSelected,
-    isAvailable,
+    isVisible,
+    isInStock,
     onSelect,
     optionName,
     choiceValue,
@@ -184,14 +190,16 @@ export interface TriggerRenderProps {
   canAddToCart: boolean;
   /** Whether add to cart is currently loading */
   isLoading: boolean;
-  /** Current product price */
+  /** Current variant price */
   price: string;
-  /** Whether product is in stock */
+  /** Whether variant is in stock */
   inStock: boolean;
   /** Whether pre-order is enabled */
   isPreOrderEnabled: boolean;
   /** Error message if any */
   error: string | null;
+  /** Available quantity */
+  availableQuantity: number | null;
 }
 
 /**
@@ -201,11 +209,15 @@ export const Trigger = (props: TriggerProps) => {
   const variantService = useService(
     SelectedVariantServiceDefinition
   ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
-  
+
   // Try to get modifiers service - it may not exist for all products
-  let modifiersService: ServiceAPI<typeof ProductModifiersServiceDefinition> | null = null;
+  let modifiersService: ServiceAPI<
+    typeof ProductModifiersServiceDefinition
+  > | null = null;
   try {
-    modifiersService = useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+    modifiersService = useService(
+      ProductModifiersServiceDefinition
+    ) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
   } catch {
     // Modifiers service not available for this product
     modifiersService = null;
@@ -216,15 +228,18 @@ export const Trigger = (props: TriggerProps) => {
   const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
   const isLoading = variantService.isLoading.get();
   const error = variantService.error.get();
+  const availableQuantity = variantService.quantityAvailable.get();
+  const quantity = variantService.selectedQuantity.get();
 
-  const quantity = props.quantity || 1;
-  
   // Check if all required modifiers are filled
-  const areAllRequiredModifiersFilled = modifiersService 
+  const areAllRequiredModifiersFilled = modifiersService
     ? modifiersService.areAllRequiredModifiersFilled()
     : true; // If no modifiers service, assume no required modifiers
-  
-  const canAddToCart = (inStock || isPreOrderEnabled) && !isLoading && areAllRequiredModifiersFilled;
+
+  const canAddToCart =
+    (inStock || isPreOrderEnabled) &&
+    !isLoading &&
+    areAllRequiredModifiersFilled;
 
   const onAddToCart = async () => {
     // Get modifiers data if available
@@ -235,7 +250,7 @@ export const Trigger = (props: TriggerProps) => {
         modifiersData = selectedModifiers;
       }
     }
-    
+
     await variantService.addToCart(quantity, modifiersData);
   };
 
@@ -247,51 +262,7 @@ export const Trigger = (props: TriggerProps) => {
     inStock,
     isPreOrderEnabled,
     error,
-  });
-};
-
-/**
- * Props for Price headless component
- */
-export interface PriceProps {
-  /** Render prop function that receives price data */
-  children: (props: PriceRenderProps) => React.ReactNode;
-}
-
-/**
- * Render props for Price component
- */
-export interface PriceRenderProps {
-  /** Current price (formatted) */
-  price: string;
-  /** Compare at price (formatted) - null if no compare price */
-  compareAtPrice: string | null;
-  /** Whether price is for a variant */
-  isVariantPrice: boolean;
-  /** Currency code */
-  currency: string;
-}
-
-/**
- * Headless component for product price display
- */
-export const Price = (props: PriceProps) => {
-  const variantService = useService(
-    SelectedVariantServiceDefinition
-  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
-
-  const price = variantService.currentPrice.get();
-  const compareAtPrice = variantService.currentCompareAtPrice.get();
-  const currentVariant = variantService.currentVariant.get();
-  const currency = variantService.currency.get();
-
-  const isVariantPrice = !!currentVariant;
-
-  return props.children({
-    price,
-    compareAtPrice,
-    isVariantPrice,
-    currency,
+    availableQuantity,
   });
 };
 
@@ -313,13 +284,12 @@ export interface StockRenderProps {
   isPreOrderEnabled: boolean;
   /** Stock status message */
   status: string;
-  /** Stock quantity (if available) */
-  quantity: number | null;
   /** Whether stock tracking is enabled */
   trackInventory: boolean;
   /** Current variant id */
   currentVariantId: string | null;
-  
+  /** Available quantity */
+  availableQuantity: number | null;
 }
 
 /**
@@ -333,9 +303,9 @@ export const Stock = (props: StockProps) => {
   const inStock = variantService.isInStock.get();
   const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
   const currentVariantId = variantService.selectedVariantId.get();
+  const availableQuantity = variantService.quantityAvailable.get();
 
   const trackInventory = false; // V3 API has different inventory structure
-  const quantity = null; // Not directly available in v3 API
 
   // Determine status based on stock and pre-order availability
   let status: string;
@@ -349,10 +319,10 @@ export const Stock = (props: StockProps) => {
 
   return props.children({
     inStock,
+    availableQuantity,
     isPreOrderEnabled,
     currentVariantId,
     status,
-    quantity,
     trackInventory,
   });
 };

@@ -35,21 +35,6 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   itemData: { slug },
   itemType: seoTags.ItemType.STORES_PRODUCT,
 });
-
-// Load product modifiers service configuration if product has modifiers
-let productModifiersServiceConfig = null;
-try {
-  if (
-    productServiceConfig.product.modifiers &&
-    productServiceConfig.product.modifiers.length > 0
-  ) {
-    productModifiersServiceConfig = {
-      product: productServiceConfig.product,
-    };
-  }
-} catch (error) {
-  console.warn("Could not load product modifiers service:", error);
-}
 ---
 
 <BaseLayout>
@@ -60,8 +45,6 @@ try {
     currentCartServiceConfig={currentCartServiceConfig}
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
-    productModifiersServiceConfig={productModifiersServiceConfig}
-    seoTagsServiceConfig={seoTagsServiceConfig}
     slot="body"
   />
 </BaseLayout>

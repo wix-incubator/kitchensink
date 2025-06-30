@@ -1,10 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CartPage from "../react-pages/cart";
-import {
-  loadCurrentCartServiceConfig,
-  CurrentCartService,
-} from "../headless/ecom/services/current-cart-service";
+import { loadCurrentCartServiceConfig } from "../headless/ecom/services/current-cart-service";
 
 // Load initial cart data server-side
 const cartServiceConfig = await loadCurrentCartServiceConfig();
@@ -14,7 +11,7 @@ const cartServiceConfig = await loadCurrentCartServiceConfig();
   <title>Shopping Cart</title>
   <meta
     name="description"
-    content="Review and manage items in your shopping cart"
+    content="Review and manage items in your Shopping Cart"
   />
 
   <CartPage client:load data={cartServiceConfig} slot="body" />

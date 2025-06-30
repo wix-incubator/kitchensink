@@ -2,6 +2,7 @@ import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductServiceDefinition } from "../services/product-service";
 import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
+import type { productsV3 } from "@wix/stores";
 
 /**
  * Props for ProductName headless component
@@ -17,8 +18,6 @@ export interface ProductNameProps {
 export interface ProductNameRenderProps {
   /** Product name */
   name: string;
-  /** Whether product has a name */
-  hasName: boolean;
 }
 
 /**
@@ -30,11 +29,10 @@ export const Name = (props: ProductNameProps) => {
   >;
 
   const product = service.product.get();
-  const name = product?.name || "";
+  const name = product.name!;
 
   return props.children({
     name,
-    hasName: !!name,
   });
 };
 
@@ -51,11 +49,9 @@ export interface ProductDescriptionProps {
  */
 export interface ProductDescriptionRenderProps {
   /** Product description (may contain HTML) */
-  description: string;
-  /** Whether product has a description */
-  hasDescription: boolean;
-  /** Whether description contains HTML */
-  isHtml: boolean;
+  description: NonNullable<productsV3.V3Product["description"]>;
+  /** Product plain description */
+  plainDescription: NonNullable<productsV3.V3Product["plainDescription"]>;
 }
 
 /**
@@ -68,65 +64,11 @@ export const Description = (props: ProductDescriptionProps) => {
 
   const product = service.product.get();
 
-  // Handle v3 description which can be string or RichContent
-  const rawDescription = product?.description;
-  const description = typeof rawDescription === "string" ? rawDescription : "";
-  const hasDescription = !!description;
-  const isHtml = description.includes("<") && description.includes(">");
+  const descriptionRichContent = product.description!;
+  const plainDescription = product.plainDescription!;
 
   return props.children({
-    description,
-    hasDescription,
-    isHtml,
-  });
-};
-
-/**
- * Props for ProductDetails headless component
- */
-export interface ProductDetailsProps {
-  /** Render prop function that receives product details data */
-  children: (props: ProductDetailsRenderProps) => React.ReactNode;
-}
-
-/**
- * Render props for ProductDetails component
- */
-export interface ProductDetailsRenderProps {
-  /** Product SKU */
-  sku: string | null;
-  /** Product weight */
-  weight: string | null;
-  /** Product dimensions (if available) */
-  dimensions: string | null;
-  /** Whether product has SKU */
-  hasSku: boolean;
-  /** Whether product has weight */
-  hasWeight: boolean;
-  /** Whether product has dimensions */
-  hasDimensions: boolean;
-}
-
-/**
- * Headless component for product details display
- */
-export const Details = (props: ProductDetailsProps) => {
-  const selectedVariantService = useService(SelectedVariantServiceDefinition) as ServiceAPI<
-    typeof SelectedVariantServiceDefinition
-  >;
-
-  const selectedVariant = selectedVariantService.currentVariant?.get();
-
-  let sku: string | null =  selectedVariant?.sku || null  ;
-  let weight: string | null = selectedVariant?.physicalProperties?.weight?.toString() || null;
-  let dimensions: string | null = null;
-
-  return props.children({
-    sku,
-    weight,
-    dimensions,
-    hasSku: !!sku,
-    hasWeight: !!weight,
-    hasDimensions: false,
+    description: descriptionRichContent,
+    plainDescription: plainDescription,
   });
 };

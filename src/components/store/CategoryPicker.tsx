@@ -1,6 +1,6 @@
 import React from "react";
 import { categories } from "@wix/categories";
-import { Category } from "../headless/store/components";
+import { Category } from "../../headless/store/components";
 
 // Use the Wix SDK category type directly
 type Category = categories.Category;
@@ -21,11 +21,14 @@ function CategoryPicker({
   if (categories.length === 0) {
     return null; // No categories to show
   }
+  if (selectedCategory === null) {
+    onCategorySelect(categories[0]._id || null);
+  }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[var(--theme-text-content)] font-semibold text-sm uppercase tracking-wide">
+        <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
           Shop by Category
         </h3>
       </div>
@@ -39,14 +42,9 @@ function CategoryPicker({
             onClick={() => onCategorySelect(category._id || null)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               selectedCategory === category._id
-                ? "text-[var(--theme-text-content)] shadow-lg transform scale-105"
-                : "bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] hover:bg-[var(--theme-bg-primary-10)] hover:text-[var(--theme-text-content)]"
+                ? "text-content-primary shadow-lg transform scale-105 btn-primary"
+                : "bg-surface-primary text-content-secondary hover:bg-brand-light hover:text-content-primary"
             }`}
-            style={
-              selectedCategory === category._id
-                ? { background: 'var(--theme-btn-primary)' }
-                : {}
-            }
           >
             {category.name}
           </button>

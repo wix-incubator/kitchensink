@@ -52,7 +52,6 @@ export function WixMediaImage({
     originalHeight = 320,
   } = parseMediaFromUrl(media?.image!);
 
-
   return (
     <Image
       key={uri}

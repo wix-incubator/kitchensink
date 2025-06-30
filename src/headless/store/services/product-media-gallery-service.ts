@@ -14,7 +14,6 @@ export interface ProductMediaGalleryServiceAPI {
   relevantImages: ReadOnlySignal<string[]>;
 
   product: ReadOnlySignal<productsV3.V3Product | null>;
-  isLoading: ReadOnlySignal<boolean>;
   totalImages: ReadOnlySignal<number>;
   productName: ReadOnlySignal<string>;
 
@@ -28,47 +27,58 @@ export const ProductMediaGalleryServiceDefinition =
 
 export const ProductMediaGalleryService = implementService.withConfig<{}>()(
   ProductMediaGalleryServiceDefinition,
-  ({ getService, config }) => {
+  ({ getService }) => {
     const signalsService = getService(SignalsServiceDefinition);
     const selectedVariantService = getService(SelectedVariantServiceDefinition);
     const productService = getService(ProductServiceDefinition);
 
     const selectedImageIndex: Signal<number> = signalsService.signal(0 as any);
 
-    const relevantImages: ReadOnlySignal<string[]> = signalsService.computed(() => {
-      const product = productService.product.get();
-      const selectedChoices = selectedVariantService.selectedChoices?.get() || {};
+    const relevantImages: ReadOnlySignal<string[]> = signalsService.computed(
+      () => {
+        const product = productService.product.get();
+        const selectedChoices =
+          selectedVariantService.selectedChoices?.get() || {};
 
-      // Get images based on selected choices if available
-      let selectedChoicesImages: string[] = [];
-      
-      Object.keys(selectedChoices).forEach((choiceKey) => {
-        const productOption = product?.options?.find((option: any) => option.name === choiceKey)?.choicesSettings?.choices?.find((choice: any) => choice.name === selectedChoices[choiceKey]);
-        if (productOption) {
-          selectedChoicesImages.push(...(productOption?.linkedMedia?.map((media: any) => media.image) || []));
+        // Get images based on selected choices if available
+        let selectedChoicesImages: string[] = [];
+
+        Object.keys(selectedChoices).forEach((choiceKey) => {
+          const productOption = product?.options
+            ?.find((option: any) => option.name === choiceKey)
+            ?.choicesSettings?.choices?.find(
+              (choice: any) => choice.name === selectedChoices[choiceKey]
+            );
+          if (productOption) {
+            selectedChoicesImages.push(
+              ...(productOption?.linkedMedia?.map(
+                (media: any) => media.image
+              ) || [])
+            );
+          }
+        });
+
+        if (selectedChoicesImages?.length) {
+          return selectedChoicesImages;
         }
-      });
 
-      if (selectedChoicesImages?.length) {
-        return selectedChoicesImages;
+        const productItemsImages = product?.media?.itemsInfo?.items
+          ?.map((item: any) => item.image)
+          .filter(Boolean);
+        if (productItemsImages?.length) {
+          return productItemsImages;
+        }
+
+        if (product?.media?.main) {
+          return [product.media.main.image];
+        }
+
+        return [];
       }
-
-      const productItemsImages =  product?.media?.itemsInfo?.items?.map((item: any) => item.image).filter(Boolean);
-      if (productItemsImages?.length) {
-        return productItemsImages;
-      }
-
-      if (product?.media?.main) {
-        return [product.media.main.image];
-      }
-
-      return [];
-    });
-
+    );
 
     const product: ReadOnlySignal<productsV3.V3Product | null> =
       productService.product;
-    const isLoading: ReadOnlySignal<boolean> = productService.isLoading;
 
     const totalImages: ReadOnlySignal<number> = signalsService.computed(() => {
       return relevantImages.get().length;
@@ -99,26 +109,22 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     const nextImage = () => {
       const images = relevantImages.get();
       const currentIndex = selectedImageIndex.get();
-  
+
       if (!images.length) return;
-  
+
       const nextIndex =
-        currentIndex >= images.length - 1
-          ? 0
-          : currentIndex + 1;
+        currentIndex >= images.length - 1 ? 0 : currentIndex + 1;
       selectedImageIndex.set(nextIndex);
     };
 
     const previousImage = () => {
       const images = relevantImages.get();
       const currentIndex = selectedImageIndex.get();
-  
+
       if (!images.length) return;
-  
+
       const prevIndex =
-        currentIndex <= 0
-          ? images.length - 1
-          : currentIndex - 1;
+        currentIndex <= 0 ? images.length - 1 : currentIndex - 1;
       selectedImageIndex.set(prevIndex);
     };
 
@@ -131,7 +137,6 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
       previousImage,
 
       product,
-      isLoading,
       totalImages,
       productName,
     };

@@ -6,6 +6,7 @@ import {
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
+import { ProductServiceDefinition } from "./product-service";
 
 export interface ModifierValue {
   modifierName: string;
@@ -33,12 +34,9 @@ export interface ProductModifiersServiceAPI {
 export const ProductModifiersServiceDefinition =
   defineService<ProductModifiersServiceAPI>("productModifiers");
 
-export const ProductModifiersService = implementService.withConfig<{
-  product: productsV3.V3Product;
-}>()(ProductModifiersServiceDefinition, ({ getService, config }) => {
+export const ProductModifiersService = implementService.withConfig()(ProductModifiersServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
-
-  const configProduct = config.product;
+  const productService = getService(ProductServiceDefinition);
 
   const selectedModifiers: Signal<Record<string, ModifierValue>> = 
     signalsService.signal({} as any);
@@ -47,6 +45,7 @@ export const ProductModifiersService = implementService.withConfig<{
 
   // Extract modifiers from product
   const modifiers = signalsService.computed(() => {
+    const configProduct = productService.product.get();
     return (configProduct?.modifiers || []) as any;
   }) as unknown as ReadOnlySignal<productsV3.ConnectedModifier[]>;
 

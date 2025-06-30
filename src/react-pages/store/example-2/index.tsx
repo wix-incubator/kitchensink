@@ -4,7 +4,7 @@ import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-2.css";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 import { WixMediaImage } from "../../../headless/media/components";
-import ProductFilters from "../../../components/ProductFilters";
+import ProductFilters from "../../../components/store/ProductFilters";
 import { FilteredCollection } from "../../../headless/store/components";
 import {
   CollectionService,
@@ -26,7 +26,7 @@ import {
   CategoryService,
   CategoryServiceDefinition,
 } from "../../../headless/store/services/category-service";
-import StoreHeader from "../../../components/StoreHeader";
+import StoreHeader from "../../../components/store/StoreHeader";
 import {
   SortService,
   SortServiceDefinition,
@@ -199,8 +199,7 @@ const ProductGridContent = () => {
                                 image,
                                 price,
                                 compareAtPrice,
-                                available,
-                                href,
+                                slug,
                                 description,
                               }) => (
                                 <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
@@ -405,10 +404,7 @@ const ProductGridContent = () => {
 
                                   <div className="flex gap-2">
                                     <a
-                                      href={href.replace(
-                                        "/store/products/",
-                                        "/store/example-2/"
-                                      )}
+                                      href={`/store/example-2/${slug}`}
                                       className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                                       style={{
                                         background: "var(--theme-btn-primary)",
@@ -583,9 +579,7 @@ export default function StoreExample2Page({
         const categorySlug = category?.slug || categoryId;
         newPath = `${basePath}/category/${categorySlug}`;
       }
-
-      // Navigate immediately - pulse animation will show during page load
-      window.location.href = newPath;
+      window.history.pushState(null, 'Showing Category ' + category?.name, newPath);
     }
   };
 
