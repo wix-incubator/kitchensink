@@ -291,6 +291,10 @@ export interface SummaryProps {
 export interface SummaryRenderProps {
   /** Cart subtotal */
   subtotal: string;
+  /** Discount amount if coupon applied */
+  discount: string | null;
+  /** Applied coupon code if any */
+  appliedCoupon: string | null;
   /** Shipping cost */
   shipping: string;
   /** Tax amount */
@@ -337,8 +341,19 @@ export const Summary = (props: SummaryProps) => {
     currency
   );
 
+  const appliedCoupon =
+    cart?.appliedDiscounts?.find((discount: any) => discount.coupon?.code)
+      ?.coupon?.code || null;
+
+  // Calculate discount from totals if available
+  const discount = totals.discount?.amount 
+    ? formatCurrency(parseFloat(totals.discount.amount), currency)
+    : null;
+
   return props.children({
     subtotal,
+    discount,
+    appliedCoupon,
     shipping,
     tax,
     total,
@@ -463,6 +478,55 @@ export const Notes = (props: NotesProps) => {
   });
 };
 
+/**
+ * Props for Coupon headless component
+ */
+export interface CouponProps {
+  /** Render prop function that receives coupon data */
+  children: (props: CouponRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Coupon component
+ */
+export interface CouponRenderProps {
+  /** Applied coupon code if any */
+  appliedCoupon: string | null;
+  /** Function to apply coupon */
+  onApply: (code: string) => Promise<void>;
+  /** Function to remove coupon */
+  onRemove: () => Promise<void>;
+  /** Whether coupon action is loading */
+  isLoading: boolean;
+  /** Error message if coupon operation fails */
+  error: string | null;
+}
+
+/**
+ * Headless component for coupon functionality
+ */
+export const Coupon = (props: CouponProps) => {
+  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
+    typeof CurrentCartServiceDefinition
+  >;
+
+  const cart = service.cart.get();
+  const isLoading = service.isCouponLoading.get();
+  const error = service.error.get();
+
+  const appliedCoupon =
+    cart?.appliedDiscounts?.find((discount: any) => discount.coupon?.code)
+      ?.coupon?.code || null;
+
+  return props.children({
+    appliedCoupon,
+    onApply: service.applyCoupon,
+    onRemove: service.removeCoupon,
+    isLoading,
+    error,
+  });
+};
+
 export const CurrentCart = {
   Trigger,
   Content,
@@ -472,4 +536,5 @@ export const CurrentCart = {
   Checkout,
   Clear,
   Notes,
+  Coupon,
 } as const;

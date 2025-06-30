@@ -19,8 +19,8 @@ interface CartPageProps {
 
 const CartContent = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="container mx-auto px-4 py-8">
         <CurrentCart.Content>
           {({ cart, isLoading, error }) => (
             <>
@@ -373,9 +373,75 @@ const CartContent = () => {
                               </CurrentCart.Notes>
                             </div>
 
+                            {/* Coupon Code */}
+                            <div className="mb-6">
+                              <CurrentCart.Coupon>
+                                {({
+                                  appliedCoupon,
+                                  onApply,
+                                  onRemove,
+                                  isLoading,
+                                  error,
+                                }) => (
+                                  <div>
+                                    {appliedCoupon ? (
+                                      <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                                        <span className="text-green-400 text-sm font-medium">
+                                          Coupon: {appliedCoupon}
+                                        </span>
+                                        <button
+                                          onClick={onRemove}
+                                          disabled={isLoading}
+                                          className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50"
+                                        >
+                                          {isLoading ? "Removing..." : "Remove"}
+                                        </button>
+                                      </div>
+                                    ) : (
+                                                                             <form
+                                         onSubmit={(e) => {
+                                           e.preventDefault();
+                                           const formData = new FormData(e.currentTarget);
+                                           const code = formData.get('couponCode') as string;
+                                           if (code?.trim()) {
+                                             onApply(code.trim());
+                                           }
+                                         }}
+                                         className="space-y-3"
+                                       >
+                                         <input
+                                           type="text"
+                                           name="couponCode"
+                                           placeholder="Enter promo code"
+                                           className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors duration-200"
+                                           disabled={isLoading}
+                                         />
+                                         <button
+                                           type="submit"
+                                           disabled={isLoading}
+                                           className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                         >
+                                           {isLoading ? "Applying..." : "Apply Coupon"}
+                                         </button>
+                                       </form>
+                                    )}
+                                    {error && error.includes("coupon") && (
+                                      <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-2">
+                                        <p className="text-red-400 text-sm">
+                                          {error}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </CurrentCart.Coupon>
+                            </div>
+
                             <CurrentCart.Summary>
                               {({
                                 subtotal,
+                                discount,
+                                appliedCoupon,
                                 shipping,
                                 tax,
                                 total,
@@ -410,6 +476,16 @@ const CartContent = () => {
                                           </LoadingOrValue>
                                         </span>
                                       </div>
+                                      {appliedCoupon && discount && (
+                                        <div className="flex justify-between text-lg text-green-400">
+                                          <span>Discount</span>
+                                          <span className="font-semibold">
+                                            -<LoadingOrValue>
+                                              {discount}
+                                            </LoadingOrValue>
+                                          </span>
+                                        </div>
+                                      )}
                                       <div className="flex justify-between text-lg text-[var(--theme-text-content)]">
                                         <span>Shipping</span>
                                         <span className="font-semibold">

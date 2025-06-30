@@ -11,6 +11,66 @@ import {
 import { CurrentCart } from "../headless/ecom/components/CurrentCart";
 import WixMediaImage from "../headless/media/components/Image";
 
+// Mini coupon form for the cart sidebar
+const CouponFormMini = ({
+  onApply,
+  isLoading,
+}: {
+  onApply: (code: string) => void;
+  isLoading: boolean;
+}) => {
+  const [code, setCode] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code.trim()) {
+      onApply(code.trim());
+      setCode("");
+    }
+  };
+
+  if (!isExpanded) {
+    return (
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="text-teal-400 hover:text-teal-300 text-xs font-medium"
+      >
+        Have a promo code?
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-2">
+      <div className="flex gap-1">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Promo code"
+          className="flex-1 px-2 py-1 text-xs bg-white/10 border border-white/20 rounded text-white placeholder-white/60 focus:border-teal-400 focus:ring-1 focus:ring-teal-400"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={!code.trim() || isLoading}
+          className="px-2 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white text-xs font-medium rounded"
+        >
+          {isLoading ? "..." : "Apply"}
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={() => setIsExpanded(false)}
+        className="text-white/60 hover:text-white/80 text-xs"
+      >
+        Cancel
+      </button>
+    </form>
+  );
+};
+
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
