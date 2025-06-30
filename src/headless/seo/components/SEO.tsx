@@ -1,23 +1,39 @@
-import {
-  ServicesManagerProvider,
-  useService,
-} from "@wix/services-manager-react";
-import {
-  SEOTagsService,
-  SEOTagsServiceDefinition,
-  type SEOTagsServiceConfig,
-} from "../services/seo-tags-service";
+import { useService } from "@wix/services-manager-react";
+import { SEOTagsServiceDefinition } from "../services/seo-tags-service";
 import type { ServiceAPI } from "@wix/services-manager/types";
 import type { seoTags } from "@wix/seo";
-import { useEffect } from "react";
-import { createServicesMap } from "@wix/services-manager";
-import { createServicesManager } from "@wix/services-manager";
 
-interface SEOTagsProps {
-  tags: seoTags.Tag[];
-}
+/**
+ * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
+ *
+ * Integrates with the Wix services manager and a custom SEO tags service to inject SEO-relevant tags.
+ *
+ * @param {SEOTagsServiceConfig} props.seoTagsServiceConfig - Configuration for the SEO tags service.
+ *
+ * @example
+ * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
+ * import { SEO } from "@wix/seo/components";
+ * import { seoTags } from "@wix/seo";
+ *
+ * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+ *   pageURL: url,
+ *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
+ *   itemType: seoTags.ItemType.<YOUR_ITEM_TYPE>,
+ * });
+ *
+ * <head>
+ *   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} />
+ * </head>
+ */
 
-function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
+export interface TagsProps {}
+
+export function Tags({}: TagsProps): React.ReactNode {
+  const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
+    typeof SEOTagsServiceDefinition
+  >;
+  const tags = service.seoTags.get();
+
   return (
     <>
       {tags
@@ -57,40 +73,6 @@ function SEOTags({ tags }: SEOTagsProps): React.ReactNode {
   );
 }
 
-/**
- * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
- *
- * Integrates with the Wix services manager and a custom SEO tags service to inject SEO-relevant tags.
- *
- * @param {SEOTagsServiceConfig} props.seoTagsServiceConfig - Configuration for the SEO tags service.
- *
- * @example
- * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
- * import { SEO } from "@wix/seo/components";
- * import { seoTags } from "@wix/seo";
- * 
- * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
- *   pageURL: url,
- *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
- *   itemType: seoTags.ItemType.<YOUR_ITEM_TYPE>,
- * });
- *
- * <head>
- *   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} />
- * </head>
- */
-
-export interface TagsProps {
-  seoTagsServiceConfig: SEOTagsServiceConfig;
-}
-
-export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
-  return <SEOTags tags={seoTagsServiceConfig.initialSeoTags} />;
-}
-
-
-
-
 export interface UpdateTagsTrigger {
   children: (props: {
     updateSeoTags: (
@@ -114,7 +96,7 @@ export interface UpdateTagsTrigger {
  *
  * <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
  *   {({ updateSeoTags }) => (
- *     <a 
+ *     <a
  *       href="https://your-domain.com/items/different-item"
  *       onClick={() =>
  *         updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "product-slug" })
@@ -126,81 +108,12 @@ export interface UpdateTagsTrigger {
  * </SEO.UpdateTagsTrigger>
  * ```
  */
-export const UpdateTagsTrigger = ({
-  seoTagsServiceConfig,
-  ...props
-}: UpdateTagsTrigger & { seoTagsServiceConfig: SEOTagsServiceConfig }) => {
-  const seoTagsServiceManager = createServicesManager(
-    createServicesMap().addService(
-      SEOTagsServiceDefinition,
-      SEOTagsService,
-      seoTagsServiceConfig
-    )
-  );
-  return (
-    <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
-      <UpdateTagsTriggerRender {...props} />  
-    </ServicesManagerProvider>
-  );
-};
-
-function UpdateTagsTriggerRender(props: UpdateTagsTrigger) {
+export const UpdateTagsTrigger = (props: UpdateTagsTrigger) => {
   const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
     typeof SEOTagsServiceDefinition
   >;
 
-  useEffect(() => {
-    const tags = service.seoTags.get().filter((tag) => !tag.disabled);
-    appendNewTags(tags);
-  }, [service.seoTags.get()]);
-
   return props.children({
     updateSeoTags: service.updateSeoTags,
   });
-}
-
-function appendNewTags(tags: seoTags.Tag[]) {
-  const newTagElements: HTMLElement[] = [];
-  try {
-    tags.forEach((tag) => {
-      const el = createTagElement(tag);
-      if (el) newTagElements.push(el);
-    });
-
-    document.head
-      .querySelectorAll('[wix-seo-tags="true"]')
-      .forEach((el) => el.remove());
-
-    newTagElements.forEach((el) => document.head.appendChild(el));
-  } catch (err) {
-    console.error("SEO tag update failed", err);
-  }
-
-  function createTagElement(tag: any): HTMLElement | null {
-    let el: HTMLElement | null = null;
-    if (tag.type === "title") {
-      el = document.createElement("title");
-      el.textContent = tag.children || "";
-    } else if (tag.type === "meta") {
-      el = document.createElement("meta");
-      setAttributes(el, tag.props);
-    } else if (tag.type === "link") {
-      el = document.createElement("link");
-      setAttributes(el, tag.props);
-    } else if (tag.type === "script") {
-      el = document.createElement("script");
-      setAttributes(el, tag.props);
-      setAttributes(el, tag.meta);
-      if (tag.children) el.textContent = tag.children;
-    }
-    if (el) el.setAttribute("wix-seo-tags", "true");
-    return el;
-  }
-
-  function setAttributes(el: HTMLElement, attrs?: Record<string, any>) {
-    if (!attrs) return;
-    Object.entries(attrs).forEach(([k, v]) => {
-      if (v !== undefined) el.setAttribute(k, v as string);
-    });
-  }
-}
+};

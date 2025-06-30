@@ -4,8 +4,6 @@ import StoreCollectionPage from "../../../../react-pages/store/example-2/index";
 import { loadCollectionServiceConfig } from "../../../../headless/store/services/collection-service";
 import { loadCurrentCartServiceConfig } from "../../../../headless/ecom/services/current-cart-service";
 import { loadCategoriesConfig } from "../../../../headless/store/services/category-service";
-import { loadSEOTagsServiceConfig } from "../../../../headless/seo/services/seo-tags-service";
-import { SEO } from "../../../../headless/seo/components";
 
 // Get category slug from URL params
 const { categorySlug } = Astro.params;
@@ -29,33 +27,9 @@ const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 if (!selectedCategory) {
   return Astro.redirect("/404");
 }
-
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemData: {
-    pageName: selectedCategory.name,
-    seoData: {
-      tags: [
-        {
-          type: "title",
-          children: `Store Example 2 - ${selectedCategory.name}`,
-        },
-        {
-          type: "meta",
-          props: {
-            content: `Browse our ${selectedCategory.name} products with modern card layout`,
-            name: "description",
-          },
-        },
-      ],
-    },
-  },
-});
 ---
 
 <BaseLayout>
-  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
-
   <StoreCollectionPage
     client:load
     filteredCollectionServiceConfig={filteredCollectionServiceConfig}

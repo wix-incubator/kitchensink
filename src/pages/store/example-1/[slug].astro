@@ -8,6 +8,7 @@ import { loadSelectedVariantServiceConfig } from "../../../headless/store/servic
 import { seoTags } from "@wix/seo";
 import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
 import { SEO } from "../../../headless/seo/components";
+import { SEOProvider } from "../../../layouts/SEOProvider";
 
 const { slug } = Astro.params;
 
@@ -52,16 +53,13 @@ try {
 }
 ---
 
-<BaseLayout>
-  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
-  <ProductDetailPage
-    client:load
-    productServiceConfig={productServiceConfig}
-    currentCartServiceConfig={currentCartServiceConfig}
-    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
-    selectedVariantServiceConfig={selectedVariantServiceConfig}
-    productModifiersServiceConfig={productModifiersServiceConfig}
-    seoTagsServiceConfig={seoTagsServiceConfig}
-    slot="body"
-  />
-</BaseLayout>
+<ProductDetailPage
+  client:load
+  productServiceConfig={productServiceConfig}
+  currentCartServiceConfig={currentCartServiceConfig}
+  productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
+  selectedVariantServiceConfig={selectedVariantServiceConfig}
+  productModifiersServiceConfig={productModifiersServiceConfig}
+  seoTagsServiceConfig={seoTagsServiceConfig}
+  slot="body"
+/>

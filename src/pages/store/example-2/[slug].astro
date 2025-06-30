@@ -7,9 +7,6 @@ import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/se
 import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
 import { loadSocialSharingServiceConfig } from "../../../headless/store/services/social-sharing-service";
 import { loadRelatedProductsServiceConfig } from "../../../headless/store/services/related-products-service";
-import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
-import { SEO } from "../../../headless/seo/components";
-import { seoTags } from "@wix/seo";
 
 const { slug } = Astro.params;
 
@@ -65,15 +62,7 @@ try {
   console.warn("Could not load product modifiers service:", error);
 }
 
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemType: seoTags.ItemType.STORES_PRODUCT,
-  itemData: { slug },
-});
 ---
-
-<BaseLayout>
-  <SEO.Tags  seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
   <ProductDetailPage
     client:load
@@ -84,6 +73,4 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     socialSharingServiceConfig={socialSharingServiceConfig}
     relatedProductsServiceConfig={relatedProductsServiceConfig}
     productModifiersServiceConfig={productModifiersServiceConfig}
-    slot="body"
   />
-</BaseLayout>
