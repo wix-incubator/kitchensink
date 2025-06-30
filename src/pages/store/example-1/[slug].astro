@@ -30,7 +30,7 @@ const selectedVariantServiceConfig =
 // Load product modifiers service configuration if product has modifiers
 let productModifiersServiceConfig = null;
 try {
-  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
+  if (productServiceConfig!.product!.modifiers && productServiceConfig!.product!.modifiers.length > 0) {
     productModifiersServiceConfig = {
       product: productServiceConfig.product,
     };
@@ -39,7 +39,7 @@ try {
   console.warn("Could not load product modifiers service:", error);
 }
 
-const productName = productServiceConfig.product.name || "Product";
+const productName = productServiceConfig!.product!.name || "Product";
 ---
 
 <BaseLayout>

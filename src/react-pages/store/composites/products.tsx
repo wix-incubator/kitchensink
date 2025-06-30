@@ -1,49 +1,12 @@
 import React from "react";
-import { StoreLayout } from "../../../layouts/StoreLayout";
 import WixMediaImage from "../../../headless/media/components/Image";
 import ProductFilters from "../../../components/ProductFilters";
 import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
-import {
-  CollectionService,
-  CollectionServiceDefinition,
-} from "../../../headless/store/services/collection-service";
-import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import {
-  FilterService,
-  FilterServiceDefinition,
-} from "../../../headless/store/services/filter-service";
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-} from "../../../headless/ecom/services/current-cart-service";
-import {
-  CategoryService,
-  CategoryServiceDefinition,
-} from "../../../headless/store/services/category-service";
 import StoreHeader from "../../../components/StoreHeader";
-import {
-  SortService,
-  SortServiceDefinition,
-} from "../../../headless/store/services/sort-service";
-import {
-  CatalogPriceRangeService,
-  CatalogPriceRangeServiceDefinition,
-} from "../../../headless/store/services/catalog-price-range-service";
-import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from "../../../headless/store/services/catalog-options-service";
 import { FiltersLoading } from "../../../headless/store/components/FilteredCollection";
 
 interface StoreCollectionPageProps {
-  filteredCollectionServiceConfig: any;
-  currentCartServiceConfig: any;
-  categoriesConfig: any;
   productPageRoute: string;
-  onCategoryChange?: (categoryId: string | null, category: any) => void;
 }
 
 const ProductGridContent = ({ productPageRoute }: { productPageRoute: string }) => {
@@ -561,49 +524,13 @@ const LoadMoreSection = () => {
 };
 
 export default function StoreCollectionPage({
-  filteredCollectionServiceConfig,
-  currentCartServiceConfig,
-  categoriesConfig,
-  onCategoryChange = () => { },
   productPageRoute,
 }: StoreCollectionPageProps) {
-  const servicesManager = createServicesManager(
-    createServicesMap()
-      .addService(
-        CollectionServiceDefinition,
-        CollectionService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        FilterServiceDefinition,
-        FilterService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartServiceConfig
-      )
-      .addService(CategoryServiceDefinition, CategoryService, {
-        ...categoriesConfig,
-        onCategoryChange,
-      })
-      .addService(SortServiceDefinition, SortService, {
-        initialSort: filteredCollectionServiceConfig.initialSort,
-      })
-      .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService, {})
-      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
-  );
 
   return (
-    <StoreLayout
-      currentCartServiceConfig={currentCartServiceConfig}
-      servicesManager={servicesManager}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <ProductGridContent productPageRoute={productPageRoute} />
-        <LoadMoreSection />
-      </div>
-    </StoreLayout>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <ProductGridContent productPageRoute={productPageRoute} />
+      <LoadMoreSection />
+    </div>
   );
 }

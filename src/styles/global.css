@@ -179,3 +179,183 @@
 .theme-text-error {
   color: var(--theme-text-error);
 }
+
+.theme-text-warning {
+  color: var(--theme-text-warning);
+}
+
+.theme-text-preorder {
+  color: var(--theme-text-preorder);
+}
+
+.theme-text-content-30 {
+  color: var(--theme-text-content-30);
+}
+
+.theme-text-social-twitter {
+  color: var(--theme-text-social-twitter);
+}
+
+.theme-text-social-facebook {
+  color: var(--theme-text-social-facebook);
+}
+
+.theme-text-social-linkedin {
+  color: var(--theme-text-social-linkedin);
+}
+
+.theme-bg-loading {
+  background-color: var(--theme-bg-loading);
+}
+
+.theme-bg-card {
+  background-color: var(--theme-bg-card);
+}
+
+.theme-bg-error {
+  background-color: var(--theme-bg-error);
+}
+
+.theme-bg-warning {
+  background-color: var(--theme-bg-warning);
+}
+
+.theme-bg-preorder {
+  background-color: var(--theme-bg-preorder);
+}
+
+.theme-bg-tooltip {
+  background-color: var(--theme-bg-tooltip);
+}
+
+.theme-bg-mini-cart {
+  background-color: var(--theme-bg-mini-cart);
+}
+
+.theme-bg-overlay {
+  background-color: var(--theme-bg-overlay);
+}
+
+.theme-bg-social-twitter {
+  background-color: var(--theme-bg-social-twitter);
+}
+
+.theme-bg-social-facebook {
+  background-color: var(--theme-bg-social-facebook);
+}
+
+.theme-bg-social-linkedin {
+  background-color: var(--theme-bg-social-linkedin);
+}
+
+.theme-border-card {
+  border-color: var(--theme-border-card);
+}
+
+.theme-border-card-hover:hover {
+  border-color: var(--theme-border-card-hover);
+}
+
+.theme-border-error {
+  border-color: var(--theme-border-error);
+}
+
+.theme-border-warning {
+  border-color: var(--theme-border-warning);
+}
+
+.theme-border-preorder {
+  border-color: var(--theme-border-preorder);
+}
+
+.theme-btn-buy-now {
+  background: var(--theme-btn-buy-now);
+}
+
+.theme-btn-buy-now:hover {
+  background: var(--theme-btn-buy-now-hover);
+}
+
+.theme-btn-view-cart {
+  background: var(--theme-btn-view-cart);
+}
+
+.theme-btn-view-cart:hover {
+  background: var(--theme-btn-view-cart-hover);
+}
+
+.theme-status-success {
+  background-color: var(--theme-status-success);
+}
+
+.theme-status-warning {
+  background-color: var(--theme-status-warning);
+}
+
+.theme-status-preorder {
+  background-color: var(--theme-status-preorder);
+}
+
+.theme-status-error {
+  background-color: var(--theme-status-error);
+}
+
+.hover\\:theme-text-primary-300:hover {
+  color: var(--theme-text-primary-300);
+}
+
+.hover\\:theme-bg-options:hover {
+  background-color: var(--theme-bg-options);
+}
+
+.hover\\:theme-bg-social-twitter:hover {
+  background-color: var(--theme-bg-social-twitter);
+}
+
+.hover\\:theme-bg-social-facebook:hover {
+  background-color: var(--theme-bg-social-facebook);
+}
+
+.hover\\:theme-bg-social-linkedin:hover {
+  background-color: var(--theme-bg-social-linkedin);
+}
+
+.hover\\:theme-text-social-twitter:hover {
+  color: var(--theme-text-social-twitter);
+}
+
+.hover\\:theme-text-social-facebook:hover {
+  color: var(--theme-text-social-facebook);
+}
+
+.hover\\:theme-text-social-linkedin:hover {
+  color: var(--theme-text-social-linkedin);
+}
+
+.hover\\:theme-text-primary-400:hover {
+  color: var(--theme-text-primary-400);
+}
+
+.group:hover .group-hover\\:theme-text-primary-400 {
+  color: var(--theme-text-primary-400);
+}
+
+.hover\\:theme-btn-primary-hover:hover {
+  background: var(--theme-btn-primary-hover);
+}
+
+.hover\\:theme-btn-buy-now-hover:hover {
+  background: var(--theme-btn-buy-now-hover);
+}
+
+.hover\\:theme-btn-view-cart-hover:hover {
+  background: var(--theme-btn-view-cart-hover);
+}
+
+.focus\\:theme-color-border-80:focus {
+  border-color: var(--theme-color-border-80);
+}
+
+.placeholder-theme-text-content-50::placeholder {
+  color: var(--theme-text-content-50);
+}

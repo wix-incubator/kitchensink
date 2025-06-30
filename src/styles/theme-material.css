@@ -15,6 +15,12 @@
   --theme-bg-error: rgba(244, 67, 54, 0.1); /* Light red background for error messages */
   --theme-bg-tooltip: rgba(33, 33, 33, 0.9); /* Dark background for tooltips and overlays */
   --theme-bg-mini-cart: rgb(255, 255, 255); /* Light background for mini cart modal with proper contrast for dark text */
+  --theme-bg-warning: rgba(255, 193, 7, 0.1); /* Light yellow background for warning messages */
+  --theme-bg-preorder: rgba(255, 152, 0, 0.1); /* Light orange background for preorder messages */
+  --theme-bg-overlay: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay for navigation buttons */
+  --theme-bg-social-twitter: rgba(25, 118, 210, 0.1); /* Twitter background for social button hover (using material theme) */
+  --theme-bg-social-facebook: rgba(21, 101, 192, 0.1); /* Facebook background for social button hover (using material theme) */
+  --theme-bg-social-linkedin: rgba(13, 71, 161, 0.1); /* LinkedIn background for social button hover (using material theme) */
 
   /* Border Colors */
   --theme-border-primary-10: rgba(25, 118, 210, 0.1); /* Very subtle primary-colored border for filter status bars */
@@ -23,6 +29,8 @@
   --theme-border-card: rgba(0, 0, 0, 0.12); /* Light border for cards and product items */
   --theme-border-card-hover: rgba(0, 0, 0, 0.2); /* Medium border for card hover states */
   --theme-border-error: rgba(244, 67, 54, 0.2); /* Red border for error messages */
+  --theme-border-warning: rgba(255, 193, 7, 0.3); /* Yellow border for warning messages */
+  --theme-border-preorder: rgba(255, 152, 0, 0.3); /* Orange border for preorder messages */
 
   /* Text Colors - Material Design Light Theme */
   --theme-text-primary-300: #1976d2; /* Primary color used for filter status text and active filter labels */
@@ -37,6 +45,17 @@
   --theme-text-content-90: rgba(33, 33, 33, 0.9); /* Almost full opacity content text used for emphasized secondary text */
   --theme-text-success: #4caf50; /* Material Green color used for "In Stock" status indicators */
   --theme-text-error: #f44336; /* Material Red color used for "Out of Stock" status and error messages */
+  --theme-text-warning: #ff9800; /* Material Orange color used for low stock warnings */
+  --theme-text-preorder: #ff5722; /* Material Deep Orange color used for preorder status indicators */
+  --theme-text-social-twitter: #1976d2; /* Twitter blue color for social button hover (using material theme) */
+  --theme-text-social-facebook: #1565c0; /* Facebook blue color for social button hover (using material theme) */
+  --theme-text-social-linkedin: #0d47a1; /* LinkedIn blue color for social button hover (using material theme) */
+
+  /* Status Indicator Colors */
+  --theme-status-success: #4caf50; /* Material Green background for in-stock status indicators */
+  --theme-status-warning: #ff9800; /* Material Orange background for low-stock status indicators */
+  --theme-status-preorder: #ff5722; /* Material Deep Orange background for preorder status indicators */
+  --theme-status-error: #f44336; /* Material Red background for out-of-stock status indicators */
 
   /* Color Picker Border Colors */
   --theme-color-border-40: rgba(25, 118, 210, 0.4); /* Default border color for product color option circles */
@@ -52,6 +71,10 @@
   --theme-btn-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Primary button hover state gradient */
   --theme-btn-secondary: linear-gradient(to right, #1976d2, #03dac6); /* Secondary button background gradient */
   --theme-btn-secondary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Secondary button hover state gradient */
+  --theme-btn-buy-now: linear-gradient(to right, #f97316, #dc2626); /* Buy now button background gradient (orange to red) */
+  --theme-btn-buy-now-hover: linear-gradient(to right, #ea580c, #b91c1c); /* Buy now button hover state gradient */
+  --theme-btn-view-cart: linear-gradient(to right, #10b981, #14b8a6); /* View cart button background gradient (emerald to teal) */
+  --theme-btn-view-cart-hover: linear-gradient(to right, #059669, #0d9488); /* View cart button hover state gradient */
 
   /* Hero Section Gradients */
   --theme-hero-text-gradient: linear-gradient(to right, #1976d2, #03dac6); /* Text gradient used for hero section main headlines */

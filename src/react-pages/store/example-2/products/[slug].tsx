@@ -1,8 +1,8 @@
-import type { ServiceAPI } from "@wix/services-definitions";
 import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import "../../../../styles/theme-2.css";
 import { useService } from "@wix/services-manager-react";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
@@ -49,6 +49,7 @@ import {
 } from "../../../../headless/store/services/social-sharing-service";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
+import ProductDetail from "../../composites/product";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -1053,7 +1054,6 @@ export default function ProductDetailPage({
           description="Complete product detail page using Product, ProductVariantSelector, ProductMediaGallery, and CurrentCart headless components with enhanced UI patterns."
           docsUrl="/docs/examples/advanced-product-detail"
         />
-
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
@@ -1077,65 +1077,10 @@ export default function ProductDetailPage({
                 Back to Store
               </a>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div>
-                <ProductImageGallery />
-              </div>
-
-              <div>
-                <ProductInfo
-                  servicesManager={servicesManager}
-                  onAddToCart={() => {
-                    setShowSuccessMessage(true);
-                    setTimeout(() => setShowSuccessMessage(false), 3000);
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="mt-12 pt-8 border-t border-white/10">
-              <CurrentCart.Summary>
-                {({ subtotal, itemCount }) => (
-                  <>
-                    {itemCount > 0 && (
-                      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-                        <h3 className="text-xl font-semibold text-white mb-4">
-                          Cart Summary
-                        </h3>
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/80">
-                            {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
-                          </span>
-                          <span className="text-xl font-bold text-white">
-                            {subtotal}
-                          </span>
-                        </div>
-                        <a
-                          href="/cart"
-                          className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                        >
-                          View Cart
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </a>
-                      </div>
-                    )}
-                  </>
-                )}
-              </CurrentCart.Summary>
-            </div>
+            <ProductDetail
+              showRelatedProducts={true}
+              setShowSuccessMessage={setShowSuccessMessage}
+            />
           </div>
         </div>
       </StoreLayout>

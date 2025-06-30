@@ -35,6 +35,7 @@ export interface CurrentCartServiceAPI {
   clearCart: () => Promise<void>;
   setBuyerNotes: (notes: string) => Promise<void>;
   proceedToCheckout: () => Promise<void>;
+  loadCart: () => Promise<void>;
   applyCoupon: (couponCode: string) => Promise<void>;
   removeCoupon: () => Promise<void>;
 }
@@ -314,6 +315,13 @@ export const CurrentCartService = implementService.withConfig<{
     }
   };
 
+  const loadCart = async () => {
+    isLoading.set(true);
+    const { initialCart } = await loadCurrentCartServiceConfig();
+    cart.set(initialCart || null);
+    isLoading.set(false);
+  };
+
   // Initialize totals immediately for existing cart
   if (config.initialCart?.lineItems?.length) {
     estimateTotals();
@@ -339,6 +347,7 @@ export const CurrentCartService = implementService.withConfig<{
     clearCart,
     setBuyerNotes,
     proceedToCheckout,
+    loadCart,
     applyCoupon,
     removeCoupon,
   };

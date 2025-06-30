@@ -15,6 +15,12 @@
   --theme-bg-error: rgba(248, 113, 113, 0.1); /* Light red background for error messages */
   --theme-bg-tooltip: rgba(0, 0, 0, 0.8); /* Dark background for tooltips and overlays */
   --theme-bg-mini-cart: rgba(15, 23, 42, 0.95); /* Dark background for mini cart modal with proper contrast for white text */
+  --theme-bg-warning: rgba(251, 191, 36, 0.2); /* Light yellow background for warning messages */
+  --theme-bg-preorder: rgba(251, 146, 60, 0.2); /* Light orange background for preorder messages */
+  --theme-bg-overlay: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay for navigation buttons */
+  --theme-bg-social-twitter: rgba(59, 130, 246, 0.2); /* Twitter blue background for social button hover */
+  --theme-bg-social-facebook: rgba(37, 99, 235, 0.2); /* Facebook blue background for social button hover */
+  --theme-bg-social-linkedin: rgba(29, 78, 216, 0.2); /* LinkedIn blue background for social button hover */
 
   /* Border Colors */
   --theme-border-primary-10: rgba(59, 130, 246, 0.1); /* Very subtle primary-colored border for filter status bars */
@@ -23,6 +29,8 @@
   --theme-border-card: rgba(255, 255, 255, 0.1); /* Light border for cards and product items */
   --theme-border-card-hover: rgba(255, 255, 255, 0.2); /* Medium border for card hover states */
   --theme-border-error: rgba(248, 113, 113, 0.2); /* Red border for error messages */
+  --theme-border-warning: rgba(251, 191, 36, 0.3); /* Yellow border for warning messages */
+  --theme-border-preorder: rgba(251, 146, 60, 0.3); /* Orange border for preorder messages */
 
   /* Text Colors */
   --theme-text-primary-300: #93c5fd; /* Light primary color used for filter status text and active filter labels */
@@ -37,6 +45,17 @@
   --theme-text-content-90: rgba(255, 255, 255, 0.9); /* Almost full opacity content text used for emphasized secondary text */
   --theme-text-success: #34d399; /* Green color used for "In Stock" status indicators */
   --theme-text-error: #f87171; /* Red color used for "Out of Stock" status and error messages */
+  --theme-text-warning: #fbbf24; /* Yellow color used for low stock warnings */
+  --theme-text-preorder: #fb923c; /* Orange color used for preorder status indicators */
+  --theme-text-social-twitter: #60a5fa; /* Twitter blue color for social button hover */
+  --theme-text-social-facebook: #3b82f6; /* Facebook blue color for social button hover */
+  --theme-text-social-linkedin: #2563eb; /* LinkedIn blue color for social button hover */
+
+  /* Status Indicator Colors */
+  --theme-status-success: #10b981; /* Green background for in-stock status indicators */
+  --theme-status-warning: #f59e0b; /* Yellow background for low-stock status indicators */
+  --theme-status-preorder: #f97316; /* Orange background for preorder status indicators */
+  --theme-status-error: #ef4444; /* Red background for out-of-stock status indicators */
 
   /* Color Picker Border Colors */
   --theme-color-border-40: rgba(93, 164, 214, 0.4); /* Default border color for product color option circles */
@@ -52,6 +71,10 @@
   --theme-btn-primary-hover: linear-gradient(to right, #2563eb, #7c3aed); /* Primary button hover state gradient */
   --theme-btn-secondary: linear-gradient(to right, #3b82f6, #8b5cf6); /* Secondary button background gradient */
   --theme-btn-secondary-hover: linear-gradient(to right, #2563eb, #7c3aed); /* Secondary button hover state gradient */
+  --theme-btn-buy-now: linear-gradient(to right, #f97316, #dc2626); /* Buy now button background gradient (orange to red) */
+  --theme-btn-buy-now-hover: linear-gradient(to right, #ea580c, #b91c1c); /* Buy now button hover state gradient */
+  --theme-btn-view-cart: linear-gradient(to right, #10b981, #14b8a6); /* View cart button background gradient (emerald to teal) */
+  --theme-btn-view-cart-hover: linear-gradient(to right, #059669, #0d9488); /* View cart button hover state gradient */
 
   /* Hero Section Gradients */
   --theme-hero-text-gradient: linear-gradient(to right, #93c5fd, #c4b5fd); /* Text gradient used for hero section main headlines */
