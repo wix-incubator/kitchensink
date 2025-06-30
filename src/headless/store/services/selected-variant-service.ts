@@ -56,7 +56,9 @@ export interface SelectedVariantServiceAPI {
 
   // New methods for smart variant selection
   getAvailableChoicesForOption: (optionName: string) => string[];
+  getChoiceInfo: (optionName: string, choiceValue: string) => { isAvailable: boolean; isInStock: boolean };
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
+  isChoiceInStock: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
 }
 
@@ -536,12 +538,55 @@ export const SelectedVariantService = implementService.withConfig<{
     return Array.from(availableChoices);
   };
 
+  // Core method that provides both availability and stock info efficiently
+  const getChoiceInfo = (
+    optionName: string,
+    choiceValue: string
+  ): { isAvailable: boolean; isInStock: boolean } => {
+    // Create hypothetical choices with this choice selected
+    const currentChoices = selectedChoices.get();
+    const hypotheticalChoices = {
+      ...currentChoices,
+      [optionName]: choiceValue,
+    };
+    
+    // Get all variants and find one that matches these choices
+    const variantsList = variants.get();
+    const matchingVariant = variantsList.find((variant) => {
+      if (!variant.choices) return false;
+      
+      const variantChoices: Record<string, string> = {};
+      for (const choice of variant.choices) {
+        if (choice.optionChoiceNames?.optionName && choice.optionChoiceNames?.choiceName) {
+          variantChoices[choice.optionChoiceNames.optionName] = choice.optionChoiceNames.choiceName;
+        }
+      }
+      
+      // Check if this variant matches our hypothetical choices
+      return Object.entries(hypotheticalChoices).every(
+        ([key, value]) => variantChoices[key] === value
+      );
+    });
+    
+    const isAvailable = !!matchingVariant;
+    const isInStock = matchingVariant?.inventoryStatus?.inStock || matchingVariant?.inventoryStatus?.preorderEnabled || false;
+    
+    return { isAvailable, isInStock };
+  };
+
+  // Simplified methods using the core getChoiceInfo
   const isChoiceAvailable = (
     optionName: string,
     choiceValue: string
   ): boolean => {
-    const availableChoices = getAvailableChoicesForOption(optionName);
-    return availableChoices.includes(choiceValue);
+    return getChoiceInfo(optionName, choiceValue).isAvailable;
+  };
+
+  const isChoiceInStock = (
+    optionName: string,
+    choiceValue: string
+  ): boolean => {
+    return getChoiceInfo(optionName, choiceValue).isInStock;
   };
 
   const hasAnySelections = (): boolean => {
@@ -580,7 +625,9 @@ export const SelectedVariantService = implementService.withConfig<{
 
     // New methods for smart variant selection
     getAvailableChoicesForOption,
+    getChoiceInfo,
     isChoiceAvailable,
+    isChoiceInStock,
     hasAnySelections,
 
     // Quantity management methods
