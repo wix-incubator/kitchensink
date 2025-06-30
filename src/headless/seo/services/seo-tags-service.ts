@@ -61,6 +61,9 @@ export const SEOTagsService =
           );
         }
         tags.set(resolvedTags);
+        // remove all elements with data-ssr-seo-tags attributes from the document to avoid duplicates
+        const elements = document.querySelectorAll("[data-ssr-seo-tags]");
+        elements.forEach((element) => element.remove());
       };
 
       return { seoTags: tags, updateSeoTags };

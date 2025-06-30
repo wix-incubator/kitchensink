@@ -31,6 +31,7 @@ import { SeoTags } from "./SeoTags";
  */
 
 export interface TagsProps {}
+
 export function Tags(props: TagsProps): React.ReactNode {
   const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
     typeof SEOTagsServiceDefinition
