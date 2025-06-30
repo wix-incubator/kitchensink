@@ -169,6 +169,11 @@ export interface ItemRenderProps {
   image: string | null;
   /** Line item price */
   price: string;
+  /** Selected product options */
+  selectedOptions: Array<{
+    name: string;
+    value: string | { name: string; code: string };
+  }>;
   /** Function to increase quantity */
   onIncrease: () => Promise<void>;
   /** Function to decrease quantity */
@@ -199,6 +204,7 @@ export const Item = (props: ItemProps) => {
       title: "",
       image: null,
       price: formatCurrency(0, currency),
+      selectedOptions: [],
       onIncrease: async () => {},
       onDecrease: async () => {},
       onRemove: async () => {},
@@ -215,6 +221,35 @@ export const Item = (props: ItemProps) => {
       console.warn("Failed to get image URL:", error);
       image = null;
     }
+  }
+
+  // Extract variant information from description lines
+  const selectedOptions: Array<{
+    name: string;
+    value: string | { name: string; code: string };
+  }> = [];
+
+  if (item.descriptionLines) {
+    item.descriptionLines.forEach((line: any) => {
+      if (line.name?.original) {
+        const optionName = line.name.original;
+
+        if (line.colorInfo) {
+          selectedOptions.push({
+            name: optionName,
+            value: {
+              name: line.colorInfo.original,
+              code: line.colorInfo.code,
+            },
+          });
+        } else if (line.plainText) {
+          selectedOptions.push({
+            name: optionName,
+            value: line.plainText.original,
+          });
+        }
+      }
+    });
   }
 
   // Calculate total price for this line item (unit price × quantity)
@@ -234,6 +269,7 @@ export const Item = (props: ItemProps) => {
     title: item.productName?.original || "",
     image,
     price: formattedPrice,
+    selectedOptions,
     onIncrease: () => service.increaseLineItemQuantity(lineItemId),
     onDecrease: () => service.decreaseLineItemQuantity(lineItemId),
     onRemove: () => service.removeLineItem(lineItemId),
@@ -255,6 +291,10 @@ export interface SummaryProps {
 export interface SummaryRenderProps {
   /** Cart subtotal */
   subtotal: string;
+  /** Shipping cost */
+  shipping: string;
+  /** Tax amount */
+  tax: string;
   /** Cart total */
   total: string;
   /** Currency code */
@@ -263,6 +303,8 @@ export interface SummaryRenderProps {
   itemCount: number;
   /** Whether checkout is available */
   canCheckout: boolean;
+  /** Whether totals are being calculated */
+  isTotalsLoading: boolean;
 }
 
 /**
@@ -275,25 +317,35 @@ export const Summary = (props: SummaryProps) => {
 
   const cart = service.cart.get();
   const itemCount = service.cartCount.get();
+  const cartTotals = service.cartTotals.get();
+  const isTotalsLoading = service.isTotalsLoading.get();
+  const currency = cart?.currency || cartTotals?.currency || "USD";
 
-  // Calculate totals manually since cart.totals doesn't exist
-  const subtotalAmount =
-    cart?.lineItems?.reduce((acc: number, item: any) => {
-      const itemPrice = parseFloat(item.price?.amount || "0");
-      const quantity = item.quantity || 0;
-      return acc + itemPrice * quantity;
-    }, 0) || 0;
-
-  const currency = cart?.currency || "USD";
-  const subtotal = formatCurrency(subtotalAmount, currency);
-  const total = subtotal; // For now, total = subtotal (no taxes/shipping calculated)
+  // Use SDK totals only
+  const totals = cartTotals?.priceSummary || {};
+  const subtotal = formatCurrency(
+    parseFloat(totals.subtotal?.amount || "0"),
+    currency
+  );
+  const shipping = formatCurrency(
+    parseFloat(totals.shipping?.amount || "0"),
+    currency
+  );
+  const tax = formatCurrency(parseFloat(totals.tax?.amount || "0"), currency);
+  const total = formatCurrency(
+    parseFloat(totals.total?.amount || "0"),
+    currency
+  );
 
   return props.children({
     subtotal,
+    shipping,
+    tax,
     total,
     currency,
     itemCount,
     canCheckout: itemCount > 0,
+    isTotalsLoading,
   });
 };
 
@@ -377,6 +429,40 @@ export const Checkout = (props: CheckoutProps) => {
   });
 };
 
+/**
+ * Props for Notes headless component
+ */
+export interface NotesProps {
+  /** Render prop function that receives notes data */
+  children: (props: NotesRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Notes component
+ */
+export interface NotesRenderProps {
+  /** Current notes value */
+  notes: string;
+  /** Function to update notes */
+  onNotesChange: (notes: string) => Promise<void>;
+}
+
+/**
+ * Headless component for notes
+ */
+export const Notes = (props: NotesProps) => {
+  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
+    typeof CurrentCartServiceDefinition
+  >;
+
+  const notes = service.buyerNotes.get();
+
+  return props.children({
+    notes,
+    onNotesChange: service.setBuyerNotes,
+  });
+};
+
 export const CurrentCart = {
   Trigger,
   Content,
@@ -385,4 +471,5 @@ export const CurrentCart = {
   Summary,
   Checkout,
   Clear,
+  Notes,
 } as const;
