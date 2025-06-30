@@ -3,7 +3,7 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
-import "../styles/theme-2.css";
+import "../styles/theme-1.css";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
