@@ -169,6 +169,11 @@ export interface ItemRenderProps {
   image: string | null;
   /** Line item price */
   price: string;
+  /** Selected product options */
+  selectedOptions: Array<{
+    name: string;
+    value: string | { name: string; code: string };
+  }>;
   /** Function to increase quantity */
   onIncrease: () => Promise<void>;
   /** Function to decrease quantity */
@@ -199,6 +204,7 @@ export const Item = (props: ItemProps) => {
       title: "",
       image: null,
       price: formatCurrency(0, currency),
+      selectedOptions: [],
       onIncrease: async () => {},
       onDecrease: async () => {},
       onRemove: async () => {},
@@ -215,6 +221,35 @@ export const Item = (props: ItemProps) => {
       console.warn("Failed to get image URL:", error);
       image = null;
     }
+  }
+
+  // Extract variant information from description lines
+  const selectedOptions: Array<{
+    name: string;
+    value: string | { name: string; code: string };
+  }> = [];
+
+  if (item.descriptionLines) {
+    item.descriptionLines.forEach((line: any) => {
+      if (line.name?.original) {
+        const optionName = line.name.original;
+
+        if (line.colorInfo) {
+          selectedOptions.push({
+            name: optionName,
+            value: {
+              name: line.colorInfo.original,
+              code: line.colorInfo.code,
+            },
+          });
+        } else if (line.plainText) {
+          selectedOptions.push({
+            name: optionName,
+            value: line.plainText.original,
+          });
+        }
+      }
+    });
   }
 
   // Calculate total price for this line item (unit price × quantity)
@@ -234,6 +269,7 @@ export const Item = (props: ItemProps) => {
     title: item.productName?.original || "",
     image,
     price: formattedPrice,
+    selectedOptions,
     onIncrease: () => service.increaseLineItemQuantity(lineItemId),
     onDecrease: () => service.decreaseLineItemQuantity(lineItemId),
     onRemove: () => service.removeLineItem(lineItemId),

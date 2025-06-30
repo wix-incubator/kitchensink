@@ -170,6 +170,7 @@ const CartContent = () => {
                                     image,
                                     price,
                                     quantity,
+                                    selectedOptions,
                                     onIncrease,
                                     onDecrease,
                                     onRemove,
@@ -201,7 +202,7 @@ const CartContent = () => {
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
                                                 strokeWidth="2"
-                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
                                               />
                                             </svg>
                                           </div>
@@ -213,6 +214,54 @@ const CartContent = () => {
                                         <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-2">
                                           {title}
                                         </h3>
+
+                                        {/* Selected Options */}
+                                        {selectedOptions.length > 0 && (
+                                          <div className="mb-3">
+                                            <div className="flex flex-wrap gap-2">
+                                              {selectedOptions.map(
+                                                (option, index) => {
+                                                  const isColor =
+                                                    typeof option.value ===
+                                                    "object";
+                                                  const text = isColor
+                                                    ? (option.value as any).name
+                                                    : option.value;
+                                                  const color = isColor
+                                                    ? (option.value as any).code
+                                                    : null;
+
+                                                  return (
+                                                    <div
+                                                      key={index}
+                                                      className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20"
+                                                    >
+                                                      <span className="text-sm text-white/80 font-medium">
+                                                        {option.name}:
+                                                      </span>
+                                                      <div className="flex items-center gap-1">
+                                                        {color && (
+                                                          <div
+                                                            className="w-4 h-4 rounded-full border border-white/30"
+                                                            style={{
+                                                              backgroundColor:
+                                                                color,
+                                                            }}
+                                                            title={text}
+                                                          />
+                                                        )}
+                                                        <span className="text-sm text-white font-medium">
+                                                          {text}
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                            </div>
+                                          </div>
+                                        )}
+
                                         <p className="text-2xl font-bold text-[var(--theme-text-content)]">
                                           {price}
                                         </p>

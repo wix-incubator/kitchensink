@@ -150,6 +150,7 @@ export function StoreLayout({
                                     image,
                                     price,
                                     quantity,
+                                    selectedOptions,
                                     onIncrease,
                                     onDecrease,
                                     onRemove,
@@ -169,6 +170,60 @@ export function StoreLayout({
                                         <h3 className="text-white font-medium text-sm truncate">
                                           {title}
                                         </h3>
+                                        {selectedOptions.length > 0 && (
+                                            <div className="mt-1 mb-2">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedOptions.map(
+                                                  (option, index) => {
+                                                    const isColor =
+                                                      typeof option.value ===
+                                                      "object";
+                                                    const text = isColor
+                                                      ? (option.value as any)
+                                                          .name
+                                                      : option.value;
+                                                    const color = isColor
+                                                      ? (option.value as any)
+                                                          .code
+                                                      : null;
+
+                                                    return (
+                                                      <div
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-xs text-white/70"
+                                                      >
+                                                        <span>
+                                                          {option.name}:
+                                                        </span>
+                                                        <div className="flex items-center gap-1">
+                                                          {color && (
+                                                            <div
+                                                              className="w-3 h-3 rounded-full border border-white/30"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  color,
+                                                              }}
+                                                              title={text}
+                                                            />
+                                                          )}
+                                                          <span className="font-medium">
+                                                            {text}
+                                                          </span>
+                                                        </div>
+                                                        {index <
+                                                          selectedOptions.length -
+                                                            1 && (
+                                                          <span className="text-white/40">
+                                                            ,
+                                                          </span>
+                                                        )}
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
                                         <p className="text-teal-400 font-semibold text-sm mt-1">
                                           {price}
                                         </p>
