@@ -11,6 +11,66 @@ import {
 import { CurrentCart } from "../headless/ecom/components/CurrentCart";
 import WixMediaImage from "../headless/media/components/Image";
 
+// Mini coupon form for the cart sidebar
+const CouponFormMini = ({
+  onApply,
+  isLoading,
+}: {
+  onApply: (code: string) => void;
+  isLoading: boolean;
+}) => {
+  const [code, setCode] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code.trim()) {
+      onApply(code.trim());
+      setCode("");
+    }
+  };
+
+  if (!isExpanded) {
+    return (
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="text-teal-400 hover:text-teal-300 text-xs font-medium"
+      >
+        Have a promo code?
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-2">
+      <div className="flex gap-1">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Promo code"
+          className="flex-1 px-2 py-1 text-xs bg-white/10 border border-white/20 rounded text-white placeholder-white/60 focus:border-teal-400 focus:ring-1 focus:ring-teal-400"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={!code.trim() || isLoading}
+          className="px-2 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white text-xs font-medium rounded"
+        >
+          {isLoading ? "..." : "Apply"}
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={() => setIsExpanded(false)}
+        className="text-white/60 hover:text-white/80 text-xs"
+      >
+        Cancel
+      </button>
+    </form>
+  );
+};
+
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
@@ -304,9 +364,51 @@ export function StoreLayout({
                         </div>
                       )}
                     </CurrentCart.Notes>
+                    
+                    {/* Coupon Code */}
+                    <CurrentCart.Coupon>
+                      {({
+                        appliedCoupon,
+                        onApply,
+                        onRemove,
+                        isLoading,
+                        error,
+                      }) => (
+                        <div className="mb-4">
+                          {appliedCoupon ? (
+                            <div className="flex items-center justify-between p-2 bg-green-500/10 border border-green-500/20 rounded">
+                              <span className="text-green-400 text-xs font-medium">
+                                Coupon: {appliedCoupon}
+                              </span>
+                              <button
+                                onClick={onRemove}
+                                disabled={isLoading}
+                                className="text-red-400 hover:text-red-300 text-xs disabled:opacity-50"
+                              >
+                                {isLoading ? "Removing..." : "Remove"}
+                              </button>
+                            </div>
+                          ) : (
+                            <CouponFormMini
+                              onApply={onApply}
+                              isLoading={isLoading}
+                            />
+                          )}
+                          {error && error.includes("coupon") && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded p-2 mt-2">
+                              <p className="text-red-400 text-xs">
+                                {error}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </CurrentCart.Coupon>
                     <CurrentCart.Summary>
                       {({
                         subtotal,
+                        discount,
+                        appliedCoupon,
                         shipping,
                         tax,
                         total,
@@ -340,6 +442,22 @@ export function StoreLayout({
                                   </LoadingOrValue>
                                 </span>
                               </div>
+                                                             {appliedCoupon && discount && (
+                                 <div className="flex justify-between">
+                                   <span className="text-green-400">
+                                     Discount
+                                   </span>
+                                   <span className="text-green-400 font-semibold">
+                                     {isTotalsLoading ? (
+                                       <span className="text-white/60">
+                                         Calculating...
+                                       </span>
+                                     ) : (
+                                       `-${discount}`
+                                     )}
+                                   </span>
+                                 </div>
+                               )}
                               <div className="flex justify-between">
                                 <span className="text-white/80">
                                   Shipping
