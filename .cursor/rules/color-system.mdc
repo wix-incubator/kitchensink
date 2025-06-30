@@ -1,0 +1,231 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Color System Rules - STRICTLY ENFORCED
+
+## 🚫 ABSOLUTE PROHIBITIONS
+
+### NEVER use hardcoded colors in components:
+```tsx
+// ❌ FORBIDDEN - Hardcoded colors
+className="bg-red-500 text-white border-gray-300"
+className="bg-orange-600 hover:bg-orange-700"
+style={{ color: '#ff0000', backgroundColor: '#ffffff' }}
+
+// ❌ FORBIDDEN - Direct CSS variable usage in className
+className="text-[var(--theme-text-primary)]"
+className="bg-[var(--theme-background-card)]"
+```
+
+### NEVER use hardcoded hex/rgb colors:
+```tsx
+// ❌ FORBIDDEN
+style={{ color: '#000000' }}
+style={{ backgroundColor: '#ff6b35' }}
+style={{ borderColor: 'rgb(255, 107, 53)' }}
+const color = "#ff0000";
+```
+
+## ✅ MANDATORY APPROACH
+
+### 1. Define colors ONLY in theme files
+**Location**: `src/styles/theme-1.css` (or theme-N.css for additional themes)
+
+```css
+/* ✅ REQUIRED - Define semantic color variables */
+:root {
+  /* Status Colors */
+  --theme-status-success: #10b981;
+  --theme-status-warning: #f59e0b;
+  --theme-status-danger: #ef4444;
+  --theme-status-info: #3b82f6;
+  
+  /* Background Colors with opacity */
+  --theme-status-success-bg-light: rgba(16, 185, 129, 0.1);
+  --theme-status-success-bg-medium: rgba(16, 185, 129, 0.2);
+  
+  /* Border Colors */
+  --theme-status-success-border: rgba(16, 185, 129, 0.3);
+}
+```
+
+### 2. Create semantic CSS classes in global.css
+**Location**: `src/styles/global.css`
+
+```css
+/* ✅ REQUIRED - Create semantic classes that use theme variables */
+
+/* Content Text Colors */
+.text-content-primary { color: var(--theme-text-primary); }
+.text-content-secondary { color: var(--theme-text-secondary); }
+.text-content-muted { color: var(--theme-text-muted); }
+
+/* Status Colors */
+.text-status-success { color: var(--theme-status-success); }
+.text-status-warning { color: var(--theme-status-warning); }
+.text-status-danger { color: var(--theme-status-danger); }
+.text-status-info { color: var(--theme-status-info); }
+
+/* Background Colors */
+.bg-surface-primary { background-color: var(--theme-background-primary); }
+.bg-surface-card { background-color: var(--theme-background-card); }
+.bg-status-success-light { background-color: var(--theme-status-success-bg-light); }
+
+/* Button Styles */
+.btn-primary {
+  background-color: var(--theme-button-primary-bg);
+  color: var(--theme-button-primary-text);
+  border-color: var(--theme-button-primary-border);
+}
+.btn-primary:hover {
+  background-color: var(--theme-button-primary-bg-hover);
+}
+
+/* Border Colors */
+.border-surface-primary { border-color: var(--theme-border-primary); }
+.border-status-success { border-color: var(--theme-status-success-border); }
+```
+
+### 3. Use ONLY semantic classes in components
+```tsx
+// ✅ REQUIRED - Use semantic class names
+function ProductCard() {
+  return (
+    <div className="bg-surface-card border-surface-primary text-content-primary">
+      <h3 className="text-content-primary">Product Name</h3>
+      <p className="text-content-secondary">Description</p>
+      <button className="btn-primary">Add to Cart</button>
+      <span className="text-status-success">In Stock</span>
+    </div>
+  );
+}
+```
+
+## 📋 SEMANTIC NAMING CONVENTIONS
+
+### Required naming pattern: `{purpose}-{variant}-{modifier}`
+
+#### Purpose Categories:
+- `text-` - Text colors
+- `bg-` - Background colors  
+- `border-` - Border colors
+- `btn-` - Button styles
+- `status-` - Status indicators
+
+#### Variant Examples:
+- `content-` (primary, secondary, muted, subtle)
+- `brand-` (primary, secondary, light, dark)
+- `status-` (success, warning, danger, info)
+- `surface-` (primary, secondary, card, overlay)
+
+#### Modifier Examples:
+- `light`, `medium`, `dark`
+- `hover`, `active`, `disabled`
+- `primary`, `secondary`
+
+## 🔧 IMPLEMENTATION WORKFLOW
+
+### When adding new colors:
+
+1. **First**: Add CSS variable to ALL theme files with colors suited to each palette
+```css
+/* src/styles/theme-1.css */
+--theme-status-accent: #06b6d4;
+--theme-status-accent-bg-light: rgba(6, 182, 212, 0.1);
+
+/* src/styles/theme-2.css */
+--theme-status-accent: #0891b2; /* Matches theme-2's teal/cyan palette */
+--theme-status-accent-bg-light: rgba(8, 145, 178, 0.1);
+
+/* src/styles/theme-wix-vibe.css */
+--theme-status-accent: #03dac6; /* Matches Wix Vibe's Material Design palette */
+--theme-status-accent-bg-light: rgba(3, 218, 198, 0.1);
+```
+
+2. **Second**: Create semantic class in global.css
+```css
+/* src/styles/global.css */
+.text-status-accent { color: var(--theme-status-accent); }
+.bg-status-accent-light { background-color: var(--theme-status-accent-bg-light); }
+```
+
+3. **Third**: Use class in component
+```tsx
+<span className="text-status-accent bg-status-accent-light">Accent Text</span>
+```
+
+### 🎨 Multi-Theme Color Coordination:
+**CRITICAL**: When adding new color variables, you MUST add them to ALL theme files:
+- `theme-1.css` - Default theme
+- `theme-2.css` - Teal/Cyan focused theme  
+- `theme-wix-vibe.css` - Material Design blue theme
+
+Each theme should use colors that harmonize with its existing palette while maintaining the same semantic meaning across all themes.
+
+## 🚨 VIOLATION DETECTION
+
+### Code Review Checklist:
+- [ ] No hardcoded colors (hex, rgb, hsl, named colors)
+- [ ] No direct CSS variable usage in className
+- [ ] No inline styles with color properties
+- [ ] All colors use semantic class names
+- [ ] New colors added to theme file first
+- [ ] Semantic classes created before component usage
+
+### Automated Checks (Recommended):
+```bash
+# Search for violations
+grep -r "className.*#[0-9a-fA-F]" src/
+grep -r "style.*color.*:" src/
+grep -r "className.*var(--" src/
+grep -r "bg-red-\|bg-blue-\|bg-green-\|bg-yellow-\|bg-orange-" src/
+```
+
+## 📚 EXAMPLES
+
+### ✅ CORRECT Implementation:
+```tsx
+// Theme variable defined in theme-1.css
+// --theme-product-price: #1f2937;
+// --theme-product-sale-price: #ef4444;
+
+// Semantic class in global.css
+// .text-product-price { color: var(--theme-product-price); }
+// .text-product-sale-price { color: var(--theme-product-sale-price); }
+
+function ProductPrice({ price, salePrice }) {
+  return (
+    <div>
+      {salePrice && <span className="text-product-sale-price">${salePrice}</span>}
+      <span className={salePrice ? "text-content-muted line-through" : "text-product-price"}>
+        ${price}
+      </span>
+    </div>
+  );
+}
+```
+
+### ❌ VIOLATIONS to avoid:
+```tsx
+// ❌ Hardcoded colors
+<span className="text-red-500">${salePrice}</span>
+<span style={{ color: '#ef4444' }}>${salePrice}</span>
+
+// ❌ Direct CSS variables
+<span className="text-[var(--theme-product-sale-price)]">${salePrice}</span>
+
+// ❌ Tailwind color classes
+<div className="bg-orange-500 hover:bg-orange-600">
+```
+
+## 🎯 ENFORCEMENT
+
+**This rule is NON-NEGOTIABLE.** All color-related code must follow this system:
+1. Colors defined in theme files as CSS variables
+2. Semantic classes created in global.css
+3. Components use only semantic class names
+4. Zero tolerance for hardcoded colors or direct CSS variable usage
+
+**Rationale**: This system ensures maintainable theming, consistent design, better performance, and easier debugging across the entire application. 
