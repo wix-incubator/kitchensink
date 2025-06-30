@@ -411,90 +411,86 @@ export default function ProductDetailPage({
                                               {({
                                                 value,
                                                 isSelected,
-                                                isAvailable,
+                                                isVisible,
+                                                isInStock,
                                                 onSelect,
                                               }) => (
-                                                  <>
-                                                    {isColorOption &&
-                                                    hasColorCode ? (
-                                                      // Color Swatch
-                                                      <div className="relative">
-                                                        <button
-                                                          onClick={onSelect}
-                                                          disabled={!isAvailable}
-                                                          title={value}
-                                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
-                                                            isSelected
-                                                              ? "border-[var(--theme-primary-500)] shadow-lg scale-110 ring-2 ring-[var(--theme-primary-500)]/30"
-                                                              : isAvailable
-                                                              ? "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
-                                                              : "border-[var(--theme-border-primary-10)] opacity-50 cursor-not-allowed"
-                                                          } ${
-                                                            !isAvailable
-                                                              ? "grayscale"
-                                                              : ""
-                                                          }`}
-                                                          style={{
-                                                            backgroundColor:
-                                                              choice.colorCode ||
-                                                              "var(--theme-text-content-40)",
-                                                          }}
-                                                        />
-                                                        {!isAvailable && (
-                                                          <div className="absolute inset-0 flex items-center justify-center">
-                                                            <svg
-                                                              className="w-6 h-6 text-[var(--theme-text-error)]"
-                                                              fill="none"
-                                                              viewBox="0 0 24 24"
-                                                              stroke="currentColor"
-                                                            >
-                                                              <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth="2"
-                                                                d="M6 18L18 6M6 6l12 12"
-                                                              />
-                                                            </svg>
-                                                          </div>
-                                                        )}
-                                                      </div>
-                                                    ) : (
-                                                      // Regular Text Button
-                                                      <div className="relative">
-                                                        <button
-                                                          onClick={onSelect}
-                                                          disabled={!isAvailable}
-                                                          className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
-                                                            isSelected
-                                                              ? "bg-[var(--theme-bg-primary-20)] border-[var(--theme-border-primary-30)] text-[var(--theme-text-primary-300)]"
-                                                              : isAvailable
-                                                              ? "bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)] text-[var(--theme-text-content)]"
-                                                              : "bg-[var(--theme-bg-options)] border-[var(--theme-border-primary-10)] text-[var(--theme-text-content-30)] cursor-not-allowed"
-                                                          }`}
-                                                        >
-                                                          {value}
-                                                        </button>
-                                                        {!isAvailable && (
-                                                          <div className="absolute inset-0 flex items-center justify-center">
-                                                            <svg
-                                                              className="w-6 h-6 text-[var(--theme-text-error)]"
-                                                              fill="none"
-                                                              viewBox="0 0 24 24"
-                                                              stroke="currentColor"
-                                                            >
-                                                              <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth="2"
-                                                                d="M6 18L18 6M6 6l12 12"
-                                                              />
-                                                            </svg>
-                                                          </div>
-                                                        )}
-                                                      </div>
-                                                    )}
-                                                  </>
-                                                )}
+                                                <>
+                                                  {isColorOption &&
+                                                  isVisible && 
+                                                  hasColorCode ? (
+                                                    // Color Swatch
+                                                    <div className="relative">
+                                                      <button
+                                                        onClick={onSelect}
+                                                        title={value}
+                                                        className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                          isSelected
+                                                            ? "border-[var(--theme-primary-500)] shadow-lg scale-110 ring-2 ring-[var(--theme-primary-500)]/30"
+                                                            : "border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] hover:scale-105"
+                                                        } ${
+                                                          !isInStock
+                                                            ? "grayscale"
+                                                            : ""
+                                                        }`}
+                                                        style={{
+                                                          backgroundColor:
+                                                            choice.colorCode ||
+                                                            "var(--theme-text-content-40)",
+                                                        }}
+                                                      />
+                                                      {!isInStock && (
+                                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                          <svg
+                                                            className="w-6 h-6 text-[var(--theme-text-error)]"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                          >
+                                                            <path
+                                                              strokeLinecap="round"
+                                                              strokeLinejoin="round"
+                                                              strokeWidth="2"
+                                                              d="M6 18L18 6M6 6l12 12"
+                                                            />
+                                                          </svg>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  ) : isVisible && (
+                                                    // Regular Text Button
+                                                    <div className="relative">
+                                                      <button
+                                                        onClick={onSelect}
+                                                        className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                          isSelected
+                                                            ? "bg-[var(--theme-bg-primary-20)] border-[var(--theme-border-primary-30)] text-[var(--theme-text-primary-300)]"
+                                                            : "bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)] text-[var(--theme-text-content)]"
+                                                        }`}
+                                                      >
+                                                        {value}
+                                                      </button>
+                                                      {!isInStock && (
+                                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                          <svg
+                                                            className="w-6 h-6 text-[var(--theme-text-error)]"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                          >
+                                                            <path
+                                                              strokeLinecap="round"
+                                                              strokeLinejoin="round"
+                                                              strokeWidth="2"
+                                                              d="M6 18L18 6M6 6l12 12"
+                                                            />
+                                                          </svg>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  )}
+                                                </>
+                                              )}
                                             </ProductVariantSelector.Choice>
                                           );
                                         })}

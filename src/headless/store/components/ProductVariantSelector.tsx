@@ -114,8 +114,10 @@ export interface ChoiceRenderProps {
   description: string | undefined;
   /** Whether this choice is currently selected */
   isSelected: boolean;
-  /** Whether this choice is available for selection */
-  isAvailable: boolean;
+  /** Whether this choice is visible */
+  isVisible: boolean;
+  /** Whether this choice is in stock */
+  isInStock: boolean;
   /** Function to select this choice */
   onSelect: () => void;
   /** Option name */
@@ -141,7 +143,10 @@ export const Choice = (props: ChoiceProps) => {
   const isSelected = selectedChoices[optionName] === choiceValue;
 
   // Check if this choice is available based on current selections
-  const isAvailable = variantService.isChoiceAvailable(optionName, choiceValue);
+  const isVisible = variantService.isChoiceAvailable(optionName, choiceValue);
+  
+  // Check if this choice results in an in-stock variant
+  const isInStock = variantService.isChoiceInStock(optionName, choiceValue);
 
   const value = choiceValue;
 
@@ -157,7 +162,8 @@ export const Choice = (props: ChoiceProps) => {
     value,
     description: undefined, // v3 choices don't have separate description field
     isSelected,
-    isAvailable,
+    isVisible,
+    isInStock,
     onSelect,
     optionName,
     choiceValue,
