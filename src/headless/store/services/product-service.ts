@@ -17,7 +17,7 @@ export const ProductServiceDefinition =
   defineService<ProductServiceAPI>("product");
 
 export const ProductService = implementService.withConfig<{
-  product: productsV3.V3Product;
+  product: productsV3.V3Product | null;
 }>()(ProductServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 

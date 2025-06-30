@@ -57,7 +57,6 @@ interface ProductDetailPageProps {
   selectedVariantServiceConfig: any;
   socialSharingServiceConfig: any;
   relatedProductsServiceConfig: any;
-  productModifiersServiceConfig?: any;
 }
 
 const ProductImageGallery = () => {
@@ -390,29 +389,29 @@ const ProductInfo = ({
                                 {({
                                   value,
                                   isSelected,
-                                  isAvailable,
                                   onSelect,
+                                  isInStock,
                                 }) => (
                                   <>
                                     {isColorOption && hasColorCode ? (
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isAvailable}
+                                          disabled={!isInStock}
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
                                               ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                              : isAvailable
+                                              : isInStock
                                               ? "border-white/30 hover:border-white/60 hover:scale-105"
                                               : "border-white/10 opacity-50 cursor-not-allowed"
-                                          } ${!isAvailable ? "grayscale" : ""}`}
+                                          } ${!isInStock ? "grayscale" : ""}`}
                                           style={{
                                             backgroundColor:
                                               choice.colorCode || "#000000",
                                           }}
                                         />
-                                        {!isAvailable && (
+                                        {!isInStock && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -434,18 +433,18 @@ const ProductInfo = ({
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isAvailable}
+                                          disabled={!isInStock}
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
                                               ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                              : isAvailable
+                                              : isInStock
                                               ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
                                               : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                           }`}
                                         >
                                           {value}
                                         </button>
-                                        {!isAvailable && (
+                                        {!isInStock && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -997,7 +996,6 @@ export default function ProductDetailPage({
   selectedVariantServiceConfig,
   socialSharingServiceConfig,
   relatedProductsServiceConfig,
-  productModifiersServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -1027,16 +1025,10 @@ export default function ProductDetailPage({
       RelatedProductsServiceDefinition,
       RelatedProductsService,
       relatedProductsServiceConfig
-    );
-
-  // Add product modifiers service if available
-  if (productModifiersServiceConfig) {
-    servicesMap = servicesMap.addService(
+    ).addService(
       ProductModifiersServiceDefinition,
       ProductModifiersService,
-      productModifiersServiceConfig
     );
-  }
 
   const servicesManager = createServicesManager(servicesMap);
 

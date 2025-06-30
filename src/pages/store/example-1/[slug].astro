@@ -27,19 +27,7 @@ const productMediaGalleryServiceConfig =
 const selectedVariantServiceConfig =
   await loadSelectedVariantServiceConfig(slug);
 
-// Load product modifiers service configuration if product has modifiers
-let productModifiersServiceConfig = null;
-try {
-  if (productServiceConfig.product.modifiers && productServiceConfig.product.modifiers.length > 0) {
-    productModifiersServiceConfig = {
-      product: productServiceConfig.product,
-    };
-  }
-} catch (error) {
-  console.warn("Could not load product modifiers service:", error);
-}
-
-const productName = productServiceConfig.product.name || "Product";
+const productName = productServiceConfig!.product!.name || "Product";
 ---
 
 <BaseLayout>
@@ -52,7 +40,6 @@ const productName = productServiceConfig.product.name || "Product";
     currentCartServiceConfig={currentCartServiceConfig}
     productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
     selectedVariantServiceConfig={selectedVariantServiceConfig}
-    productModifiersServiceConfig={productModifiersServiceConfig}
     slot="body"
   />
 </BaseLayout>
