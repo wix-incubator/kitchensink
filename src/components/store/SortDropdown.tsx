@@ -1,6 +1,6 @@
 import React from "react";
-import { Sort } from "../headless/store/components";
-import { type SortBy } from "../headless/store/services/sort-service";
+import { Sort } from "../../headless/store/components";
+import { type SortBy } from "../../headless/store/services/sort-service";
 
 interface SortDropdownProps {
   className?: string;

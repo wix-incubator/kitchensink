@@ -4,7 +4,7 @@ import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-2.css";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 import { WixMediaImage } from "../../../headless/media/components";
-import ProductFilters from "../../../components/ProductFilters";
+import ProductFilters from "../../../components/store/ProductFilters";
 import { FilteredCollection } from "../../../headless/store/components";
 import {
   CollectionService,
@@ -26,7 +26,7 @@ import {
   CategoryService,
   CategoryServiceDefinition,
 } from "../../../headless/store/services/category-service";
-import StoreHeader from "../../../components/StoreHeader";
+import StoreHeader from "../../../components/store/StoreHeader";
 import {
   SortService,
   SortServiceDefinition,
