@@ -5,13 +5,14 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
 
 export interface SelectedVariantServiceAPI {
+  selectedQuantity: Signal<number>;
   selectedChoices: Signal<Record<string, string>>;
   selectedVariantId: ReadOnlySignal<string | null>;
   currentVariant: ReadOnlySignal<productsV3.Variant | null>;
@@ -27,7 +28,8 @@ export interface SelectedVariantServiceAPI {
   basePrice: Signal<number>;
   discountPrice: Signal<number | null>;
   isOnSale: Signal<boolean | null>;
-  quantityAvailable: Signal<number>;
+  quantityAvailable: Signal<number | null>;
+  trackQuantity: Signal<boolean>;  
   productId: Signal<string>;
   ribbonLabel: Signal<string | null>;
 
@@ -45,6 +47,10 @@ export interface SelectedVariantServiceAPI {
     modifiers?: Record<string, any>
   ) => Promise<void>;
   setOption: (group: string, value: string) => void;
+  // Quantity management methods
+  setSelectedQuantity: (quantity: number) => void;
+  incrementQuantity: () => void;
+  decrementQuantity: () => void;
   selectVariantById: (id: string) => void;
   loadProductVariants: (data: productsV3.Variant[]) => void;
   resetSelections: () => void;
@@ -110,14 +116,50 @@ export const SelectedVariantService = implementService.withConfig<{
     return variantsList[0] || null;
   };
 
+  const fetchRealQuantity = async (variantId: string | null | undefined, inStock: boolean, preOrderEnabled: boolean) => {
+    if (!variantId) return;
+    
+    try {
+      // Use the correct Wix inventoryItemsV3.queryInventoryItems() API
+      const queryResult = await inventoryItemsV3
+        .queryInventoryItems()
+        .eq('variantId', variantId)
+        .find();
+
+      const inventoryItem = queryResult.items?.[0];
+      const isTrackingQuantity = inventoryItem?.trackQuantity ?? false;
+      trackQuantity.set(isTrackingQuantity);
+      
+      if (!inventoryItem || !isTrackingQuantity) {
+        quantityAvailable.set(null);
+        return;
+      }
+      
+      if (inStock && inventoryItem?.quantity) {
+        quantityAvailable.set(inventoryItem.quantity);
+      } else if (preOrderEnabled && inventoryItem.preorderInfo?.limit) {
+        quantityAvailable.set(inventoryItem.preorderInfo.limit);
+      } else {
+        quantityAvailable.set(null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch inventory quantity:", error);
+      // Fallback on error
+      quantityAvailable.set(0);
+      trackQuantity.set(false);
+    }
+  };
+
   const updateQuantityFromVariant = (variant: productsV3.Variant | null) => {
     if (variant) {
       const inStock = variant.inventoryStatus?.inStock ?? true;
       const preOrderEnabled = variant.inventoryStatus?.preorderEnabled ?? false;
-      // If in stock, allow 999. If out of stock but pre-order enabled, allow 999. Otherwise 0.
-      quantityAvailable.set(inStock || preOrderEnabled ? 999 : 0);
+       
+      // Then fetch real quantity from inventory API
+      fetchRealQuantity(variant._id, inStock, preOrderEnabled);
     } else {
       quantityAvailable.set(0);
+      trackQuantity.set(false);
     }
   };
 
@@ -138,7 +180,9 @@ export const SelectedVariantService = implementService.withConfig<{
     null as any
   );
   const isOnSale: Signal<boolean | null> = signalsService.signal(null as any);
-  const quantityAvailable: Signal<number> = signalsService.signal(0 as any);
+  const quantityAvailable: Signal<number | null> = signalsService.signal(null as any);
+  const trackQuantity: Signal<boolean> = signalsService.signal(false as any);
+  const selectedQuantity: Signal<number> = signalsService.signal(1 as any);
   const productId: Signal<string> = signalsService.signal("" as any);
   const sku: Signal<string> = signalsService.signal("" as any);
   const ribbonLabel: Signal<string | null> = signalsService.signal(null as any);
@@ -282,9 +326,13 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const isInStock: ReadOnlySignal<boolean> = signalsService.computed(() => {
     const variant = currentVariant.get();
+    const prod = v3Product.get();
 
     if (variant) {
       return variant.inventoryStatus?.inStock ?? false;
+    } else if (prod) {
+      const status = prod.inventory?.availabilityStatus;
+      return status === "IN_STOCK" || status === "PARTIALLY_OUT_OF_STOCK";
     } else {
       return false;
     }
@@ -328,6 +376,7 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const setSelectedChoices = (choices: Record<string, string>) => {
     selectedChoices.set(choices);
+    selectedQuantity.set(1); // Reset quantity when choices change
     const matchingVariant = findVariantByChoices(variants.get(), choices);
     updateQuantityFromVariant(matchingVariant);
   };
@@ -452,6 +501,27 @@ export const SelectedVariantService = implementService.withConfig<{
 
   const resetSelections = () => {
     selectedChoices.set({});
+    selectedQuantity.set(1); // Reset quantity when resetting selections
+  };
+
+  // Quantity management methods
+  const setSelectedQuantity = (quantity: number) => {
+    const maxQuantity = quantityAvailable.get();
+    const validQuantity = Math.max(1, Math.min(quantity, maxQuantity || 999));
+    selectedQuantity.set(validQuantity);
+  };
+
+  const incrementQuantity = () => {
+    const current = selectedQuantity.get();
+    const maxQuantity = quantityAvailable.get();
+    const newQuantity = Math.min(current + 1, maxQuantity || 999);
+    selectedQuantity.set(newQuantity);
+  };
+
+  const decrementQuantity = () => {
+    const current = selectedQuantity.get();
+    const newQuantity = Math.max(1, current - 1);
+    selectedQuantity.set(newQuantity);
   };
 
   // New methods for smart variant selection
@@ -508,6 +578,8 @@ export const SelectedVariantService = implementService.withConfig<{
     discountPrice,
     isOnSale,
     quantityAvailable,
+    trackQuantity,
+    selectedQuantity,
     productId,
     ribbonLabel,
 
@@ -523,6 +595,11 @@ export const SelectedVariantService = implementService.withConfig<{
     getAvailableChoicesForOption,
     isChoiceAvailable,
     hasAnySelections,
+
+    // Quantity management methods
+    setSelectedQuantity,
+    incrementQuantity,
+    decrementQuantity,
 
     selectedVariant,
     finalPrice,
