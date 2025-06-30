@@ -186,7 +186,8 @@ const CartContent = () => {
                                             width={96}
                                             height={96}
                                             alt={title}
-                                            className="h-24 w-24 rounded-lg object-cover border border-[var(--theme-border-primary-20)]"
+                                            displayMode="fill"
+                                            className="h-24 w-24 rounded-lg border border-[var(--theme-border-primary-20)] overflow-hidden"
                                           />
                                         ) : (
                                           <div className="h-24 w-24 bg-[var(--theme-bg-options)] rounded-lg flex items-center justify-center border border-[var(--theme-border-primary-20)]">
