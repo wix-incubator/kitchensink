@@ -73,8 +73,7 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
 ---
 
 <BaseLayout>
-  <SEO.Tags  seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
-
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}
