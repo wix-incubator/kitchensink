@@ -291,6 +291,10 @@ export interface SummaryProps {
 export interface SummaryRenderProps {
   /** Cart subtotal */
   subtotal: string;
+  /** Shipping cost */
+  shipping: string;
+  /** Tax amount */
+  tax: string;
   /** Cart total */
   total: string;
   /** Currency code */
@@ -299,6 +303,8 @@ export interface SummaryRenderProps {
   itemCount: number;
   /** Whether checkout is available */
   canCheckout: boolean;
+  /** Whether totals are being calculated */
+  isTotalsLoading: boolean;
 }
 
 /**
@@ -311,25 +317,35 @@ export const Summary = (props: SummaryProps) => {
 
   const cart = service.cart.get();
   const itemCount = service.cartCount.get();
+  const cartTotals = service.cartTotals.get();
+  const isTotalsLoading = service.isTotalsLoading.get();
+  const currency = cart?.currency || cartTotals?.currency || "USD";
 
-  // Calculate totals manually since cart.totals doesn't exist
-  const subtotalAmount =
-    cart?.lineItems?.reduce((acc: number, item: any) => {
-      const itemPrice = parseFloat(item.price?.amount || "0");
-      const quantity = item.quantity || 0;
-      return acc + itemPrice * quantity;
-    }, 0) || 0;
-
-  const currency = cart?.currency || "USD";
-  const subtotal = formatCurrency(subtotalAmount, currency);
-  const total = subtotal; // For now, total = subtotal (no taxes/shipping calculated)
+  // Use SDK totals only
+  const totals = cartTotals?.priceSummary || {};
+  const subtotal = formatCurrency(
+    parseFloat(totals.subtotal?.amount || "0"),
+    currency
+  );
+  const shipping = formatCurrency(
+    parseFloat(totals.shipping?.amount || "0"),
+    currency
+  );
+  const tax = formatCurrency(parseFloat(totals.tax?.amount || "0"), currency);
+  const total = formatCurrency(
+    parseFloat(totals.total?.amount || "0"),
+    currency
+  );
 
   return props.children({
     subtotal,
+    shipping,
+    tax,
     total,
     currency,
     itemCount,
     canCheckout: itemCount > 0,
+    isTotalsLoading,
   });
 };
 
