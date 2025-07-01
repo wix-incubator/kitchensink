@@ -99,7 +99,7 @@ jobs:
 
             core.setOutput('deployment_id', deployment.data.id);
 
-            - name: Get production URL from topology
+      - name: Get production URL from topology
         id: get-production-url
         if: success()
         run: |
