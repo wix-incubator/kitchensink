@@ -1,7 +1,7 @@
 import React from "react";
-import WixMediaImage from "../../../headless/media/components/Image";
+import { WixMediaImage } from "../../../headless/media/components/Image";
 import ProductFilters from "../../../components/ProductFilters";
-import { FilteredCollection } from "../../../headless/store/components/FilteredCollection";
+import { FilteredCollection } from "../../../headless/store/components";
 import StoreHeader from "../../../components/StoreHeader";
 import { FiltersLoading } from "../../../headless/store/components/FilteredCollection";
 
