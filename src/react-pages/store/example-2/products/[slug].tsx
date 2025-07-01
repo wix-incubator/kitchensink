@@ -54,8 +54,6 @@ import "../../../../styles/theme-2.css";
 interface ProductDetailPageProps {
   productServiceConfig: any;
   currentCartServiceConfig: any;
-  productMediaGalleryServiceConfig: any;
-  selectedVariantServiceConfig: any;
   socialSharingServiceConfig: any;
   relatedProductsServiceConfig: any;
 }
@@ -328,7 +326,9 @@ const ProductInfo = ({
                 >
                   {status}
                   {trackInventory && availableQuantity !== null && (
-                    <span className="ml-1">({availableQuantity} available)</span>
+                    <span className="ml-1">
+                      ({availableQuantity} available)
+                    </span>
                   )}
                 </span>
               </div>
@@ -993,8 +993,6 @@ const ProductInfo = ({
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
-  productMediaGalleryServiceConfig,
-  selectedVariantServiceConfig,
   socialSharingServiceConfig,
   relatedProductsServiceConfig,
 }: ProductDetailPageProps) {
@@ -1007,15 +1005,10 @@ export default function ProductDetailPage({
       CurrentCartService,
       currentCartServiceConfig
     )
-    .addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      selectedVariantServiceConfig
-    )
+    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(
       ProductMediaGalleryServiceDefinition,
-      ProductMediaGalleryService,
-      productMediaGalleryServiceConfig
+      ProductMediaGalleryService
     )
     .addService(
       SocialSharingServiceDefinition,
@@ -1026,10 +1019,8 @@ export default function ProductDetailPage({
       RelatedProductsServiceDefinition,
       RelatedProductsService,
       relatedProductsServiceConfig
-    ).addService(
-      ProductModifiersServiceDefinition,
-      ProductModifiersService,
-    );
+    )
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService);
 
   const servicesManager = createServicesManager(servicesMap);
 
