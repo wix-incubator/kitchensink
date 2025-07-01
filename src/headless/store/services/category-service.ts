@@ -7,6 +7,7 @@ export interface CategoryServiceAPI {
   selectedCategory: Signal<string | null>;
   categories: Signal<categories.Category[]>;
   setSelectedCategory: (categoryId: string | null) => void;
+  loadCategories: () => Promise<void>;
 }
 
 export const CategoryServiceDefinition =
@@ -30,6 +31,11 @@ export const CategoryService =
       const categories: Signal<categories.Category[]> = signalsService.signal(
         config.categories as any
       );
+
+      const loadCategories = async () => {
+        const { categories: loadedCategories } = await loadCategoriesConfig();
+        categories.set(loadedCategories);
+      }
 
       // Track if this is the initial load to prevent navigation on service creation
       let isInitialLoad = true;
@@ -60,6 +66,7 @@ export const CategoryService =
         selectedCategory,
         categories,
         setSelectedCategory,
+        loadCategories,
       };
     }
   );

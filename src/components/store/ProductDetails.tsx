@@ -48,8 +48,10 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 
 export default function ProductDetails({
   setShowSuccessMessage = () => {},
+  cartUrl = "/cart",
 }: {
   setShowSuccessMessage?: (show: boolean) => void;
+  cartUrl?: string;
 }) {
   return (
     <>

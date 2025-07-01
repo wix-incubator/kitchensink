@@ -1013,6 +1013,10 @@ export default function ProductDetailPage({
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     })
     .addService(
+      SelectedVariantServiceDefinition,
+      SelectedVariantService,
+    )
+    .addService(
       SocialSharingServiceDefinition,
       SocialSharingService,
       socialSharingServiceConfig

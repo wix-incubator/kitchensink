@@ -18,7 +18,7 @@ function CategoryPicker({
   categories,
   className = "",
 }: CategoryPickerProps) {
-  if (categories.length === 0) {
+  if (!categories || categories.length === 0) {
     return null; // No categories to show
   }
   if (selectedCategory === null) {

@@ -1,22 +1,21 @@
 import { CurrentCart } from "../../headless/ecom/components";
 import { WixMediaImage } from "../../headless/media/components";
 
-
 export default function CartContent() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <CurrentCart.Content>
           {({ cart, isLoading }) => (
             <>
               {/* Header */}
               <div className="text-center mb-12">
-                <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
+                <h1 className="text-5xl font-bold text-content-primary mb-4">
                   Shopping Cart
                 </h1>
                 <CurrentCart.Trigger>
                   {({ itemCount }) => (
-                    <p className="text-[var(--theme-text-content-80)] text-xl">
+                    <p className="text-content-secondary text-xl">
                       {itemCount} {itemCount === 1 ? "item" : "items"} in your
                       cart
                     </p>
@@ -29,7 +28,7 @@ export default function CartContent() {
                 <div className="flex justify-center items-center min-h-64">
                   <div className="flex items-center gap-3">
                     <svg
-                      className="animate-spin w-8 h-8 text-[var(--theme-text-content)]"
+                      className="animate-spin w-8 h-8 text-content-primary"
                       fill="none"
                       viewBox="0 0 24 24"
                     >
@@ -47,7 +46,7 @@ export default function CartContent() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    <span className="text-[var(--theme-text-content)] text-lg">
+                    <span className="text-content-primary text-lg">
                       Loading your cart...
                     </span>
                   </div>
@@ -61,9 +60,9 @@ export default function CartContent() {
                   <>
                     {!hasItems && !isLoading && (
                       <div className="text-center py-16">
-                        <div className="w-32 h-32 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-8">
+                        <div className="w-32 h-32 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-8">
                           <svg
-                            className="w-16 h-16 text-[var(--theme-text-content-60)]"
+                            className="w-16 h-16 text-content-muted"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -76,23 +75,22 @@ export default function CartContent() {
                             />
                           </svg>
                         </div>
-                        <h2 className="text-3xl font-bold text-[var(--theme-text-content)] mb-4">
+                        <h2 className="text-3xl font-bold text-content-primary mb-4">
                           Your cart is empty
                         </h2>
-                        <p className="text-[var(--theme-text-content-70)] text-lg mb-8">
+                        <p className="text-content-light text-lg mb-8">
                           Start shopping to add items to your cart
                         </p>
                         <a
                           href="/store"
-                          className="inline-flex items-center gap-2 text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
-                          style={{ background: "var(--theme-btn-primary)" }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-primary-hover)";
+                          className="inline-flex items-center gap-2 text-content-primary font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 btn-primary"
+                          onMouseEnter={(e: any) => {
+                            e.currentTarget.classList.remove('btn-primary');
+                            e.currentTarget.classList.add('btn-primary:hover');
                           }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background =
-                              "var(--theme-btn-primary)";
+                          onMouseLeave={(e: any) => {
+                            e.currentTarget.classList.remove('btn-primary:hover');
+                            e.currentTarget.classList.add('btn-primary');
                           }}
                         >
                           Continue Shopping
@@ -118,9 +116,9 @@ export default function CartContent() {
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Cart Items */}
                         <div className="lg:col-span-2">
-                          <div className="bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl border border-[var(--theme-border-primary-10)] p-6">
+                          <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-6">
                             <div className="flex items-center justify-between mb-6">
-                              <h2 className="text-2xl font-bold text-[var(--theme-text-content)]">
+                              <h2 className="text-2xl font-bold text-content-primary">
                                 Cart Items
                               </h2>
                               <CurrentCart.Clear>
@@ -129,7 +127,7 @@ export default function CartContent() {
                                     <button
                                       onClick={onClear}
                                       disabled={isLoading}
-                                      className="text-[var(--theme-text-error)] hover:text-[var(--theme-text-error)]/80 text-sm font-medium transition-colors duration-200 disabled:opacity-50"
+                                      className="text-status-error hover:text-status-error/80 text-sm font-medium transition-colors duration-200 disabled:opacity-50"
                                     >
                                       Clear all items
                                     </button>
@@ -152,7 +150,7 @@ export default function CartContent() {
                                     onRemove,
                                     isLoading: itemLoading,
                                   }) => (
-                                    <div className="flex items-center space-x-6 p-4 bg-[var(--theme-bg-options)] rounded-lg border border-[var(--theme-border-primary-10)] hover:border-[var(--theme-border-primary-20)] transition-all duration-200">
+                                    <div className="flex items-center space-x-6 p-4 bg-surface-primary rounded-lg border border-surface-subtle hover:border-surface-interactive transition-all duration-200">
                                       {/* Product Image */}
                                       <div className="flex-shrink-0">
                                         {image ? (
@@ -164,12 +162,12 @@ export default function CartContent() {
                                             height={96}
                                             alt={title}
                                             displayMode="fill"
-                                            className="h-24 w-24 rounded-lg border border-[var(--theme-border-primary-20)] overflow-hidden"
+                                            className="h-24 w-24 rounded-lg border border-surface-interactive overflow-hidden"
                                           />
                                         ) : (
-                                          <div className="h-24 w-24 bg-[var(--theme-bg-options)] rounded-lg flex items-center justify-center border border-[var(--theme-border-primary-20)]">
+                                          <div className="h-24 w-24 bg-surface-primary rounded-lg flex items-center justify-center border border-surface-interactive">
                                             <svg
-                                              className="w-8 h-8 text-[var(--theme-text-content-40)]"
+                                              className="w-8 h-8 text-content-subtle"
                                               fill="none"
                                               viewBox="0 0 24 24"
                                               stroke="currentColor"
@@ -187,7 +185,7 @@ export default function CartContent() {
 
                                       {/* Product Details */}
                                       <div className="flex-1 min-w-0">
-                                        <h3 className="text-xl font-semibold text-[var(--theme-text-content)] mb-2">
+                                        <h3 className="text-xl font-semibold text-content-primary mb-2">
                                           {title}
                                         </h3>
 
@@ -210,15 +208,15 @@ export default function CartContent() {
                                                   return (
                                                     <div
                                                       key={index}
-                                                      className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20"
+                                                      className="flex items-center gap-2 px-3 py-1 bg-surface-interactive rounded-full border border-surface-interactive"
                                                     >
-                                                      <span className="text-sm text-white/80 font-medium">
+                                                      <span className="text-sm text-content-secondary font-medium">
                                                         {option.name}:
                                                       </span>
                                                       <div className="flex items-center gap-1">
                                                         {color && (
                                                           <div
-                                                            className="w-4 h-4 rounded-full border border-white/30"
+                                                            className="w-4 h-4 rounded-full border border-color-swatch"
                                                             style={{
                                                               backgroundColor:
                                                                 color,
@@ -226,7 +224,7 @@ export default function CartContent() {
                                                             title={text}
                                                           />
                                                         )}
-                                                        <span className="text-sm text-white font-medium">
+                                                        <span className="text-sm text-content-primary font-medium">
                                                           {text}
                                                         </span>
                                                       </div>
@@ -238,7 +236,7 @@ export default function CartContent() {
                                           </div>
                                         )}
 
-                                        <p className="text-2xl font-bold text-[var(--theme-text-content)]">
+                                        <p className="text-2xl font-bold text-content-primary">
                                           {price}
                                         </p>
                                       </div>
@@ -250,7 +248,7 @@ export default function CartContent() {
                                           disabled={
                                             itemLoading || quantity <= 1
                                           }
-                                          className="p-2 rounded-lg bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] hover:border-[var(--theme-border-primary-30)] text-[var(--theme-text-content)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                          className="p-2 rounded-lg bg-surface-primary hover:bg-brand-light border border-surface-interactive hover:border-brand-medium text-content-primary transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                           <svg
                                             className="h-4 w-4"
@@ -267,14 +265,14 @@ export default function CartContent() {
                                           </svg>
                                         </button>
 
-                                        <span className="text-xl font-bold text-[var(--theme-text-content)] min-w-12 text-center bg-[var(--theme-bg-options)] rounded-lg py-2 px-3 border border-[var(--theme-border-primary-20)]">
+                                        <span className="text-xl font-bold text-content-primary min-w-12 text-center bg-surface-primary rounded-lg py-2 px-3 border border-surface-interactive">
                                           {quantity}
                                         </span>
 
                                         <button
                                           onClick={onIncrease}
                                           disabled={itemLoading}
-                                          className="p-2 rounded-lg bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] hover:border-[var(--theme-border-primary-30)] text-[var(--theme-text-content)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                          className="p-2 rounded-lg bg-surface-primary hover:bg-brand-light border border-surface-interactive hover:border-brand-medium text-content-primary transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                           <svg
                                             className="h-4 w-4"
@@ -296,7 +294,7 @@ export default function CartContent() {
                                       <button
                                         onClick={onRemove}
                                         disabled={itemLoading}
-                                        className="text-[var(--theme-text-error)] hover:text-[var(--theme-text-error)]/80 p-2 rounded-lg hover:bg-[var(--theme-bg-error)] transition-all duration-200 disabled:opacity-50"
+                                        className="text-status-error hover:text-status-error/80 p-2 rounded-lg hover:bg-surface-error transition-all duration-200 disabled:opacity-50"
                                       >
                                         <svg
                                           className="h-5 w-5"
@@ -322,8 +320,8 @@ export default function CartContent() {
 
                         {/* Order Summary */}
                         <div className="lg:col-span-1">
-                          <div className="bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl border border-[var(--theme-border-primary-10)] p-6 sticky top-6">
-                            <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-6">
+                          <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-6 sticky top-6">
+                            <h2 className="text-2xl font-bold text-content-primary mb-6">
                               Order Summary
                             </h2>
 
@@ -332,7 +330,7 @@ export default function CartContent() {
                               <CurrentCart.Notes>
                                 {({ notes, onNotesChange }) => (
                                   <div>
-                                    <label className="block text-sm font-medium text-white mb-2">
+                                    <label className="block text-sm font-medium text-content-primary mb-2">
                                       Notes:
                                     </label>
                                     <textarea
@@ -342,7 +340,7 @@ export default function CartContent() {
                                       }
                                       placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
                                       rows={3}
-                                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors duration-200 resize-vertical"
+                                      className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200 resize-vertical"
                                     />
                                   </div>
                                 )}
@@ -360,14 +358,14 @@ export default function CartContent() {
                                 }) => (
                                   <div>
                                     {appliedCoupon ? (
-                                      <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                                        <span className="text-green-400 text-sm font-medium">
+                                      <div className="flex items-center justify-between p-3 bg-status-success-light border border-status-success rounded-lg">
+                                        <span className="text-status-success text-sm font-medium">
                                           Coupon: {appliedCoupon}
                                         </span>
                                         <button
                                           onClick={onRemove}
                                           disabled={isLoading}
-                                          className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50"
+                                          className="text-status-error hover:text-status-error/80 text-sm disabled:opacity-50"
                                         >
                                           {isLoading ? "Removing..." : "Remove"}
                                         </button>
@@ -388,13 +386,13 @@ export default function CartContent() {
                                            type="text"
                                            name="couponCode"
                                            placeholder="Enter promo code"
-                                           className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors duration-200"
+                                           className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200"
                                            disabled={isLoading}
                                          />
                                          <button
                                            type="submit"
                                            disabled={isLoading}
-                                           className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                           className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
                                          >
                                            {isLoading ? "Applying..." : "Apply Coupon"}
                                          </button>
@@ -423,7 +421,7 @@ export default function CartContent() {
                                   children: string;
                                 }) =>
                                   isTotalsLoading ? (
-                                    <span className="text-[var(--theme-text-content-60)]">
+                                    <span className="text-content-muted">
                                       Calculating...
                                     </span>
                                   ) : (
@@ -433,7 +431,7 @@ export default function CartContent() {
                                 return (
                                   <div className="space-y-4">
                                     <div className="space-y-3">
-                                      <div className="flex justify-between text-lg text-[var(--theme-text-content)]">
+                                      <div className="flex justify-between text-lg text-content-primary">
                                         <span>
                                           Subtotal ({itemCount}{" "}
                                           {itemCount === 1 ? "item" : "items"})
@@ -445,7 +443,7 @@ export default function CartContent() {
                                         </span>
                                       </div>
                                       {appliedCoupon && discount && (
-                                        <div className="flex justify-between text-lg text-green-400">
+                                        <div className="flex justify-between text-lg text-status-success">
                                           <span>Discount</span>
                                           <span className="font-semibold">
                                             -<LoadingOrValue>
@@ -454,7 +452,7 @@ export default function CartContent() {
                                           </span>
                                         </div>
                                       )}
-                                      <div className="flex justify-between text-lg text-[var(--theme-text-content)]">
+                                      <div className="flex justify-between text-lg text-content-primary">
                                         <span>Shipping</span>
                                         <span className="font-semibold">
                                           <LoadingOrValue>
@@ -462,7 +460,7 @@ export default function CartContent() {
                                           </LoadingOrValue>
                                         </span>
                                       </div>
-                                      <div className="flex justify-between text-lg text-[var(--theme-text-content)]">
+                                      <div className="flex justify-between text-lg text-content-primary">
                                         <span>Tax</span>
                                         <span className="font-semibold">
                                           <LoadingOrValue>{tax}</LoadingOrValue>
@@ -470,8 +468,8 @@ export default function CartContent() {
                                       </div>
                                     </div>
 
-                                    <div className="border-t border-[var(--theme-border-primary-20)] pt-4">
-                                      <div className="flex justify-between text-xl font-bold text-[var(--theme-text-content)]">
+                                    <div className="border-t border-surface-interactive pt-4">
+                                      <div className="flex justify-between text-xl font-bold text-content-primary">
                                         <span>Total</span>
                                         <span>
                                           <LoadingOrValue>
@@ -490,8 +488,8 @@ export default function CartContent() {
                                       }) => (
                                         <div className="space-y-4">
                                           {checkoutError && (
-                                            <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-lg p-3">
-                                              <p className="text-[var(--theme-text-error)] text-sm">
+                                            <div className="bg-surface-error border border-status-error rounded-lg p-3">
+                                              <p className="text-status-error text-sm">
                                                 {checkoutError}
                                               </p>
                                             </div>
@@ -502,26 +500,13 @@ export default function CartContent() {
                                             disabled={
                                               !canProceed || checkoutLoading
                                             }
-                                            className="w-full text-[var(--theme-text-content)] font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className={`w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                              canProceed ? "btn-primary" : "bg-surface-primary"
+                                            }`}
                                             style={{
-                                              background: canProceed
-                                                ? "var(--theme-btn-primary)"
-                                                : "var(--theme-bg-options)",
                                               cursor: !canProceed
                                                 ? "not-allowed"
                                                 : "pointer",
-                                            }}
-                                            onMouseEnter={(e) => {
-                                              if (canProceed) {
-                                                e.currentTarget.style.background =
-                                                  "var(--theme-btn-primary-hover)";
-                                              }
-                                            }}
-                                            onMouseLeave={(e) => {
-                                              if (canProceed) {
-                                                e.currentTarget.style.background =
-                                                  "var(--theme-btn-primary)";
-                                              }
                                             }}
                                           >
                                             {checkoutLoading ? (
@@ -558,7 +543,7 @@ export default function CartContent() {
                                     <div className="text-center pt-4">
                                       <a
                                         href="/store"
-                                        className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                                        className="text-brand-primary hover:text-brand-light font-medium transition-colors duration-200 flex items-center justify-center gap-2"
                                       >
                                         <svg
                                           className="w-4 h-4"
