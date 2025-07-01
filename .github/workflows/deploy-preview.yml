@@ -1,0 +1,67 @@
+name: Deploy Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+env:
+  NODE_VERSION: "18"
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Wix CLI
+        run: npm install -g @wix/cli@latest
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy preview
+        run: npm run preview
+        env:
+          WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
+
+      - name: Get preview URL
+        id: preview-url
+        run: |
+          # Extract the preview URL from the output
+          PREVIEW_URL=$(npm run preview 2>&1 | grep -o 'https://[^[:space:]]*wix-host\.com' | head -1)
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+          echo "Preview URL: $PREVIEW_URL"
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = '${{ steps.preview-url.outputs.preview_url }}';
+            const comment = `## 🚀 Preview Deployment
+
+            Your changes have been deployed to a preview environment!
+
+            **Preview URL:** ${previewUrl}
+
+            ---
+            *This preview will be automatically updated when you push new commits to this PR.*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
