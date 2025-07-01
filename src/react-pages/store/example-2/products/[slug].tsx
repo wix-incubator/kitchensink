@@ -1006,6 +1006,10 @@ export default function ProductDetailPage({
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(MediaGalleryServiceDefinition, MediaGalleryService)
     .addService(
+      SelectedVariantServiceDefinition,
+      SelectedVariantService,
+    )
+    .addService(
       SocialSharingServiceDefinition,
       SocialSharingService,
       socialSharingServiceConfig
