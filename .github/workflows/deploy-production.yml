@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "22"
 
 jobs:
   deploy-production:
@@ -24,9 +24,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Setup Wix CLI
-        run: npm install -g @wix/cli@latest
 
       - name: Build project
         run: npm run build
