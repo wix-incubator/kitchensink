@@ -81,25 +81,35 @@ jobs:
             .astro/
           retention-days: 30
 
-      - name: Notify deployment success
+            - name: Create deployment
+        id: create-deployment
         if: success()
         uses: actions/github-script@v7
         with:
           script: |
-            const comment = `## ✅ Production Deployment Successful
-
-            Your changes have been successfully deployed to production!
-
-            **Production URL:** https://kitchensink-netanelg4.wix-host.com
-
-            ---
-            *Deployed at: ${new Date().toISOString()}*`;
-
-            // Create a deployment status
-            github.rest.repos.createDeploymentStatus({
+            const deployment = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              deployment_id: context.sha,
+              ref: context.sha,
+              environment: 'production',
+              description: 'Production deployment',
+              auto_merge: false,
+              required_contexts: []
+            });
+            
+            core.setOutput('deployment_id', deployment.data.id);
+
+      - name: Update deployment status
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentId = ${{ steps.create-deployment.outputs.deployment_id }};
+
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deploymentId,
               state: 'success',
               description: 'Production deployment completed successfully',
               environment_url: 'https://kitchensink-netanelg4.wix-host.com'
@@ -110,21 +120,25 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const comment = `## ❌ Production Deployment Failed
-
-            The production deployment failed. Debug logs and build artifacts have been uploaded as workflow artifacts.
-
-            **Debug Logs:** Available in the "wix-debug-logs" artifact
-            **Build Artifacts:** Available in the "build-artifacts" artifact
-
-            ---
-            *Failed at: ${new Date().toISOString()}*`;
-
-            // Create a deployment status
-            github.rest.repos.createDeploymentStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              deployment_id: context.sha,
-              state: 'failure',
-              description: 'Production deployment failed - check artifacts for debug logs'
-            });
+            // Try to create deployment and status for failure
+            try {
+              const deployment = await github.rest.repos.createDeployment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: context.sha,
+                environment: 'production',
+                description: 'Production deployment (failed)',
+                auto_merge: false,
+                required_contexts: []
+              });
+              
+              await github.rest.repos.createDeploymentStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: deployment.data.id,
+                state: 'failure',
+                description: 'Production deployment failed - check artifacts for debug logs'
+              });
+            } catch (error) {
+              console.log('Failed to create deployment status:', error.message);
+            }
