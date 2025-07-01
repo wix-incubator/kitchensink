@@ -6,7 +6,6 @@ import {
   FilteredCollection,
   ProductVariantSelector,
 } from "../../headless/store/components";
-import { ProductActionButtons } from "./ProductActionButtons";
 import {
   createServicesManager,
   createServicesMap,
@@ -33,74 +32,9 @@ import {
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
 import { useService } from "@wix/services-manager-react";
-import { useState, useEffect } from "react";
-
-// Simple wrapper to add cart functionality per product
-const ProductWithCart = ({ 
-  product, 
-  children 
-}: { 
-  product: productsV3.V3Product;
-  children: (props: any) => React.ReactNode;
-}) => {
-  const currentCartService = useService(CurrentCartServiceDefinition);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
-  // Create services for this product
-  const servicesMap = createServicesMap()
-    .addService(ProductServiceDefinition, ProductService, { product })
-    .addService(CurrentCartServiceDefinition, CurrentCartService, currentCartService)
-    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
-      media: product?.media?.itemsInfo?.items ?? [],
-    });
-
-  const servicesManager = createServicesManager(servicesMap);
-
-  // Auto-select first available choices if product has options
-  useEffect(() => {
-    if (product.options && product.options.length > 0) {
-      const variantService = servicesManager.getService(SelectedVariantServiceDefinition);
-      const defaultChoices: Record<string, string> = {};
-      
-      product.options.forEach((option: any) => {
-        if (option.name && option.choicesSettings?.choices?.length > 0) {
-          defaultChoices[option.name] = option.choicesSettings.choices[0].name;
-        }
-      });
-
-      if (Object.keys(defaultChoices).length > 0) {
-        variantService.setSelectedChoices(defaultChoices);
-      }
-    }
-  }, [product._id, servicesManager]);
-
-  return (
-    <div className="relative">
-      {showSuccessMessage && (
-        <div className="absolute inset-0 bg-surface-card backdrop-blur-sm rounded-xl flex items-center justify-center z-10 border border-status-success">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-status-success-light rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg className="w-6 h-6 text-status-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <p className="text-status-success font-medium">Added to Cart!</p>
-          </div>
-        </div>
-      )}
-
-      <ServicesManagerProvider servicesManager={servicesManager}>
-        <FilteredCollection.Item product={product}>
-          {(itemProps) => children({ ...itemProps, onShowSuccessMessage: setShowSuccessMessage })}
-        </FilteredCollection.Item>
-      </ServicesManagerProvider>
-    </div>
-  );
-};
  
 export const ProductGridContent = ({productPageRoute}: {productPageRoute: string}) => {
+  const currentCartService = useService(CurrentCartServiceDefinition);
     return (
       <FilteredCollection.Provider>
         <FilteredCollection.Grid>
@@ -266,21 +200,30 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                           </div>
                         ) : (
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {products.map((product: productsV3.V3Product) => (
-                              <ProductWithCart
-                                key={product._id}
-                                product={product}
-                              >
-                                {({
-                                  title,
-                                  image,
-                                  price,
-                                  compareAtPrice,
-                                  available,
-                                  slug,
-                                  description,
-                                  onShowSuccessMessage,
-                                }) => (
+                            {products.map((product: productsV3.V3Product) => {
+                              // Create services for each product
+                              const servicesMap = createServicesMap()
+                                .addService(ProductServiceDefinition, ProductService, { product })
+                                .addService(CurrentCartServiceDefinition, CurrentCartService, currentCartService)
+                                .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+                                .addService(ProductModifiersServiceDefinition, ProductModifiersService)
+                                .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+                                  media: product?.media?.itemsInfo?.items ?? [],
+                                });
+                              const servicesManager = createServicesManager(servicesMap);
+
+                              return (
+                                <ServicesManagerProvider key={product._id} servicesManager={servicesManager}>
+                                  <FilteredCollection.Item product={product}>
+                                    {({
+                                      title,
+                                      image,
+                                      price,
+                                      compareAtPrice,
+                                      available,
+                                      slug,
+                                      description,
+                                    }) => (
                                   <div className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col">
                                     <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                                       {image ? (
@@ -452,21 +395,14 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     <div className="space-y-2">
                                       {/* Add to Cart Button */}
                                       <ProductVariantSelector.Trigger>
-                                        {({
-                                          onAddToCart,
-                                          canAddToCart,
-                                          isLoading,
-                                          isPreOrderEnabled,
-                                          inStock,
-                                        }) => (
-                                          <ProductActionButtons
-                                            onAddToCart={onAddToCart}
-                                            canAddToCart={canAddToCart}
-                                            isLoading={isLoading}
-                                            isPreOrderEnabled={isPreOrderEnabled}
-                                            inStock={inStock}
-                                            onShowSuccessMessage={onShowSuccessMessage}
-                                          />
+                                        {({ onAddToCart, canAddToCart, isLoading }) => (
+                                          <button
+                                            onClick={onAddToCart}
+                                            disabled={!canAddToCart || isLoading}
+                                            className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                          >
+                                            {isLoading ? "Adding..." : "Add to Cart"}
+                                          </button>
                                         )}
                                       </ProductVariantSelector.Trigger>
 
@@ -482,9 +418,11 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       </a>
                                     </div>
                                                                       </div>
-                                  )}
-                               </ProductWithCart>
-                              ))}
+                                    )}
+                                  </FilteredCollection.Item>
+                                </ServicesManagerProvider>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
