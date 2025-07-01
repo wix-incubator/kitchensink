@@ -3,8 +3,6 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductDetailPage from "../../../react-pages/store/example-2/products/[slug]";
 import { loadProductServiceConfig } from "../../../headless/store/services/product-service";
 import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
-import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
-import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
 import { loadSocialSharingServiceConfig } from "../../../headless/store/services/social-sharing-service";
 import { loadRelatedProductsServiceConfig } from "../../../headless/store/services/related-products-service";
 import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
@@ -17,20 +15,17 @@ if (!slug) {
   return Astro.redirect("/store/example-2");
 }
 
-// Load service configurations using the standard headless services
-const productServiceConfigResult = await loadProductServiceConfig(slug);
+const [productServiceConfigResult, currentCartServiceConfig] =
+  await Promise.all([
+    loadProductServiceConfig(slug),
+    loadCurrentCartServiceConfig(),
+  ]);
 
 if (productServiceConfigResult.type === "notFound") {
   return Astro.redirect("/404");
 }
 
 const productServiceConfig = productServiceConfigResult.config;
-
-const currentCartServiceConfig = await loadCurrentCartServiceConfig();
-const productMediaGalleryServiceConfig =
-  await loadProductMediaGalleryServiceConfig(slug);
-const selectedVariantServiceConfig =
-  await loadSelectedVariantServiceConfig(slug);
 
 const productName = productServiceConfig!.product!.name || "Product";
 const productDescription =
@@ -63,8 +58,6 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     client:load
     productServiceConfig={productServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
-    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
-    selectedVariantServiceConfig={selectedVariantServiceConfig}
     socialSharingServiceConfig={socialSharingServiceConfig}
     relatedProductsServiceConfig={relatedProductsServiceConfig}
     slot="body"

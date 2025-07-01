@@ -29,7 +29,7 @@ The example consists of two main pages:
 The example uses a comprehensive services manager setup:
 
 ```tsx
-const servicesManager = createServicesManager(
+const [servicesManager] = useState(() => createServicesManager(
   createServicesMap()
     .addService(
       BookingServicesServiceDefinition,
@@ -46,7 +46,7 @@ const servicesManager = createServicesManager(
       BookingSelectionService,
       bookingSelectionConfig
     )
-);
+));
 ```
 
 ### Page Structure

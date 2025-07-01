@@ -307,13 +307,13 @@ import {
 } from "../headless/members/current-member-service";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap().addService(
       CurrentMemberServiceDefinition,
       CurrentMemberService,
       currentMemberConfig
     )
-  )}
+  ))[0]}
 >
   {/* Your CurrentMemberProfile components here */}
 </ServicesManagerProvider>;

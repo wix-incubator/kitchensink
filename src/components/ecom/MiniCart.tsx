@@ -1,9 +1,4 @@
 import { useState, type ReactNode } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,

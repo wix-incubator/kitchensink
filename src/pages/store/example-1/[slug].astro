@@ -3,11 +3,9 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductDetailPage from "../../../react-pages/store/example-1/products/[slug]";
 import { loadProductServiceConfig } from "../../../headless/store/services/product-service";
 import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
-import { loadProductMediaGalleryServiceConfig } from "../../../headless/store/services/product-media-gallery-service";
-import { loadSelectedVariantServiceConfig } from "../../../headless/store/services/selected-variant-service";
+import { SEO } from "../../../headless/seo/components";
 import { seoTags } from "@wix/seo";
 import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
-import { SEO } from "../../../headless/seo/components";
 
 const { slug } = Astro.params;
 
@@ -15,8 +13,11 @@ if (!slug) {
   return Astro.redirect("/store");
 }
 
-// Load initial data for services
-const productServiceConfigResult = await loadProductServiceConfig(slug);
+const [productServiceConfigResult, currentCartServiceConfig] =
+  await Promise.all([
+    loadProductServiceConfig(slug),
+    loadCurrentCartServiceConfig(),
+  ]);
 
 if (productServiceConfigResult.type === "notFound") {
   return Astro.redirect("/404");
@@ -24,11 +25,7 @@ if (productServiceConfigResult.type === "notFound") {
 
 const productServiceConfig = productServiceConfigResult.config;
 
-const currentCartServiceConfig = await loadCurrentCartServiceConfig();
-const productMediaGalleryServiceConfig =
-  await loadProductMediaGalleryServiceConfig(slug);
-const selectedVariantServiceConfig =
-  await loadSelectedVariantServiceConfig(slug);
+const productName = productServiceConfig.product.name || "Product";
 
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
@@ -43,8 +40,6 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     client:load
     productServiceConfig={productServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
-    productMediaGalleryServiceConfig={productMediaGalleryServiceConfig}
-    selectedVariantServiceConfig={selectedVariantServiceConfig} 
     seoTagsServiceConfig={seoTagsServiceConfig}
     slot="body"
   />

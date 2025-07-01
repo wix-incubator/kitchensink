@@ -15,6 +15,7 @@
     "@astrojs/sitemap": "^3.4.1",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
+    "@types/react-router-dom": "^5.3.3",
     "@wix/astro": "^1.0.22",
     "@wix/bookings": "^1.0.897",
     "@wix/categories": "^1.0.133",
@@ -35,6 +36,7 @@
     "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.3",
     "sass-embedded": "^1.89.0",
     "typescript": "^5.8.3"
   },

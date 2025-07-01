@@ -9,10 +9,6 @@ import {
   CurrentCartServiceDefinition,
 } from "../../../../headless/ecom/services/current-cart-service";
 import {
-  ProductMediaGalleryService,
-  ProductMediaGalleryServiceDefinition,
-} from "../../../../headless/store/services/product-media-gallery-service";
-import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from "../../../../headless/store/services/product-modifiers-service";
@@ -29,27 +25,25 @@ import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-1.css";
 import ProductDetails from "../../../../components/store/ProductDetails";
 import {
-  SEOTagsService,
-  SEOTagsServiceDefinition,
-} from "../../../../headless/seo/services/seo-tags-service";
+  MediaGalleryService,
+  MediaGalleryServiceDefinition,
+} from "../../../../headless/media/services/media-gallery-service";
+import { SEOTagsServiceDefinition } from "../../../../headless/seo/services/seo-tags-service";
+import type { ServiceFactoryConfig } from "@wix/services-definitions";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { seoTags } from "@wix/seo";
 import { SEO } from "../../../../headless/seo/components";
+import { seoTags } from "@wix/seo";
+import { SEOTagsService } from "../../../../headless/seo/services/seo-tags-service";
 
 interface ProductDetailPageProps {
-  productServiceConfig: any;
-  currentCartServiceConfig: any;
-  productMediaGalleryServiceConfig: any;
-  selectedVariantServiceConfig: any;
-  productModifiersServiceConfig?: any;
-  seoTagsServiceConfig: any;
+  productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
+  currentCartServiceConfig: ServiceFactoryConfig<typeof CurrentCartService>;
+  seoTagsServiceConfig: ServiceFactoryConfig<typeof SEOTagsService>;
 }
 
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
-  productMediaGalleryServiceConfig,
-  selectedVariantServiceConfig,
   seoTagsServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -62,19 +56,13 @@ export default function ProductDetailPage({
       CurrentCartService,
       currentCartServiceConfig
     )
-    .addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      selectedVariantServiceConfig
-    )
-    .addService(
-      ProductMediaGalleryServiceDefinition,
-      ProductMediaGalleryService,
-      productMediaGalleryServiceConfig
-    )
-    .addService(ProductModifiersServiceDefinition, ProductModifiersService);
+    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
+    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
+    });
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   const seoTagsServiceManager = createServicesManager(
     createServicesMap().addService(

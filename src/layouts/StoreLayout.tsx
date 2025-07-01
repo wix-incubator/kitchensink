@@ -29,15 +29,17 @@ export function StoreLayout({
   const [internalShowSuccess, setInternalShowSuccess] = useState(false);
 
   // Use external services manager if provided, otherwise create one with just cart service
-  const servicesManager =
-    externalServicesManager ||
+  const [internalServicesManager] = useState(() => 
     createServicesManager(
       createServicesMap().addService(
         CurrentCartServiceDefinition,
         CurrentCartService,
         currentCartServiceConfig
       )
-    );
+    )
+  );
+  
+  const servicesManager = externalServicesManager || internalServicesManager;
 
   const actualShowSuccess = onSuccessMessageChange
     ? showSuccessMessage

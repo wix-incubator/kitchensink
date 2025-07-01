@@ -47,7 +47,7 @@ export function ProfilePage({
   const [showPhotoDialog, setShowPhotoDialog] = useState(false);
 
   // Create services manager with all three services that depend on each other
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         CurrentMemberServiceDefinition,
@@ -64,7 +64,7 @@ export function ProfilePage({
         allowedTypes: ["image/jpeg", "image/png", "image/gif"],
         photoUploadAstroActions: actions.photoUploadAstroActions,
       })
-  );
+  ));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

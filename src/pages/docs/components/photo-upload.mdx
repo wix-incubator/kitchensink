@@ -369,7 +369,7 @@ import {
 import { actions } from "astro:actions";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap().addService(
       PhotoUploadServiceDefinition,
       PhotoUploadService,
@@ -379,7 +379,7 @@ import { actions } from "astro:actions";
         photoUploadAstroActions: actions.photoUploadAstroActions,
       }
     )
-  )}
+  ))[0]}
 >
   {/* Your PhotoUpload components here */}
 </ServicesManagerProvider>;

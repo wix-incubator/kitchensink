@@ -1,4 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
+import type {
+  ServiceAPI,
+  ServiceFactoryConfig,
+} from "@wix/services-definitions";
 import {
   createServicesManager,
   createServicesMap,
@@ -6,14 +9,16 @@ import {
 import { useService } from "@wix/services-manager-react";
 import { useState } from "react";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
-import { WixMediaImage } from "../../../../headless/media/components";
+import {
+  MediaGallery,
+  WixMediaImage,
+} from "../../../../headless/media/components";
 import { CurrentCart } from "../../../../headless/ecom/components";
 import {
   Product,
   SelectedVariant,
 } from "../../../../headless/store/components";
 import {
-  ProductMediaGallery,
   ProductModifiers,
   ProductVariantSelector,
   RelatedProducts,
@@ -23,10 +28,6 @@ import {
   CurrentCartService,
   CurrentCartServiceDefinition,
 } from "../../../../headless/ecom/services/current-cart-service";
-import {
-  ProductMediaGalleryService,
-  ProductMediaGalleryServiceDefinition,
-} from "../../../../headless/store/services/product-media-gallery-service";
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
@@ -50,21 +51,25 @@ import {
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-2.css";
+import {
+  MediaGalleryService,
+  MediaGalleryServiceDefinition,
+} from "../../../../headless/media/services/media-gallery-service";
 
 interface ProductDetailPageProps {
-  productServiceConfig: any;
-  currentCartServiceConfig: any;
-  productMediaGalleryServiceConfig: any;
-  selectedVariantServiceConfig: any;
-  socialSharingServiceConfig: any;
-  relatedProductsServiceConfig: any;
+  productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
+  currentCartServiceConfig: ServiceFactoryConfig<typeof CurrentCartService>;
+  socialSharingServiceConfig: ServiceFactoryConfig<typeof SocialSharingService>;
+  relatedProductsServiceConfig: ServiceFactoryConfig<
+    typeof RelatedProductsService
+  >;
 }
 
 const ProductImageGallery = () => {
   return (
     <div className="space-y-4">
-      <ProductMediaGallery.Viewport>
-        {({ src, totalImages }) => {
+      <MediaGallery.Viewport>
+        {({ src }) => {
           return (
             <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
               {src ? (
@@ -94,87 +99,83 @@ const ProductImageGallery = () => {
                 </div>
               )}
 
-              {totalImages > 1 && (
-                <>
-                  <ProductMediaGallery.Previous>
-                    {({ onPrevious, canGoPrevious }) => (
-                      <>
-                        {canGoPrevious && (
-                          <button
-                            onClick={onPrevious}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <svg
-                              className="w-6 h-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M15 19l-7-7 7-7"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </ProductMediaGallery.Previous>
-
-                  <ProductMediaGallery.Next>
-                    {({ onNext, canGoNext }) => (
-                      <>
-                        {canGoNext && (
-                          <button
-                            onClick={onNext}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <svg
-                              className="w-6 h-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </ProductMediaGallery.Next>
-                </>
-              )}
-
-              <ProductMediaGallery.Indicator>
-                {({ current, total, hasImages }) => (
+              <MediaGallery.Previous>
+                {({ onPrevious, canGoPrevious }) => (
                   <>
-                    {hasImages && total > 1 && (
+                    {canGoPrevious && (
+                      <button
+                        onClick={onPrevious}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </>
+                )}
+              </MediaGallery.Previous>
+
+              <MediaGallery.Next>
+                {({ onNext, canGoNext }) => (
+                  <>
+                    {canGoNext && (
+                      <button
+                        onClick={onNext}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </>
+                )}
+              </MediaGallery.Next>
+
+              <MediaGallery.Indicator>
+                {({ current, total, hasMedia }) => (
+                  <>
+                    {hasMedia && total > 1 && (
                       <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
                         {current} / {total}
                       </div>
                     )}
                   </>
                 )}
-              </ProductMediaGallery.Indicator>
+              </MediaGallery.Indicator>
             </div>
           );
         }}
-      </ProductMediaGallery.Viewport>
+      </MediaGallery.Viewport>
 
-      <ProductMediaGallery.Indicator>
-        {({ total, hasImages }) => (
+      <MediaGallery.Indicator>
+        {({ total, hasMedia }) => (
           <>
-            {hasImages && total > 1 && (
+            {hasMedia && total > 1 && (
               <div className="flex gap-2 overflow-x-auto">
                 {Array.from({ length: total }).map((_, index) => (
-                  <ProductMediaGallery.Thumbnail key={index} index={index}>
+                  <MediaGallery.Thumbnail key={index} index={index}>
                     {({ src, isActive, onSelect }) => (
                       <button
                         onClick={onSelect}
@@ -192,13 +193,13 @@ const ProductImageGallery = () => {
                         )}
                       </button>
                     )}
-                  </ProductMediaGallery.Thumbnail>
+                  </MediaGallery.Thumbnail>
                 ))}
               </div>
             )}
           </>
         )}
-      </ProductMediaGallery.Indicator>
+      </MediaGallery.Indicator>
     </div>
   );
 };
@@ -328,7 +329,9 @@ const ProductInfo = ({
                 >
                   {status}
                   {trackInventory && availableQuantity !== null && (
-                    <span className="ml-1">({availableQuantity} available)</span>
+                    <span className="ml-1">
+                      ({availableQuantity} available)
+                    </span>
                   )}
                 </span>
               </div>
@@ -993,8 +996,6 @@ const ProductInfo = ({
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
-  productMediaGalleryServiceConfig,
-  selectedVariantServiceConfig,
   socialSharingServiceConfig,
   relatedProductsServiceConfig,
 }: ProductDetailPageProps) {
@@ -1007,15 +1008,13 @@ export default function ProductDetailPage({
       CurrentCartService,
       currentCartServiceConfig
     )
+    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
+    })
     .addService(
       SelectedVariantServiceDefinition,
       SelectedVariantService,
-      selectedVariantServiceConfig
-    )
-    .addService(
-      ProductMediaGalleryServiceDefinition,
-      ProductMediaGalleryService,
-      productMediaGalleryServiceConfig
     )
     .addService(
       SocialSharingServiceDefinition,
@@ -1026,12 +1025,10 @@ export default function ProductDetailPage({
       RelatedProductsServiceDefinition,
       RelatedProductsService,
       relatedProductsServiceConfig
-    ).addService(
-      ProductModifiersServiceDefinition,
-      ProductModifiersService,
-    );
+    )
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService);
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <KitchensinkLayout>

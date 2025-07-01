@@ -254,13 +254,13 @@ import {
 } from "../headless/store/product-service";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap().addService(
       ProductServiceDefinition,
       ProductService,
       productConfig
     )
-  )}
+  ))[0]}
 >
   {/* Your Product components here */}
 </ServicesManagerProvider>;

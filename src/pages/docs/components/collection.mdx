@@ -499,13 +499,13 @@ import {
 } from "../headless/store/collection-service";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap().addService(
       CollectionServiceDefinition,
       CollectionService,
       collectionConfig
     )
-  )}
+  ))[0]}
 >
   {/* Your Collection components here */}
 </ServicesManagerProvider>;
