@@ -55,7 +55,7 @@ export default function ProductDetailPage({
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     });
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <KitchensinkLayout>

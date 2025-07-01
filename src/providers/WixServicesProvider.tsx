@@ -15,6 +15,7 @@ import {
   SelectedVariantServiceDefinition,
 } from "../headless/store/services/selected-variant-service";
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   FilterService,
@@ -68,7 +69,7 @@ export default function WixServicesLayout({
     .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
     .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

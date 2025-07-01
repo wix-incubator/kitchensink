@@ -3,6 +3,7 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import { useState } from "react";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import {
   BookingServicesService,
@@ -30,7 +31,7 @@ export default function BookingsPage({
   bookingSelectionConfig,
 }: BookingsPageProps) {
   // Create services manager with both booking services
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         BookingServicesServiceDefinition,
@@ -42,7 +43,7 @@ export default function BookingsPage({
         BookingSelectionService,
         bookingSelectionConfig
       )
-  );
+  ));
 
   return (
     <KitchensinkLayout>

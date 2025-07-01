@@ -185,11 +185,11 @@ import {
 } from "@wix/services-manager";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap()
       .addService(ServiceDefinition, Service, serviceConfig)
       .addService(AnotherServiceDefinition, AnotherService, anotherConfig)
-  )}
+  ))[0]}
 >
   {/* Your UI components */}
 </ServicesManagerProvider>;

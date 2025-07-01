@@ -142,6 +142,7 @@ const postTitle = blogPostConfig.post.title;
 
 ```tsx
 // src/react-pages/blog/[slug].tsx
+import { useState } from "react";
 import {
   createServicesManager,
   createServicesMap,
@@ -158,13 +159,13 @@ interface BlogPostPageProps {
 }
 
 export default function BlogPostPage({ blogPostConfig }: BlogPostPageProps) {
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap().addService(
       BlogPostServiceDefinition,
       BlogPostService,
       blogPostConfig
     )
-  );
+  ));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

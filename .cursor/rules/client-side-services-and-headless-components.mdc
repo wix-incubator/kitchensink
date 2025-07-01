@@ -83,14 +83,14 @@ In order to use services we need to render a `ServicesManagerProvider` somewhere
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import { CurrentMemberServiceDefinition, CurrentMemberService } from "/path/to/headless/members/current-member-service.ts";
 <ServicesManagerProvider
-      servicesManager={createServicesManager(
-        createServicesMap().addService(
-          CurrentMemberServiceDefinition,
-          CurrentMemberService,
-          currentMemberServiceConfig
-        )
-      )}
-    >
+  servicesManager={useState(() => createServicesManager(
+    createServicesMap().addService(
+      CurrentMemberServiceDefinition,
+      CurrentMemberService,
+      currentMemberServiceConfig
+    )
+  ))[0]}
+>
     </>
 </ServiesManagerProvider>
 ```
@@ -303,11 +303,11 @@ If you have a service that depends on another service (using `getService`), both
 
 ```tsx
 // ✅ CORRECT: Both services in the same ServicesManager
-const servicesManager = createServicesManager(
+const [servicesManager] = useState(() => createServicesManager(
   createServicesMap()
     .addService(CurrentMemberServiceDefinition, CurrentMemberService, currentMemberConfig)
     .addService(ProfileUpdateServiceDefinition, ProfileUpdateService, profileUpdateConfig)
-);
+));
 
 <ServicesManagerProvider servicesManager={servicesManager}>
   {/* Both CurrentMember and ProfileUpdate headless components work here */}
@@ -533,13 +533,13 @@ export default function PhotoUploadDialog({ photoUploadConfig }) {
 
   return (
     <ServicesManagerProvider
-      servicesManager={createServicesManager(
+      servicesManager={useState(() => createServicesManager(
         createServicesMap().addService(
           PhotoUploadServiceDefinition,
           PhotoUploadService,
           fullConfig
         )
-      )}
+      ))[0]}
     >
       {/* UI components */}
     </ServicesManagerProvider>

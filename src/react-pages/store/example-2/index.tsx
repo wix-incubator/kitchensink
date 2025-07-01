@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../layouts/StoreLayout";
 import "../../../styles/theme-2.css";
@@ -583,7 +583,7 @@ export default function StoreExample2Page({
     }
   };
 
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         CollectionServiceDefinition,
@@ -613,7 +613,7 @@ export default function StoreExample2Page({
         {}
       )
       .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
-  );
+  ));
 
   return (
     <KitchensinkLayout>
