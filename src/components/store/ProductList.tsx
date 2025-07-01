@@ -32,7 +32,90 @@ import {
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
 import { useService } from "@wix/services-manager-react";
- 
+import { useState, useEffect } from "react";
+
+// Auto-select first variant choices for products with options
+const AutoSelectVariants = ({ product }: { product: productsV3.V3Product }) => {
+  const variantService = useService(SelectedVariantServiceDefinition);
+
+  useEffect(() => {
+    // Auto-select first choice for each option if none selected
+    if (product.options && product.options.length > 0 && !variantService.hasAnySelections()) {
+      const defaultChoices: Record<string, string> = {};
+      
+      product.options.forEach((option: any) => {
+        if (option.name && option.choicesSettings?.choices?.length > 0) {
+          defaultChoices[option.name] = option.choicesSettings.choices[0].name;
+        }
+      });
+
+      if (Object.keys(defaultChoices).length > 0) {
+        variantService.setSelectedChoices(defaultChoices);
+      }
+    }
+  }, [product._id, variantService]);
+
+  // Show interactive variant options with original styling
+  return (
+    <div className="mb-3 space-y-2">
+      {product.options?.map((option: any) => (
+        <div key={option._id} className="space-y-1">
+          <span className="text-content-secondary text-xs font-medium">
+            {String(option.name)}:
+          </span>
+          <div className="flex flex-wrap gap-1">
+            {option.choicesSettings?.choices
+              ?.slice(0, 3)
+              .map((choice: any) => {
+                // Check if this is a color option and if choice has color data
+                const isColorOption = String(option.name)
+                  .toLowerCase()
+                  .includes("color");
+                const hasColorCode = choice.colorCode || choice.media?.image;
+
+                if (isColorOption && (choice.colorCode || hasColorCode)) {
+                  return (
+                    <div
+                      key={choice.choiceId}
+                      className="relative group/color"
+                    >
+                      <div
+                        onClick={() => variantService.setOption(option.name, choice.name)}
+                        className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
+                        style={{
+                          backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
+                        }}
+                      />
+                      {/* Tooltip */}
+                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                        {String(choice.name)}
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <button
+                      key={choice.choiceId}
+                      onClick={() => variantService.setOption(option.name, choice.name)}
+                      className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium hover:border-brand-primary transition-colors cursor-pointer"
+                    >
+                      {String(choice.name)}
+                    </button>
+                  );
+                }
+              })}
+            {option.choicesSettings?.choices?.length > 3 && (
+              <span className="text-content-muted text-xs">
+                +{option.choicesSettings.choices.length - 3} more
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export const ProductGridContent = ({productPageRoute}: {productPageRoute: string}) => {
   const currentCartService = useService(CurrentCartServiceDefinition);
     return (
@@ -262,81 +345,10 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       {title}
                                     </h3>
   
-                                    {/* Product Options */}
-                                    {product.options &&
-                                      product.options.length > 0 && (
-                                        <div className="mb-3 space-y-2">
-                                          {product.options.map((option: any) => (
-                                            <div
-                                              key={option._id}
-                                              className="space-y-1"
-                                            >
-                                              <span className="text-content-secondary text-xs font-medium">
-                                                {String(option.name)}:
-                                              </span>
-                                              <div className="flex flex-wrap gap-1">
-                                                {option.choicesSettings?.choices
-                                                  ?.slice(0, 3)
-                                                  .map((choice: any) => {
-                                                    // Check if this is a color option and if choice has color data
-                                                    const isColorOption = String(
-                                                      option.name
-                                                    )
-                                                      .toLowerCase()
-                                                      .includes("color");
-                                                    const hasColorCode =
-                                                      choice.colorCode ||
-                                                      choice.media?.image;
-  
-                                                    if (
-                                                      isColorOption &&
-                                                      (choice.colorCode ||
-                                                        hasColorCode)
-                                                    ) {
-                                                      return (
-                                                        <div
-                                                          key={choice.choiceId}
-                                                          className="relative group/color"
-                                                        >
-                                                          <div
-                                                            className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
-                                                            style={{
-                                                              backgroundColor:
-                                                                choice.colorCode ||
-                                                                "var(--theme-fallback-color)",
-                                                            }}
-                                                          />
-                                                          {/* Tooltip */}
-                                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                            {String(choice.name)}
-                                                          </div>
-                                                        </div>
-                                                      );
-                                                    } else {
-                                                      return (
-                                                        <span
-                                                          key={choice.choiceId}
-                                                          className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium"
-                                                        >
-                                                          {String(choice.name)}
-                                                        </span>
-                                                      );
-                                                    }
-                                                  })}
-                                                {option.choicesSettings?.choices
-                                                  ?.length > 3 && (
-                                                  <span className="text-content-muted text-xs">
-                                                    +
-                                                    {option.choicesSettings
-                                                      .choices.length - 3}{" "}
-                                                    more
-                                                  </span>
-                                                )}
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
+                                    {/* Auto-select Variants and Compact Display */}
+                                    {product.options && product.options.length > 0 && (
+                                      <AutoSelectVariants product={product} />
+                                    )}
   
                                     {description && (
                                       <p className="text-content-muted text-sm mb-3 line-clamp-2">
