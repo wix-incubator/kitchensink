@@ -10,6 +10,7 @@ import { ProductServiceDefinition } from '../../headless/store/services/product-
 import { CategoryServiceDefinition } from '../../headless/store/services/category-service';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import '../../styles/theme-wix-vibe.css';
+import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
 
 // Store Route Component with Categories Loading
 function StoreRoute() {
@@ -115,6 +116,7 @@ function ProductDetailsRoute() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const productService = useService(ProductServiceDefinition);
+  const mediaGalleryService = useService(MediaGalleryServiceDefinition);
   
   // Handle the success message timer
   useEffect(() => {
@@ -134,6 +136,7 @@ function ProductDetailsRoute() {
         setError(error);
       });
       await productService.loadProduct(slug);
+      await mediaGalleryService.setMediaToDisplay(productService.product.get().media?.itemsInfo?.items ?? []);
       setIsLoading(false);
     }
 
