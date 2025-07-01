@@ -37,6 +37,7 @@ jobs:
 
       - name: Capture environment info
         run: |
+          mkdir -p .wix
           echo "=== Environment Information ===" > .wix/debug.log
           echo "Node.js version: $(node --version)" >> .wix/debug.log
           echo "npm version: $(npm --version)" >> .wix/debug.log
