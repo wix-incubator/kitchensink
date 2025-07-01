@@ -6,14 +6,15 @@ import ReactRouterApp from "../../react-pages/react-router/[...path]";
 <BaseLayout>
   <title>React Router Store</title>
   <meta name="description" content="A single-page store application with client-side routing" />
-  
-  <ReactRouterApp client:only="react" slot="body">
-    <!-- Loading fallback -->
-    <div class="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p class="text-gray-600 text-lg">Loading React Router Store...</p>
+  <div class="mx-auto max-w-7xl">
+    <ReactRouterApp client:only="react" slot="body">
+      <!-- Loading fallback -->
+      <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p class="text-gray-600 text-lg">Loading React Router Store...</p>
+        </div>
       </div>
-    </div>
-  </ReactRouterApp>
+    </ReactRouterApp>
+  </div>
 </BaseLayout>

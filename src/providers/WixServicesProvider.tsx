@@ -46,17 +46,18 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../headless/media/services/media-gallery-service";
+import { ProductModifiersService, ProductModifiersServiceDefinition } from "../headless/store/services/product-modifiers-service";
 
-export interface WixServicesLayoutProps {
+export interface WixServicesProviderProps {
   children: ReactNode;
   // whether to show the cart icon in the header allowing the user to view the mini cart
   showCartIcon?: boolean;
 }
 
-export default function WixServicesLayout({
+export default function WixServicesProvider({
   children,
   showCartIcon = false,
-}: WixServicesLayoutProps) {
+}: WixServicesProviderProps) {
   let servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService)
     .addService(CurrentCartServiceDefinition, CurrentCartService)
@@ -67,6 +68,7 @@ export default function WixServicesLayout({
     .addService(CategoryServiceDefinition, CategoryService)
     .addService(SortServiceDefinition, SortService)
     .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
     .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
 
   const [servicesManager] = useState(() => createServicesManager(servicesMap));

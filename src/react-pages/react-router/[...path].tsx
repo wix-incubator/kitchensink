@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams, Link, useLocation } from 'react-router-dom';
 import { createServicesManager, createServicesMap } from '@wix/services-manager';
 import { ServicesManagerProvider, useService } from '@wix/services-manager-react';
-import WixServicesLayout from '../../providers/WixServicesProvider';
+import WixServicesProvider from '../../providers/WixServicesProvider';
 import ProductList from '../../components/store/ProductList';
 import ProductDetails from '../../components/store/ProductDetails';
 import Cart from '../../components/ecom/Cart';
@@ -11,6 +11,7 @@ import { CategoryServiceDefinition } from '../../headless/store/services/categor
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import '../../styles/theme-wix-vibe.css';
 import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
+import { type NavigationComponent, NavigationProvider } from '../../components/NavigationContext';
 
 // Store Route Component with Categories Loading
 function StoreRoute() {
@@ -92,7 +93,7 @@ function StoreRoute() {
     );
   }
 
-  return <ProductList productPageRoute="/react-router/products" />;
+  return <ProductList productPageRoute="/products" />;
 }
 
 // Global Cart Loader Component
@@ -197,7 +198,7 @@ function ProductDetailsRoute() {
             {error}
           </h2>
           <Link
-            to="/react-router/store"
+            to="/store"
             className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-light transition-colors"
           >
             <svg
@@ -226,7 +227,7 @@ function ProductDetailsRoute() {
       {/* Product Details */}
       <ProductDetails 
         setShowSuccessMessage={setShowSuccessMessage} 
-        cartUrl="/react-router/cart"
+        cartUrl="/cart"
       />
 
       {/* Success Message */}
@@ -254,11 +255,16 @@ function ProductDetailsRoute() {
   );
 }
 
+const ReactRouterNavigationComponent: NavigationComponent = ({ route, children, ...props }) => {
+  return <Link to={route} {...props}>{children}</Link>;
+};
+
 export default function ReactRouterApp() {
   return (
     <div className="min-h-screen bg-surface-primary p-4 pt-16">
       <Router basename="/react-router">
-        <WixServicesLayout showCartIcon={true}>
+        <WixServicesProvider showCartIcon={true}>
+        <NavigationProvider navigationComponent={ReactRouterNavigationComponent}>
           <GlobalCartLoader>
             <Routes>
               {/* Default route redirects to store */}
@@ -286,7 +292,8 @@ export default function ReactRouterApp() {
               <Route path="*" element={<Navigate to="/store" replace />} />
             </Routes>
           </GlobalCartLoader>
-        </WixServicesLayout>
+          </NavigationProvider>
+        </WixServicesProvider>
       </Router>
     </div>
   );
