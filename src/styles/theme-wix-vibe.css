@@ -1,137 +1,189 @@
 :root {
-  /* Primary Theme Colors - Material Blue */
-  --theme-primary-500: #1976d2; /* Primary brand color used for main UI elements like filter status bars and icons */
-  --theme-primary-600: #1565c0; /* Darker variant of primary color used for hover states and emphasis */
-  --theme-secondary-500: #03dac6; /* Secondary accent color (Material Teal) used in gradients alongside primary color */
-  --theme-secondary-600: #00bcd4; /* Darker variant of secondary color used for hover state gradients */
-  --theme-secondary-700: #0097a7; /* Darkest variant of secondary color used for intense hover states */
-
-  /* Status Colors - Material Design */
-  --theme-warning-500: #ff9800; /* Material Design orange for warnings */
-  --theme-warning-600: #f57c00; /* Darker Material Design orange for hover states */
-  --theme-warning-400: #ffb74d; /* Lighter Material Design orange for text */
-  --theme-warning-300: #ffcc80; /* Light Material Design orange for text */
+  /* =========================== */
+  /* BASE COLOR PALETTE */
+  /* =========================== */
   
-  --theme-info-500: #1976d2; /* Material Design blue matching theme primary */
-  --theme-info-600: #1565c0; /* Darker Material Design blue for hover states */
-  --theme-info-400: #42a5f5; /* Lighter Material Design blue for text */
+  /* Primary Brand Colors - Main brand identity colors used throughout the interface */
+  --color-primary: 66, 165, 245; /* Primary brand color - main blue used for key UI elements, buttons, and interactive components */
+  --color-primary-dark: 21, 101, 192; /* Darker variant of primary color - used for hover states and emphasis */
+  --color-secondary: 3, 218, 198; /* Secondary brand color - complementary teal used for accents and secondary actions */
+  --color-secondary-dark: 0, 188, 212; /* Darker variant of secondary color - used for hover states on secondary elements */
+  --color-secondary-darker: 9, 151, 167; /* Darkest variant of secondary color - used for pressed states and high emphasis */
   
-  --theme-danger-500: #f44336; /* Material Design red for error states */
-  --theme-danger-600: #d32f2f; /* Darker Material Design red for hover states */
-  --theme-danger-400: #ef5350; /* Lighter Material Design red for text */
-  --theme-danger-300: #e57373; /* Light Material Design red for text */
+  /* Status Colors - Semantic colors for communicating system states and user feedback */
+  --color-warning: 255, 152, 0; /* Warning color - orange used for caution messages and non-critical alerts */
+  --color-warning-dark: 245, 124, 0; /* Darker warning color - used for hover states on warning elements */
+  --color-warning-light: 255, 183, 77; /* Lighter warning color - used for warning text and subtle warning indicators */
+  --color-warning-lighter: 255, 204, 128; /* Lightest warning color - used for very subtle warning backgrounds */
   
-  --theme-success-500: #4caf50; /* Material Design green for positive states */
-  --theme-success-600: #388e3c; /* Darker Material Design green for hover states */
-  --theme-success-400: #66bb6a; /* Lighter Material Design green for text */
+  --color-info: 25, 118, 210; /* Information color - blue used for informational messages and neutral notifications */
+  --color-info-dark: 21, 101, 192; /* Darker info color - used for hover states on informational elements */
+  --color-info-light: 66, 165, 245; /* Lighter info color - used for info text and subtle informational indicators */
   
-  --theme-accent-500: #03dac6; /* Material Design teal accent matching secondary */
-  --theme-accent-600: #00bcd4; /* Darker Material Design teal accent */
-  --theme-accent-400: #26c6da; /* Lighter Material Design teal accent */
+  --color-danger: 244, 67, 54; /* Danger/error color - red used for error messages, destructive actions, and critical alerts */
+  --color-danger-dark: 211, 47, 47; /* Darker danger color - used for hover states on destructive elements */
+  --color-danger-light: 239, 83, 80; /* Lighter danger color - used for error text and danger indicators */
+  --color-danger-lighter: 229, 115, 115; /* Lightest danger color - used for subtle error backgrounds */
   
-  --theme-amber-500: #ffc107; /* Material Design amber for special highlights */
-  --theme-amber-600: #ffa000; /* Darker Material Design amber */
-
-  /* Background Colors with Opacity */
-  --theme-bg-primary-10: rgba(25, 118, 210, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
-  --theme-bg-primary-20: rgba(25, 118, 210, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
-  --theme-bg-options: rgba(0, 0, 0, 0.04); /* Background color for product option tags and choice buttons */
-  --theme-bg-loading: rgba(0, 0, 0, 0.08); /* Background color for loading skeleton elements */
-  --theme-bg-card: rgba(0, 0, 0, 0.02); /* Very light background for cards and product items */
-  --theme-bg-error: rgba(244, 67, 54, 0.1); /* Light red background for error messages */
-  --theme-bg-tooltip: rgba(33, 33, 33, 0.9); /* Dark background for tooltips and overlays */
-
-  /* Status Background Colors */
-  --theme-bg-warning-10: rgba(255, 152, 0, 0.1); /* Light Material warning background */
-  --theme-bg-warning-20: rgba(255, 152, 0, 0.2); /* Medium Material warning background */
-  --theme-bg-info-10: rgba(25, 118, 210, 0.1); /* Light Material info background */
-  --theme-bg-info-20: rgba(25, 118, 210, 0.2); /* Medium Material info background */
-  --theme-bg-success-10: rgba(76, 175, 80, 0.1); /* Light Material success background */
-  --theme-bg-success-20: rgba(76, 175, 80, 0.2); /* Medium Material success background */
-  --theme-bg-danger-10: rgba(244, 67, 54, 0.1); /* Light Material danger background */
-  --theme-bg-danger-20: rgba(244, 67, 54, 0.2); /* Medium Material danger background */
-  --theme-bg-accent-10: rgba(3, 218, 198, 0.1); /* Light Material accent background */
-  --theme-bg-accent-20: rgba(3, 218, 198, 0.2); /* Medium Material accent background */
-
-  /* Border Colors */
-  --theme-border-primary-10: rgba(25, 118, 210, 0.1); /* Very subtle primary-colored border for filter status bars */
-  --theme-border-primary-20: rgba(25, 118, 210, 0.2); /* More visible primary-colored border for emphasized elements */
-  --theme-border-primary-30: rgba(25, 118, 210, 0.3); /* Strong primary-colored border used for product option tags */
-  --theme-border-card: rgba(0, 0, 0, 0.12); /* Light border for cards and product items */
-  --theme-border-card-hover: rgba(0, 0, 0, 0.2); /* Medium border for card hover states */
-  --theme-border-error: rgba(244, 67, 54, 0.2); /* Red border for error messages */
-
-  /* Status Border Colors */
-  --theme-border-warning-20: rgba(255, 152, 0, 0.2); /* Material warning border */
-  --theme-border-warning-30: rgba(255, 152, 0, 0.3); /* Stronger Material warning border */
-  --theme-border-info-20: rgba(25, 118, 210, 0.2); /* Material info border */
-  --theme-border-info-30: rgba(25, 118, 210, 0.3); /* Stronger Material info border */
-  --theme-border-success-20: rgba(76, 175, 80, 0.2); /* Material success border */
-  --theme-border-success-30: rgba(76, 175, 80, 0.3); /* Stronger Material success border */
-  --theme-border-danger-20: rgba(244, 67, 54, 0.2); /* Material danger border */
-  --theme-border-danger-30: rgba(244, 67, 54, 0.3); /* Stronger Material danger border */
-  --theme-border-accent-20: rgba(3, 218, 198, 0.2); /* Material accent border */
-  --theme-border-accent-30: rgba(3, 218, 198, 0.3); /* Stronger Material accent border */
-
-  /* Text Colors - Material Design Light Theme */
-  --theme-text-primary-300: #1976d2; /* Primary color used for filter status text and active filter labels */
-  --theme-text-primary-400: #1565c0; /* Darker primary color used for filter icons and interactive text elements */
-  --theme-text-content: #212121; /* Main content text color used for headings, product titles, and button labels */
-  --theme-text-content-30: rgba(33, 33, 33, 0.3); /* Very faded content text used for disabled text elements */
-  --theme-text-content-40: rgba(33, 33, 33, 0.4); /* Very dim content text used for placeholder icons and subtle elements */
-  --theme-text-content-50: rgba(33, 33, 33, 0.5); /* Dim content text used for strikethrough sale prices */
-  --theme-text-content-60: rgba(33, 33, 33, 0.6); /* Muted content text used for descriptions, counts, and secondary information */
-  --theme-text-content-70: rgba(33, 33, 33, 0.7); /* Semi-muted content text used for subtitles and intro paragraphs */
-  --theme-text-content-80: rgba(33, 33, 33, 0.8); /* Clear content text used for option labels and form text */
-  --theme-text-content-90: rgba(33, 33, 33, 0.9); /* Almost full opacity content text used for emphasized secondary text */
-  --theme-text-success: #4caf50; /* Material Green color used for "In Stock" status indicators */
-  --theme-text-error: #f44336; /* Material Red color used for "Out of Stock" status and error messages */
-
-  /* Status Text Colors */
-  --theme-text-warning: #ffb74d; /* Material warning text color */
-  --theme-text-info: #42a5f5; /* Material info text color */
-  --theme-text-danger: #ef5350; /* Material danger text color */
-  --theme-text-accent: #26c6da; /* Material accent text color */
-
-  /* Color Picker Border Colors */
-  --theme-color-border-40: rgba(25, 118, 210, 0.4); /* Default border color for product color option circles */
-  --theme-color-border-80: rgba(25, 118, 210, 0.8); /* Hover border color for product color option circles */
-
-  /* Fallback Colors */
-  --theme-fallback-color: #424242; /* Material Design grey for fallback elements */
-  --theme-dropdown-arrow-color: #757575; /* Material Design grey for dropdown arrows */
-
-  /* Gradient Colors - Material Design */
-  --theme-gradient-primary: linear-gradient(to right, #1976d2, #03dac6); /* Main brand gradient used for primary buttons and CTAs */
-  --theme-gradient-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Darker gradient used for button hover states */
-  --theme-gradient-ribbon: linear-gradient(to right, #1976d2, #03dac6); /* Gradient used for product ribbon/badge backgrounds */
-  --theme-gradient-warning: linear-gradient(to right, #ff9800, #f44336); /* Material warning gradient */
-  --theme-gradient-warning-hover: linear-gradient(to right, #f57c00, #d32f2f); /* Material warning gradient hover */
-  --theme-gradient-success: linear-gradient(to right, #4caf50, #388e3c); /* Material success gradient */
-  --theme-gradient-info: linear-gradient(to right, #1976d2, #1565c0); /* Material info gradient */
-  --theme-gradient-accent: linear-gradient(to right, #03dac6, #00bcd4); /* Material accent gradient */
-
-  /* Button Gradients */
-  --theme-btn-primary: linear-gradient(to right, #1976d2, #03dac6); /* Primary button background gradient for main actions */
-  --theme-btn-primary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Primary button hover state gradient */
-  --theme-btn-secondary: linear-gradient(to right, #1976d2, #03dac6); /* Secondary button background gradient */
-  --theme-btn-secondary-hover: linear-gradient(to right, #1565c0, #00bcd4); /* Secondary button hover state gradient */
-  --theme-btn-warning: linear-gradient(to right, #ff9800, #f44336); /* Material warning button gradient */
-  --theme-btn-warning-hover: linear-gradient(to right, #f57c00, #d32f2f); /* Material warning button hover gradient */
-  --theme-btn-success: linear-gradient(to right, #4caf50, #388e3c); /* Material success button gradient */
-  --theme-btn-info: linear-gradient(to right, #1976d2, #1565c0); /* Material info button gradient */
-  --theme-btn-danger: linear-gradient(to right, #f44336, #d32f2f); /* Material danger button gradient */
-  --theme-btn-accent: linear-gradient(to right, #03dac6, #00bcd4); /* Material accent button gradient */
-
-  /* Hero Section Gradients */
-  --theme-hero-text-gradient: linear-gradient(to right, #1976d2, #03dac6); /* Text gradient used for hero section main headlines */
-  --theme-hero-card-gradient: linear-gradient(to right, rgba(25, 118, 210, 0.08), rgba(3, 218, 198, 0.08)); /* Background gradient for hero feature cards */
-  --theme-hero-feature-gradient: linear-gradient(to bottom right, #1976d2, #03dac6); /* Background gradient for hero feature icons */
+  --color-success: 76, 175, 80; /* Success color - green used for success messages, positive feedback, and completion states */
+  --color-success-dark: 56, 142, 60; /* Darker success color - used for hover states on success elements */
+  --color-success-light: 102, 187, 106; /* Lighter success color - used for success text and positive indicators */
   
-  /* Typography - Material Design */
-  --theme-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Material Design font family for all themed text elements */
-  --theme-font-weight-normal: 400; /* Normal font weight for body text */
-  --theme-font-weight-medium: 500; /* Medium font weight for emphasized text */
-  --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings and labels */
-  --theme-font-weight-bold: 700; /* Bold font weight for titles and strong emphasis */
+  --color-accent: 3, 218, 198; /* Accent color - bright teal used for highlights, special features, and call-to-action elements */
+  --color-accent-dark: 0, 188, 212; /* Darker accent color - used for hover states on accent elements */
+  --color-accent-light: 38, 198, 218; /* Lighter accent color - used for accent text and subtle accent indicators */
+  
+  --color-amber: 255, 193, 7; /* Amber color - golden yellow used for special highlights, premium features, and attention-grabbing elements */
+  --color-amber-dark: 255, 160, 0; /* Darker amber color - used for hover states on amber elements */
+  
+  /* Content Colors - Typography and content-related colors */
+  --color-content: 33, 33, 33; /* Primary content color - dark grey used for main text, headings, and readable content */
+  --color-content-light: 255, 255, 255; /* Light content color - white used for text on dark backgrounds */
+  
+  /* Neutral Colors - Basic colors for backgrounds, borders, and neutral elements */
+  --color-black: 0, 0, 0; /* Pure black - used for high contrast elements and overlays */
+  --color-white: 255, 255, 255; /* Pure white - used for clean backgrounds and high contrast text */
+  --color-grey-dark: 66, 66, 66; /* Dark grey - used for secondary text and subtle elements */
+  --color-grey-medium: 117, 117, 117; /* Medium grey - used for muted text, borders, and inactive elements */
+
+  /* =========================== */
+  /* THEME VARIABLES */
+  /* =========================== */
+
+  /* Primary Theme Colors - Core brand colors for consistent theming */
+  --theme-primary-500: rgb(var(--color-primary)); /* Primary brand color used for main UI elements like filter status bars and icons */
+  --theme-primary-600: rgb(var(--color-primary-dark)); /* Darker variant of primary color used for hover states and emphasis */
+  --theme-secondary-500: rgb(var(--color-secondary)); /* Secondary accent color used for complementary UI elements and secondary actions */
+  --theme-secondary-600: rgb(var(--color-secondary-dark)); /* Darker variant of secondary color used for hover state on secondary elements */
+  --theme-secondary-700: rgb(var(--color-secondary-darker)); /* Darkest variant of secondary color used for pressed states and high emphasis */
+
+  /* Status Colors - Semantic colors for system feedback and user communication */
+  --theme-warning-500: rgb(var(--color-warning)); /* Warning color for caution messages, non-critical alerts, and attention-needed states */
+  --theme-warning-600: rgb(var(--color-warning-dark)); /* Darker warning color for hover states on warning buttons and interactive elements */
+  --theme-warning-400: rgb(var(--color-warning-light)); /* Lighter warning color for warning text and subtle warning indicators */
+  --theme-warning-300: rgb(var(--color-warning-lighter)); /* Lightest warning color for very subtle warning backgrounds and borders */
+  
+  --theme-info-500: rgb(var(--color-info)); /* Information color for neutral notifications, helpful tips, and informational content */
+  --theme-info-600: rgb(var(--color-info-dark)); /* Darker info color for hover states on informational buttons and interactive elements */
+  --theme-info-400: rgb(var(--color-info-light)); /* Lighter info color for informational text and subtle info indicators */
+  
+  --theme-danger-500: rgb(var(--color-danger)); /* Danger color for error messages, destructive actions, and critical system alerts */
+  --theme-danger-600: rgb(var(--color-danger-dark)); /* Darker danger color for hover states on destructive buttons and critical actions */
+  --theme-danger-400: rgb(var(--color-danger-light)); /* Lighter danger color for error text and danger status indicators */
+  --theme-danger-300: rgb(var(--color-danger-lighter)); /* Lightest danger color for subtle error backgrounds and borders */
+  
+  --theme-success-500: rgb(var(--color-success)); /* Success color for positive feedback, completion messages, and successful operations */
+  --theme-success-600: rgb(var(--color-success-dark)); /* Darker success color for hover states on success buttons and positive actions */
+  --theme-success-400: rgb(var(--color-success-light)); /* Lighter success color for success text and positive status indicators */
+  
+  --theme-accent-500: rgb(var(--color-accent)); /* Accent color for highlights, special features, and prominent call-to-action elements */
+  --theme-accent-600: rgb(var(--color-accent-dark)); /* Darker accent color for hover states on accent buttons and highlighted elements */
+  --theme-accent-400: rgb(var(--color-accent-light)); /* Lighter accent color for accent text and subtle highlight indicators */
+  
+  --theme-amber-500: rgb(var(--color-amber)); /* Amber color for special highlights, premium features, and attention-grabbing elements */
+  --theme-amber-600: rgb(var(--color-amber-dark)); /* Darker amber color for hover states on premium buttons and special features */
+
+  /* Background Colors - Surface colors with transparency for layering and depth */
+  --theme-bg-primary-10: rgba(var(--color-primary), 0.1); /* Semi-transparent primary background for filter status bars and primary-themed surfaces */
+  --theme-bg-primary-20: rgba(var(--color-primary), 0.2); /* More opaque primary background for emphasized primary-themed elements */
+  --theme-bg-options: rgba(var(--color-black), 0.025); /* Very subtle background for product option tags and choice buttons on light surfaces */
+  --theme-bg-modal: rgba(var(--color-white), 0.95); /* Semi-transparent white background for modal dialogs and overlay content */
+  --theme-bg-loading: rgba(var(--color-black), 0.08); /* Subtle background for loading skeleton elements and placeholder content */
+  --theme-bg-card: rgba(var(--color-black), 0.02); /* Very light background for cards, product items, and content containers */
+  --theme-bg-error: rgba(var(--color-danger), 0.1); /* Light red background for error message containers and alert backgrounds */
+  --theme-bg-tooltip: rgba(var(--color-black), 0.75); /* Semi-transparent dark background for tooltips, overlays, and floating elements */
+
+  /* Status Background Colors - Themed backgrounds for different system states */
+  --theme-bg-warning-10: rgba(var(--color-warning), 0.1); /* Light warning background for warning message containers and caution areas */
+  --theme-bg-warning-20: rgba(var(--color-warning), 0.2); /* Medium warning background for emphasized warning elements and alert boxes */
+  --theme-bg-info-10: rgba(var(--color-info), 0.1); /* Light info background for informational message containers and helpful content */
+  --theme-bg-info-20: rgba(var(--color-info), 0.2); /* Medium info background for emphasized informational elements and notice boxes */
+  --theme-bg-success-10: rgba(var(--color-success), 0.1); /* Light success background for success message containers and positive feedback */
+  --theme-bg-success-20: rgba(var(--color-success), 0.2); /* Medium success background for emphasized success elements and completion states */
+  --theme-bg-danger-10: rgba(var(--color-danger), 0.1); /* Light danger background for error message containers and warning areas */
+  --theme-bg-danger-20: rgba(var(--color-danger), 0.2); /* Medium danger background for emphasized error elements and critical alerts */
+  --theme-bg-accent-10: rgba(var(--color-accent), 0.1); /* Light accent background for highlighted content and special feature areas */
+  --theme-bg-accent-20: rgba(var(--color-accent), 0.2); /* Medium accent background for emphasized accent elements and call-to-action areas */
+
+  /* Border Colors - Outline colors for visual separation and component definition */
+  --theme-border-primary-10: rgba(var(--color-primary), 0.1); /* Very subtle primary border for filter status bars and primary-themed outlines */
+  --theme-border-primary-20: rgba(var(--color-primary), 0.2); /* More visible primary border for emphasized elements and interactive components */
+  --theme-border-primary-30: rgba(var(--color-primary), 0.3); /* Strong primary border for product option tags and selected states */
+  --theme-border-card: rgba(var(--color-black), 0.12); /* Light neutral border for cards, product items, and content containers */
+  --theme-border-card-hover: rgba(var(--color-black), 0.2); /* Medium neutral border for card hover states and interactive containers */
+  --theme-border-error: rgba(var(--color-danger), 0.2); /* Red border for error message containers and form validation errors */
+
+  /* Status Border Colors - Themed borders for different system states */
+  --theme-border-warning-20: rgba(var(--color-warning), 0.2); /* Warning border for caution message containers and warning form fields */
+  --theme-border-warning-30: rgba(var(--color-warning), 0.3); /* Stronger warning border for emphasized warning elements and alert boxes */
+  --theme-border-info-20: rgba(var(--color-info), 0.2); /* Info border for informational message containers and helpful content areas */
+  --theme-border-info-30: rgba(var(--color-info), 0.3); /* Stronger info border for emphasized informational elements and notice boxes */
+  --theme-border-success-20: rgba(var(--color-success), 0.2); /* Success border for positive message containers and success form fields */
+  --theme-border-success-30: rgba(var(--color-success), 0.3); /* Stronger success border for emphasized success elements and completion states */
+  --theme-border-danger-20: rgba(var(--color-danger), 0.2); /* Danger border for error message containers and critical form fields */
+  --theme-border-danger-30: rgba(var(--color-danger), 0.3); /* Stronger danger border for emphasized error elements and critical alerts */
+  --theme-border-accent-20: rgba(var(--color-accent), 0.2); /* Accent border for highlighted content areas and special features */
+  --theme-border-accent-30: rgba(var(--color-accent), 0.3); /* Stronger accent border for emphasized accent elements and call-to-action areas */
+
+  /* Text Colors - Typography colors for content hierarchy and readability */
+  --theme-text-primary-300: rgb(var(--color-primary)); /* Primary brand color for filter status text, active labels, and brand-colored text */
+  --theme-text-primary-400: rgb(var(--color-primary-dark)); /* Darker primary color for filter icons, interactive text, and emphasized brand text */
+  --theme-text-content: rgb(var(--color-content)); /* Main content text color for headings, product titles, body text, and readable content */
+  --theme-text-content-30: rgba(var(--color-content), 0.3); /* Very faded content text for disabled elements and inactive text */
+  --theme-text-content-40: rgba(var(--color-content), 0.4); /* Dim content text for placeholder icons, subtle elements, and muted content */
+  --theme-text-content-50: rgba(var(--color-content), 0.5); /* Medium faded content text for strikethrough prices and deemphasized text */
+  --theme-text-content-60: rgba(var(--color-content), 0.6); /* Muted content text for descriptions, counts, metadata, and secondary information */
+  --theme-text-content-70: rgba(var(--color-content), 0.7); /* Semi-muted content text for subtitles, intro paragraphs, and supporting text */
+  --theme-text-content-80: rgba(var(--color-content), 0.8); /* Clear content text for option labels, form text, and secondary headings */
+  --theme-text-content-90: rgba(var(--color-content), 0.9); /* Almost full opacity content text for emphasized secondary text and important labels */
+  --theme-text-success: rgb(var(--color-success)); /* Success text color for "In Stock" indicators, positive status, and success messages */
+  --theme-text-error: rgb(var(--color-danger)); /* Error text color for "Out of Stock" status, error messages, and validation feedback */
+
+  /* Status Text Colors - Semantic text colors for system feedback */
+  --theme-text-warning: rgb(var(--color-warning-light)); /* Warning text color for caution messages and non-critical alerts */
+  --theme-text-info: rgb(var(--color-info-light)); /* Info text color for informational messages and helpful content */
+  --theme-text-danger: rgb(var(--color-danger-light)); /* Danger text color for error messages and critical alerts */
+  --theme-text-accent: rgb(var(--color-accent-light)); /* Accent text color for highlighted content and special features */
+
+  /* Interactive Element Colors - Colors for user interface controls and interactive components */
+  --theme-color-border-40: rgba(var(--color-primary), 0.4); /* Default border color for product color option circles and interactive elements */
+  --theme-color-border-80: rgba(var(--color-primary), 0.8); /* Hover border color for product color option circles and active interactive elements */
+
+  /* Utility Colors - Fallback and utility colors for edge cases and neutral elements */
+  --theme-fallback-color: rgb(var(--color-grey-dark)); /* Fallback color for elements that need a default neutral color */
+  --theme-dropdown-arrow-color: rgb(var(--color-grey-medium)); /* Color for dropdown arrows, chevrons, and navigational icons */
+
+  /* Gradient Colors - Decorative gradients for visual interest (not used for buttons) */
+  --theme-gradient-primary: linear-gradient(to right, rgb(var(--color-primary)), rgb(var(--color-secondary))); /* Primary brand gradient for hero sections and decorative elements */
+  --theme-gradient-primary-hover: linear-gradient(to right, rgb(var(--color-primary-dark)), rgb(var(--color-secondary-dark))); /* Darker primary gradient for hover states on decorative elements */
+  --theme-gradient-ribbon: linear-gradient(to right, rgb(var(--color-primary)), rgb(var(--color-secondary))); /* Gradient for product ribbons, badges, and promotional elements */
+  --theme-gradient-warning: linear-gradient(to right, rgb(var(--color-warning)), rgb(var(--color-danger))); /* Warning gradient for alert banners and caution elements */
+  --theme-gradient-warning-hover: linear-gradient(to right, rgb(var(--color-warning-dark)), rgb(var(--color-danger-dark))); /* Darker warning gradient for hover states on warning elements */
+  --theme-gradient-success: linear-gradient(to right, rgb(var(--color-success)), rgb(var(--color-success-dark))); /* Success gradient for achievement banners and positive elements */
+  --theme-gradient-info: linear-gradient(to right, rgb(var(--color-info)), rgb(var(--color-info-dark))); /* Info gradient for informational banners and helpful elements */
+  --theme-gradient-accent: linear-gradient(to right, rgb(var(--color-accent)), rgb(var(--color-accent-dark))); /* Accent gradient for highlight banners and special features */
+
+  /* Button Colors - Solid colors for consistent button styling (can be converted to gradients if desired) */
+  --theme-btn-primary: rgb(var(--color-primary)); /* Primary button background for main actions and primary CTAs */
+  --theme-btn-primary-hover: rgb(var(--color-primary-dark)); /* Primary button hover state for interactive feedback */
+  --theme-btn-secondary: rgb(var(--color-secondary)); /* Secondary button background for secondary actions and alternative CTAs */
+  --theme-btn-secondary-hover: rgb(var(--color-secondary-dark)); /* Secondary button hover state for interactive feedback */
+  --theme-btn-warning: rgb(var(--color-warning)); /* Warning button background for caution actions (can be gradient) */
+  --theme-btn-warning-hover: rgb(var(--color-warning-dark)); /* Warning button hover state for interactive feedback */
+  --theme-btn-success: rgb(var(--color-success)); /* Success button background for positive actions (can be gradient) */
+  --theme-btn-info: rgb(var(--color-info)); /* Info button background for informational actions (can be gradient) */
+  --theme-btn-danger: rgb(var(--color-danger)); /* Danger button background for destructive actions (can be gradient) */
+  --theme-btn-accent: rgb(var(--color-accent)); /* Accent button background for highlighted actions (can be gradient) */
+
+  /* Hero Section Colors - Special colors for landing page and hero sections */
+  --theme-hero-text-gradient: linear-gradient(to right, rgb(var(--color-primary)), rgb(var(--color-secondary))); /* Text gradient for hero section headlines and prominent text */
+  --theme-hero-card-gradient: linear-gradient(to right, rgba(var(--color-primary), 0.08), rgba(var(--color-secondary), 0.08)); /* Background gradient for hero feature cards and promotional boxes */
+  --theme-hero-feature-gradient: linear-gradient(to bottom right, rgb(var(--color-primary)), rgb(var(--color-secondary))); /* Background gradient for hero feature icons and decorative elements */
+  
+  /* Typography Settings - Font family and weight definitions for consistent text styling */
+  --theme-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Primary font family for all themed text elements */
+  --theme-font-weight-normal: 400; /* Normal font weight for body text and regular content */
+  --theme-font-weight-medium: 500; /* Medium font weight for emphasized text and semi-bold content */
+  --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings, labels, and important text */
+  --theme-font-weight-bold: 700; /* Bold font weight for titles, strong emphasis, and prominent headings */
 } 

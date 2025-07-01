@@ -5,6 +5,7 @@ import {
   DocsDrawer,
   DocsFloatingMenu,
 } from "../components/DocsMode";
+import { NavigationProvider } from "../components/NavigationContext";
 
 interface KitchensinkLayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
 
   return (
     <DocsProvider>
+      <NavigationProvider>
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
         {/* Backdrop for mobile menu */}
         {isMenuOpen && (
@@ -170,6 +172,7 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
         <div className="fixed bottom-20 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse delay-700 pointer-events-none" />
         <div className="fixed top-1/2 left-10 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-1000 pointer-events-none" />
       </div>
+      </NavigationProvider>
     </DocsProvider>
   );
 };

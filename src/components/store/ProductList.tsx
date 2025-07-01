@@ -5,9 +5,11 @@ import { WixMediaImage } from "../../headless/media/components";
 import {
   FilteredCollection,
 } from "../../headless/store/components";
+import { useNavigation } from "../NavigationContext";
 
 
 export const ProductGridContent = ({productPageRoute}: {productPageRoute: string}) => {
+    const Navigation = useNavigation();
     return (
       <FilteredCollection.Provider>
         <FilteredCollection.Grid>
@@ -356,8 +358,8 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     </div>
   
                                     <div className="flex gap-2">
-                                      <a
-                                        href={`${productPageRoute}/${slug}`}
+                                      <Navigation
+                                        route={`${productPageRoute}/${slug}`}
                                         className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
                                       >
                                         View Product
@@ -374,7 +376,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                             d="M9 5l7 7-7 7"
                                           />
                                         </svg>
-                                      </a>
+                                      </Navigation>
                                     </div>
                                   </div>
                                 )}
