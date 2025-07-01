@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "22"
 
 jobs:
   deploy-production:
@@ -25,8 +25,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup Wix CLI
-        run: npm install -g @wix/cli@latest
+      - name: Auth CLI
+        run: |
+          npx wix login --api-key $WIX_AUTH_TOKEN
+        env:
+          WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
+
+      - name: Pull environment variables
+        run: |
+          npx wix env pull
 
       - name: Build project
         run: npm run build
