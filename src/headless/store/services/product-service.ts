@@ -17,7 +17,7 @@ export const ProductServiceDefinition =
   defineService<ProductServiceAPI>("product");
 
 export const ProductService = implementService.withConfig<{
-  product: productsV3.V3Product | null;
+  product: productsV3.V3Product;
 }>()(ProductServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
@@ -65,7 +65,7 @@ export async function loadProductServiceConfig(
     return {
       type: "success",
       config: {
-        product: productResponse.product,
+        product: productResponse.product!,
       },
     };
   } catch (error) {

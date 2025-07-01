@@ -362,9 +362,13 @@ export async function loadCurrentCartServiceConfig(): Promise<
       initialCart: cartData || null,
     };
   } catch (error) {
-    console.warn("Failed to load initial cart:", error);
-    return {
-      initialCart: null,
-    };
+    if (
+      (error as any).details?.applicationError?.code === "OWNED_CART_NOT_FOUND"
+    ) {
+      return {
+        initialCart: null,
+      };
+    }
+    throw error;
   }
 }

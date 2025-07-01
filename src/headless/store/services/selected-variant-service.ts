@@ -1,12 +1,12 @@
 import {
   defineService,
   implementService,
-  type ServiceFactoryConfig,
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3, inventoryItemsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
+import { ProductServiceDefinition } from "./product-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
@@ -66,12 +66,12 @@ export const SelectedVariantServiceDefinition =
   defineService<SelectedVariantServiceAPI>("selectedVariant");
 
 export const SelectedVariantService = implementService.withConfig<{
-  product: productsV3.V3Product;
 }>()(SelectedVariantServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
   const cartService = getService(CurrentCartServiceDefinition);
+  const productService = getService(ProductServiceDefinition);
 
-  const configProduct = config.product;
+  const configProduct = productService.product.get();
 
   const parsePrice = (amount?: string | null): number => {
     if (!amount) return 0;
@@ -644,36 +644,3 @@ export const SelectedVariantService = implementService.withConfig<{
     currency,
   };
 });
-
-export async function loadSelectedVariantServiceConfig(
-  productSlug: string
-): Promise<ServiceFactoryConfig<typeof SelectedVariantService>> {
-  try {
-    // Use getProductBySlug directly - single API call with comprehensive fields
-    const productResponse = await productsV3.getProductBySlug(productSlug, {
-      fields: [
-        "DESCRIPTION" as any,
-        "DIRECT_CATEGORIES_INFO" as any,
-        "BREADCRUMBS_INFO" as any,
-        "INFO_SECTION" as any,
-        "MEDIA_ITEMS_INFO" as any,
-        "PLAIN_DESCRIPTION" as any,
-        "THUMBNAIL" as any,
-        "URL" as any,
-        "VARIANT_OPTION_CHOICE_NAMES" as any,
-        "WEIGHT_MEASUREMENT_UNIT_INFO" as any,
-      ],
-    });
-
-    if (!productResponse.product) {
-      throw new Error("Product not found");
-    }
-
-    return {
-      product: productResponse.product,
-    };
-  } catch (error) {
-    console.error(`Failed to load product for slug "${productSlug}":`, error);
-    throw error;
-  }
-}

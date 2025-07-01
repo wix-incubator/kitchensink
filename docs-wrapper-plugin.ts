@@ -195,22 +195,6 @@ export function headlessDocsWrapper(): Plugin {
                       return;
                     }
 
-                    console.log(
-                      `[Docs Wrapper] Found ${
-                        nodesToWrap.length
-                      } headless components to wrap in ${path.relative(
-                        process.cwd(),
-                        id
-                      )}:`
-                    );
-                    nodesToWrap.forEach((nodeInfo, index) => {
-                      console.log(
-                        `  [${index + 1}] ${nodeInfo.componentName} at line ${
-                          nodeInfo.path.node.loc.start.line
-                        }`
-                      );
-                    });
-
                     // Add import if needed
                     let alreadyHasWrapperImport = false;
                     programPath.traverse({

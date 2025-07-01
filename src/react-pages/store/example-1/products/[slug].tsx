@@ -32,16 +32,11 @@ import ProductDetails from "../../../../components/store/ProductDetails";
 interface ProductDetailPageProps {
   productServiceConfig: any;
   currentCartServiceConfig: any;
-  productMediaGalleryServiceConfig: any;
-  selectedVariantServiceConfig: any;
-  productModifiersServiceConfig?: any;
 }
 
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
-  productMediaGalleryServiceConfig,
-  selectedVariantServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -53,15 +48,10 @@ export default function ProductDetailPage({
       CurrentCartService,
       currentCartServiceConfig
     )
-    .addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      selectedVariantServiceConfig
-    )
+    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(
       ProductMediaGalleryServiceDefinition,
       ProductMediaGalleryService,
-      productMediaGalleryServiceConfig
     ).addService(
       ProductModifiersServiceDefinition,
       ProductModifiersService,

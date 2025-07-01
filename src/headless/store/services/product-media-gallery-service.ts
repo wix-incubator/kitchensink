@@ -1,13 +1,9 @@
-import {
-  defineService,
-  implementService,
-  type ServiceFactoryConfig,
-} from "@wix/services-definitions";
+import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal, ReadOnlySignal } from "../../Signal";
 import { productsV3 } from "@wix/stores";
-import { SelectedVariantServiceDefinition } from "./selected-variant-service";
+import type { ReadOnlySignal, Signal } from "../../Signal";
 import { ProductServiceDefinition } from "./product-service";
+import { SelectedVariantServiceDefinition } from "./selected-variant-service";
 
 export interface ProductMediaGalleryServiceAPI {
   selectedImageIndex: Signal<number>;
@@ -142,16 +138,3 @@ export const ProductMediaGalleryService = implementService.withConfig<{}>()(
     };
   }
 );
-
-export async function loadProductMediaGalleryServiceConfig(
-  productSlug: string
-): Promise<ServiceFactoryConfig<typeof ProductMediaGalleryService>> {
-  try {
-    // No need to fetch product data here since this service depends on ProductServiceDefinition
-    // which already loads the product data. We just need to return an empty config.
-    return {};
-  } catch (error) {
-    console.error("Failed to load product media gallery config:", error);
-    throw error;
-  }
-}
