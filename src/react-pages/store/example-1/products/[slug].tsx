@@ -33,8 +33,8 @@ import {
   SEOTagsServiceDefinition,
 } from "../../../../headless/seo/services/seo-tags-service";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { ClientSEO } from "../../../../headless/seo/components";
 import { seoTags } from "@wix/seo";
+import { SEO } from "../../../../headless/seo/components";
 
 interface ProductDetailPageProps {
   productServiceConfig: any;
@@ -86,8 +86,7 @@ export default function ProductDetailPage({
   return (
     <>
       <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
-        <ClientSEO.Tags />
-        <ClientSEO.UpdateTagsTrigger>
+        <SEO.UpdateTagsTrigger>
           {({ updateSeoTags }) => (
             <button
               onClick={() =>
@@ -99,7 +98,7 @@ export default function ProductDetailPage({
               Update SEO Tags
             </button>
           )}
-        </ClientSEO.UpdateTagsTrigger>
+        </SEO.UpdateTagsTrigger>
       </ServicesManagerProvider>
       <KitchensinkLayout>
         <StoreLayout

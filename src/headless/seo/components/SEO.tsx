@@ -1,5 +1,52 @@
-import { type SEOTagsServiceConfig } from "../services/seo-tags-service";
-import { SeoTags } from "./SeoTags";
+import type { ServiceAPI } from "@wix/services-manager/types";
+import {
+  SEOTagsServiceDefinition,
+  type SEOTagsServiceConfig,
+} from "../services/seo-tags-service";
+import type { seoTags } from "@wix/seo";
+import { useService } from "@wix/services-manager-react";
+
+interface SEOTagsProps {
+  tags: seoTags.Tag[];
+}
+
+export function SeoTags({ tags }: SEOTagsProps): React.ReactNode {
+  const dataAttr = { "wix-seo-tags": "true" };
+  const tagsToRender = tags
+    .filter((tag) => !tag.disabled)
+    .map((tag, index) => {
+      if (tag.type === "title") {
+        return (
+          <title key={`title-${index}`} {...dataAttr}>
+            {tag.children}
+          </title>
+        );
+      }
+      if (tag.type === "meta") {
+        return <meta key={`meta-${index}`} {...tag.props} {...dataAttr} />;
+      }
+
+      if (tag.type === "link") {
+        return <link key={`link-${index}`} {...tag.props} {...dataAttr} />;
+      }
+
+      if (tag.type === "script") {
+        return (
+          <script
+            key={`script-${index}`}
+            {...tag.props}
+            {...tag.meta}
+            {...dataAttr}
+          >
+            {tag.children}
+          </script>
+        );
+      }
+      return null;
+    });
+
+  return tagsToRender;
+}
 
 /**
  * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
@@ -29,5 +76,50 @@ export interface TagsProps {
 }
 
 export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
-  return <SeoTags tags={seoTagsServiceConfig.initialSeoTags} />;
+  return <SeoTags tags={seoTagsServiceConfig.tags} />;
 }
+
+export interface UpdateTagsTrigger {
+  children: (props: {
+    updateSeoTags: (
+      itemType: seoTags.ItemType,
+      itemData: seoTags.SlugData | seoTags.PageNameData
+    ) => Promise<void>;
+  }) => React.ReactNode;
+}
+
+/**
+ * UpdateTagsTrigger - Handles updating SEO tags dynamically
+ *
+ * This component provides a way to update SEO tags on the client side without
+ * requiring a full page reload. It wraps content with the ability to trigger
+ * SEO tag updates.
+ *
+ * @example
+ * ```tsx
+ * import { SEO } from "@wix/seo/components";
+ * import { seoTags } from "@wix/seo";
+ *
+ * <SEO.UpdateTagsTrigger>
+ *   {({ updateSeoTags }) => (
+ *     <a
+ *       href="https://your-domain.com/items/different-item"
+ *       onClick={() =>
+ *         updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "product-slug" })
+ *       }
+ *     >
+ *       Go to a different item
+ *     </a>
+ *   )}
+ * </SEO.UpdateTagsTrigger>
+ * ```
+ */
+export const UpdateTagsTrigger = (props: UpdateTagsTrigger): React.ReactNode => {
+  const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
+    typeof SEOTagsServiceDefinition
+  >;
+
+  return props.children({
+    updateSeoTags: service.updateSeoTags,
+  });
+};

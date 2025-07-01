@@ -20,7 +20,7 @@ export const SEOTagsServiceDefinition =
   defineService<SEOTagsServiceAPI>("seoTagsService");
 
 export type SEOTagsServiceConfig = {
-  initialSeoTags: seoTags.Tag[];
+  tags: seoTags.Tag[];
   itemType?: seoTags.ItemType;
   itemData: seoTags.SlugData | seoTags.PageNameData;
 };
@@ -30,13 +30,10 @@ export const SEOTagsService =
     SEOTagsServiceDefinition,
     ({ getService, config }) => {
       const signalsService = getService(SignalsServiceDefinition);
-      const { initialSeoTags } = config;
+      const { tags: initialTags } = config;
 
       // @ts-ignore
-      const tags: Signal<seoTags.Tag[]> = signalsService.signal(
-        // @ts-ignore
-        initialSeoTags || []
-      );
+      const tags: Signal<seoTags.Tag[]> = signalsService.signal(initialTags);
 
       const updateSeoTags = async (
         itemType: seoTags.ItemType = config.itemType ??
@@ -44,26 +41,15 @@ export const SEOTagsService =
         itemData: seoTags.SlugData | seoTags.PageNameData = config.itemData
       ) => {
         const pageURL = window.location.href;
-        let resolvedTags = [];
 
-        const isStaticPage =
-          !itemType || itemType === seoTags.ItemType.UNKNOWN_ITEM_TYPE;
-        if (isStaticPage) {
-          resolvedTags = await resolveStaticPageSeoTags(
-            pageURL,
-            itemData as seoTags.PageNameData
-          );
-        } else {
-          resolvedTags = await resolveItemSeoTags(
-            pageURL,
-            itemType,
-            itemData as seoTags.SlugData
-          );
-        }
-        tags.set(resolvedTags);
-        // remove all elements with data-ssr-seo-tags attributes from the document to avoid duplicates
-        const elements = document.querySelectorAll("[data-ssr-seo-tags]");
-        elements.forEach((element) => element.remove());
+        const updatedConfig = await loadSEOTagsServiceConfig({
+          pageUrl: pageURL,
+          itemType,
+          itemData
+        })
+
+        tags.set(updatedConfig.tags);
+        appendNewTags(updatedConfig.tags)
       };
 
       return { seoTags: tags, updateSeoTags };
@@ -140,22 +126,70 @@ export async function loadSEOTagsServiceConfig({
   const isStaticPage =
     !itemType || itemType === seoTags.ItemType.UNKNOWN_ITEM_TYPE;
 
-  let initialSeoTags: seoTags.Tag[] = [];
+  let tags: seoTags.Tag[] = [];
   if (isStaticPage) {
-    initialSeoTags = await resolveStaticPageSeoTags(
+    tags = await resolveStaticPageSeoTags(
       pageUrl,
       itemData as seoTags.PageNameData
     );
   } else {
-    initialSeoTags = await resolveItemSeoTags(
+    tags = await resolveItemSeoTags(
       pageUrl,
       itemType,
       itemData as seoTags.SlugData
     );
   }
   return {
-    initialSeoTags,
+    tags,
     itemType,
     itemData,
   };
+}
+
+function appendNewTags(tags: seoTags.Tag[]) {
+  if(typeof window === "undefined") return;
+
+  const newTagElements: HTMLElement[] = [];
+  try {
+    tags.forEach((tag) => {
+      const el = createTagElement(tag);
+      if (el) newTagElements.push(el);
+    });
+
+    document.head
+      .querySelectorAll('[wix-seo-tags="true"]')
+      .forEach((el) => el.remove());
+
+    newTagElements.forEach((el) => document.head.appendChild(el));
+  } catch (err) {
+    console.error("SEO tag update failed", err);
+  }
+
+  function createTagElement(tag: any): HTMLElement | null {
+    let el: HTMLElement | null = null;
+    if (tag.type === "title") {
+      el = document.createElement("title");
+      el.textContent = tag.children || "";
+    } else if (tag.type === "meta") {
+      el = document.createElement("meta");
+      setAttributes(el, tag.props);
+    } else if (tag.type === "link") {
+      el = document.createElement("link");
+      setAttributes(el, tag.props);
+    } else if (tag.type === "script") {
+      el = document.createElement("script");
+      setAttributes(el, tag.props);
+      setAttributes(el, tag.meta);
+      if (tag.children) el.textContent = tag.children;
+    }
+    if (el) el.setAttribute("wix-seo-tags", "true");
+    return el;
+  }
+
+  function setAttributes(el: HTMLElement, attrs?: Record<string, any>) {
+    if (!attrs) return;
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (v !== undefined) el.setAttribute(k, v as string);
+    });
+  }
 }
