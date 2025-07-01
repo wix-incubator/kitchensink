@@ -9,10 +9,6 @@ import {
   CurrentCartServiceDefinition,
 } from "../../../../headless/ecom/services/current-cart-service";
 import {
-  ProductMediaGalleryService,
-  ProductMediaGalleryServiceDefinition,
-} from "../../../../headless/store/services/product-media-gallery-service";
-import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from "../../../../headless/store/services/product-modifiers-service";
@@ -28,10 +24,15 @@ import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { StoreLayout } from "../../../../layouts/StoreLayout";
 import "../../../../styles/theme-1.css";
 import ProductDetails from "../../../../components/store/ProductDetails";
+import {
+  MediaGalleryService,
+  MediaGalleryServiceDefinition,
+} from "../../../../headless/media/services/media-gallery-service";
+import type { ServiceFactoryConfig } from "@wix/services-definitions";
 
 interface ProductDetailPageProps {
-  productServiceConfig: any;
-  currentCartServiceConfig: any;
+  productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
+  currentCartServiceConfig: ServiceFactoryConfig<typeof CurrentCartService>;
 }
 
 export default function ProductDetailPage({
@@ -49,13 +50,10 @@ export default function ProductDetailPage({
       currentCartServiceConfig
     )
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(
-      ProductMediaGalleryServiceDefinition,
-      ProductMediaGalleryService,
-    ).addService(
-      ProductModifiersServiceDefinition,
-      ProductModifiersService,
-    );
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
+    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
+    });
 
   const servicesManager = createServicesManager(servicesMap);
 

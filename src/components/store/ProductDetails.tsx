@@ -1,7 +1,6 @@
-import { WixMediaImage } from "../../headless/media/components";
+import { MediaGallery, WixMediaImage } from "../../headless/media/components";
 import {
   Product,
-  ProductMediaGallery,
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
@@ -10,7 +9,6 @@ import { SelectedVariantServiceDefinition } from "../../headless/store/services/
 import { ProductActionButtons } from "./ProductActionButtons";
 import { CurrentCart } from "../../headless/ecom/components";
 import { useService } from "@wix/services-manager-react";
-
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -36,10 +34,9 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
         />
         {maxChars && (
           <div
-            className={`text-xs text-right ${isOverLimit
-              ? "text-status-error"
-              : "text-content-muted"
-              }`}
+            className={`text-xs text-right ${
+              isOverLimit ? "text-status-error" : "text-content-muted"
+            }`}
           >
             {charCount}/{maxChars} characters
           </div>
@@ -61,13 +58,14 @@ export default function ProductDetails({
         <div className="space-y-4">
           {/* Main Image */}
           <div className="aspect-square bg-surface-primary rounded-2xl overflow-hidden border border-brand-subtle relative">
-            <ProductMediaGallery.Viewport>
-              {({ src, currentIndex, totalImages }) => (
+            <MediaGallery.Viewport>
+              {({ src, alt }) => (
                 <>
                   {src ? (
                     <WixMediaImage
                       media={{ image: src }}
                       className="w-full h-full object-cover"
+                      alt={alt}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -87,92 +85,89 @@ export default function ProductDetails({
                     </div>
                   )}
 
-                  {/* Navigation Arrows */}
-                  {totalImages > 1 && (
-                    <>
-                      <ProductMediaGallery.Previous>
-                        {({ onPrevious, canGoPrevious }) => (
-                          <button
-                            onClick={onPrevious}
-                            disabled={!canGoPrevious}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M15 19l-7-7 7-7"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </ProductMediaGallery.Previous>
+                  <MediaGallery.Previous>
+                    {({ onPrevious, canGoPrevious }) => (
+                      <button
+                        onClick={onPrevious}
+                        disabled={!canGoPrevious}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </MediaGallery.Previous>
 
-                      <ProductMediaGallery.Next>
-                        {({ onNext, canGoNext }) => (
-                          <button
-                            onClick={onNext}
-                            disabled={!canGoNext}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                      </ProductMediaGallery.Next>
-                    </>
-                  )}
+                  <MediaGallery.Next>
+                    {({ onNext, canGoNext }) => (
+                      <button
+                        onClick={onNext}
+                        disabled={!canGoNext}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </MediaGallery.Next>
 
                   {/* Image Counter */}
-                  {totalImages > 1 && (
-                    <ProductMediaGallery.Indicator>
+                  {
+                    <MediaGallery.Indicator>
                       {({ current, total }) => (
                         <div className="absolute bottom-4 right-4 bg-surface-tooltip text-content-primary px-3 py-1 rounded-full text-sm">
                           {current} / {total}
                         </div>
                       )}
-                    </ProductMediaGallery.Indicator>
-                  )}
+                    </MediaGallery.Indicator>
+                  }
                 </>
               )}
-            </ProductMediaGallery.Viewport>
+            </MediaGallery.Viewport>
           </div>
 
           {/* Thumbnail Images */}
-          <ProductMediaGallery.Indicator>
+          <MediaGallery.Indicator>
             {({ total }) => (
               <div className="grid grid-cols-4 gap-4">
                 {Array.from({ length: total }).map((_, i) => (
-                  <ProductMediaGallery.Thumbnail key={i} index={i}>
+                  <MediaGallery.Thumbnail key={i} index={i}>
                     {({ src, isActive, onSelect, alt }) => (
                       <div
                         onClick={onSelect}
-                        className={`aspect-square bg-surface-primary rounded-lg border cursor-pointer transition-all ${isActive
-                          ? "border-brand-medium ring-2 ring-brand-light"
-                          : "border-brand-subtle hover:border-brand-light"
-                          }`}
+                        className={`aspect-square bg-surface-primary rounded-lg border cursor-pointer transition-all ${
+                          isActive
+                            ? "border-brand-medium ring-2 ring-brand-light"
+                            : "border-brand-subtle hover:border-brand-light"
+                        }`}
                       >
                         {src ? (
                           <WixMediaImage
                             media={{ image: src }}
                             className="w-full h-full object-cover rounded-lg"
+                            alt={alt}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
@@ -193,11 +188,11 @@ export default function ProductDetails({
                         )}
                       </div>
                     )}
-                  </ProductMediaGallery.Thumbnail>
+                  </MediaGallery.Thumbnail>
                 ))}
               </div>
             )}
-          </ProductMediaGallery.Indicator>
+          </MediaGallery.Indicator>
         </div>
 
         {/* Product Info */}
@@ -218,8 +213,7 @@ export default function ProductDetails({
                     {price}
                   </div>
                   {compareAtPrice &&
-                    parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) >
-                    0 && (
+                    parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 && (
                       <div className="text-lg font-medium text-content-faded line-through">
                         {compareAtPrice}
                       </div>
@@ -298,20 +292,22 @@ export default function ProductDetails({
                                         }) => (
                                           <>
                                             {isColorOption &&
-                                              isVisible &&
-                                              hasColorCode ? (
+                                            isVisible &&
+                                            hasColorCode ? (
                                               // Color Swatch
                                               <div className="relative">
                                                 <button
                                                   onClick={onSelect}
                                                   title={value}
-                                                  className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
-                                                    ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
-                                                    : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
-                                                    } ${!isInStock
+                                                  className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                                    isSelected
+                                                      ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
+                                                      : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
+                                                  } ${
+                                                    !isInStock
                                                       ? "grayscale"
                                                       : ""
-                                                    }`}
+                                                  }`}
                                                   style={{
                                                     backgroundColor:
                                                       choice.colorCode ||
@@ -336,36 +332,39 @@ export default function ProductDetails({
                                                   </div>
                                                 )}
                                               </div>
-                                            ) : isVisible && (
-                                              // Regular Text Button
-                                              <div className="relative">
-                                                <button
-                                                  onClick={onSelect}
-                                                  className={`px-4 py-2 border rounded-lg transition-all duration-200 ${isSelected
-                                                    ? "product-option-active"
-                                                    : "product-option-inactive"
+                                            ) : (
+                                              isVisible && (
+                                                // Regular Text Button
+                                                <div className="relative">
+                                                  <button
+                                                    onClick={onSelect}
+                                                    className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                      isSelected
+                                                        ? "product-option-active"
+                                                        : "product-option-inactive"
                                                     }`}
-                                                >
-                                                  {value}
-                                                </button>
-                                                {!isInStock && (
-                                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                    <svg
-                                                      className="w-6 h-6 text-status-error"
-                                                      fill="none"
-                                                      viewBox="0 0 24 24"
-                                                      stroke="currentColor"
-                                                    >
-                                                      <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                      />
-                                                    </svg>
-                                                  </div>
-                                                )}
-                                              </div>
+                                                  >
+                                                    {value}
+                                                  </button>
+                                                  {!isInStock && (
+                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                      <svg
+                                                        className="w-6 h-6 text-status-error"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                      >
+                                                        <path
+                                                          strokeLinecap="round"
+                                                          strokeLinejoin="round"
+                                                          strokeWidth="2"
+                                                          d="M6 18L18 6M6 6l12 12"
+                                                        />
+                                                      </svg>
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              )
                                             )}
                                           </>
                                         )}
@@ -386,10 +385,9 @@ export default function ProductDetails({
                         <button
                           onClick={() => {
                             // Reset all selections
-                            const variantService =
-                              useService(
-                                SelectedVariantServiceDefinition
-                              );
+                            const variantService = useService(
+                              SelectedVariantServiceDefinition
+                            );
                             variantService.resetSelections();
                           }}
                           className="text-sm text-brand-primary hover:text-brand-light transition-colors"
@@ -419,58 +417,16 @@ export default function ProductDetails({
                         key={modifier.name}
                         modifier={modifier}
                       >
-                        {({
-                          name,
-                          type,
-                          choices,
-                          hasChoices,
-                          mandatory,
-                        }) => (
+                        {({ name, type, choices, hasChoices, mandatory }) => (
                           <div className="space-y-3">
                             <h4 className="text-md font-medium text-content-primary">
                               {name}{" "}
                               {mandatory && (
-                                <span className="text-status-error">
-                                  *
-                                </span>
+                                <span className="text-status-error">*</span>
                               )}
                             </h4>
 
-                            {type === "SWATCH_CHOICES" &&
-                              hasChoices && (
-                                <div className="flex flex-wrap gap-2">
-                                  {choices.map((choice: any) => (
-                                    <ProductModifiers.Choice
-                                      key={choice.value}
-                                      modifier={modifier}
-                                      choice={choice}
-                                    >
-                                      {({
-                                        value,
-                                        isSelected,
-                                        colorCode,
-                                        onSelect,
-                                      }) => (
-                                        <button
-                                          onClick={onSelect}
-                                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${isSelected
-                                            ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
-                                            : "border-brand-light hover:border-brand-medium hover:scale-105"
-                                            }`}
-                                          style={{
-                                            backgroundColor:
-                                              colorCode ||
-                                              "var(--theme-text-content-40)",
-                                          }}
-                                          title={value}
-                                        />
-                                      )}
-                                    </ProductModifiers.Choice>
-                                  ))}
-                                </div>
-                              )}
-
-                            {type === "TEXT_CHOICES" && hasChoices && (
+                            {type === "SWATCH_CHOICES" && hasChoices && (
                               <div className="flex flex-wrap gap-2">
                                 {choices.map((choice: any) => (
                                   <ProductModifiers.Choice
@@ -481,14 +437,45 @@ export default function ProductDetails({
                                     {({
                                       value,
                                       isSelected,
+                                      colorCode,
                                       onSelect,
                                     }) => (
                                       <button
                                         onClick={onSelect}
-                                        className={`px-4 py-2 border rounded-lg transition-all duration-200 ${isSelected
-                                          ? "product-option-active"
-                                          : "product-option-inactive"
-                                          }`}
+                                        className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
+                                          isSelected
+                                            ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
+                                            : "border-brand-light hover:border-brand-medium hover:scale-105"
+                                        }`}
+                                        style={{
+                                          backgroundColor:
+                                            colorCode ||
+                                            "var(--theme-text-content-40)",
+                                        }}
+                                        title={value}
+                                      />
+                                    )}
+                                  </ProductModifiers.Choice>
+                                ))}
+                              </div>
+                            )}
+
+                            {type === "TEXT_CHOICES" && hasChoices && (
+                              <div className="flex flex-wrap gap-2">
+                                {choices.map((choice: any) => (
+                                  <ProductModifiers.Choice
+                                    key={choice.value}
+                                    modifier={modifier}
+                                    choice={choice}
+                                  >
+                                    {({ value, isSelected, onSelect }) => (
+                                      <button
+                                        onClick={onSelect}
+                                        className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                          isSelected
+                                            ? "product-option-active"
+                                            : "product-option-inactive"
+                                        }`}
                                       >
                                         {value}
                                       </button>
@@ -509,10 +496,7 @@ export default function ProductDetails({
                                   <ProductModifiers.ToggleFreeText
                                     modifier={modifier}
                                   >
-                                    {({
-                                      isTextInputShown,
-                                      onToggle,
-                                    }) => (
+                                    {({ isTextInputShown, onToggle }) => (
                                       <div className="space-y-3">
                                         <label className="flex items-center gap-2">
                                           <input
@@ -554,7 +538,9 @@ export default function ProductDetails({
             </h3>
             <ProductVariantSelector.Stock>
               {({ inStock, isPreOrderEnabled, availableQuantity }) => {
-                const variantService = useService(SelectedVariantServiceDefinition);
+                const variantService = useService(
+                  SelectedVariantServiceDefinition
+                );
                 const selectedQuantity = variantService.selectedQuantity.get();
 
                 return (
@@ -562,7 +548,10 @@ export default function ProductDetails({
                     <div className="flex items-center border border-brand-light rounded-lg">
                       <button
                         onClick={() => variantService.decrementQuantity()}
-                        disabled={selectedQuantity <= 1 || (!inStock && !isPreOrderEnabled)}
+                        disabled={
+                          selectedQuantity <= 1 ||
+                          (!inStock && !isPreOrderEnabled)
+                        }
                         className="px-3 py-2 text-content-primary hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         -
@@ -572,7 +561,11 @@ export default function ProductDetails({
                       </span>
                       <button
                         onClick={() => variantService.incrementQuantity()}
-                        disabled={!!availableQuantity && selectedQuantity >= availableQuantity || (!inStock && !isPreOrderEnabled)}
+                        disabled={
+                          (!!availableQuantity &&
+                            selectedQuantity >= availableQuantity) ||
+                          (!inStock && !isPreOrderEnabled)
+                        }
                         className="px-3 py-2 text-content-primary hover:bg-surface-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         +
@@ -610,9 +603,7 @@ export default function ProductDetails({
                 <div className="space-y-4">
                   {error && (
                     <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
-                      <p className="text-status-error text-sm">
-                        {error}
-                      </p>
+                      <p className="text-status-error text-sm">{error}</p>
                     </div>
                   )}
 
@@ -641,16 +632,18 @@ export default function ProductDetails({
                 currentVariantId && (
                   <div className="flex items-center gap-2">
                     <div
-                      className={`w-3 h-3 rounded-full ${inStock || isPreOrderEnabled
-                        ? "status-dot-success"
-                        : "status-dot-danger"
-                        }`}
+                      className={`w-3 h-3 rounded-full ${
+                        inStock || isPreOrderEnabled
+                          ? "status-dot-success"
+                          : "status-dot-danger"
+                      }`}
                     ></div>
                     <span
-                      className={`text-sm ${inStock || isPreOrderEnabled
-                        ? "text-status-success"
-                        : "text-status-error"
-                        }`}
+                      className={`text-sm ${
+                        inStock || isPreOrderEnabled
+                          ? "text-status-success"
+                          : "text-status-error"
+                      }`}
                     >
                       {status}
                       {trackInventory && availableQuantity !== null && (

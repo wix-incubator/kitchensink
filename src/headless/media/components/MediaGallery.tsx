@@ -1,6 +1,6 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
-import { ProductMediaGalleryServiceDefinition } from "../services/product-media-gallery-service";
+import { MediaGalleryServiceDefinition } from "../services/media-gallery-service";
 
 /**
  * Props for Viewport headless component
@@ -14,38 +14,34 @@ export interface ViewportProps {
  * Render props for Viewport component
  */
 export interface ViewportRenderProps {
-  /** Image URL */
+  /** Media URL */
   src: string | null;
-  /** Alt text for image */
+  /** Alt text for media */
   alt: string;
-  /** Current image index */
-  currentIndex: number;
-  /** Total number of images */
-  totalImages: number;
 }
 
 /**
- * Headless component for displaying the main viewport image
+ * Headless component for displaying the main viewport media
  */
 export const Viewport = (props: ViewportProps) => {
-  const mediaService = useService(
-    ProductMediaGalleryServiceDefinition
-  ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
 
-  const currentIndex = mediaService.selectedImageIndex.get();
-  const totalImages = mediaService.totalImages.get();
-  const productName = mediaService.productName.get();
-  const relevantImages = mediaService.relevantImages.get();
+  const currentIndex = mediaService.selectedMediaIndex.get();
+  const mediaToDisplay = mediaService.mediaToDisplay.get();
 
-  // Get the current image from the relevant images array
-  const src = relevantImages[currentIndex] || null;
-  const alt = productName || "Product image";
+  if (mediaToDisplay.length === 0) {
+    return null;
+  }
+
+  // Get the current media from the relevant media array
+  const src = mediaToDisplay[currentIndex].image!;
+  const alt = mediaToDisplay[currentIndex].altText!;
 
   return props.children({
     src,
     alt,
-    currentIndex,
-    totalImages,
   });
 };
 
@@ -69,7 +65,7 @@ export interface ThumbnailRenderProps {
   src: string | null;
   /** Whether this thumbnail is currently active */
   isActive: boolean;
-  /** Function to select this image */
+  /** Function to select this media */
   onSelect: () => void;
   /** Index of this thumbnail */
   index: number;
@@ -81,27 +77,29 @@ export interface ThumbnailRenderProps {
  * Headless component for individual media thumbnail
  */
 export const Thumbnail = (props: ThumbnailProps) => {
-  const mediaService = useService(
-    ProductMediaGalleryServiceDefinition
-  ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
 
-  const product = mediaService.product.get();
-  const currentIndex = mediaService.selectedImageIndex.get();
-  const productName = mediaService.productName.get();
-  const relevantImages = mediaService.relevantImages.get();
+  const currentIndex = mediaService.selectedMediaIndex.get();
+  const mediaToDisplay = mediaService.mediaToDisplay.get();
+
+  if (mediaToDisplay.length === 0) {
+    return null;
+  }
 
   // Get the image source from the centralized relevant images
-  const src = relevantImages[props.index] || null;
+  const src = mediaToDisplay[props.index].image!;
+  const alt = mediaToDisplay[props.index].altText!;
 
   const isActive = currentIndex === props.index;
-  const alt = `${productName || "Product"} image ${props.index + 1}`;
 
   const onSelect = () => {
-    mediaService.setSelectedImageIndex(props.index);
+    mediaService.setSelectedMediaIndex(props.index);
   };
 
   return props.children({
-    item: product?.media?.main || null,
+    item: mediaToDisplay[props.index],
     src,
     isActive,
     onSelect,
@@ -122,33 +120,37 @@ export interface NextProps {
  * Render props for Next component
  */
 export interface NextRenderProps {
-  /** Function to go to next image */
+  /** Function to go to next media */
   onNext: () => void;
-  /** Whether there is a next image available */
+  /** Whether there is a next media available */
   canGoNext: boolean;
-  /** Current image index */
+  /** Current media index */
   currentIndex: number;
-  /** Total number of images */
-  totalImages: number;
+  /** Total number of media */
+  totalMedia: number;
 }
 
 /**
- * Headless component for next image navigation
+ * Headless component for next media navigation
  */
 export const Next = (props: NextProps) => {
-  const mediaService = useService(
-    ProductMediaGalleryServiceDefinition
-  ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
 
-  const currentIndex = mediaService.selectedImageIndex.get();
-  const totalImages = mediaService.totalImages.get();
-  const canGoNext = currentIndex < totalImages - 1;
+  const currentIndex = mediaService.selectedMediaIndex.get();
+  const totalMedia = mediaService.totalMedia.get();
+  const canGoNext = currentIndex < totalMedia - 1;
+
+  if (totalMedia <= 1) {
+    return null;
+  }
 
   return props.children({
-    onNext: mediaService.nextImage,
+    onNext: mediaService.nextMedia,
     canGoNext,
     currentIndex,
-    totalImages,
+    totalMedia,
   });
 };
 
@@ -164,33 +166,37 @@ export interface PreviousProps {
  * Render props for Previous component
  */
 export interface PreviousRenderProps {
-  /** Function to go to previous image */
+  /** Function to go to previous media */
   onPrevious: () => void;
-  /** Whether there is a previous image available */
+  /** Whether there is a previous media available */
   canGoPrevious: boolean;
-  /** Current image index */
+  /** Current media index */
   currentIndex: number;
-  /** Total number of images */
-  totalImages: number;
+  /** Total number of media */
+  totalMedia: number;
 }
 
 /**
- * Headless component for previous image navigation
+ * Headless component for previous media navigation
  */
 export const Previous = (props: PreviousProps) => {
-  const mediaService = useService(
-    ProductMediaGalleryServiceDefinition
-  ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
 
-  const currentIndex = mediaService.selectedImageIndex.get();
-  const totalImages = mediaService.totalImages.get();
+  const currentIndex = mediaService.selectedMediaIndex.get();
+  const totalMedia = mediaService.totalMedia.get();
   const canGoPrevious = currentIndex > 0;
 
+  if (totalMedia <= 1) {
+    return null;
+  }
+
   return props.children({
-    onPrevious: mediaService.previousImage,
+    onPrevious: mediaService.previousMedia,
     canGoPrevious,
     currentIndex,
-    totalImages,
+    totalMedia,
   });
 };
 
@@ -206,28 +212,32 @@ export interface IndicatorProps {
  * Render props for Indicator component
  */
 export interface IndicatorRenderProps {
-  /** Current image index (1-based for display) */
+  /** Current media index (1-based for display) */
   current: number;
-  /** Total number of images */
+  /** Total number of media */
   total: number;
-  /** Whether gallery has images */
-  hasImages: boolean;
+  /** Whether gallery has media */
+  hasMedia: boolean;
 }
 
 /**
  * Headless component for media gallery indicator/counter
  */
 export const Indicator = (props: IndicatorProps) => {
-  const mediaService = useService(
-    ProductMediaGalleryServiceDefinition
-  ) as ServiceAPI<typeof ProductMediaGalleryServiceDefinition>;
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
 
-  const currentIndex = mediaService.selectedImageIndex.get();
-  const totalImages = mediaService.totalImages.get();
+  const currentIndex = mediaService.selectedMediaIndex.get();
+  const totalMedia = mediaService.totalMedia.get();
+
+  if (totalMedia <= 1) {
+    return null;
+  }
 
   return props.children({
     current: currentIndex + 1,
-    total: totalImages,
-    hasImages: totalImages > 0,
+    total: totalMedia,
+    hasMedia: totalMedia > 0,
   });
 };
