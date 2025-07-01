@@ -1,4 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
+import type {
+  ServiceAPI,
+  ServiceFactoryConfig,
+} from "@wix/services-definitions";
 import {
   createServicesManager,
   createServicesMap,
@@ -54,10 +57,12 @@ import {
 } from "../../../../headless/media/services/media-gallery-service";
 
 interface ProductDetailPageProps {
-  productServiceConfig: any;
-  currentCartServiceConfig: any;
-  socialSharingServiceConfig: any;
-  relatedProductsServiceConfig: any;
+  productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
+  currentCartServiceConfig: ServiceFactoryConfig<typeof CurrentCartService>;
+  socialSharingServiceConfig: ServiceFactoryConfig<typeof SocialSharingService>;
+  relatedProductsServiceConfig: ServiceFactoryConfig<
+    typeof RelatedProductsService
+  >;
 }
 
 const ProductImageGallery = () => {
@@ -1004,7 +1009,9 @@ export default function ProductDetailPage({
       currentCartServiceConfig
     )
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(MediaGalleryServiceDefinition, MediaGalleryService)
+    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
+    })
     .addService(
       SocialSharingServiceDefinition,
       SocialSharingService,
