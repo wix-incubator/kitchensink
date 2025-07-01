@@ -82,13 +82,17 @@ jobs:
             .astro/
           retention-days: 30
 
-      - name: Get preview URL
+      - name: Get preview URL from topology
         id: preview-url
         run: |
-          # Extract the preview URL from the output
-          PREVIEW_URL=$(npm run preview 2>&1 | grep -o 'https://[^[:space:]]*wix-host\.com' | head -1)
-          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-          echo "Preview URL: $PREVIEW_URL"
+          if [ -f ".wix/topology.json" ]; then
+            PREVIEW_URL=$(cat .wix/topology.json | jq -r '.preview.site.main')
+            echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+            echo "Preview URL: $PREVIEW_URL"
+          else
+            echo "preview_url=" >> $GITHUB_OUTPUT
+            echo "Preview URL: Not found in topology.json"
+          fi
 
             - name: Comment on PR
         uses: actions/github-script@v7

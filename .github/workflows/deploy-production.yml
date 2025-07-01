@@ -99,20 +99,34 @@ jobs:
 
             core.setOutput('deployment_id', deployment.data.id);
 
+            - name: Get production URL from topology
+        id: get-production-url
+        if: success()
+        run: |
+          if [ -f ".wix/topology.json" ]; then
+            PRODUCTION_URL=$(cat .wix/topology.json | jq -r '.production.site.main')
+            echo "production_url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
+            echo "Production URL: $PRODUCTION_URL"
+          else
+            echo "production_url=https://kitchensink-netanelg4.wix-host.com" >> $GITHUB_OUTPUT
+            echo "Production URL: https://kitchensink-netanelg4.wix-host.com (fallback)"
+          fi
+
       - name: Update deployment status
         if: success()
         uses: actions/github-script@v7
         with:
           script: |
             const deploymentId = ${{ steps.create-deployment.outputs.deployment_id }};
-
+            const productionUrl = '${{ steps.get-production-url.outputs.production_url }}';
+            
             await github.rest.repos.createDeploymentStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
               deployment_id: deploymentId,
               state: 'success',
               description: 'Production deployment completed successfully',
-              environment_url: 'https://kitchensink-netanelg4.wix-host.com'
+              environment_url: productionUrl
             });
 
       - name: Notify deployment failure
@@ -132,12 +146,25 @@ jobs:
                 required_contexts: []
               });
               
+              // Try to get production URL from topology if available
+              let productionUrl = 'https://kitchensink-netanelg4.wix-host.com';
+              try {
+                const fs = require('fs');
+                if (fs.existsSync('.wix/topology.json')) {
+                  const topology = JSON.parse(fs.readFileSync('.wix/topology.json', 'utf8'));
+                  productionUrl = topology.production?.site?.main || productionUrl;
+                }
+              } catch (error) {
+                console.log('Could not read topology.json:', error.message);
+              }
+              
               await github.rest.repos.createDeploymentStatus({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 deployment_id: deployment.data.id,
                 state: 'failure',
-                description: 'Production deployment failed - check artifacts for debug logs'
+                description: 'Production deployment failed - check artifacts for debug logs',
+                environment_url: productionUrl
               });
             } catch (error) {
               console.log('Failed to create deployment status:', error.message);
