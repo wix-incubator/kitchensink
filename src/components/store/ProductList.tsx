@@ -39,79 +39,103 @@ const AutoSelectVariants = ({ product }: { product: productsV3.V3Product }) => {
   const variantService = useService(SelectedVariantServiceDefinition);
 
   useEffect(() => {
-    // Auto-select first choice for each option if none selected
-    if (product.options && product.options.length > 0 && !variantService.hasAnySelections()) {
-      const defaultChoices: Record<string, string> = {};
-      
-      product.options.forEach((option: any) => {
-        if (option.name && option.choicesSettings?.choices?.length > 0) {
-          defaultChoices[option.name] = option.choicesSettings.choices[0].name;
-        }
-      });
+    // Auto-select first choice for each option on mount with slight delay
+    if (product.options && product.options.length > 0) {
+      // Use setTimeout to ensure the variant service is fully initialized
+      const timer = setTimeout(() => {
+        if (product.options && product.options.length > 0) {
+          const defaultChoices: Record<string, string> = {};
+          
+          product.options.forEach((option: any) => {
+            if (option.name && option.choicesSettings?.choices?.length > 0) {
+              defaultChoices[option.name] = option.choicesSettings.choices[0].name;
+            }
+          });
 
-      if (Object.keys(defaultChoices).length > 0) {
-        variantService.setSelectedChoices(defaultChoices);
-      }
+          if (Object.keys(defaultChoices).length > 0) {
+            // Always set the default choices to ensure cart button works
+            variantService.setSelectedChoices(defaultChoices);
+          }
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
   }, [product._id, variantService]);
 
-  // Show interactive variant options with original styling
+  // Show interactive variant options with selection state
   return (
     <div className="mb-3 space-y-2">
-      {product.options?.map((option: any) => (
-        <div key={option._id} className="space-y-1">
-          <span className="text-content-secondary text-xs font-medium">
-            {String(option.name)}:
-          </span>
-          <div className="flex flex-wrap gap-1">
-            {option.choicesSettings?.choices
-              ?.slice(0, 3)
-              .map((choice: any) => {
-                // Check if this is a color option and if choice has color data
-                const isColorOption = String(option.name)
-                  .toLowerCase()
-                  .includes("color");
-                const hasColorCode = choice.colorCode || choice.media?.image;
+      <ProductVariantSelector.Options>
+        {({ selectedChoices }) => (
+          <>
+            {product.options?.map((option: any) => (
+              <div key={option._id} className="space-y-1">
+                <span className="text-content-secondary text-xs font-medium">
+                  {String(option.name)}:
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {option.choicesSettings?.choices
+                    ?.slice(0, 3)
+                    .map((choice: any) => {
+                      // Check if this choice is selected
+                      const isSelected = selectedChoices?.[option.name] === choice.name;
+                      // Check if this is a color option and if choice has color data
+                      const isColorOption = String(option.name)
+                        .toLowerCase()
+                        .includes("color");
+                      const hasColorCode = choice.colorCode || choice.media?.image;
 
-                if (isColorOption && (choice.colorCode || hasColorCode)) {
-                  return (
-                    <div
-                      key={choice.choiceId}
-                      className="relative group/color"
-                    >
-                      <div
-                        onClick={() => variantService.setOption(option.name, choice.name)}
-                        className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
-                        style={{
-                          backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
-                        }}
-                      />
-                      {/* Tooltip */}
-                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                        {String(choice.name)}
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <button
-                      key={choice.choiceId}
-                      onClick={() => variantService.setOption(option.name, choice.name)}
-                      className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium hover:border-brand-primary transition-colors cursor-pointer"
-                    >
-                      {String(choice.name)}
-                    </button>
-                  );
-                }
-              })}
-            {option.choicesSettings?.choices?.length > 3 && (
-              <span className="text-content-muted text-xs">
-                +{option.choicesSettings.choices.length - 3} more
-              </span>
-            )}
-          </div>
-        </div>
-      ))}
+                      if (isColorOption && (choice.colorCode || hasColorCode)) {
+                        return (
+                          <div
+                            key={choice.choiceId}
+                            className="relative group/color"
+                          >
+                            <div
+                              onClick={() => variantService.setOption(option.name, choice.name)}
+                              className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
+                                isSelected 
+                                  ? "border-brand-primary shadow-md" 
+                                  : "border-color-swatch hover:border-color-swatch-hover"
+                              }`}
+                              style={{
+                                backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
+                              }}
+                            />
+                            {/* Tooltip */}
+                            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                              {String(choice.name)}
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <button
+                            key={choice.choiceId}
+                            onClick={() => variantService.setOption(option.name, choice.name)}
+                            className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
+                              isSelected
+                                ? "bg-brand-primary text-content-primary border-brand-primary"
+                                : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
+                            }`}
+                          >
+                            {String(choice.name)}
+                          </button>
+                        );
+                      }
+                    })}
+                  {option.choicesSettings?.choices?.length > 3 && (
+                    <span className="text-content-muted text-xs">
+                      +{option.choicesSettings.choices.length - 3} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </ProductVariantSelector.Options>
     </div>
   );
 };
@@ -407,13 +431,16 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     <div className="space-y-2">
                                       {/* Add to Cart Button */}
                                       <ProductVariantSelector.Trigger>
-                                        {({ onAddToCart, canAddToCart, isLoading }) => (
+                                        {({ onAddToCart, canAddToCart, isLoading, inStock, isPreOrderEnabled }) => (
                                           <button
                                             onClick={onAddToCart}
                                             disabled={!canAddToCart || isLoading}
                                             className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title={!canAddToCart ? "Please select all variants" : ""}
                                           >
-                                            {isLoading ? "Adding..." : "Add to Cart"}
+                                            {isLoading ? "Adding..." : 
+                                             !inStock && isPreOrderEnabled ? "Pre Order" : 
+                                             "Add to Cart"}
                                           </button>
                                         )}
                                       </ProductVariantSelector.Trigger>
