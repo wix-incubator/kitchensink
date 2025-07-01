@@ -36,13 +36,50 @@ jobs:
         run: |
           npx wix env pull
 
+      - name: Capture environment info
+        run: |
+          echo "=== Environment Information ===" > .wix/debug.log
+          echo "Node.js version: $(node --version)" >> .wix/debug.log
+          echo "npm version: $(npm --version)" >> .wix/debug.log
+          echo "Wix CLI version: $(npx wix --version)" >> .wix/debug.log
+          echo "GitHub SHA: ${{ github.sha }}" >> .wix/debug.log
+          echo "GitHub Ref: ${{ github.ref }}" >> .wix/debug.log
+          echo "Build timestamp: $(date)" >> .wix/debug.log
+          echo "================================" >> .wix/debug.log
+
       - name: Build project
-        run: npm run build
+        run: |
+          echo "=== Build Output ===" >> .wix/debug.log
+          npm run build 2>&1 | tee -a .wix/debug.log
+          echo "=== Build Complete ===" >> .wix/debug.log
 
       - name: Deploy preview
-        run: npm run preview
+        run: |
+          echo "=== Preview Deployment Output ===" >> .wix/debug.log
+          npm run preview 2>&1 | tee -a .wix/debug.log
+          echo "=== Preview Deployment Complete ===" >> .wix/debug.log
         env:
           WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
+
+      - name: Upload debug logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wix-debug-logs-preview
+          path: |
+            .wix/debug.log
+            .wix/*.log
+          retention-days: 30
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-preview
+          path: |
+            dist/
+            .astro/
+          retention-days: 30
 
       - name: Get preview URL
         id: preview-url
@@ -52,19 +89,34 @@ jobs:
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
           echo "Preview URL: $PREVIEW_URL"
 
-      - name: Comment on PR
+            - name: Comment on PR
         uses: actions/github-script@v7
         with:
           script: |
             const previewUrl = '${{ steps.preview-url.outputs.preview_url }}';
-            const comment = `## 🚀 Preview Deployment
+            const workflowStatus = '${{ job.status }}';
 
-            Your changes have been deployed to a preview environment!
+            let comment;
+            if (workflowStatus === 'success' && previewUrl) {
+              comment = `## 🚀 Preview Deployment
 
-            **Preview URL:** ${previewUrl}
+              Your changes have been deployed to a preview environment!
+              
+              **Preview URL:** ${previewUrl}
+              
+              ---
+              *This preview will be automatically updated when you push new commits to this PR.*`;
+            } else {
+              comment = `## ❌ Preview Deployment Failed
 
-            ---
-            *This preview will be automatically updated when you push new commits to this PR.*`;
+              The preview deployment failed. Debug logs and build artifacts have been uploaded as workflow artifacts.
+              
+              **Debug Logs:** Available in the "wix-debug-logs-preview" artifact
+              **Build Artifacts:** Available in the "build-artifacts-preview" artifact
+              
+              ---
+              *Please check the workflow logs and artifacts for more details.*`;
+            }
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

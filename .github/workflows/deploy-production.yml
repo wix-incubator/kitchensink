@@ -35,13 +35,50 @@ jobs:
         run: |
           npx wix env pull
 
+      - name: Capture environment info
+        run: |
+          echo "=== Environment Information ===" > .wix/debug.log
+          echo "Node.js version: $(node --version)" >> .wix/debug.log
+          echo "npm version: $(npm --version)" >> .wix/debug.log
+          echo "Wix CLI version: $(npx wix --version)" >> .wix/debug.log
+          echo "GitHub SHA: ${{ github.sha }}" >> .wix/debug.log
+          echo "GitHub Ref: ${{ github.ref }}" >> .wix/debug.log
+          echo "Build timestamp: $(date)" >> .wix/debug.log
+          echo "================================" >> .wix/debug.log
+
       - name: Build project
-        run: npm run build
+        run: |
+          echo "=== Build Output ===" >> .wix/debug.log
+          npm run build 2>&1 | tee -a .wix/debug.log
+          echo "=== Build Complete ===" >> .wix/debug.log
 
       - name: Deploy to production
-        run: npm run release
+        run: |
+          echo "=== Deployment Output ===" >> .wix/debug.log
+          npm run release 2>&1 | tee -a .wix/debug.log
+          echo "=== Deployment Complete ===" >> .wix/debug.log
         env:
           WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
+
+      - name: Upload debug logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wix-debug-logs
+          path: |
+            .wix/debug.log
+            .wix/*.log
+          retention-days: 30
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            .astro/
+          retention-days: 30
 
       - name: Notify deployment success
         if: success()
@@ -74,7 +111,10 @@ jobs:
           script: |
             const comment = `## ❌ Production Deployment Failed
 
-            The production deployment failed. Please check the logs for more details.
+            The production deployment failed. Debug logs and build artifacts have been uploaded as workflow artifacts.
+
+            **Debug Logs:** Available in the "wix-debug-logs" artifact
+            **Build Artifacts:** Available in the "build-artifacts" artifact
 
             ---
             *Failed at: ${new Date().toISOString()}*`;
@@ -85,5 +125,5 @@ jobs:
               repo: context.repo.repo,
               deployment_id: context.sha,
               state: 'failure',
-              description: 'Production deployment failed'
+              description: 'Production deployment failed - check artifacts for debug logs'
             });
