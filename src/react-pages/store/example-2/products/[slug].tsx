@@ -1022,7 +1022,7 @@ export default function ProductDetailPage({
     )
     .addService(ProductModifiersServiceDefinition, ProductModifiersService);
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <KitchensinkLayout>

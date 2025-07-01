@@ -49,12 +49,14 @@ The main React component sets up the services manager and composes the UI:
 
 ```tsx
 // src/react-pages/members/index.tsx
+import { useState } from "react";
+
 export function MembersPage({
   currentMemberServiceConfig,
   profileUpdateServiceConfig,
 }) {
   // Create services manager with all three interdependent services
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         CurrentMemberServiceDefinition,
@@ -71,7 +73,7 @@ export function MembersPage({
         allowedTypes: ["image/jpeg", "image/png", "image/gif"],
         photoUploadAstroActions: actions.photoUploadAstroActions,
       })
-  );
+  ));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

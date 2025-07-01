@@ -43,6 +43,7 @@ We have successfully extracted a generic file upload service and headless compon
 ### Setting Up a File Upload Service
 
 ```tsx
+import { useState } from "react";
 import {
   FileUploadServiceDefinition,
   FileUploadService,
@@ -53,7 +54,7 @@ import {
 } from "../headless/media/photo-upload-actions";
 
 // Create services manager
-const servicesManager = createServicesManager(
+const [servicesManager] = useState(() => createServicesManager(
   createServicesMap().addService(
     FileUploadServiceDefinition,
     FileUploadService,
@@ -65,7 +66,7 @@ const servicesManager = createServicesManager(
       }),
     }
   )
-);
+));
 ```
 
 ### Using Headless Components

@@ -4,6 +4,7 @@ import { ProductService, ProductServiceDefinition } from "../headless/store/serv
 import { SelectedVariantService, SelectedVariantServiceDefinition } from "../headless/store/services/selected-variant-service";
 import { ProductMediaGalleryService, ProductMediaGalleryServiceDefinition } from "../headless/store/services/product-media-gallery-service";
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
 import { FilterService, FilterServiceDefinition } from "../headless/store/services/filter-service";
 import { CategoryService, CategoryServiceDefinition } from "../headless/store/services/category-service";
@@ -32,7 +33,7 @@ export default function WixServicesLayout({ children, showCartIcon = false }: Wi
     .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
     .addService(CatalogOptionsServiceDefinition, CatalogOptionsService)
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

@@ -621,7 +621,7 @@ export default function BookNowPage({
   bookingSelectionConfig,
 }: BookNowPageProps) {
   // Create services manager with all required services
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         BookingServicesServiceDefinition,
@@ -638,7 +638,7 @@ export default function BookNowPage({
         BookingSelectionService,
         bookingSelectionConfig
       )
-  );
+  ));
 
   return (
     <KitchensinkLayout>

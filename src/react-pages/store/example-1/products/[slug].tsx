@@ -57,7 +57,7 @@ export default function ProductDetailPage({
       ProductModifiersService,
     );
 
-  const servicesManager = createServicesManager(servicesMap);
+  const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
     <KitchensinkLayout>

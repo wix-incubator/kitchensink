@@ -167,11 +167,11 @@ import {
 } from "@wix/services-manager";
 
 <ServicesManagerProvider
-  servicesManager={createServicesManager(
+  servicesManager={useState(() => createServicesManager(
     createServicesMap()
       .addService(ServiceDefinition, Service, serviceConfig)
       .addService(AnotherServiceDefinition, AnotherService, anotherConfig)
-  )}
+  ))[0]}
 >
   {/* Your UI components */}
 </ServicesManagerProvider>;
@@ -446,13 +446,13 @@ export default function PhotoUploadDialog({ photoUploadConfig }) {
 
   return (
     <ServicesManagerProvider
-      servicesManager={createServicesManager(
+      servicesManager={useState(() => createServicesManager(
         createServicesMap().addService(
           PhotoUploadServiceDefinition,
           PhotoUploadService,
           fullConfig
         )
-      )}
+      ))[0]}
     >
       {/* Your UI components */}
     </ServicesManagerProvider>

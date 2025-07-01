@@ -2,6 +2,7 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
+import { useState } from "react";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 import {
   CatalogOptionsService,
@@ -71,7 +72,7 @@ export default function StoreCollectionPage({
     }
   };
 
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         CollectionServiceDefinition,
@@ -101,7 +102,7 @@ export default function StoreCollectionPage({
         {}
       )
       .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
-  );
+  ));
 
   return (
     <KitchensinkLayout>

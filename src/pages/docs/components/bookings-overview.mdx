@@ -310,9 +310,10 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { useState } from "react";
 
 function BookingApp({ configs }) {
-  const servicesManager = createServicesManager(
+  const [servicesManager] = useState(() => createServicesManager(
     createServicesMap()
       .addService(
         BookingServicesServiceDefinition,
@@ -329,7 +330,7 @@ function BookingApp({ configs }) {
         BookingSelectionService,
         configs.selection
       )
-  );
+  ));
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

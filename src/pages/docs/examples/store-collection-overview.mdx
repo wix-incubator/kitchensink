@@ -151,7 +151,7 @@ The page adapts to different screen sizes:
 The page requires these services to function:
 
 ```tsx
-const servicesManager = createServicesManager(
+const [servicesManager] = useState(() => createServicesManager(
   createServicesMap()
     .addService(
       CollectionServiceDefinition,
@@ -159,7 +159,7 @@ const servicesManager = createServicesManager(
       collectionConfig
     )
     .addService(CurrentCartServiceDefinition, CurrentCartService, cartConfig)
-);
+));
 ```
 
 ### Collection Service
