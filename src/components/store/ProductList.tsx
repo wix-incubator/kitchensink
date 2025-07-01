@@ -32,36 +32,10 @@ import {
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
 import { useService } from "@wix/services-manager-react";
-import { useState, useEffect } from "react";
 
-// Auto-select first variant choices for products with options
-const AutoSelectVariants = ({ product }: { product: productsV3.V3Product }) => {
+// Interactive variant selector without auto-selection
+const InteractiveVariants = ({ product }: { product: productsV3.V3Product }) => {
   const variantService = useService(SelectedVariantServiceDefinition);
-
-  useEffect(() => {
-    // Auto-select first choice for each option on mount with slight delay
-    if (product.options && product.options.length > 0) {
-      // Use setTimeout to ensure the variant service is fully initialized
-      const timer = setTimeout(() => {
-        if (product.options && product.options.length > 0) {
-          const defaultChoices: Record<string, string> = {};
-          
-          product.options.forEach((option: any) => {
-            if (option.name && option.choicesSettings?.choices?.length > 0) {
-              defaultChoices[option.name] = option.choicesSettings.choices[0].name;
-            }
-          });
-
-          if (Object.keys(defaultChoices).length > 0) {
-            // Always set the default choices to ensure cart button works
-            variantService.setSelectedChoices(defaultChoices);
-          }
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [product._id, variantService]);
 
   // Show interactive variant options with selection state
   return (
@@ -369,9 +343,9 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       {title}
                                     </h3>
   
-                                    {/* Auto-select Variants and Compact Display */}
+                                    {/* Interactive Variants */}
                                     {product.options && product.options.length > 0 && (
-                                      <AutoSelectVariants product={product} />
+                                      <InteractiveVariants product={product} />
                                     )}
   
                                     {description && (
@@ -431,18 +405,30 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     <div className="space-y-2">
                                       {/* Add to Cart Button */}
                                       <ProductVariantSelector.Trigger>
-                                        {({ onAddToCart, canAddToCart, isLoading, inStock, isPreOrderEnabled }) => (
-                                          <button
-                                            onClick={onAddToCart}
-                                            disabled={!canAddToCart || isLoading}
-                                            className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            title={!canAddToCart ? "Please select all variants" : ""}
-                                          >
-                                            {isLoading ? "Adding..." : 
-                                             !inStock && isPreOrderEnabled ? "Pre Order" : 
-                                             "Add to Cart"}
-                                          </button>
-                                        )}
+                                        {({ onAddToCart, canAddToCart, isLoading, inStock, isPreOrderEnabled }) => {
+                                          // For products without variants, canAddToCart should always be true
+                                          const hasVariants = product.options && product.options.length > 0;
+                                          const buttonDisabled = !canAddToCart || isLoading;
+                                          
+                                          return (
+                                            <button
+                                              onClick={onAddToCart}
+                                              disabled={buttonDisabled}
+                                              className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                              title={
+                                                hasVariants && !canAddToCart 
+                                                  ? "Please select all variants" 
+                                                  : !canAddToCart 
+                                                    ? "Product unavailable" 
+                                                    : ""
+                                              }
+                                            >
+                                              {isLoading ? "Adding..." : 
+                                               !inStock && isPreOrderEnabled ? "Pre Order" : 
+                                               "Add to Cart"}
+                                            </button>
+                                          );
+                                        }}
                                       </ProductVariantSelector.Trigger>
 
                                       {/* View Product Button */}
