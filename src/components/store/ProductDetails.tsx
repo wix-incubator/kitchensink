@@ -232,13 +232,27 @@ export default function ProductDetails({
                 </div>
               )}
             </SelectedVariant.Price>
+            {isQuickView && (
+              <SelectedVariant.SKU>
+                {({ sku }) => (
+                  sku && (
+                    <>
+                      <br />
+                      <div className="text-base text-content-muted">
+                        SKU: {sku}
+                      </div>
+                    </>
+                  )
+                )}
+              </SelectedVariant.SKU>
+            )}
           </div>
 
           {/* Product Description */}
           <Product.Description>
             {({ description, plainDescription }) => (
               <>
-                {plainDescription && (
+                {plainDescription && !isQuickView && (
                   <div>
                     <h3 className="text-xl font-semibold text-content-primary mb-3">
                       Description

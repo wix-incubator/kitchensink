@@ -80,3 +80,35 @@ export const Price = (props: PriceProps) => {
     currency,
   });
 };
+
+/**
+ * Props for SKU headless component
+ */
+export interface SKUProps {
+  /** Render prop function that receives SKU data */
+  children: (props: SKURenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for SKU component
+ */
+export interface SKURenderProps {
+  /** Product SKU */
+  sku: string | null;
+}
+
+/**
+ * Headless component for product SKU display
+ */
+export const SKU = (props: SKUProps) => {
+  const selectedVariantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const selectedVariant = selectedVariantService.currentVariant?.get();
+  const sku: string | null = selectedVariant?.sku || null;
+
+  return props.children({
+    sku,
+  });
+};
