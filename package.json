@@ -7,7 +7,11 @@
     "build": "wix build",
     "preview": "wix preview",
     "release": "wix release",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -46,6 +50,7 @@
     "@babel/core": "^7.27.4",
     "@babel/plugin-syntax-jsx": "^7.27.1",
     "@babel/plugin-syntax-typescript": "^7.27.1",
+    "@playwright/test": "^1.53.2",
     "@tailwindcss/vite": "^4.0.13",
     "@types/lodash.kebabcase": "^4.1.9",
     "@wix/cli": "^1.1.95",

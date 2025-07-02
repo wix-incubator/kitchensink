@@ -60,7 +60,7 @@ export default function ProductDetails({
   );
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12" data-testid="product-details">
         {/* Product Images */}
         <div className="space-y-4">
           {/* Main Image */}
@@ -208,7 +208,7 @@ export default function ProductDetails({
           <div>
             <Product.Name>
               {({ name }) => (
-                <h1 className="text-4xl font-bold text-content-primary mb-4">
+                <h1 className="text-4xl font-bold text-content-primary mb-4" data-testid="product-name">
                   {name}
                 </h1>
               )}

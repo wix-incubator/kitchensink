@@ -359,6 +359,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
   
                                     <div className="flex gap-2">
                                       <Navigation
+                                        data-testid="view-product-button"
                                         route={`${productPageRoute}/${slug}`}
                                         className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
                                       >

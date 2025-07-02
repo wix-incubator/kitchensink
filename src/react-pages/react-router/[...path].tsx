@@ -12,7 +12,7 @@ const ReactRouterNavigationComponent: NavigationComponent = ({ route, children, 
 
 export default function ReactRouterApp() {
   return (
-    <div className="min-h-screen bg-surface-primary p-4 pt-16">
+    <div className="min-h-screen bg-surface-primary p-4 pt-16" data-testid="main-container">
       <Router basename="/react-router">
         <WixServicesProvider showCartIcon={true}>
         <NavigationProvider navigationComponent={ReactRouterNavigationComponent}>
