@@ -84,6 +84,16 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       const selectedChoicesValue = selectedChoices.get() || {};
       let mediaToDisplay: productsV3.ProductMedia[] = [];
 
+      const productItemsImages =
+      product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
+      [];
+
+      if (productItemsImages.length) {
+        mediaToDisplay = productItemsImages;
+      } else if (product?.media?.main) {
+        mediaToDisplay = [product.media.main];
+      }
+
       // Get images based on selected choices if available
       let selectedChoicesImages: productsV3.ProductMedia[] = [];
 
@@ -100,16 +110,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       if (selectedChoicesImages?.length) {
         mediaToDisplay = selectedChoicesImages;
-      }
-
-      const productItemsImages =
-        product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
-        [];
-
-      if (productItemsImages.length) {
-        mediaToDisplay = productItemsImages;
-      } else if (product?.media?.main) {
-        mediaToDisplay = [product.media.main];
       }
 
       mediaService.setMediaToDisplay(mediaToDisplay ?? []);
