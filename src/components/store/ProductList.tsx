@@ -25,17 +25,13 @@ import {
   CurrentCartServiceDefinition,
 } from "../../headless/ecom/services/current-cart-service";
 import {
-  ProductModifiersService,
-  ProductModifiersServiceDefinition,
-} from "../../headless/store/services/product-modifiers-service";
-import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
 import { useState } from "react";
 import { useService } from "@wix/services-manager-react";
 
-// Interactive variant selector without auto-selection
+// Enhanced variant selector using all ProductVariantSelector components
 const InteractiveVariants = ({ product }: { product: productsV3.V3Product }) => {
   return (
     <div className="mb-3 space-y-2">
@@ -44,108 +40,62 @@ const InteractiveVariants = ({ product }: { product: productsV3.V3Product }) => 
           <>
             {hasOptions && options.map((option: any) => (
               <ProductVariantSelector.Option key={option.name} option={option}>
-                {({ name, choices, hasChoices }) => (
+                {({ name, choices }) => (
                   <div className="space-y-1">
                     <span className="text-content-secondary text-xs font-medium">
                       {String(name)}:
                     </span>
                     <div className="flex flex-wrap gap-1">
-                      {choices
-                        ?.slice(0, 3)
-                        .map((choice: any) => (
-                          <ProductVariantSelector.Choice
-                            key={choice.value || choice.description || choice.name}
-                            option={option}
-                            choice={choice}
-                          >
-                            {({
-                              value,
-                              isSelected,
-                              isVisible,
-                              isInStock,
-                              onSelect,
-                            }) => {
-                              if (!isVisible) return null;
-
-                              // Check if this is a color option and if choice has color data
-                              const isColorOption = String(name)
-                                .toLowerCase()
-                                .includes("color");
-                              const hasColorCode = choice.colorCode || choice.media?.image;
-
-                              if (isColorOption && (choice.colorCode || hasColorCode)) {
-                                return (
-                                  <div className="relative group/color">
-                                    <div
-                                      onClick={onSelect}
-                                      className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
-                                        isSelected 
-                                          ? "border-brand-primary shadow-md" 
-                                          : "border-color-swatch hover:border-color-swatch-hover"
-                                      } ${!isInStock ? "grayscale" : ""}`}
-                                      style={{
-                                        backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
-                                      }}
-                                    />
-                                    {/* Tooltip */}
-                                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                      {String(value)}
+                      {choices?.slice(0, 3).map((choice: any) => (
+                        <ProductVariantSelector.Choice
+                          key={choice.value || choice.description}
+                          option={option}
+                          choice={choice}
+                        >
+                          {({ value, isSelected, isVisible, isInStock, onSelect }) => {
+                            // Hide non-visible choices
+                            if (!isVisible) return null;
+                            
+                            const isColor = String(name).toLowerCase().includes("color");
+                            
+                            if (isColor && choice.colorCode) {
+                              return (
+                                <div className="relative">
+                                  <div
+                                    onClick={onSelect}
+                                    className={`w-6 h-6 rounded-full border-2 cursor-pointer transition-all ${
+                                      isSelected ? "border-brand-primary ring-2 ring-brand-primary ring-opacity-30" : "border-color-swatch hover:border-brand-primary"
+                                    } ${!isInStock ? "opacity-50" : ""}`}
+                                    style={{ backgroundColor: choice.colorCode }}
+                                    title={`${String(value)} ${!isInStock ? "(Out of Stock)" : ""}`}
+                                  />
+                                  {!isInStock && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <div className="w-0.5 h-8 bg-status-error rotate-45 rounded-full"></div>
                                     </div>
-                                    {!isInStock && (
-                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <svg
-                                          className="w-3 h-3 text-status-error"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M6 18L18 6M6 6l12 12"
-                                          />
-                                        </svg>
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              } else {
-                                return (
-                                  <div className="relative">
-                                    <button
-                                      onClick={onSelect}
-                                      className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
-                                        isSelected
-                                          ? "bg-brand-primary text-content-primary border-brand-primary"
-                                          : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
-                                      } ${!isInStock ? "opacity-50" : ""}`}
-                                    >
-                                      {String(value)}
-                                    </button>
-                                    {!isInStock && (
-                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <svg
-                                          className="w-3 h-3 text-status-error"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M6 18L18 6M6 6l12 12"
-                                          />
-                                        </svg>
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              }
-                            }}
-                          </ProductVariantSelector.Choice>
-                        ))}
+                                  )}
+                                </div>
+                              );
+                            }
+                            
+                            return (
+                              <button
+                                onClick={onSelect}
+                                disabled={!isInStock}
+                                className={`px-2 py-1 text-xs rounded border transition-all ${
+                                  isSelected
+                                    ? "bg-brand-primary text-content-primary border-brand-primary"
+                                    : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
+                                } ${!isInStock ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                title={!isInStock ? "Out of Stock" : ""}
+                              >
+                                {String(value)}
+                                {!isInStock && <span className="ml-1 text-status-error">✕</span>}
+                              </button>
+                            );
+                          }}
+                        </ProductVariantSelector.Choice>
+                      ))}
                       {choices?.length > 3 && (
                         <span className="text-content-muted text-xs">
                           +{choices.length - 3} more
@@ -336,7 +286,6 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                 .addService(ProductServiceDefinition, ProductService, { product })
                                 .addService(CurrentCartServiceDefinition, CurrentCartService, currentCartService)
                                 .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-                                .addService(ProductModifiersServiceDefinition, ProductModifiersService)
                                 .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
                                   media: product?.media?.itemsInfo?.items ?? [],
                                 });
@@ -397,6 +346,32 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                       <InteractiveVariants product={product} />
                                     )}
   
+                                    {/* Stock Status using ProductVariantSelector.Stock */}
+                                    <ProductVariantSelector.Stock>
+                                      {({ inStock, isPreOrderEnabled, status }) => (
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <div
+                                            className={`w-2 h-2 rounded-full ${
+                                              inStock 
+                                                ? "bg-status-success" 
+                                                : isPreOrderEnabled 
+                                                  ? "bg-status-warning" 
+                                                  : "bg-status-error"
+                                            }`}
+                                          />
+                                          <span className={`text-xs font-medium ${
+                                            inStock 
+                                              ? "text-status-success" 
+                                              : isPreOrderEnabled 
+                                                ? "text-status-warning" 
+                                                : "text-status-error"
+                                          }`}>
+                                            {status}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </ProductVariantSelector.Stock>
+  
                                     {description && (
                                       <p className="text-content-muted text-sm mb-3 line-clamp-2">
                                         {description}
@@ -454,30 +429,61 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                     <div className="space-y-2">
                                       {/* Add to Cart Button */}
                                       <ProductVariantSelector.Trigger>
-                                        {({ onAddToCart, canAddToCart, isLoading, inStock, isPreOrderEnabled }) => {
-                                          // For products without variants, canAddToCart should always be true
-                                          const hasVariants = product.options && product.options.length > 0;
-                                          const buttonDisabled = !canAddToCart || isLoading;
-                                          
-                                          return (
+                                        {({ 
+                                          onAddToCart, 
+                                          canAddToCart, 
+                                          isLoading, 
+                                          price: variantPrice, 
+                                          inStock, 
+                                          isPreOrderEnabled, 
+                                          error, 
+                                          availableQuantity 
+                                        }) => (
+                                          <div className="space-y-1">
                                             <button
                                               onClick={onAddToCart}
-                                              disabled={buttonDisabled}
+                                              disabled={!canAddToCart || isLoading}
                                               className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                               title={
-                                                hasVariants && !canAddToCart 
-                                                  ? "Please select all variants" 
-                                                  : !canAddToCart 
-                                                    ? "Product unavailable" 
-                                                    : ""
+                                                !canAddToCart && !isLoading
+                                                  ? "Please select all required options"
+                                                  : ""
                                               }
                                             >
-                                              {isLoading ? "Adding..." : 
-                                               !inStock && isPreOrderEnabled ? "Pre Order" : 
-                                               "Add to Cart"}
+                                              {isLoading ? (
+                                                <div className="flex items-center justify-center gap-2">
+                                                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                  Adding...
+                                                </div>
+                                              ) : !inStock && isPreOrderEnabled ? (
+                                                "Pre Order"
+                                              ) : (
+                                                "Add to Cart"
+                                              )}
                                             </button>
-                                          );
-                                        }}
+                                            
+                                            {/* Display variant price if different from base price */}
+                                            {variantPrice && variantPrice !== price && (
+                                              <div className="text-xs text-content-secondary text-center">
+                                                Selected: {variantPrice}
+                                              </div>
+                                            )}
+                                            
+                                            {/* Show error if any */}
+                                            {error && (
+                                              <div className="text-xs text-status-error text-center">
+                                                {error}
+                                              </div>
+                                            )}
+                                            
+                                            {/* Show available quantity if limited */}
+                                            {availableQuantity !== null && availableQuantity < 10 && availableQuantity > 0 && (
+                                              <div className="text-xs text-status-warning text-center">
+                                                Only {availableQuantity} left
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
                                       </ProductVariantSelector.Trigger>
 
                                       {/* View Product Button */}
