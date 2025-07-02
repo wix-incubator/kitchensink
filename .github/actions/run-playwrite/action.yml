@@ -55,33 +55,7 @@ runs:
               repo: repo,
               ref: pullRequest.data.head.ref,
             });
-          
-            let checkRunId = null;
-            for (const checkRun of checksForPr.data.check_runs) {
-              if (checkRun.name === jobName) {
-                checkRunId = checkRun.id;
-                console.log(`Found Check Run ID: ${checkRunId}`);
-                break;
-              }
-            }
-          
-            if (checkRunId) {
-              const checkInput = {
-                owner,
-                repo,
-                check_run_id: checkRunId,
-                pull_request: prNumber,
-                status: 'completed',
-                conclusion: conclusion,
-                output: {
-                  title: `e2e`,
-                  summary: `e2e: ${conclusion}`,
-                },
-              };
-              github.rest.checks.update(checkInput).catch((error) => {
-                console.warn('Error updating check:', error, ' flow continues');
-              });
-            }
+
             // Create a comment with the artifact links on the pull request
             const artifactLinks = [
               `## ${conclusion === 'success' ? ':green_circle:' : ':red_circle:'} Playwright E2E`,

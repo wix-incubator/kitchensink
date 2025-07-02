@@ -12,7 +12,8 @@
     "test:playwright": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "test:install": "playwright install chromium"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
