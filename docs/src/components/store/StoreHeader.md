@@ -23,55 +23,6 @@ A header component that renders category filtering and sorting controls in a sty
 
 ## Usage Examples
 
-### Basic Store Header
-
-```typescript
-import StoreHeader from './components/store/StoreHeader';
-
-function StorePage() {
-  return (
-    <div>
-      <StoreHeader />
-      <div className="product-grid">
-        {/* Product content */}
-      </div>
-    </div>
-  );
-}
-```
-
-### With Custom Styling
-
-```typescript
-import StoreHeader from './components/store/StoreHeader';
-
-function CustomStorePage() {
-  return (
-    <div>
-      <StoreHeader className="shadow-lg mb-8" />
-      <div className="products">
-        {/* Product content */}
-      </div>
-    </div>
-  );
-}
-```
-
-### In Store Layout
-
-```typescript
-import StoreHeader from './components/store/StoreHeader';
-
-function StoreLayout({ children }) {
-  return (
-    <div className="store-container">
-      <StoreHeader className="sticky top-0 z-10" />
-      <main>{children}</main>
-    </div>
-  );
-}
-```
-
 ### Responsive Store Header
 
 ```typescript

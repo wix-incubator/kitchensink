@@ -46,63 +46,6 @@ Context-aware wrapper that provides sort state management through Wix's Sort com
 
 ## Usage Examples
 
-### Basic Sort Dropdown
-
-```typescript
-import SortDropdown from './components/store/SortDropdown';
-
-function ProductListPage() {
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1>Products</h1>
-        <SortDropdown />
-      </div>
-      <div className="product-grid">
-        {/* Products will be sorted based on selection */}
-      </div>
-    </div>
-  );
-}
-```
-
-### In Store Header
-
-```typescript
-import SortDropdown from './components/store/SortDropdown';
-import CategoryPicker from './components/store/CategoryPicker';
-
-function StoreHeader() {
-  return (
-    <div className="store-header">
-      <div className="flex justify-between items-center">
-        <CategoryPicker />
-        <SortDropdown className="ml-4" />
-      </div>
-    </div>
-  );
-}
-```
-
-### With Custom Styling
-
-```typescript
-import SortDropdown from './components/store/SortDropdown';
-
-function CustomProductPage() {
-  return (
-    <div>
-      <div className="filters-container">
-        <SortDropdown className="shadow-md rounded-xl" />
-      </div>
-      <div className="products">
-        {/* Sorted products */}
-      </div>
-    </div>
-  );
-}
-```
-
 ### Mobile-Responsive Layout
 
 ```typescript
@@ -118,28 +61,6 @@ function ResponsiveProductPage() {
       <div className="product-grid">
         {/* Products */}
       </div>
-    </div>
-  );
-}
-```
-
-### Direct Sort Control Usage
-
-```typescript
-import { SortDropdownContent } from './components/store/SortDropdown';
-import { SortBy } from '../headless/store/services/sort-service';
-
-function CustomSortInterface() {
-  const [currentSort, setCurrentSort] = useState<SortBy>('');
-
-  return (
-    <div className="sort-container">
-      <SortDropdownContent
-        sortBy={currentSort}
-        setSortBy={setCurrentSort}
-        className="custom-sort-dropdown"
-      />
-      <div>Currently sorting by: {currentSort || 'Latest Arrivals'}</div>
     </div>
   );
 }

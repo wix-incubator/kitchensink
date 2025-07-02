@@ -49,40 +49,6 @@ Context-aware wrapper that provides category data and state management through W
 
 ## Usage Examples
 
-### Basic Category Picker with Context
-
-```typescript
-import CategoryPicker from './components/store/CategoryPicker';
-
-function StorePage() {
-  return (
-    <div>
-      <CategoryPicker />
-      <div className="products">
-        {/* Product grid filtered by selected category */}
-      </div>
-    </div>
-  );
-}
-```
-
-### With Custom Styling
-
-```typescript
-import CategoryPicker from './components/store/CategoryPicker';
-
-function StyledStorePage() {
-  return (
-    <div>
-      <CategoryPicker className="mb-8 border-b pb-4" />
-      <div className="product-container">
-        {/* Products */}
-      </div>
-    </div>
-  );
-}
-```
-
 ### Direct CategoryPicker Usage
 
 ```typescript
@@ -102,47 +68,7 @@ function CustomCategoryInterface() {
       categories={categories}
       selectedCategory={selectedCategory}
       onCategorySelect={setSelectedCategory}
-      className="custom-category-picker"
     />
-  );
-}
-```
-
-### In Store Header
-
-```typescript
-import CategoryPicker from './components/store/CategoryPicker';
-
-function StoreHeader() {
-  return (
-    <div className="store-header">
-      <div className="flex justify-between items-center">
-        <CategoryPicker className="flex-1" />
-        <SortDropdown />
-      </div>
-    </div>
-  );
-}
-```
-
-### Mobile-Responsive Layout
-
-```typescript
-import CategoryPicker from './components/store/CategoryPicker';
-
-function ResponsiveStore() {
-  return (
-    <div className="container mx-auto px-4">
-      <CategoryPicker className="md:hidden mb-4" />
-      <div className="flex gap-6">
-        <aside className="hidden md:block w-64">
-          <CategoryPicker className="sticky top-4" />
-        </aside>
-        <main className="flex-1">
-          {/* Product grid */}
-        </main>
-      </div>
-    </div>
   );
 }
 ```
