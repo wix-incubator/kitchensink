@@ -3,6 +3,9 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductDetailPage from "../../../react-pages/store/example-1/products/[slug]";
 import { loadProductServiceConfig } from "../../../headless/store/services/product-service";
 import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
+import { SEO } from "../../../headless/seo/components";
+import { seoTags } from "@wix/seo";
+import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
 
 const { slug } = Astro.params;
 
@@ -23,12 +26,16 @@ if (productServiceConfigResult.type === "notFound") {
 const productServiceConfig = productServiceConfigResult.config;
 
 const productName = productServiceConfig.product.name || "Product";
+
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: { slug },
+  itemType: seoTags.ItemType.STORES_PRODUCT,
+});
 ---
 
 <BaseLayout>
-  <title>{productName} - Store - Kitchensink</title>
-  <meta name="description" content={`View details for ${productName}`} />
-
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}

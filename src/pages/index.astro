@@ -1,19 +1,38 @@
 ---
+import { loadSEOTagsServiceConfig } from "../headless/seo/services/seo-tags-service";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomePage from "../react-pages/index";
+import { SEO } from "../headless/seo/components";
 
 export const prerender = true;
 
 // Server-side logic can be added here
 // For example: authentication, data fetching, etc.
+
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: {
+    pageName: "Home",
+    seoData: {
+      tags: [
+        {
+          type: "title",
+          children: "Wix Kitchensink",
+        },
+        {
+          type: "meta",
+          props: {
+            name: "description",
+            content: "Explore all Wix features and implementations",
+          },
+        },
+      ],
+    },
+  },
+});
 ---
 
 <BaseLayout>
-  <title>Wix Kitchensink</title>
-  <meta
-    name="description"
-    content="Explore all Wix features and implementations"
-  />
-
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <HomePage client:load slot="body" />
 </BaseLayout>

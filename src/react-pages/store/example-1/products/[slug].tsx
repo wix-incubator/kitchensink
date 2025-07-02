@@ -29,6 +29,7 @@ import {
   MediaGalleryServiceDefinition,
 } from "../../../../headless/media/services/media-gallery-service";
 import type { ServiceFactoryConfig } from "@wix/services-definitions";
+import { SEOTagsService } from "../../../../headless/seo/services/seo-tags-service";
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
@@ -58,50 +59,52 @@ export default function ProductDetailPage({
   const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
   return (
-    <KitchensinkLayout>
-      <StoreLayout
-        currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
-        showSuccessMessage={showSuccessMessage}
-        onSuccessMessageChange={setShowSuccessMessage}
-      >
-        {/* Register page documentation */}
-        <PageDocsRegistration
-          title="Product Detail Page"
-          description="A complete product detail interface showcasing Product and CurrentCart headless components working together."
-          docsUrl="/docs/examples/product-detail-overview"
-        />
+    <>
+      <KitchensinkLayout>
+        <StoreLayout
+          currentCartServiceConfig={currentCartServiceConfig}
+          servicesManager={servicesManager}
+          showSuccessMessage={showSuccessMessage}
+          onSuccessMessageChange={setShowSuccessMessage}
+        >
+          {/* Register page documentation */}
+          <PageDocsRegistration
+            title="Product Detail Page"
+            description="A complete product detail interface showcasing Product and CurrentCart headless components working together."
+            docsUrl="/docs/examples/product-detail-overview"
+          />
 
-        {/* Main Content */}
-        <div className="min-h-screen p-6">
-          <div className="max-w-7xl mx-auto">
-            {/* Back to Store */}
-            <div className="mb-8">
-              <a
-                href="/store/example-1"
-                className="inline-flex items-center gap-2 text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          {/* Main Content */}
+          <div className="min-h-screen p-6">
+            <div className="max-w-7xl mx-auto">
+              {/* Back to Store */}
+              <div className="mb-8">
+                <a
+                  href="/store/example-1"
+                  className="inline-flex items-center gap-2 text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-                Back to Store
-              </a>
-            </div>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                  Back to Store
+                </a>
+              </div>
 
-            <ProductDetails setShowSuccessMessage={setShowSuccessMessage} />
+              <ProductDetails setShowSuccessMessage={setShowSuccessMessage} />
+            </div>
           </div>
-        </div>
-      </StoreLayout>
-    </KitchensinkLayout>
+        </StoreLayout>
+      </KitchensinkLayout>
+    </>
   );
 }

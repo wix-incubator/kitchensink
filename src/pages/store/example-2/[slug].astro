@@ -5,6 +5,9 @@ import { loadProductServiceConfig } from "../../../headless/store/services/produ
 import { loadCurrentCartServiceConfig } from "../../../headless/ecom/services/current-cart-service";
 import { loadSocialSharingServiceConfig } from "../../../headless/store/services/social-sharing-service";
 import { loadRelatedProductsServiceConfig } from "../../../headless/store/services/related-products-service";
+import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
+import { SEO } from "../../../headless/seo/components";
+import { seoTags } from "@wix/seo";
 
 const { slug } = Astro.params;
 
@@ -41,19 +44,16 @@ const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
   productServiceConfig!.product!._id || "",
   4 // limit to 4 related products
 );
+
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemType: seoTags.ItemType.STORES_PRODUCT,
+  itemData: { slug },
+});
 ---
 
 <BaseLayout>
-  <title>{productName} - Advanced Store - Kitchensink</title>
-  <meta
-    name="description"
-    content={`View details for ${productName} with enhanced UI and modern design patterns.`}
-  />
-  <meta
-    name="keywords"
-    content={`${productName}, product, buy, e-commerce, store`}
-  />
-
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage
     client:load
     productServiceConfig={productServiceConfig}
