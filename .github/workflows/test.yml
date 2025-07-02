@@ -41,6 +41,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+      
+      - uses: ./.github/actions/setup-playwright
 
       - name: Run tests
         run: npm run test
