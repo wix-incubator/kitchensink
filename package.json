@@ -8,7 +8,8 @@
     "preview": "wix preview",
     "release": "wix release",
     "astro": "astro",
-    "test": "playwright test",
+    "test": "npm run test:playwright",
+    "test:playwright": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug"

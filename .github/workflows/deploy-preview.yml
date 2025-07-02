@@ -129,3 +129,11 @@ jobs:
               repo: context.repo.repo,
               body: comment
             });
+      - uses: ./.github/actions/setup-playwright
+
+      - uses: ./.github/actions/run-playwrite
+        with:
+          deployment-url: ${{ steps.preview-url.outputs.preview_url }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          prNumber: ${{ github.event.pull_request.number }}
+
