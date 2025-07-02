@@ -1,3 +1,4 @@
+import React from "react";
 import { productsV3 } from "@wix/stores";
 import ProductFilters from "./ProductFilters";
 import StoreHeader from "./StoreHeader";
