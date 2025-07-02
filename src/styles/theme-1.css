@@ -35,11 +35,12 @@
   /* Background Colors with Opacity */
   --theme-bg-primary-10: rgba(59, 130, 246, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
   --theme-bg-primary-20: rgba(59, 130, 246, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
-  --theme-bg-options: rgba(255, 255, 255, 0.1); /* Background color for product option tags and choice buttons */
+  --theme-bg-options: rgba(255, 255, 255, 0.08); /* Background color for product option tags and choice buttons on dark backgrounds */
+  --theme-bg-modal: rgba(0, 0, 0, 0.6); /* Dark modal content background for dark theme */
   --theme-bg-loading: rgba(255, 255, 255, 0.15); /* Background color for loading skeleton elements */
   --theme-bg-card: rgba(255, 255, 255, 0.05); /* Very light background for cards and product items */
   --theme-bg-error: rgba(248, 113, 113, 0.1); /* Light red background for error messages */
-  --theme-bg-tooltip: rgba(0, 0, 0, 0.8); /* Dark background for tooltips and overlays */
+  --theme-bg-tooltip: rgba(0, 0, 0, 0.75); /* Dark background for tooltips and overlays */
   
   /* Status Background Colors */
   --theme-bg-warning-10: rgba(245, 158, 11, 0.1); /* Light warning background */

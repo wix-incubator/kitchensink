@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: 22
 
 jobs:
   deploy-production:
@@ -20,44 +20,113 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup Wix CLI
-        run: npm install -g @wix/cli@latest
-
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy to production
-        run: npm run release
+      - name: Auth CLI
+        run: |
+          npx wix login --api-key $WIX_AUTH_TOKEN
         env:
           WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
 
-      - name: Notify deployment success
+      - name: Pull environment variables
+        run: |
+          npx wix env pull
+
+      - name: Capture environment info
+        run: |
+          mkdir -p .wix
+          echo "=== Environment Information ===" > .wix/debug.log
+          echo "Node.js version: $(node --version)" >> .wix/debug.log
+          echo "npm version: $(npm --version)" >> .wix/debug.log
+          echo "Wix CLI version: $(npx wix --version)" >> .wix/debug.log
+          echo "GitHub SHA: ${{ github.sha }}" >> .wix/debug.log
+          echo "GitHub Ref: ${{ github.ref }}" >> .wix/debug.log
+          echo "Build timestamp: $(date)" >> .wix/debug.log
+          echo "================================" >> .wix/debug.log
+
+      - name: Build project
+        run: |
+          echo "=== Build Output ===" >> .wix/debug.log
+          npm run build 2>&1 | tee -a .wix/debug.log
+          echo "=== Build Complete ===" >> .wix/debug.log
+
+      - name: Deploy to production
+        run: |
+          echo "=== Deployment Output ===" >> .wix/debug.log
+          npm run release 2>&1 | tee -a .wix/debug.log
+          echo "=== Deployment Complete ===" >> .wix/debug.log
+        env:
+          WIX_AUTH_TOKEN: ${{ secrets.WIX_AUTH_TOKEN }}
+
+      - name: Upload debug logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wix-debug-logs
+          path: |
+            .wix/debug.log
+            .wix/*.log
+          retention-days: 30
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            .astro/
+          retention-days: 30
+
+      - name: Create deployment
+        id: create-deployment
         if: success()
         uses: actions/github-script@v7
         with:
           script: |
-            const comment = `## ✅ Production Deployment Successful
-
-            Your changes have been successfully deployed to production!
-
-            **Production URL:** https://kitchensink-netanelg4.wix-host.com
-
-            ---
-            *Deployed at: ${new Date().toISOString()}*`;
-
-            // Create a deployment status
-            github.rest.repos.createDeploymentStatus({
+            const deployment = await github.rest.repos.createDeployment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              deployment_id: context.sha,
+              ref: context.sha,
+              environment: 'production',
+              description: 'Production deployment',
+              auto_merge: false,
+              required_contexts: []
+            });
+
+            core.setOutput('deployment_id', deployment.data.id);
+
+      - name: Get production URL from topology
+        id: get-production-url
+        if: success()
+        run: |
+          if [ -f ".wix/topology.json" ]; then
+            PRODUCTION_URL=$(cat .wix/topology.json | jq -r '.production.site.main')
+            echo "production_url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
+            echo "Production URL: $PRODUCTION_URL"
+          else
+            echo "production_url=https://kitchensink-netanelg4.wix-host.com" >> $GITHUB_OUTPUT
+            echo "Production URL: https://kitchensink-netanelg4.wix-host.com (fallback)"
+          fi
+
+      - name: Update deployment status
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentId = ${{ steps.create-deployment.outputs.deployment_id }};
+            const productionUrl = '${{ steps.get-production-url.outputs.production_url }}';
+            
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deploymentId,
               state: 'success',
               description: 'Production deployment completed successfully',
-              environment_url: 'https://kitchensink-netanelg4.wix-host.com'
+              environment_url: productionUrl
             });
 
       - name: Notify deployment failure
@@ -65,18 +134,38 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const comment = `## ❌ Production Deployment Failed
-
-            The production deployment failed. Please check the logs for more details.
-
-            ---
-            *Failed at: ${new Date().toISOString()}*`;
-
-            // Create a deployment status
-            github.rest.repos.createDeploymentStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              deployment_id: context.sha,
-              state: 'failure',
-              description: 'Production deployment failed'
-            });
+            // Try to create deployment and status for failure
+            try {
+              const deployment = await github.rest.repos.createDeployment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: context.sha,
+                environment: 'production',
+                description: 'Production deployment (failed)',
+                auto_merge: false,
+                required_contexts: []
+              });
+              
+              // Try to get production URL from topology if available
+              let productionUrl = 'https://kitchensink-netanelg4.wix-host.com';
+              try {
+                const fs = require('fs');
+                if (fs.existsSync('.wix/topology.json')) {
+                  const topology = JSON.parse(fs.readFileSync('.wix/topology.json', 'utf8'));
+                  productionUrl = topology.production?.site?.main || productionUrl;
+                }
+              } catch (error) {
+                console.log('Could not read topology.json:', error.message);
+              }
+              
+              await github.rest.repos.createDeploymentStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: deployment.data.id,
+                state: 'failure',
+                description: 'Production deployment failed - check artifacts for debug logs',
+                environment_url: productionUrl
+              });
+            } catch (error) {
+              console.log('Failed to create deployment status:', error.message);
+            }

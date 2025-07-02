@@ -34,7 +34,7 @@ export interface ProductModifiersServiceAPI {
 export const ProductModifiersServiceDefinition =
   defineService<ProductModifiersServiceAPI>("productModifiers");
 
-export const ProductModifiersService = implementService.withConfig()(ProductModifiersServiceDefinition, ({ getService, config }) => {
+export const ProductModifiersService = implementService.withConfig()(ProductModifiersServiceDefinition, ({ getService }) => {
   const signalsService = getService(SignalsServiceDefinition);
   const productService = getService(ProductServiceDefinition);
 

@@ -149,7 +149,7 @@
 }
 
 .bg-surface-modal {
-  background-color: var(--theme-bg-options);
+  background-color: var(--theme-bg-modal);
 }
 
 .bg-surface-interactive {
@@ -569,4 +569,24 @@
 
 .theme-text-error {
   color: var(--theme-text-error);
+}
+
+/* Navigation Button Styles */
+.btn-nav {
+  background: var(--theme-btn-secondary);
+  color: var(--theme-text-content);
+}
+
+.btn-nav:hover {
+  background: var(--theme-btn-secondary-hover);
+}
+
+.btn-nav:disabled {
+  opacity: 0.3;
+}
+
+/* Navigation Text for dark backgrounds */
+.text-nav {
+  background: var(--theme-btn-secondary);
+  color: var(--theme-text-nav);
 }

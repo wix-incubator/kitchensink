@@ -77,12 +77,22 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const selectedChoices: Signal<Record<string, string>> =
       signalsService.signal({} as any);
 
-    const configProduct = productService.product.get();
+    const initialProduct = productService.product.get();
 
     signalsService.effect(() => {
       const product = productService.product.get();
       const selectedChoicesValue = selectedChoices.get() || {};
       let mediaToDisplay: productsV3.ProductMedia[] = [];
+
+      const productItemsImages =
+      product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
+      [];
+
+      if (productItemsImages.length) {
+        mediaToDisplay = productItemsImages;
+      } else if (product?.media?.main) {
+        mediaToDisplay = [product.media.main];
+      }
 
       // Get images based on selected choices if available
       let selectedChoicesImages: productsV3.ProductMedia[] = [];
@@ -100,16 +110,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       if (selectedChoicesImages?.length) {
         mediaToDisplay = selectedChoicesImages;
-      }
-
-      const productItemsImages =
-        product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
-        [];
-
-      if (productItemsImages.length) {
-        mediaToDisplay = productItemsImages;
-      } else if (product?.media?.main) {
-        mediaToDisplay = [product.media.main];
       }
 
       mediaService.setMediaToDisplay(mediaToDisplay ?? []);
@@ -239,63 +239,71 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     );
 
     const v3Product: Signal<V3Product | null> = signalsService.signal(
-      configProduct as any
+      initialProduct as any
     );
 
-    if (configProduct) {
-      productId.set(configProduct._id || "");
-      ribbonLabel.set(configProduct.ribbon?.name || null);
-
-      const actualPrice = configProduct.actualPriceRange?.minValue?.amount;
-      const compareAtPrice =
-        configProduct.compareAtPriceRange?.minValue?.amount;
-
-      basePrice.set(parsePrice(actualPrice));
-      discountPrice.set(compareAtPrice ? parsePrice(compareAtPrice) : null);
-      isOnSale.set(
-        !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
-      );
-
-      if (configProduct.options) {
-        const optionsMap: Record<string, string[]> = {};
-        configProduct.options.forEach((option: any) => {
-          if (option.name && option.choicesSettings?.choices) {
-            optionsMap[option.name] = option.choicesSettings.choices.map(
-              (choice: any) => choice.name || ""
-            );
-          }
-        });
-        options.set(optionsMap);
-      }
-
-      if (configProduct.variantsInfo?.variants) {
-        variants.set(configProduct.variantsInfo.variants);
-
-        if (configProduct.variantsInfo.variants.length > 0) {
-          updateQuantityFromVariant(configProduct.variantsInfo.variants[0]);
+    const init = (currentProduct: V3Product | null) => {
+      if (currentProduct) {
+        v3Product.set(currentProduct);
+        productId.set(currentProduct._id || "");
+        ribbonLabel.set(currentProduct.ribbon?.name || null);
+  
+        const actualPrice = currentProduct.actualPriceRange?.minValue?.amount;
+        const compareAtPrice =
+          currentProduct.compareAtPriceRange?.minValue?.amount;
+  
+        basePrice.set(parsePrice(actualPrice));
+        discountPrice.set(compareAtPrice ? parsePrice(compareAtPrice) : null);
+        isOnSale.set(
+          !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
+        );
+  
+        if (currentProduct.options) {
+          const optionsMap: Record<string, string[]> = {};
+          currentProduct.options.forEach((option: any) => {
+            if (option.name && option.choicesSettings?.choices) {
+              optionsMap[option.name] = option.choicesSettings.choices.map(
+                (choice: any) => choice.name || ""
+              );
+            }
+          });
+          options.set(optionsMap);
         }
-      } else {
-        const singleVariant: productsV3.Variant = {
-          _id: "default",
-          visible: true,
-          choices: [],
-          price: {
-            actualPrice: configProduct.actualPriceRange?.minValue,
-            compareAtPrice: configProduct.compareAtPriceRange?.minValue,
-          },
-          inventoryStatus: {
-            inStock:
-              configProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-              configProduct.inventory?.availabilityStatus ===
-                "PARTIALLY_OUT_OF_STOCK",
-            preorderEnabled:
-              configProduct.inventory?.preorderStatus === "ENABLED",
-          },
-        };
-        variants.set([singleVariant]);
-        updateQuantityFromVariant(singleVariant);
+  
+        if (currentProduct.variantsInfo?.variants) {
+          variants.set(currentProduct.variantsInfo.variants);
+  
+          if (currentProduct.variantsInfo.variants.length > 0) {
+            updateQuantityFromVariant(currentProduct.variantsInfo.variants[0]);
+          }
+        } else {
+          const singleVariant: productsV3.Variant = {
+            _id: "default",
+            visible: true,
+            choices: [],
+            price: {
+              actualPrice: initialProduct.actualPriceRange?.minValue,
+              compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
+            },
+            inventoryStatus: {
+              inStock:
+                initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                initialProduct.inventory?.availabilityStatus ===
+                  "PARTIALLY_OUT_OF_STOCK",
+              preorderEnabled:
+                initialProduct.inventory?.preorderStatus === "ENABLED",
+            },
+          };
+          variants.set([singleVariant]);
+          updateQuantityFromVariant(singleVariant);
+        }
       }
-    }
+    };
+
+    signalsService.effect(() => {
+      const currentProduct = productService.product.get();
+      init(currentProduct);
+    });
 
     const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
       signalsService.computed<any>((() => {

@@ -9,6 +9,7 @@ import { SelectedVariantServiceDefinition } from "../../headless/store/services/
 import { ProductActionButtons } from "./ProductActionButtons";
 import { CurrentCart } from "../../headless/ecom/components";
 import { useService } from "@wix/services-manager-react";
+import { useNavigation } from "../NavigationContext";
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -53,6 +54,10 @@ export default function ProductDetails({
   setShowSuccessMessage?: (show: boolean) => void;
   cartUrl?: string;
 }) {
+  const Navigation = useNavigation();
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  );
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -92,7 +97,7 @@ export default function ProductDetails({
                       <button
                         onClick={onPrevious}
                         disabled={!canGoPrevious}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full transition-all"
                       >
                         <svg
                           className="w-4 h-4"
@@ -116,7 +121,7 @@ export default function ProductDetails({
                       <button
                         onClick={onNext}
                         disabled={!canGoNext}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-tooltip hover:bg-surface-tooltip/90 text-content-primary p-2 rounded-full transition-all disabled:opacity-30"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full transition-all"
                       >
                         <svg
                           className="w-4 h-4"
@@ -139,7 +144,7 @@ export default function ProductDetails({
                   {
                     <MediaGallery.Indicator>
                       {({ current, total }) => (
-                        <div className="absolute bottom-4 right-4 bg-surface-tooltip text-content-primary px-3 py-1 rounded-full text-sm">
+                        <div className="absolute bottom-4 right-4 bg-surface-tooltip text-nav px-3 py-1 rounded-full text-sm">
                           {current} / {total}
                         </div>
                       )}
@@ -387,9 +392,6 @@ export default function ProductDetails({
                         <button
                           onClick={() => {
                             // Reset all selections
-                            const variantService = useService(
-                              SelectedVariantServiceDefinition
-                            );
                             variantService.resetSelections();
                           }}
                           className="text-sm text-brand-primary hover:text-brand-light transition-colors"
@@ -701,8 +703,8 @@ export default function ProductDetails({
                       {subtotal}
                     </span>
                   </div>
-                  <a
-                    href="/cart"
+                  <Navigation
+                    route="/cart"
                     className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
                   >
                     View Cart
@@ -719,7 +721,7 @@ export default function ProductDetails({
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
-                  </a>
+                  </Navigation>
                 </div>
               )}
             </>
