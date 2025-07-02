@@ -30,117 +30,6 @@ Async function that loads the initial cart configuration from Wix APIs, handling
 
 ## Usage Examples
 
-### Basic Service Registration
-```typescript
-import { CurrentCartService, CurrentCartServiceDefinition } from './headless/ecom/services/current-cart-service';
-
-// Register with services manager
-const servicesMap = createServicesMap()
-  .addService(CurrentCartServiceDefinition, CurrentCartService);
-```
-
-### Using Cart in React Components
-```tsx
-import { useService } from '@wix/services-manager-react';
-import { CurrentCartServiceDefinition } from './headless/ecom/services/current-cart-service';
-
-function CartComponent() {
-  const cartService = useService(CurrentCartServiceDefinition);
-  
-  // Access reactive cart state
-  const cart = cartService.cart.use();
-  const isLoading = cartService.isLoading.use();
-  const cartCount = cartService.cartCount.use();
-  
-  const handleAddToCart = async () => {
-    await cartService.addToCart([{
-      catalogReference: {
-        appId: 'app-id',
-        catalogItemId: 'product-id',
-        options: {
-          variantId: 'variant-id'
-        }
-      },
-      quantity: 1
-    }]);
-  };
-  
-  return (
-    <div>
-      <p>Items in cart: {cartCount}</p>
-      {isLoading && <p>Loading...</p>}
-      <button onClick={handleAddToCart}>Add to Cart</button>
-    </div>
-  );
-}
-```
-
-### Cart Management Operations
-```typescript
-const cartService = useService(CurrentCartServiceDefinition);
-
-// Add items to cart
-await cartService.addToCart([{
-  catalogReference: {
-    appId: 'stores-app-id',
-    catalogItemId: 'product-123',
-    options: { variantId: 'variant-456' }
-  },
-  quantity: 2
-}]);
-
-// Update item quantity
-await cartService.updateLineItemQuantity('line-item-id', 3);
-
-// Remove item from cart
-await cartService.removeLineItem('line-item-id');
-
-// Apply coupon
-await cartService.applyCoupon('DISCOUNT10');
-
-// Proceed to checkout
-await cartService.proceedToCheckout();
-```
-
-### Cart State Monitoring
-```tsx
-function CartStatus() {
-  const cartService = useService(CurrentCartServiceDefinition);
-  
-  const cart = cartService.cart.use();
-  const cartTotals = cartService.cartTotals.use();
-  const error = cartService.error.use();
-  const isCouponLoading = cartService.isCouponLoading.use();
-  
-  return (
-    <div>
-      {error && <div className="error">{error}</div>}
-      
-      {cart?.lineItems?.map(item => (
-        <div key={item._id}>
-          {item.name} - Quantity: {item.quantity}
-          <button onClick={() => cartService.increaseLineItemQuantity(item._id!)}>
-            +
-          </button>
-          <button onClick={() => cartService.decreaseLineItemQuantity(item._id!)}>
-            -
-          </button>
-        </div>
-      ))}
-      
-      {cartTotals && (
-        <div>
-          Subtotal: {cartTotals.priceSummary?.subtotal?.amount}
-          {cartTotals.appliedDiscounts && <p>Discounts applied!</p>}
-        </div>
-      )}
-      
-      {isCouponLoading && <p>Applying coupon...</p>}
-    </div>
-  );
-}
-```
-
 ### Complete Cart Integration
 ```tsx
 import { useState } from 'react';
@@ -204,19 +93,12 @@ function ShoppingCart() {
           
           {/* Buyer Notes */}
           <textarea
-            value={buyerNotes}
-            onChange={(e) => cartService.setBuyerNotes(e.target.value)}
-            placeholder="Special instructions..."
+            value={buyerNotes || ''}
+            onChange={(e) => cartService.updateBuyerNote(e.target.value)}
+            placeholder="Add a note..."
           />
           
-          {/* Totals and Checkout */}
-          {cartTotals && (
-            <div>
-              <p>Subtotal: {cartTotals.priceSummary?.subtotal?.formattedAmount}</p>
-              <p>Total: {cartTotals.priceSummary?.total?.formattedAmount}</p>
-            </div>
-          )}
-          
+          {/* Checkout */}
           <button onClick={() => cartService.proceedToCheckout()}>
             Checkout
           </button>

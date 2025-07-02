@@ -22,50 +22,6 @@ The main provider component that initializes and provides access to all Wix serv
 
 ## Usage Examples
 
-### Basic Usage
-```tsx
-import WixServicesProvider from './providers/WixServicesProvider';
-
-function App() {
-  return (
-    <WixServicesProvider>
-      <YourAppComponents />
-    </WixServicesProvider>
-  );
-}
-```
-
-### With Cart Icon in Store Layout
-```tsx
-import WixServicesProvider from './providers/WixServicesProvider';
-
-function StoreApp() {
-  return (
-    <WixServicesProvider showCartIcon={true}>
-      <ProductCatalog />
-      <ProductDetails />
-    </WixServicesProvider>
-  );
-}
-```
-
-### Accessing Services in Child Components
-```tsx
-import { useService } from '@wix/services-manager-react';
-import { ProductServiceDefinition } from '../headless/store/services/product-service';
-
-function ProductComponent() {
-  const productService = useService(ProductServiceDefinition);
-  
-  // Use the service methods
-  const loadProducts = () => {
-    productService.loadProducts();
-  };
-  
-  return <div>Product Component</div>;
-}
-```
-
 ### Complete Application Setup
 ```tsx
 import WixServicesProvider from './providers/WixServicesProvider';

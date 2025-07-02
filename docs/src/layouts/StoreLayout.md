@@ -25,104 +25,6 @@ Main layout component that provides store functionality including cart services,
 
 ## Usage Examples
 
-### Basic Store Layout
-```tsx
-import { StoreLayout } from './layouts/StoreLayout';
-
-function ProductPage() {
-  return (
-    <StoreLayout currentCartServiceConfig={null}>
-      <div>
-        <h1>Product Catalog</h1>
-        <ProductList />
-      </div>
-    </StoreLayout>
-  );
-}
-```
-
-### With External Services Manager
-```tsx
-import { StoreLayout } from './layouts/StoreLayout';
-import { createServicesManager, createServicesMap } from '@wix/services-manager';
-import { CurrentCartServiceDefinition, CurrentCartService } from '../headless/ecom/services/current-cart-service';
-
-function App() {
-  const servicesManager = createServicesManager(
-    createServicesMap()
-      .addService(CurrentCartServiceDefinition, CurrentCartService)
-      // Add other services...
-  );
-  
-  return (
-    <StoreLayout 
-      currentCartServiceConfig={cartConfig}
-      servicesManager={servicesManager}
-    >
-      <ProductCatalog />
-      <ProductDetails />
-    </StoreLayout>
-  );
-}
-```
-
-### With Success Message Control
-```tsx
-import { useState } from 'react';
-import { StoreLayout } from './layouts/StoreLayout';
-
-function ShoppingApp() {
-  const [showSuccess, setShowSuccess] = useState(false);
-  
-  const handleAddToCart = async () => {
-    // Add product to cart logic
-    await addProductToCart();
-    
-    // Show success message
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
-  };
-  
-  return (
-    <StoreLayout 
-      currentCartServiceConfig={null}
-      showSuccessMessage={showSuccess}
-      onSuccessMessageChange={setShowSuccess}
-    >
-      <div>
-        <button onClick={handleAddToCart}>
-          Add to Cart
-        </button>
-      </div>
-    </StoreLayout>
-  );
-}
-```
-
-### Nested in Application Layout
-```tsx
-import { StoreLayout } from './layouts/StoreLayout';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-
-function EcommerceApp() {
-  return (
-    <div className="app">
-      <Header />
-      
-      <main>
-        <StoreLayout currentCartServiceConfig={null}>
-          <ProductCatalog />
-          <FeaturedProducts />
-        </StoreLayout>
-      </main>
-      
-      <Footer />
-    </div>
-  );
-}
-```
-
 ### Complete Store Setup with Cart Configuration
 ```tsx
 import { StoreLayout } from './layouts/StoreLayout';
@@ -159,33 +61,6 @@ function StoreApp() {
         <ProductGrid />
         <Categories />
       </div>
-    </StoreLayout>
-  );
-}
-```
-
-### Multiple Store Sections
-```tsx
-import { StoreLayout } from './layouts/StoreLayout';
-
-function MultiSectionStore() {
-  return (
-    <StoreLayout currentCartServiceConfig={null}>
-      <section className="hero">
-        <h1>Featured Products</h1>
-        <FeaturedProducts />
-      </section>
-      
-      <section className="catalog">
-        <h2>Browse Catalog</h2>
-        <ProductFilters />
-        <ProductGrid />
-      </section>
-      
-      <section className="recommendations">
-        <h2>Recommended for You</h2>
-        <RecommendedProducts />
-      </section>
     </StoreLayout>
   );
 }

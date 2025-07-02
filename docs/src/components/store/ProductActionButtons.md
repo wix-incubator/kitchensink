@@ -61,41 +61,6 @@ Button component for immediate purchase that clears the cart, adds the product, 
 
 ## Usage Examples
 
-### Basic Product Actions
-
-```typescript
-import { ProductActionButtons } from './components/store/ProductActionButtons';
-
-function ProductPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      // Add product to cart logic
-      await cartService.addToCart(productId, quantity);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <ProductActionButtons
-        onAddToCart={handleAddToCart}
-        canAddToCart={true}
-        isLoading={isLoading}
-        isPreOrderEnabled={false}
-        inStock={true}
-        onShowSuccessMessage={setShowSuccess}
-      />
-      {showSuccess && <div>Added to cart successfully!</div>}
-    </div>
-  );
-}
-```
-
 ### Pre-Order Product
 
 ```typescript
@@ -122,46 +87,6 @@ function PreOrderProduct() {
       inStock={false}
       onShowSuccessMessage={() => {}}
     />
-  );
-}
-```
-
-### Out of Stock Product
-
-```typescript
-import { ProductActionButtons } from './components/store/ProductActionButtons';
-
-function OutOfStockProduct() {
-  return (
-    <ProductActionButtons
-      onAddToCart={async () => {}}
-      canAddToCart={false}
-      isLoading={false}
-      isPreOrderEnabled={false}
-      inStock={false}
-      onShowSuccessMessage={() => {}}
-    />
-  );
-}
-```
-
-### With Custom Styling
-
-```typescript
-import { ProductActionButtons } from './components/store/ProductActionButtons';
-
-function StyledProductActions() {
-  return (
-    <div className="product-actions-container">
-      <ProductActionButtons
-        onAddToCart={handleAddToCart}
-        canAddToCart={true}
-        isLoading={false}
-        isPreOrderEnabled={false}
-        inStock={true}
-        onShowSuccessMessage={setShowMessage}
-      />
-    </div>
   );
 }
 ```
