@@ -118,6 +118,8 @@ export interface ChoiceRenderProps {
   isVisible: boolean;
   /** Whether this choice is in stock */
   isInStock: boolean;
+  /** Whether this choice is available for pre-order */
+  isPreOrderEnabled: boolean;
   /** Function to select this choice */
   onSelect: () => void;
   /** Option name */
@@ -147,6 +149,9 @@ export const Choice = (props: ChoiceProps) => {
   
   // Check if this choice results in an in-stock variant
   const isInStock = variantService.isChoiceInStock(optionName, choiceValue);
+  
+  // Check if this choice is available for pre-order
+  const isPreOrderEnabled = variantService.isChoicePreOrderEnabled(optionName, choiceValue);
 
   const value = choiceValue;
 
@@ -164,6 +169,7 @@ export const Choice = (props: ChoiceProps) => {
     isSelected,
     isVisible,
     isInStock,
+    isPreOrderEnabled,
     onSelect,
     optionName,
     choiceValue,

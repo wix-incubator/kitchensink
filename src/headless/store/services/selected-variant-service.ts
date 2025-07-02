@@ -57,9 +57,10 @@ export interface SelectedVariantServiceAPI {
   getChoiceInfo: (
     optionName: string,
     choiceValue: string
-  ) => { isAvailable: boolean; isInStock: boolean };
+  ) => { isAvailable: boolean; isInStock: boolean; isPreOrderEnabled: boolean };
   isChoiceAvailable: (optionName: string, choiceValue: string) => boolean;
   isChoiceInStock: (optionName: string, choiceValue: string) => boolean;
+  isChoicePreOrderEnabled: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
 }
 
@@ -603,7 +604,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const getChoiceInfo = (
       optionName: string,
       choiceValue: string
-    ): { isAvailable: boolean; isInStock: boolean } => {
+    ): { isAvailable: boolean; isInStock: boolean; isPreOrderEnabled: boolean } => {
       // Create hypothetical choices with this choice selected
       const currentChoices = selectedChoices.get();
       const hypotheticalChoices = {
@@ -634,12 +635,10 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       });
 
       const isAvailable = !!matchingVariant;
-      const isInStock =
-        matchingVariant?.inventoryStatus?.inStock ||
-        matchingVariant?.inventoryStatus?.preorderEnabled ||
-        false;
+      const isInStock = matchingVariant?.inventoryStatus?.inStock === true;
+      const isPreOrderEnabled = matchingVariant?.inventoryStatus?.preorderEnabled === true;
 
-      return { isAvailable, isInStock };
+      return { isAvailable, isInStock, isPreOrderEnabled };
     };
 
     // Simplified methods using the core getChoiceInfo
@@ -655,6 +654,13 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       choiceValue: string
     ): boolean => {
       return getChoiceInfo(optionName, choiceValue).isInStock;
+    };
+
+    const isChoicePreOrderEnabled = (
+      optionName: string,
+      choiceValue: string
+    ): boolean => {
+      return getChoiceInfo(optionName, choiceValue).isPreOrderEnabled;
     };
 
     const hasAnySelections = (): boolean => {
@@ -696,6 +702,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       getChoiceInfo,
       isChoiceAvailable,
       isChoiceInStock,
+      isChoicePreOrderEnabled,
       hasAnySelections,
 
       // Quantity management methods
