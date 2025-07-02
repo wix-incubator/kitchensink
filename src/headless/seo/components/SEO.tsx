@@ -6,13 +6,36 @@ import {
 import type { seoTags } from "@wix/seo";
 import { useService } from "@wix/services-manager-react";
 
-interface SEOTagsProps {
-  tags: seoTags.Tag[];
+/**
+ * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
+ *
+ * Integrates with the Wix services manager and a custom SEO tags service to inject SEO-relevant tags.
+ *
+ * @param {SEOTagsServiceConfig} props.seoTagsServiceConfig - Configuration for the SEO tags service.
+ *
+ * @example
+ * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
+ * import { SEO } from "@wix/seo/components";
+ * import { seoTags } from "@wix/seo";
+ *
+ * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+ *   pageURL: url,
+ *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
+ *   itemType: seoTags.ItemType.<YOUR_ITEM_TYPE>,
+ * });
+ *
+ * <head>
+ *   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} />
+ * </head>
+ */
+
+export interface TagsProps {
+  seoTagsServiceConfig: SEOTagsServiceConfig;
 }
 
-export function SeoTags({ tags }: SEOTagsProps): React.ReactNode {
+export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
   const dataAttr = { "wix-seo-tags": "true" };
-  const tagsToRender = tags
+  return seoTagsServiceConfig.tags
     .filter((tag) => !tag.disabled)
     .map((tag, index) => {
       if (tag.type === "title") {
@@ -44,39 +67,6 @@ export function SeoTags({ tags }: SEOTagsProps): React.ReactNode {
       }
       return null;
     });
-
-  return tagsToRender;
-}
-
-/**
- * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
- *
- * Integrates with the Wix services manager and a custom SEO tags service to inject SEO-relevant tags.
- *
- * @param {SEOTagsServiceConfig} props.seoTagsServiceConfig - Configuration for the SEO tags service.
- *
- * @example
- * import { loadSEOTagsServiceConfig } from "@wix/seo/server-actions";
- * import { SEO } from "@wix/seo/components";
- * import { seoTags } from "@wix/seo";
- *
- * const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
- *   pageURL: url,
- *   itemData: { slug: "<YOUR_ITEM_SLUG>" },
- *   itemType: seoTags.ItemType.<YOUR_ITEM_TYPE>,
- * });
- *
- * <head>
- *   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} />
- * </head>
- */
-
-export interface TagsProps {
-  seoTagsServiceConfig: SEOTagsServiceConfig;
-}
-
-export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
-  return <SeoTags tags={seoTagsServiceConfig.tags} />;
 }
 
 export interface UpdateTagsTrigger {

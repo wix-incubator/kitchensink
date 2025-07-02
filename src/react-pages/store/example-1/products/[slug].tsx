@@ -28,23 +28,17 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../../../../headless/media/services/media-gallery-service";
-import { SEOTagsServiceDefinition } from "../../../../headless/seo/services/seo-tags-service";
 import type { ServiceFactoryConfig } from "@wix/services-definitions";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { SEO } from "../../../../headless/seo/components";
-import { seoTags } from "@wix/seo";
 import { SEOTagsService } from "../../../../headless/seo/services/seo-tags-service";
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
   currentCartServiceConfig: ServiceFactoryConfig<typeof CurrentCartService>;
-  seoTagsServiceConfig: ServiceFactoryConfig<typeof SEOTagsService>;
 }
 
 export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
-  seoTagsServiceConfig,
 }: ProductDetailPageProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -64,30 +58,8 @@ export default function ProductDetailPage({
 
   const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
-  const seoTagsServiceManager = createServicesManager(
-    createServicesMap().addService(
-      SEOTagsServiceDefinition,
-      SEOTagsService,
-      seoTagsServiceConfig
-    )
-  );
   return (
     <>
-      <ServicesManagerProvider servicesManager={seoTagsServiceManager}>
-        <SEO.UpdateTagsTrigger>
-          {({ updateSeoTags }) => (
-            <button
-              onClick={() =>
-                updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
-                  slug: "urban-street-sneakers",
-                })
-              }
-            >
-              Update SEO Tags
-            </button>
-          )}
-        </SEO.UpdateTagsTrigger>
-      </ServicesManagerProvider>
       <KitchensinkLayout>
         <StoreLayout
           currentCartServiceConfig={currentCartServiceConfig}

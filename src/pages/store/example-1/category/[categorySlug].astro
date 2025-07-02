@@ -25,36 +25,37 @@ const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
 );
 const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemData: {
-    pageName: selectedCategory.name,
-    seoData:{
-      tags: [
-        {
-          type: "title",
-          children: `Store Example 1 - ${selectedCategory.name}`,
-        },
-        {
-          type: "meta",
-          props: {
-            content: `Browse our ${selectedCategory.name} products with traditional grid layout`,
-            name: "description",
-          },
-        },
-      ]
-    }
-  },
-});
-
 // If category not found, return 404
 if (!selectedCategory) {
   return Astro.redirect("/404");
 }
+
+const categoryName = selectedCategory?.name || "";
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: {
+    pageName: categoryName,
+    seoData: {
+      tags: [
+        {
+          type: "title",
+          children: `Store Example 1 - ${categoryName}`,
+        },
+        {
+          type: "meta",
+          props: {
+            content: `Browse our ${categoryName} products with traditional grid layout`,
+            name: "description",
+          },
+        },
+      ],
+    },
+  },
+});
 ---
 
 <BaseLayout>
-  <SEO.Tags  seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags"  />
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <StoreCollectionPage
     client:load
     filteredCollectionServiceConfig={filteredCollectionServiceConfig}

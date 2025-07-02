@@ -30,20 +30,22 @@ if (!selectedCategory) {
   return Astro.redirect("/404");
 }
 
+const categoryName = selectedCategory?.name || "";
+
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
   itemData: {
-    pageName: selectedCategory.name,
+    pageName: categoryName,
     seoData: {
       tags: [
         {
           type: "title",
-          children: `Store Example 2 - ${selectedCategory.name}`,
+          children: `Store Example 2 - ${categoryName}`,
         },
         {
           type: "meta",
           props: {
-            content: `Browse our ${selectedCategory.name} products with modern card layout`,
+            content: `Browse our ${categoryName} products with modern card layout`,
             name: "description",
           },
         },
