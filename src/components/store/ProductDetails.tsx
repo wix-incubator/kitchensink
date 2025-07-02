@@ -624,6 +624,7 @@ export default function ProductDetails({
                     isPreOrderEnabled={isPreOrderEnabled}
                     inStock={inStock}
                     onShowSuccessMessage={setShowSuccessMessage}
+                    isQuickView={isQuickView}
                   />
                 </div>
               )}
@@ -694,6 +695,7 @@ export default function ProductDetails({
       </div>
 
       {/* Current Cart Summary */}
+      {!isQuickView && 
       <div className="mt-12 pt-8 border-t border-brand-subtle">
         <CurrentCart.Summary>
           {({ subtotal, itemCount }) => (
@@ -735,7 +737,7 @@ export default function ProductDetails({
             </>
           )}
         </CurrentCart.Summary>
-      </div>
+      </div>}
     </>
   );
 }
