@@ -46,13 +46,17 @@ const buildSearchOptions = (
   const searchOptions: any = {
     search: {},
     fields: [
-      "PLAIN_DESCRIPTION",
-      "MEDIA_ITEMS_INFO",
-      "CURRENCY",
-      "THUMBNAIL",
-      "URL",
-      "ALL_CATEGORIES_INFO",
-    ],
+      "DESCRIPTION" as any,
+      "DIRECT_CATEGORIES_INFO" as any,
+      "BREADCRUMBS_INFO" as any,
+      "INFO_SECTION" as any,
+      "MEDIA_ITEMS_INFO" as any,
+      "PLAIN_DESCRIPTION" as any,
+      "THUMBNAIL" as any,
+      "URL" as any,
+      "VARIANT_OPTION_CHOICE_NAMES" as any,
+      "WEIGHT_MEASUREMENT_UNIT_INFO" as any,
+    ]
   };
 
   // Build filter conditions array

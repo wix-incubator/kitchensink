@@ -31,81 +31,129 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
+import { useState } from "react";
 import { useService } from "@wix/services-manager-react";
 
 // Interactive variant selector without auto-selection
 const InteractiveVariants = ({ product }: { product: productsV3.V3Product }) => {
-  const variantService = useService(SelectedVariantServiceDefinition);
-
-  // Show interactive variant options with selection state
   return (
     <div className="mb-3 space-y-2">
       <ProductVariantSelector.Options>
-        {({ selectedChoices }) => (
+        {({ options, hasOptions }) => (
           <>
-            {product.options?.map((option: any) => (
-              <div key={option._id} className="space-y-1">
-                <span className="text-content-secondary text-xs font-medium">
-                  {String(option.name)}:
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  {option.choicesSettings?.choices
-                    ?.slice(0, 3)
-                    .map((choice: any) => {
-                      // Check if this choice is selected
-                      const isSelected = selectedChoices?.[option.name] === choice.name;
-                      // Check if this is a color option and if choice has color data
-                      const isColorOption = String(option.name)
-                        .toLowerCase()
-                        .includes("color");
-                      const hasColorCode = choice.colorCode || choice.media?.image;
-
-                      if (isColorOption && (choice.colorCode || hasColorCode)) {
-                        return (
-                          <div
-                            key={choice.choiceId}
-                            className="relative group/color"
-                          >
-                            <div
-                              onClick={() => variantService.setOption(option.name, choice.name)}
-                              className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
-                                isSelected 
-                                  ? "border-brand-primary shadow-md" 
-                                  : "border-color-swatch hover:border-color-swatch-hover"
-                              }`}
-                              style={{
-                                backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
-                              }}
-                            />
-                            {/* Tooltip */}
-                            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                              {String(choice.name)}
-                            </div>
-                          </div>
-                        );
-                      } else {
-                        return (
-                          <button
-                            key={choice.choiceId}
-                            onClick={() => variantService.setOption(option.name, choice.name)}
-                            className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
-                              isSelected
-                                ? "bg-brand-primary text-content-primary border-brand-primary"
-                                : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
-                            }`}
-                          >
-                            {String(choice.name)}
-                          </button>
-                        );
-                      }
-                    })}
-                  {option.choicesSettings?.choices?.length > 3 && (
-                    <span className="text-content-muted text-xs">
-                      +{option.choicesSettings.choices.length - 3} more
+            {hasOptions && options.map((option: any) => (
+              <ProductVariantSelector.Option key={option.name} option={option}>
+                {({ name, choices, hasChoices }) => (
+                  <div className="space-y-1">
+                    <span className="text-content-secondary text-xs font-medium">
+                      {String(name)}:
                     </span>
-                  )}
-                </div>
-              </div>
+                    <div className="flex flex-wrap gap-1">
+                      {choices
+                        ?.slice(0, 3)
+                        .map((choice: any) => (
+                          <ProductVariantSelector.Choice
+                            key={choice.value || choice.description || choice.name}
+                            option={option}
+                            choice={choice}
+                          >
+                            {({
+                              value,
+                              isSelected,
+                              isVisible,
+                              isInStock,
+                              onSelect,
+                            }) => {
+                              if (!isVisible) return null;
+
+                              // Check if this is a color option and if choice has color data
+                              const isColorOption = String(name)
+                                .toLowerCase()
+                                .includes("color");
+                              const hasColorCode = choice.colorCode || choice.media?.image;
+
+                              if (isColorOption && (choice.colorCode || hasColorCode)) {
+                                return (
+                                  <div className="relative group/color">
+                                    <div
+                                      onClick={onSelect}
+                                      className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
+                                        isSelected 
+                                          ? "border-brand-primary shadow-md" 
+                                          : "border-color-swatch hover:border-color-swatch-hover"
+                                      } ${!isInStock ? "grayscale" : ""}`}
+                                      style={{
+                                        backgroundColor: choice.colorCode || "var(--theme-fallback-color)",
+                                      }}
+                                    />
+                                    {/* Tooltip */}
+                                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                      {String(value)}
+                                    </div>
+                                    {!isInStock && (
+                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <svg
+                                          className="w-3 h-3 text-status-error"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M6 18L18 6M6 6l12 12"
+                                          />
+                                        </svg>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              } else {
+                                return (
+                                  <div className="relative">
+                                    <button
+                                      onClick={onSelect}
+                                      className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
+                                        isSelected
+                                          ? "bg-brand-primary text-content-primary border-brand-primary"
+                                          : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
+                                      } ${!isInStock ? "opacity-50" : ""}`}
+                                    >
+                                      {String(value)}
+                                    </button>
+                                    {!isInStock && (
+                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <svg
+                                          className="w-3 h-3 text-status-error"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M6 18L18 6M6 6l12 12"
+                                          />
+                                        </svg>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              }
+                            }}
+                          </ProductVariantSelector.Choice>
+                        ))}
+                      {choices?.length > 3 && (
+                        <span className="text-content-muted text-xs">
+                          +{choices.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </ProductVariantSelector.Option>
             ))}
           </>
         )}
@@ -281,7 +329,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                           </div>
                         ) : (
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {products.map((product: productsV3.V3Product) => {
+                            {products.map((product) => {
                               // Create services for each product
                               const servicesMap = createServicesMap()
                                 .addService(ProductServiceDefinition, ProductService, { product })
@@ -291,7 +339,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                 .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
                                   media: product?.media?.itemsInfo?.items ?? [],
                                 });
-                              const servicesManager = createServicesManager(servicesMap);
+                              const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
                               return (
                                 <ServicesManagerProvider key={product._id} servicesManager={servicesManager}>
