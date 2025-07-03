@@ -2,6 +2,8 @@
 
 A comprehensive showcase of Wix platform features with working implementations, interactive examples, and comprehensive documentation. Built with Astro, React, and TypeScript.
 
+[Live Site](https://pwebsite-55ownftd-netanelg4.wix-host.com/)
+
 ## Features
 
 - **Members Management** - Complete authentication, profile management, and member data handling
