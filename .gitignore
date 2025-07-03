@@ -32,3 +32,8 @@ pnpm-debug.log*
 appointments-sub*
 
 .specstory/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
