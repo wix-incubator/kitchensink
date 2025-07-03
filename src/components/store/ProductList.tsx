@@ -66,16 +66,13 @@ export const ProductGridContent = ({
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
     const currentCartService = useService(CurrentCartServiceDefinition);
 
-    // Create services for each product - the SelectedVariantService will handle variant fetching
+    // Create services for each product - reuse the parent's CurrentCartService instance
     const servicesMap = createServicesMap()
       .addService(ProductServiceDefinition, ProductService, {
         product: product,
       })
-      .addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartService
-      )
+      // Use the existing cart service from parent context instead of creating new one
+      .addService(CurrentCartServiceDefinition, () => currentCartService)
       .addService(SelectedVariantServiceDefinition, SelectedVariantService)
       .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
         media: product?.media?.itemsInfo?.items ?? [],
