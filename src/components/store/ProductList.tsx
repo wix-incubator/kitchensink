@@ -5,6 +5,7 @@ import StoreHeader from "./StoreHeader";
 import { WixMediaImage } from "../../headless/media/components";
 import {
   FilteredCollection,
+  ProductVariantSelector,
   SelectedVariant,
 } from "../../headless/store/components";
 import { useNavigation } from "../NavigationContext";
@@ -164,69 +165,87 @@ export const ProductGridContent = ({
                 {title}
               </h3>
 
+              {/* <ProductVariantSelector.Options>
+                {({ options, hasOptions, selectedChoices }) => (
+                  console.log({ options }), (<>options</>)
+                )}
+              </ProductVariantSelector.Options> */}
               {/* Product Options */}
-              {product.options && product.options.length > 0 && (
-                <div className="mb-3 space-y-2">
-                  {product.options.map((option: any) => (
-                    <div key={option._id} className="space-y-1">
-                      <span className="text-content-secondary text-xs font-medium">
-                        {String(option.name)}:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {option.choicesSettings?.choices
-                          ?.slice(0, 3)
-                          .map((choice: any) => {
-                            // Check if this is a color option and if choice has color data
-                            const isColorOption = String(option.name)
-                              .toLowerCase()
-                              .includes("color");
-                            const hasColorCode =
-                              choice.colorCode || choice.media?.image;
-
-                            if (
-                              isColorOption &&
-                              (choice.colorCode || hasColorCode)
-                            ) {
-                              return (
-                                <div
-                                  key={choice.choiceId}
-                                  className="relative group/color"
-                                >
-                                  <div
-                                    className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
-                                    style={{
-                                      backgroundColor:
-                                        choice.colorCode ||
-                                        "var(--theme-fallback-color)",
-                                    }}
-                                  />
-                                  {/* Tooltip */}
-                                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                    {String(choice.name)}
-                                  </div>
-                                </div>
-                              );
-                            } else {
-                              return (
-                                <span
-                                  key={choice.choiceId}
-                                  className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium"
-                                >
-                                  {String(choice.name)}
+              <ProductVariantSelector.Options>
+                {({ options, hasOptions }) => (
+                  <>
+                    {hasOptions && (
+                      <div className="mb-3 space-y-2">
+                        {options.map((option: any) => (
+                          <ProductVariantSelector.Option
+                            key={option._id}
+                            option={option}
+                          >
+                            {({ name, choices }) => (
+                              <div className="space-y-1">
+                                <span className="text-content-secondary text-xs font-medium">
+                                  {String(name)}:
                                 </span>
-                              );
-                            }
-                          })}
-                        {option.choicesSettings?.choices?.length > 3 && (
-                          <span className="text-content-muted text-xs">
-                            +{option.choicesSettings.choices.length - 3} more
-                          </span>
-                        )}
+                                <div className="flex flex-wrap gap-1">
+                                  {choices?.slice(0, 3).map((choice: any) => (
+                                    <ProductVariantSelector.Choice
+                                      key={choice.choiceId}
+                                      option={option}
+                                      choice={choice}
+                                    >
+                                      {({ value }) => {
+                                        // Check if this is a color option and if choice has color data
+                                        const isColorOption = String(name)
+                                          .toLowerCase()
+                                          .includes("color");
+                                        const hasColorCode =
+                                          choice.colorCode || choice.media?.image;
+
+                                        if (
+                                          isColorOption &&
+                                          (choice.colorCode || hasColorCode)
+                                        ) {
+                                          return (
+                                            <div className="relative group/color">
+                                              <div
+                                                className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
+                                                style={{
+                                                  backgroundColor:
+                                                    choice.colorCode ||
+                                                    "var(--theme-fallback-color)",
+                                                }}
+                                              />
+                                              {/* Tooltip */}
+                                              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                {String(value)}
+                                              </div>
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <span className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium">
+                                              {String(value)}
+                                            </span>
+                                          );
+                                        }
+                                      }}
+                                    </ProductVariantSelector.Choice>
+                                  ))}
+                                  {choices?.length > 3 && (
+                                    <span className="text-content-muted text-xs">
+                                      +{choices.length - 3} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </ProductVariantSelector.Option>
+                        ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    )}
+                  </>
+                )}
+              </ProductVariantSelector.Options>
 
               {description && (
                 <p className="text-content-muted text-sm mb-3 line-clamp-2">
