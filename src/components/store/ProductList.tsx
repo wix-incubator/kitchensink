@@ -3,7 +3,10 @@ import { productsV3 } from "@wix/stores";
 import ProductFilters from "./ProductFilters";
 import StoreHeader from "./StoreHeader";
 import { WixMediaImage } from "../../headless/media/components";
-import { FilteredCollection } from "../../headless/store/components";
+import {
+  FilteredCollection,
+  SelectedVariant,
+} from "../../headless/store/components";
 import { useNavigation } from "../NavigationContext";
 import QuickViewModal from "./QuickViewModal";
 import {
@@ -233,47 +236,51 @@ export const ProductGridContent = ({
 
               <div className="mt-auto mb-3">
                 <div className="space-y-1">
-                  {compareAtPrice &&
-                  parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
-                    <>
-                      <div className="text-xl font-bold text-content-primary">
-                        {price}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm font-medium text-content-faded line-through">
-                          {compareAtPrice}
+                  <SelectedVariant.Price>
+                    {({ price, compareAtPrice }) =>
+                      compareAtPrice &&
+                      parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
+                        <>
+                          <div className="text-xl font-bold text-content-primary">
+                            {price}
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-medium text-content-faded line-through">
+                              {compareAtPrice}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {available ? (
+                                <span className="text-status-success text-sm">
+                                  In Stock
+                                </span>
+                              ) : (
+                                <span className="text-status-error text-sm">
+                                  Out of Stock
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <div className="text-xl font-bold text-content-primary">
+                            {price}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {available ? (
+                              <span className="text-status-success text-sm">
+                                In Stock
+                              </span>
+                            ) : (
+                              <span className="text-status-error text-sm">
+                                Out of Stock
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          {available ? (
-                            <span className="text-status-success text-sm">
-                              In Stock
-                            </span>
-                          ) : (
-                            <span className="text-status-error text-sm">
-                              Out of Stock
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-between">
-                      <div className="text-xl font-bold text-content-primary">
-                        {price}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {available ? (
-                          <span className="text-status-success text-sm">
-                            In Stock
-                          </span>
-                        ) : (
-                          <span className="text-status-error text-sm">
-                            Out of Stock
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                      )
+                    }
+                  </SelectedVariant.Price>
                 </div>
               </div>
 
