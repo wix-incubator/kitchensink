@@ -45,6 +45,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
   return (
     <button
+      data-testid="add-to-cart-button"
       onClick={onClick}
       disabled={disabled}
       className={`flex-1 text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${

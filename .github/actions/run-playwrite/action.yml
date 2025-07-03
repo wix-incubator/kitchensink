@@ -1,0 +1,76 @@
+name: 'Run Playwright Tests'
+description: 'Run Playwright Tests and store results'
+inputs:
+  deployment-url:
+    description: 'The deployment URL to test with'
+    required: true
+  githubToken:
+    description: 'GitHub Token'
+    required: true
+  prNumber:
+    description: 'Pull request ID (optional)'
+    required: false
+outputs:
+  conclusion:
+    description: 'E2E result'
+runs:
+  using: "composite"
+  steps:
+    - name: Run E2E Tests
+      id: playwright-e2e
+      run: npm run test
+      shell: bash
+      env:
+        PLAYWRIGHT_TEST_BASE_URL: ${{ inputs.deployment-url }}
+    - uses: actions/upload-artifact@v4
+      id: playwright-report-artifact
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 10
+    - uses: actions/github-script@v6
+      if: always()
+      with:
+        github-token: ${{ inputs.githubToken }}
+        script: |
+          const conclusion = '${{ steps.playwright-e2e.outcome }}';
+          const prNumber = '${{ inputs.prNumber }}';
+          const deploymentUrl = '${{ inputs.deployment-url }}';
+          
+          if (prNumber && conclusion) {
+            core.setOutput('conclusion', conclusion);
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const jobName = context.job;
+            const runId = context.runId;
+
+            const pullRequest = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber,
+            });
+            const checksForPr = await github.rest.checks.listForRef({
+              owner: owner,
+              repo: repo,
+              ref: pullRequest.data.head.ref,
+            });
+
+            // Create a comment with the artifact links on the pull request
+            const artifactLinks = [
+              `## ${conclusion === 'success' ? ':green_circle:' : ':red_circle:'} Playwright E2E`,
+              `| Name | Info    |`,
+              `|------|---------|`,
+              `| Summary | [Action Summary](https://github.com/${owner}/${repo}/actions/runs/${runId}/) |`,
+              `| Site URL | [${deploymentUrl}](${deploymentUrl}) |`,
+            ];
+            const comment = artifactLinks.join('\n');
+            github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pullRequest.data.number,
+              body: comment
+            }).catch((error) => {
+              console.warn('Error creating comment:', error, ' flow continues');
+            });
+          }

@@ -24,6 +24,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
     }) => (
       <div className="space-y-2">
         <textarea
+          data-testid="product-modifier-free-text-input"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={
@@ -64,7 +65,7 @@ export default function ProductDetails({
   
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12" data-testid="product-details">
         {/* Product Images */}
         <div className="space-y-4">
           {/* Main Image */}
@@ -212,7 +213,7 @@ export default function ProductDetails({
           <div>
             <Product.Name>
               {({ name }) => (
-                <h1 className="text-4xl font-bold text-content-primary mb-4">
+                <h1 className="text-4xl font-bold text-content-primary mb-4" data-testid="product-name">
                   {name}
                 </h1>
               )}
@@ -276,13 +277,13 @@ export default function ProductDetails({
             {({ options, hasOptions, selectedChoices }) => (
               <>
                 {hasOptions && (
-                  <div className="space-y-6">
+                  <div className="space-y-6" data-testid="product-options">
                     <h3 className="text-lg font-semibold text-content-primary">
                       Product Options
                     </h3>
 
                     {options.map((option: any) => (
-                      <div key={option.name}>
+                      <div key={option.name} data-testid="product-option">
                         <ProductVariantSelector.Option option={option}>
                           {({ name, choices, hasChoices }) => (
                             <>
@@ -324,6 +325,7 @@ export default function ProductDetails({
                                               // Color Swatch
                                               <div className="relative">
                                                 <button
+                                                  data-testid="product-modifier-choice-button"
                                                   onClick={onSelect}
                                                   title={value}
                                                   className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
@@ -364,6 +366,7 @@ export default function ProductDetails({
                                                 // Regular Text Button
                                                 <div className="relative">
                                                   <button
+                                                    data-testid="product-modifier-choice-button"
                                                     onClick={onSelect}
                                                     className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                                       isSelected
@@ -442,7 +445,7 @@ export default function ProductDetails({
                         modifier={modifier}
                       >
                         {({ name, type, choices, hasChoices, mandatory }) => (
-                          <div className="space-y-3">
+                          <div className="space-y-3" data-testid="product-modifiers">
                             <h4 className="text-md font-medium text-content-primary">
                               {name}{" "}
                               {mandatory && (
@@ -465,6 +468,7 @@ export default function ProductDetails({
                                       onSelect,
                                     }) => (
                                       <button
+                                        data-testid="product-modifier-choice-button"
                                         onClick={onSelect}
                                         className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                           isSelected
@@ -494,6 +498,7 @@ export default function ProductDetails({
                                   >
                                     {({ value, isSelected, onSelect }) => (
                                       <button
+                                        data-testid="product-modifier-choice-button"
                                         onClick={onSelect}
                                         className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                           isSelected
@@ -513,6 +518,7 @@ export default function ProductDetails({
                               <>
                                 {mandatory ? (
                                   <FreeTextInput
+                                    data-testid="product-modifier-free-text"
                                     modifier={modifier}
                                     name={name}
                                   />
@@ -728,6 +734,7 @@ export default function ProductDetails({
                     </span>
                   </div>
                   <Navigation
+                    data-testid="view-cart-button"
                     route="/cart"
                     className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
                   >

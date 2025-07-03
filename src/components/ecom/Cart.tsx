@@ -5,7 +5,7 @@ import { useNavigation } from "../NavigationContext";
 export default function CartContent() {
   const Navigation = useNavigation();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" data-testid="cart-summary">
       <div className="container mx-auto px-4 py-8">
         <CurrentCart.Content>
           {({ cart, isLoading }) => (
@@ -498,6 +498,7 @@ export default function CartContent() {
                                           )}
 
                                           <button
+                                            data-testid="proceed-to-checkout-button"
                                             onClick={onProceed}
                                             disabled={
                                               !canProceed || checkoutLoading

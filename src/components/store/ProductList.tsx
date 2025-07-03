@@ -204,7 +204,11 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                   slug,
                                   description,
                                 }) => (
-                                  <div className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative">
+                                  <div
+                                    data-testid="product-item"
+                                    data-product-available={available}
+                                    className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
+                                    >
                                     <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                                       {image ? (
                                         <WixMediaImage
@@ -407,6 +411,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
   
                                     <div className="flex gap-2">
                                       <Navigation
+                                        data-testid="view-product-button"
                                         route={`${productPageRoute}/${slug}`}
                                         className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
                                       >
