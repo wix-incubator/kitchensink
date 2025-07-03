@@ -28,6 +28,7 @@ interface ProductActionButtonsProps {
   isPreOrderEnabled: boolean;
   inStock: boolean;
   onShowSuccessMessage: (show: boolean) => void;
+  isQuickView?: boolean;
 }
 
 // Add to Cart / Pre Order Button Component
@@ -143,6 +144,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   isPreOrderEnabled,
   inStock,
   onShowSuccessMessage,
+  isQuickView = false,
 }) => {
   const handleAddToCart = async () => {
     await onAddToCart();
@@ -165,8 +167,8 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
         inStock={inStock}
       />
 
-      {/* Buy Now Button - Only show for in-stock items */}
-      {inStock && (
+      {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
+      {inStock && !isQuickView && (
         <BuyNowButton
           disabled={!canAddToCart || isLoading}
           isLoading={isLoading}

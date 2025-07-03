@@ -39,6 +39,38 @@
   opacity: 0;
 }
 
+/* Quick View Modal animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Mobile drawer fixes */
 @media (max-width: 640px) {
   .docs-drawer {
@@ -589,4 +621,14 @@
 .text-nav {
   background: var(--theme-btn-secondary);
   color: var(--theme-text-nav);
+}
+
+/* Quick View button hover effects */
+.bg-surface-hover {
+  background-color: var(--theme-bg-primary-10);
+}
+
+.product-card-quick-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }

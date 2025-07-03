@@ -16,6 +16,74 @@ interface NodeToWrap {
   componentPath: string;
 }
 
+// Mapping from source path patterns to documentation paths
+const COMPONENT_DOC_MAPPING: Record<string, string | Record<string, string>> = {
+  // Media components
+  "media/components": "product-media-gallery",
+
+  // Store components
+  "store/components": {
+    Product: "product",
+    ProductModifiers: "product-modifiers",
+    ProductVariantSelector: "product-variant-selector",
+    SelectedVariant: "selected-variant",
+    Collection: "collection",
+  },
+
+  // Ecom components
+  "ecom/components": {
+    CurrentCart: "current-cart",
+  },
+
+  // Member components
+  "members/components": {
+    CurrentMemberProfile: "current-member-profile",
+    ProfileUpdate: "profile-update",
+    PhotoUpload: "photo-upload",
+  },
+
+  // Booking components
+  "bookings/components": {
+    BookingServices: "bookings-services",
+    BookingAvailability: "booking-availability",
+    BookingSelection: "booking-selection",
+  },
+
+  // SEO components
+  "seo/components": {
+    SEO: "seo-tags",
+  },
+};
+
+function getDocumentationPath(
+  sourcePath: string,
+  componentName: string
+): string {
+  const normalizedPath = sourcePath.replace(/\\/g, "/").replace(/\.\.\//g, "");
+
+  // Check each mapping pattern
+  for (const [pattern, mapping] of Object.entries(COMPONENT_DOC_MAPPING)) {
+    if (normalizedPath.includes(pattern)) {
+      if (typeof mapping === "string") {
+        // Direct mapping for single component files
+        return `/docs/components/${mapping}`;
+      } else if (typeof mapping === "object") {
+        // Component-specific mapping
+        const baseComponentName = componentName.split(".")[0];
+        const docPath = mapping[baseComponentName];
+        if (docPath) {
+          return `/docs/components/${docPath}`;
+        }
+      }
+    }
+  }
+
+  // Fallback to original logic
+  const fileNameWithExt = path.basename(sourcePath);
+  const fileName = path.parse(fileNameWithExt).name;
+  return `/docs/components/${kebabCase(fileName)}`;
+}
+
 export function headlessDocsWrapper(): Plugin {
   return {
     name: "headless-docs-wrapper",
@@ -169,13 +237,9 @@ export function headlessDocsWrapper(): Plugin {
 
                   const componentProperty = componentId.split(".")[1] || "";
 
-                  const sourcePath = importInfo.source;
-                  const fileNameWithExt = path.basename(sourcePath);
-                  const fileName = path.parse(fileNameWithExt).name;
-
                   const componentName = componentId;
                   const componentPath =
-                    `/docs/components/${kebabCase(fileName)}` +
+                    getDocumentationPath(importInfo.source, componentName) +
                     (componentProperty
                       ? `#${componentProperty.toLowerCase()}`
                       : "");

@@ -295,19 +295,21 @@ const ProductInfo = ({
       </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
-        {({ inStock, status, availableQuantity, trackInventory }) => {
+        {({ inStock, status, availableQuantity, trackInventory, isPreOrderEnabled }) => {
           const isLowStock =
             trackInventory &&
             availableQuantity !== null &&
             availableQuantity <= 5 &&
             availableQuantity > 0;
-          const isPreorder = status && status.toLowerCase().includes("pre");
+
+          const isNotInStockButPreOrderEnabled = isPreOrderEnabled && !inStock;
+          
           return (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div
                   className={`w-2 h-2 rounded-full ${
-                    isPreorder
+                    isNotInStockButPreOrderEnabled
                       ? "bg-orange-500"
                       : inStock
                       ? isLowStock
@@ -318,7 +320,7 @@ const ProductInfo = ({
                 ></div>
                 <span
                   className={`text-sm ${
-                    isPreorder
+                    isNotInStockButPreOrderEnabled
                       ? "text-orange-400"
                       : inStock
                       ? isLowStock
@@ -335,7 +337,7 @@ const ProductInfo = ({
                   )}
                 </span>
               </div>
-              {isPreorder && (
+              {isNotInStockButPreOrderEnabled && (
                 <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-2">
                   <p className="text-orange-300 text-xs">
                     🚀 This item is available for pre-order and will ship when
@@ -395,27 +397,28 @@ const ProductInfo = ({
                                   isSelected,
                                   onSelect,
                                   isInStock,
+                                  isPreOrderEnabled,
                                 }) => (
                                   <>
                                     {isColorOption && hasColorCode ? (
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isInStock}
+                                          disabled={!isInStock && !isPreOrderEnabled}
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
                                               ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                              : isInStock
+                                              : (isInStock || isPreOrderEnabled)
                                               ? "border-white/30 hover:border-white/60 hover:scale-105"
                                               : "border-white/10 opacity-50 cursor-not-allowed"
-                                          } ${!isInStock ? "grayscale" : ""}`}
+                                          } ${(!isInStock && !isPreOrderEnabled) ? "grayscale" : ""}`}
                                           style={{
                                             backgroundColor:
                                               choice.colorCode || "#000000",
                                           }}
                                         />
-                                        {!isInStock && (
+                                        {(!isInStock && !isPreOrderEnabled) && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -437,18 +440,18 @@ const ProductInfo = ({
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isInStock}
+                                          disabled={!isInStock && !isPreOrderEnabled}
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
                                               ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                              : isInStock
+                                              : (isInStock || isPreOrderEnabled)
                                               ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
                                               : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                           }`}
                                         >
                                           {value}
                                         </button>
-                                        {!isInStock && (
+                                        {(!isInStock && !isPreOrderEnabled) && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"

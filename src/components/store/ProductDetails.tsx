@@ -51,14 +51,18 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 export default function ProductDetails({
   setShowSuccessMessage = () => {},
   cartUrl = "/cart",
+  isQuickView = false,
 }: {
   setShowSuccessMessage?: (show: boolean) => void;
   cartUrl?: string;
+  isQuickView?: boolean;
 }) {
   const Navigation = useNavigation();
   const variantService = useService(
     SelectedVariantServiceDefinition
   );
+
+  
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12" data-testid="product-details">
@@ -229,13 +233,27 @@ export default function ProductDetails({
                 </div>
               )}
             </SelectedVariant.Price>
+            {isQuickView && (
+              <SelectedVariant.SKU>
+                {({ sku }) => (
+                  sku && (
+                    <>
+                      <br />
+                      <div className="text-base text-content-muted">
+                        SKU: {sku}
+                      </div>
+                    </>
+                  )
+                )}
+              </SelectedVariant.SKU>
+            )}
           </div>
 
           {/* Product Description */}
           <Product.Description>
             {({ description, plainDescription }) => (
               <>
-                {plainDescription && (
+                {plainDescription && !isQuickView && (
                   <div>
                     <h3 className="text-xl font-semibold text-content-primary mb-3">
                       Description
@@ -296,12 +314,14 @@ export default function ProductDetails({
                                           isSelected,
                                           isVisible,
                                           isInStock,
+                                          isPreOrderEnabled,
                                           onSelect,
                                         }) => (
                                           <>
                                             {isColorOption &&
                                             isVisible &&
-                                            hasColorCode ? (
+                                            hasColorCode &&
+                                            (!isQuickView || isInStock) ? (
                                               // Color Swatch
                                               <div className="relative">
                                                 <button
@@ -313,7 +333,7 @@ export default function ProductDetails({
                                                       ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
                                                       : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
                                                   } ${
-                                                    !isInStock
+                                                    (!isInStock && !isPreOrderEnabled) && !isQuickView
                                                       ? "grayscale"
                                                       : ""
                                                   }`}
@@ -323,7 +343,7 @@ export default function ProductDetails({
                                                       "var(--theme-text-content-40)",
                                                   }}
                                                 />
-                                                {!isInStock && (
+                                                {(!isInStock && !isPreOrderEnabled) && !isQuickView && (
                                                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                     <svg
                                                       className="w-6 h-6 text-status-error"
@@ -342,7 +362,7 @@ export default function ProductDetails({
                                                 )}
                                               </div>
                                             ) : (
-                                              isVisible && (
+                                              isVisible && (!isQuickView || isInStock) && (
                                                 // Regular Text Button
                                                 <div className="relative">
                                                   <button
@@ -356,7 +376,7 @@ export default function ProductDetails({
                                                   >
                                                     {value}
                                                   </button>
-                                                  {!isInStock && (
+                                                  {(!isInStock && !isPreOrderEnabled) && !isQuickView && (
                                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                       <svg
                                                         className="w-6 h-6 text-status-error"
@@ -624,6 +644,7 @@ export default function ProductDetails({
                     isPreOrderEnabled={isPreOrderEnabled}
                     inStock={inStock}
                     onShowSuccessMessage={setShowSuccessMessage}
+                    isQuickView={isQuickView}
                   />
                 </div>
               )}
@@ -669,29 +690,32 @@ export default function ProductDetails({
           </div>
 
           {/* Product Details */}
-          <SelectedVariant.Details>
-            {({ sku, weight }) => (
-              <div className="border-t border-brand-light pt-8">
-                <h3 className="text-xl font-semibold text-content-primary mb-4">
-                  Product Details
-                </h3>
-                <div className="space-y-3 text-content-secondary">
-                  <div className="flex justify-between">
-                    <span>SKU:</span>
-                    <span>{sku ? sku : "N/A"}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Weight:</span>
-                    <span>{weight ? weight : "N/A"}</span>
+          {!isQuickView && (
+            <SelectedVariant.Details>
+              {({ sku, weight }) => (
+                <div className="border-t border-brand-light pt-8">
+                  <h3 className="text-xl font-semibold text-content-primary mb-4">
+                    Product Details
+                  </h3>
+                  <div className="space-y-3 text-content-secondary">
+                    <div className="flex justify-between">
+                      <span>SKU:</span>
+                      <span>{sku ? sku : "N/A"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Weight:</span>
+                      <span>{weight ? weight : "N/A"}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </SelectedVariant.Details>
+              )}
+            </SelectedVariant.Details>
+          )}
         </div>
       </div>
 
       {/* Current Cart Summary */}
+      {!isQuickView && 
       <div className="mt-12 pt-8 border-t border-brand-subtle">
         <CurrentCart.Summary>
           {({ subtotal, itemCount }) => (
@@ -734,7 +758,7 @@ export default function ProductDetails({
             </>
           )}
         </CurrentCart.Summary>
-      </div>
+      </div>}
     </>
   );
 }

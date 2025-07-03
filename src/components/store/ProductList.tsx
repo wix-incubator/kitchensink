@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { productsV3 } from "@wix/stores";
 import ProductFilters from "./ProductFilters";
 import StoreHeader from "./StoreHeader";
@@ -6,10 +7,24 @@ import {
   FilteredCollection,
 } from "../../headless/store/components";
 import { useNavigation } from "../NavigationContext";
+import QuickViewModal from "./QuickViewModal";
 
 
 export const ProductGridContent = ({productPageRoute}: {productPageRoute: string}) => {
     const Navigation = useNavigation();
+    const [quickViewProduct, setQuickViewProduct] = useState<productsV3.V3Product | null>(null);
+    const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+
+    const openQuickView = (product: productsV3.V3Product) => {
+      setQuickViewProduct(product);
+      setIsQuickViewOpen(true);
+    };
+
+    const closeQuickView = () => {
+      setIsQuickViewOpen(false);
+      setTimeout(() => setQuickViewProduct(null), 300); // Allow animation to complete
+    };
+
     return (
       <FilteredCollection.Provider>
         <FilteredCollection.Grid>
@@ -192,7 +207,7 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                   <div
                                     data-testid="product-item"
                                     data-product-available={available}
-                                    className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col"
+                                    className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
                                     >
                                     <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                                       {image ? (
@@ -217,6 +232,39 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                           </svg>
                                         </div>
                                       )}
+
+                                      {/* Quick View Button - appears on hover */}
+                                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
+                                        <button
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            openQuickView(product);
+                                          }}
+                                          className="bg-gradient-primary text-white px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium bg-gradient-primary-hover transition-all duration-200 whitespace-nowrap"
+                                        >
+                                          <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                            />
+                                          </svg>
+                                          Quick View
+                                        </button>
+                                      </div>
                                     </div>
   
                                     {product.ribbon?.name && (
@@ -391,6 +439,16 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                         )}
                       </div>
                     </div>
+
+                    {/* Quick View Modal */}
+                    {quickViewProduct && (
+                      <QuickViewModal
+                        product={quickViewProduct}
+                        isOpen={isQuickViewOpen}
+                        onClose={closeQuickView}
+                        productPageRoute={productPageRoute}
+                      />
+                    )}
                   </div>
                 );
               }}

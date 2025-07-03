@@ -148,6 +148,18 @@ const buildSearchOptions = (
           { fieldName: "actualPriceRange.minValue.amount", order: "DESC" },
         ];
         break;
+      case "recommended":
+        searchOptions.search.sort = [
+          { 
+            fieldName: "allCategoriesInfo.categories.index", 
+            selectItemsBy: [
+              {
+                "allCategoriesInfo.categories.id": selectedCategory
+              }
+            ]
+          }
+        ];
+        break;
     }
   }
 
@@ -168,6 +180,7 @@ export const CollectionService = implementService.withConfig<{
   const collectionFilters = getService(FilterServiceDefinition);
   const categoryService = getService(CategoryServiceDefinition);
   const sortService = getService(SortServiceDefinition);
+  
   const hasMoreProducts: Signal<boolean> = signalsService.signal(
     (config.initialHasMore ?? true) as any
   );
@@ -263,6 +276,8 @@ export const CollectionService = implementService.withConfig<{
       const selectedCategory = categoryService.selectedCategory.get();
       const sortBy = sortService.currentSort.get();
       const categories = config.categories || categoryService.categories.get();
+
+      // Use regular search for all sorting options including recommended
       const searchOptions = buildSearchOptions(
         filters,
         selectedCategory,
@@ -389,6 +404,7 @@ function parseURLParams(
     name_desc: "name-desc",
     price_asc: "price-asc",
     price_desc: "price-desc",
+    recommended: "recommended",
   };
   const initialSort = sortMap[urlParams.sort as string] || ("" as SortBy);
 
