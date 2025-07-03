@@ -145,28 +145,6 @@ const ProductItemWithVariants = ({
     },
   };
 
-  // Debug logging
-  console.log("ProductWithVariants for service:", {
-    productId: productWithVariants._id,
-    originalOptionsCount: product.options?.length || 0,
-    enhancedOptionsCount: enhancedOptions.length,
-    finalOptionsCount: productWithVariants.options?.length || 0,
-    options: productWithVariants.options?.map((o) => ({
-      name: o.name,
-      choicesCount: o.choicesSettings?.choices?.length || 0,
-    })),
-  });
-
-  // Full options structure debug
-  console.log(
-    "Full enhanced options structure:",
-    JSON.stringify(enhancedOptions, null, 2)
-  );
-  console.log(
-    "Full productWithVariants.options:",
-    JSON.stringify(productWithVariants.options, null, 2)
-  );
-
   // Create services for each product with enhanced variant data
   const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService, {
@@ -186,13 +164,9 @@ const ProductItemWithVariants = ({
   // Force service initialization with enhanced product data
   useEffect(() => {
     const productService = servicesManager.getService(ProductServiceDefinition);
-    const selectedVariantService = servicesManager.getService(
-      SelectedVariantServiceDefinition
-    );
 
     // Ensure the product service has the enhanced product data
     if (productService && productWithVariants) {
-      console.log("Updating ProductService with enhanced data...");
       productService.product.set(productWithVariants);
     }
   }, [servicesManager, productWithVariants, variants.length]);
@@ -247,164 +221,155 @@ const ProductItemWithVariants = ({
               {title}
             </h3>
 
-            {/* Debug Service State */}
-            <div className="mb-2 text-xs text-content-muted">
-              <ProductVariantSelector.Options>
-                {({ options, hasOptions }) => (
-                  <div>
-                    Service Debug: options={options?.length || 0}, hasOptions=
-                    {hasOptions ? "true" : "false"}
-                    <br />
-                    Options details:{" "}
-                    {JSON.stringify(
-                      options?.slice(0, 2).map((o) => ({
-                        name: o.name,
-                        choicesCount: o.choicesSettings?.choices?.length || 0,
-                      })),
-                      null,
-                      2
-                    )}
-                  </div>
-                )}
-              </ProductVariantSelector.Options>
-            </div>
-
             {/* Interactive Product Variant Selection */}
             {enhancedOptions && enhancedOptions.length > 0 && (
-              <div className="mb-3 space-y-2">
+              <div className="mb-4 space-y-3">
                 <ProductVariantSelector.Options>
                   {({ options, hasOptions, selectedChoices }) => (
                     <>
-                      {/* Debug info */}
-                      <div className="mb-2 text-xs text-content-muted">
-                        Service options: {options?.length || 0}, hasOptions:{" "}
-                        {hasOptions ? "true" : "false"}
-                      </div>
-
                       {hasOptions &&
-                        options.slice(0, 2).map((option: any) => (
+                        options.map((option: any) => (
                           <ProductVariantSelector.Option
                             key={option.name}
                             option={option}
                           >
                             {({ name, choices, hasChoices }) => (
-                              <div className="space-y-1">
-                                <span className="text-content-secondary text-xs font-medium">
-                                  {String(name)}:
-                                </span>
-                                <div className="flex flex-wrap gap-1">
-                                  {hasChoices &&
-                                    choices?.slice(0, 3).map((choice: any) => (
-                                      <ProductVariantSelector.Choice
-                                        key={
-                                          choice.value ||
-                                          choice.name ||
-                                          choice.choiceId
-                                        }
-                                        option={option}
-                                        choice={choice}
-                                      >
-                                        {({
-                                          value,
-                                          isSelected,
-                                          isVisible,
-                                          isInStock,
-                                          onSelect,
-                                        }) => {
-                                          // Hide non-visible choices
-                                          if (!isVisible) return null;
+                              <div className="space-y-2">
+                                <h4 className="text-content-primary text-sm font-medium">
+                                  {String(name)}
+                                </h4>
+                                {hasChoices && (
+                                  <div className="flex flex-wrap gap-2">
+                                    {choices.map((choice: any) => {
+                                      const isColorOption =
+                                        String(name)
+                                          .toLowerCase()
+                                          .includes("color") ||
+                                        option.optionRenderType ===
+                                          "SWATCH_CHOICES";
 
-                                          const isColorOption =
-                                            String(name)
-                                              .toLowerCase()
-                                              .includes("color") ||
-                                            option.optionRenderType ===
-                                              "SWATCH_CHOICES";
+                                      return (
+                                        <ProductVariantSelector.Choice
+                                          key={choice.choiceId || choice.name}
+                                          option={option}
+                                          choice={choice}
+                                        >
+                                          {({
+                                            value,
+                                            isSelected,
+                                            isVisible,
+                                            isInStock,
+                                            onSelect,
+                                          }) => {
+                                            // Hide non-visible choices
+                                            if (!isVisible) return null;
 
-                                          if (
-                                            isColorOption &&
-                                            choice.colorCode
-                                          ) {
+                                            if (
+                                              isColorOption &&
+                                              choice.colorCode
+                                            ) {
+                                              return (
+                                                <div className="relative">
+                                                  <button
+                                                    onClick={onSelect}
+                                                    className={`w-8 h-8 rounded-full border-4 transition-all duration-200 ${
+                                                      isSelected
+                                                        ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
+                                                        : "border-brand-light hover:border-brand-medium hover:scale-105"
+                                                    }`}
+                                                    style={{
+                                                      backgroundColor:
+                                                        choice.colorCode,
+                                                    }}
+                                                    title={`${String(
+                                                      value || choice.name
+                                                    )} ${
+                                                      !isInStock
+                                                        ? "(Out of Stock)"
+                                                        : ""
+                                                    }`}
+                                                  />
+                                                  {!isInStock && (
+                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                      <svg
+                                                        className="w-4 h-4 text-status-error"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                      >
+                                                        <path
+                                                          strokeLinecap="round"
+                                                          strokeLinejoin="round"
+                                                          strokeWidth="2"
+                                                          d="M6 18L18 6M6 6l12 12"
+                                                        />
+                                                      </svg>
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              );
+                                            }
+
                                             return (
-                                              <div className="relative group/color">
-                                                <div
+                                              <div className="relative">
+                                                <button
                                                   onClick={onSelect}
-                                                  className={`w-6 h-6 rounded-full border-2 cursor-pointer transition-all ${
+                                                  disabled={!isInStock}
+                                                  className={`px-3 py-1.5 border rounded-lg transition-all duration-200 text-sm ${
                                                     isSelected
-                                                      ? "border-brand-primary ring-2 ring-brand-primary ring-opacity-30 scale-110"
-                                                      : "border-color-swatch hover:border-brand-primary"
+                                                      ? "product-option-active"
+                                                      : "product-option-inactive"
                                                   } ${
                                                     !isInStock
-                                                      ? "opacity-50"
+                                                      ? "opacity-50 cursor-not-allowed"
                                                       : ""
                                                   }`}
-                                                  style={{
-                                                    backgroundColor:
-                                                      choice.colorCode,
-                                                  }}
-                                                  title={`${String(
-                                                    value || choice.name
-                                                  )} ${
-                                                    !isInStock
-                                                      ? "(Out of Stock)"
-                                                      : ""
-                                                  }`}
-                                                />
+                                                >
+                                                  {String(value || choice.name)}
+                                                </button>
                                                 {!isInStock && (
-                                                  <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div className="w-0.5 h-6 bg-status-error rotate-45 rounded-full"></div>
+                                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <svg
+                                                      className="w-4 h-4 text-status-error"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      stroke="currentColor"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                      />
+                                                    </svg>
                                                   </div>
                                                 )}
-                                                {/* Tooltip */}
-                                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                  {String(value || choice.name)}
-                                                </div>
                                               </div>
                                             );
-                                          }
-
-                                          return (
-                                            <button
-                                              onClick={onSelect}
-                                              disabled={!isInStock}
-                                              className={`px-2 py-1 text-xs rounded border transition-all ${
-                                                isSelected
-                                                  ? "bg-brand-primary text-content-primary border-brand-primary scale-105"
-                                                  : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
-                                              } ${
-                                                !isInStock
-                                                  ? "opacity-50 cursor-not-allowed"
-                                                  : "cursor-pointer"
-                                              }`}
-                                              title={
-                                                !isInStock ? "Out of Stock" : ""
-                                              }
-                                            >
-                                              {String(value || choice.name)}
-                                              {!isInStock && (
-                                                <span className="ml-1 text-status-error">
-                                                  ✕
-                                                </span>
-                                              )}
-                                            </button>
-                                          );
-                                        }}
-                                      </ProductVariantSelector.Choice>
-                                    ))}
-                                  {choices?.length > 3 && (
-                                    <span className="text-content-muted text-xs">
-                                      +{choices.length - 3} more
-                                    </span>
-                                  )}
-                                </div>
+                                          }}
+                                        </ProductVariantSelector.Choice>
+                                      );
+                                    })}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </ProductVariantSelector.Option>
                         ))}
-                      {options.length > 2 && (
-                        <div className="text-content-muted text-xs">
-                          +{options.length - 2} more options
-                        </div>
+
+                      {/* Reset Button - shows when there are selections */}
+                      {Object.keys(selectedChoices).length > 0 && (
+                        <button
+                          onClick={() => {
+                            const variantService = servicesManager.getService(
+                              SelectedVariantServiceDefinition
+                            );
+                            variantService.resetSelections();
+                          }}
+                          className="text-xs text-brand-primary hover:text-brand-light transition-colors"
+                        >
+                          Reset Selections
+                        </button>
                       )}
                     </>
                   )}
@@ -418,24 +383,6 @@ const ProductItemWithVariants = ({
                 <div className="text-xs text-content-muted animate-pulse">
                   Loading variants...
                 </div>
-              </div>
-            )}
-
-            {/* Debug info - remove in production */}
-            {variants.length > 0 && (
-              <div className="mb-2 text-xs text-content-muted">
-                ✓ {variants.length} variants loaded, {enhancedOptions.length}{" "}
-                options built
-                <br />
-                Enhanced options:{" "}
-                {JSON.stringify(
-                  enhancedOptions.map((o) => ({
-                    name: o.name,
-                    choices: o.choicesSettings?.choices?.length || 0,
-                  })),
-                  null,
-                  2
-                )}
               </div>
             )}
 
