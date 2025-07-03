@@ -313,10 +313,8 @@ export const ProductGridContent = ({
               <div className="mt-auto mb-3">
                 <div className="space-y-1">
                   <SelectedVariant.Price>
-                    {({ price, compareAtPrice }) =>
-                      {
-                        console.log({price});
-                        return compareAtPrice &&
+                    {({ price, compareAtPrice }) => {
+                      return compareAtPrice &&
                         parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
                           <>
                             <div className="text-xl font-bold text-content-primary">
@@ -326,17 +324,21 @@ export const ProductGridContent = ({
                               <div className="text-sm font-medium text-content-faded line-through">
                                 {compareAtPrice}
                               </div>
-                              <div className="flex items-center gap-2">
-                                {available ? (
-                                  <span className="text-status-success text-sm">
-                                    In Stock
-                                  </span>
-                                ) : (
-                                  <span className="text-status-error text-sm">
-                                    Out of Stock
-                                  </span>
+                              <SelectedVariant.Stock>
+                                {({ inStock, isPreOrderEnabled, status }) => (
+                                  <div className="flex items-center gap-2">
+                                    <span className={`text-sm ${
+                                      inStock 
+                                        ? "text-status-success" 
+                                        : isPreOrderEnabled 
+                                        ? "text-status-warning" 
+                                        : "text-status-error"
+                                    }`}>
+                                      {status}
+                                    </span>
+                                  </div>
                                 )}
-                              </div>
+                              </SelectedVariant.Stock>
                             </div>
                           </>
                         ) : (
@@ -344,21 +346,24 @@ export const ProductGridContent = ({
                             <div className="text-xl font-bold text-content-primary">
                               {price}
                             </div>
-                            <div className="flex items-center gap-2">
-                              {available ? (
-                                <span className="text-status-success text-sm">
-                                  In Stock
-                                </span>
-                              ) : (
-                                <span className="text-status-error text-sm">
-                                  Out of Stock
-                                </span>
+                            <SelectedVariant.Stock>
+                              {({ inStock, isPreOrderEnabled, status }) => (
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-sm ${
+                                    inStock 
+                                      ? "text-status-success" 
+                                      : isPreOrderEnabled 
+                                      ? "text-status-warning" 
+                                      : "text-status-error"
+                                  }`}>
+                                    {status}
+                                  </span>
+                                </div>
                               )}
-                            </div>
+                            </SelectedVariant.Stock>
                           </div>
-                        )
-                      }
-                    }
+                        );
+                    }}
                   </SelectedVariant.Price>
                 </div>
               </div>

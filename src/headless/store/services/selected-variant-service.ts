@@ -21,8 +21,6 @@ const fetchVariantsByProductId = async (
       .eq("productData.productId", productId)
       .find();
 
-    console.log({ items }); 
-
     return items.map(({optionChoices, ...rest}) => ({
       ...rest,
       choices: optionChoices as productsV3.Variant["choices"],

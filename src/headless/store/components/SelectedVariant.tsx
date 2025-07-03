@@ -112,3 +112,98 @@ export const SKU = (props: SKUProps) => {
     sku,
   });
 };
+
+/**
+ * Props for Stock headless component
+ */
+export interface StockProps {
+  /** Render prop function that receives stock data */
+  children: (props: StockRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Stock component
+ */
+export interface StockRenderProps {
+  /** Whether variant is in stock */
+  inStock: boolean;
+  /** Whether pre-order is enabled */
+  isPreOrderEnabled: boolean;
+  /** Stock status message */
+  status: string;
+  /** Available quantity */
+  availableQuantity: number | null;
+  /** Current variant id */
+  currentVariantId: string | null;
+}
+
+/**
+ * Headless component for product stock status
+ */
+export const Stock = (props: StockProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+  const productService = useService(
+    ProductServiceDefinition
+  ) as ServiceAPI<typeof ProductServiceDefinition>;
+
+  const selectedChoices = variantService.selectedChoices.get();
+  const hasSelections = Object.keys(selectedChoices).length > 0;
+
+  // Get variant-specific availability
+  const variantInStock = variantService.isInStock.get();
+  const variantPreOrderEnabled = variantService.isPreOrderEnabled.get();
+  const currentVariantId = variantService.selectedVariantId.get();
+  const availableQuantity = variantService.quantityAvailable.get();
+
+  // Get general product availability
+  const product = productService.product.get();
+  const productAvailabilityStatus = product?.inventory?.availabilityStatus;
+  const generalPreOrderEnabled = product?.inventory?.preorderStatus === "ENABLED";
+
+  // Determine status based on whether selections are made
+  let inStock: boolean;
+  let isPreOrderEnabled: boolean;
+  let status: string;
+
+  if (hasSelections) {
+    // Use variant-specific availability
+    inStock = variantInStock;
+    isPreOrderEnabled = variantPreOrderEnabled;
+    
+    if (inStock) {
+      status = "In Stock";
+    } else if (isPreOrderEnabled) {
+      status = "Available for Pre-Order";
+    } else {
+      status = "Out of Stock";
+    }
+  } else {
+    // Use general product availability
+    isPreOrderEnabled = generalPreOrderEnabled;
+    
+         if (productAvailabilityStatus === "IN_STOCK") {
+       inStock = true;
+       status = "In Stock";
+     } else if (productAvailabilityStatus === "PARTIALLY_OUT_OF_STOCK") {
+       inStock = false;
+       isPreOrderEnabled = true; // Force orange styling for partially out of stock
+       status = "Partially out of stock";
+     } else if (isPreOrderEnabled) {
+       inStock = false;
+       status = "Available for Pre-Order";
+     } else {
+       inStock = false;
+       status = "Out of Stock";
+     }
+  }
+
+  return props.children({
+    inStock,
+    availableQuantity: hasSelections ? availableQuantity : null, // Only show quantity for specific variants
+    isPreOrderEnabled,
+    currentVariantId: hasSelections ? currentVariantId : null,
+    status,
+  });
+};
