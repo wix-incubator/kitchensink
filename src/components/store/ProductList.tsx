@@ -6,6 +6,30 @@ import { WixMediaImage } from "../../headless/media/components";
 import { FilteredCollection } from "../../headless/store/components";
 import { useNavigation } from "../NavigationContext";
 import QuickViewModal from "./QuickViewModal";
+import {
+  createServicesMap,
+  createServicesManager,
+} from "@wix/services-manager";
+import {
+  ServicesManagerProvider,
+  useService,
+} from "@wix/services-manager-react";
+import {
+  CurrentCartService,
+  CurrentCartServiceDefinition,
+} from "../../headless/ecom/services/current-cart-service";
+import {
+  ProductService,
+  ProductServiceDefinition,
+} from "../../headless/store/services/product-service";
+import {
+  SelectedVariantService,
+  SelectedVariantServiceDefinition,
+} from "../../headless/store/services/selected-variant-service";
+import {
+  MediaGalleryService,
+  MediaGalleryServiceDefinition,
+} from "../../headless/media/services/media-gallery-service";
 
 export const ProductGridContent = ({
   productPageRoute,
@@ -28,174 +52,214 @@ export const ProductGridContent = ({
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
+    const currentCartService = useService(CurrentCartServiceDefinition);
+
+    // Create services for each product - the SelectedVariantService will handle variant fetching
+    const servicesMap = createServicesMap()
+      .addService(ProductServiceDefinition, ProductService, {
+        product: product,
+      })
+      .addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartService
+      )
+      .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+      .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
+        media: product?.media?.itemsInfo?.items ?? [],
+      });
+    const [servicesManager] = useState(() =>
+      createServicesManager(servicesMap)
+    );
+
     console.log({ product });
+
     return (
-      <FilteredCollection.Item key={product._id} product={product}>
-        {({
-          title,
-          image,
-          price,
-          compareAtPrice,
-          available,
-          slug,
-          description,
-        }) => (
-          <div
-            data-testid="product-item"
-            data-product-available={available}
-            className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
-          >
-            <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
-              {image ? (
-                <WixMediaImage
-                  media={{ image: image }}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <svg
-                    className="w-12 h-12 text-content-subtle"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+      <ServicesManagerProvider servicesManager={servicesManager}>
+        <FilteredCollection.Item key={product._id} product={product}>
+          {({
+            title,
+            image,
+            price,
+            compareAtPrice,
+            available,
+            slug,
+            description,
+          }) => (
+            <div
+              data-testid="product-item"
+              data-product-available={available}
+              className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
+            >
+              <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
+                {image ? (
+                  <WixMediaImage
+                    media={{ image: image }}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg
+                      className="w-12 h-12 text-content-subtle"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+
+                {/* Quick View Button - appears on hover */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      openQuickView(product);
+                    }}
+                    className="bg-gradient-primary text-white px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium bg-gradient-primary-hover transition-all duration-200 whitespace-nowrap"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    Quick View
+                  </button>
+                </div>
+              </div>
+
+              {product.ribbon?.name && (
+                <div className="absolute top-2 left-2">
+                  <span className="bg-gradient-ribbon text-content-primary text-xs px-2 py-1 rounded-full font-medium">
+                    {product.ribbon.name}
+                  </span>
                 </div>
               )}
 
-              {/* Quick View Button - appears on hover */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openQuickView(product);
-                  }}
-                  className="bg-gradient-primary text-white px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium bg-gradient-primary-hover transition-all duration-200 whitespace-nowrap"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                  Quick View
-                </button>
-              </div>
-            </div>
+              <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
+                {title}
+              </h3>
 
-            {product.ribbon?.name && (
-              <div className="absolute top-2 left-2">
-                <span className="bg-gradient-ribbon text-content-primary text-xs px-2 py-1 rounded-full font-medium">
-                  {product.ribbon.name}
-                </span>
-              </div>
-            )}
+              {/* Product Options */}
+              {product.options && product.options.length > 0 && (
+                <div className="mb-3 space-y-2">
+                  {product.options.map((option: any) => (
+                    <div key={option._id} className="space-y-1">
+                      <span className="text-content-secondary text-xs font-medium">
+                        {String(option.name)}:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {option.choicesSettings?.choices
+                          ?.slice(0, 3)
+                          .map((choice: any) => {
+                            // Check if this is a color option and if choice has color data
+                            const isColorOption = String(option.name)
+                              .toLowerCase()
+                              .includes("color");
+                            const hasColorCode =
+                              choice.colorCode || choice.media?.image;
 
-            <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
-              {title}
-            </h3>
-
-            {/* Product Options */}
-            {product.options && product.options.length > 0 && (
-              <div className="mb-3 space-y-2">
-                {product.options.map((option: any) => (
-                  <div key={option._id} className="space-y-1">
-                    <span className="text-content-secondary text-xs font-medium">
-                      {String(option.name)}:
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {option.choicesSettings?.choices
-                        ?.slice(0, 3)
-                        .map((choice: any) => {
-                          // Check if this is a color option and if choice has color data
-                          const isColorOption = String(option.name)
-                            .toLowerCase()
-                            .includes("color");
-                          const hasColorCode =
-                            choice.colorCode || choice.media?.image;
-
-                          if (
-                            isColorOption &&
-                            (choice.colorCode || hasColorCode)
-                          ) {
-                            return (
-                              <div
-                                key={choice.choiceId}
-                                className="relative group/color"
-                              >
+                            if (
+                              isColorOption &&
+                              (choice.colorCode || hasColorCode)
+                            ) {
+                              return (
                                 <div
-                                  className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
-                                  style={{
-                                    backgroundColor:
-                                      choice.colorCode ||
-                                      "var(--theme-fallback-color)",
-                                  }}
-                                />
-                                {/* Tooltip */}
-                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                  {String(choice.name)}
+                                  key={choice.choiceId}
+                                  className="relative group/color"
+                                >
+                                  <div
+                                    className="w-6 h-6 rounded-full border-2 border-color-swatch hover:border-color-swatch-hover transition-colors cursor-pointer"
+                                    style={{
+                                      backgroundColor:
+                                        choice.colorCode ||
+                                        "var(--theme-fallback-color)",
+                                    }}
+                                  />
+                                  {/* Tooltip */}
+                                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                    {String(choice.name)}
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <span
-                                key={choice.choiceId}
-                                className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium"
-                              >
-                                {String(choice.name)}
-                              </span>
-                            );
-                          }
-                        })}
-                      {option.choicesSettings?.choices?.length > 3 && (
-                        <span className="text-content-muted text-xs">
-                          +{option.choicesSettings.choices.length - 3} more
-                        </span>
-                      )}
+                              );
+                            } else {
+                              return (
+                                <span
+                                  key={choice.choiceId}
+                                  className="inline-flex items-center px-2 py-1 bg-surface-primary text-content-secondary text-xs rounded border border-brand-medium"
+                                >
+                                  {String(choice.name)}
+                                </span>
+                              );
+                            }
+                          })}
+                        {option.choicesSettings?.choices?.length > 3 && (
+                          <span className="text-content-muted text-xs">
+                            +{option.choicesSettings.choices.length - 3} more
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            {description && (
-              <p className="text-content-muted text-sm mb-3 line-clamp-2">
-                {description}
-              </p>
-            )}
+              {description && (
+                <p className="text-content-muted text-sm mb-3 line-clamp-2">
+                  {description}
+                </p>
+              )}
 
-            <div className="mt-auto mb-3">
-              <div className="space-y-1">
-                {compareAtPrice &&
-                parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
-                  <>
-                    <div className="text-xl font-bold text-content-primary">
-                      {price}
-                    </div>
+              <div className="mt-auto mb-3">
+                <div className="space-y-1">
+                  {compareAtPrice &&
+                  parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
+                    <>
+                      <div className="text-xl font-bold text-content-primary">
+                        {price}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium text-content-faded line-through">
+                          {compareAtPrice}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {available ? (
+                            <span className="text-status-success text-sm">
+                              In Stock
+                            </span>
+                          ) : (
+                            <span className="text-status-error text-sm">
+                              Out of Stock
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
                     <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium text-content-faded line-through">
-                        {compareAtPrice}
+                      <div className="text-xl font-bold text-content-primary">
+                        {price}
                       </div>
                       <div className="flex items-center gap-2">
                         {available ? (
@@ -209,53 +273,36 @@ export const ProductGridContent = ({
                         )}
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="text-xl font-bold text-content-primary">
-                      {price}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {available ? (
-                        <span className="text-status-success text-sm">
-                          In Stock
-                        </span>
-                      ) : (
-                        <span className="text-status-error text-sm">
-                          Out of Stock
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Navigation
+                  data-testid="view-product-button"
+                  route={`${productPageRoute}/${slug}`}
+                  className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
+                >
+                  View Product
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Navigation>
               </div>
             </div>
-
-            <div className="flex gap-2">
-              <Navigation
-                data-testid="view-product-button"
-                route={`${productPageRoute}/${slug}`}
-                className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
-              >
-                View Product
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </Navigation>
-            </div>
-          </div>
-        )}
-      </FilteredCollection.Item>
+          )}
+        </FilteredCollection.Item>
+      </ServicesManagerProvider>
     );
   };
 
