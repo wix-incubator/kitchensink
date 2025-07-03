@@ -50,7 +50,7 @@ const fetchedVariants = {
       ],
       price: {
         actualPrice: {
-          amount: "0",
+          amount: "110",
         },
       },
       physicalProperties: {},
