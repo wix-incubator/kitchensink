@@ -181,11 +181,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       );
     };
 
-    const getDefaultVariant = (): productsV3.Variant | null => {
-      const variantsList = variants.get();
-      return variantsList[0] || null;
-    };
-
     const updateVariantInventoryQuantities = async (
       variantId: string | null | undefined,
       inStock: boolean,
@@ -357,17 +352,13 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
       signalsService.computed<any>((() => {
-        const prod = v3Product.get();
         const choices = selectedChoices.get();
         const variantsList = variants.get();
 
-        // Use variants from product if available, otherwise use variants from API
-        const availableVariants = prod?.variantsInfo?.variants || variantsList;
-        
-        if (!availableVariants || availableVariants.length === 0) return null;
+        if (!variantsList || variantsList.length === 0) return null;
 
         return (
-          availableVariants.find((variant: any) => {
+          variantsList.find((variant: any) => {
             const variantChoices = processVariantChoices(variant);
 
             if (
