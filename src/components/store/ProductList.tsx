@@ -145,6 +145,28 @@ const ProductItemWithVariants = ({
     },
   };
 
+  // Debug logging
+  console.log("ProductWithVariants for service:", {
+    productId: productWithVariants._id,
+    originalOptionsCount: product.options?.length || 0,
+    enhancedOptionsCount: enhancedOptions.length,
+    finalOptionsCount: productWithVariants.options?.length || 0,
+    options: productWithVariants.options?.map((o) => ({
+      name: o.name,
+      choicesCount: o.choicesSettings?.choices?.length || 0,
+    })),
+  });
+
+  // Full options structure debug
+  console.log(
+    "Full enhanced options structure:",
+    JSON.stringify(enhancedOptions, null, 2)
+  );
+  console.log(
+    "Full productWithVariants.options:",
+    JSON.stringify(productWithVariants.options, null, 2)
+  );
+
   // Create services for each product with enhanced variant data
   const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService, {
@@ -160,6 +182,20 @@ const ProductItemWithVariants = ({
       media: product?.media?.itemsInfo?.items ?? [],
     });
   const [servicesManager] = useState(() => createServicesManager(servicesMap));
+
+  // Force service initialization with enhanced product data
+  useEffect(() => {
+    const productService = servicesManager.getService(ProductServiceDefinition);
+    const selectedVariantService = servicesManager.getService(
+      SelectedVariantServiceDefinition
+    );
+
+    // Ensure the product service has the enhanced product data
+    if (productService && productWithVariants) {
+      console.log("Updating ProductService with enhanced data...");
+      productService.product.set(productWithVariants);
+    }
+  }, [servicesManager, productWithVariants, variants.length]);
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
@@ -210,6 +246,28 @@ const ProductItemWithVariants = ({
             <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
               {title}
             </h3>
+
+            {/* Debug Service State */}
+            <div className="mb-2 text-xs text-content-muted">
+              <ProductVariantSelector.Options>
+                {({ options, hasOptions }) => (
+                  <div>
+                    Service Debug: options={options?.length || 0}, hasOptions=
+                    {hasOptions ? "true" : "false"}
+                    <br />
+                    Options details:{" "}
+                    {JSON.stringify(
+                      options?.slice(0, 2).map((o) => ({
+                        name: o.name,
+                        choicesCount: o.choicesSettings?.choices?.length || 0,
+                      })),
+                      null,
+                      2
+                    )}
+                  </div>
+                )}
+              </ProductVariantSelector.Options>
+            </div>
 
             {/* Interactive Product Variant Selection */}
             {enhancedOptions && enhancedOptions.length > 0 && (
