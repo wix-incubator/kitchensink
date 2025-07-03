@@ -704,7 +704,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       decrementQuantity,
 
       selectedVariant,
-      finalPrice,
+      finalPrice, 
       isLowStock,
 
       product,
