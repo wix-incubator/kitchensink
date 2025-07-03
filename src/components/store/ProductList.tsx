@@ -28,7 +28,7 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../../headless/media/services/media-gallery-service";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useService } from "@wix/services-manager-react";
 import { useNavigation } from "../NavigationContext";
 
@@ -150,13 +150,6 @@ const ProductItemWithVariants = ({
                                           isInStock,
                                           onSelect,
                                         }) => {
-                                          console.log("Choice:", {
-                                            value,
-                                            isSelected,
-                                            isVisible,
-                                            isInStock,
-                                            onSelect,
-                                          });
                                           if (
                                             isColorOption &&
                                             choice.colorCode
@@ -249,21 +242,6 @@ const ProductItemWithVariants = ({
                           )}
                         </ProductVariantSelector.Option>
                       ))}
-
-                    {/* Reset Button - shows when there are selections */}
-                    {/* {Object.keys(selectedChoices).length > 0 && (
-                      <button
-                        onClick={() => {
-                          const variantService = servicesManager.getService(
-                            SelectedVariantServiceDefinition
-                          );
-                          variantService.resetSelections();
-                        }}
-                        className="text-xs text-brand-primary hover:text-brand-light transition-colors"
-                      >
-                        Reset Selections
-                      </button>
-                    )} */}
                   </>
                 )}
               </ProductVariantSelector.Options>

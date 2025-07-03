@@ -264,19 +264,12 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     ): Promise<productsV3.Variant[]> => {
       try {
         isFetchingVariants.set(true);
-        console.log(`Fetching variants for product: ${productId}`);
-
         const variantsQuery = await readOnlyVariantsV3
           .queryVariants()
           .eq("productData.productId", productId)
           .find();
 
-        const fetchedVariants = variantsQuery.items || [];
-        console.log(
-          `Fetched ${fetchedVariants.length} variants for product ${productId}`
-        );
-
-        return fetchedVariants;
+        return variantsQuery.items || [];
       } catch (err) {
         console.error("Failed to fetch variants:", err);
         throw err;
@@ -291,27 +284,16 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     ): any[] => {
       if (!variants.length) return [];
 
-      console.log("Building options from variants:", variants.length);
-
       const optionsMap = new Map();
 
-      variants.forEach((variant, variantIndex) => {
+      variants.forEach((variant) => {
         const variantData = variant as any;
-        console.log(`Variant ${variantIndex}:`, variantData.optionChoices);
 
         if (variantData.optionChoices) {
           variantData.optionChoices.forEach((optionChoice: any) => {
             const { optionName, choiceName, renderType } =
               optionChoice.optionChoiceNames || {};
             const { optionId, choiceId } = optionChoice.optionChoiceIds || {};
-
-            console.log("Processing choice:", {
-              optionName,
-              choiceName,
-              renderType,
-              optionId,
-              choiceId,
-            });
 
             if (!optionName || !choiceName) return;
 
@@ -324,7 +306,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
                   choices: [],
                 },
               });
-              console.log(`Created new option: ${optionName}`);
             }
 
             const option = optionsMap.get(optionName);
@@ -341,19 +322,12 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
                 media: optionChoice.media || null,
               };
               option.choicesSettings.choices.push(newChoice);
-              console.log(`Added choice to ${optionName}:`, newChoice);
-            } else {
-              console.log(
-                `Choice already exists: ${choiceName} in ${optionName}`
-              );
             }
           });
         }
       });
 
-      const result = Array.from(optionsMap.values());
-      console.log("Final built options:", result);
-      return result;
+      return Array.from(optionsMap.values());
     };
 
     const init = async (currentProduct: V3Product | null) => {
@@ -376,27 +350,17 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         let productVariants: productsV3.Variant[] = [];
         let enhancedOptions: any[] = currentProduct.options || [];
 
-        // Check if we have variants in the product data
         if (currentProduct.variantsInfo?.variants?.length) {
           productVariants = currentProduct.variantsInfo.variants;
-          console.log(`Using existing variants: ${productVariants.length}`);
         } else if (currentProduct._id) {
-          // Fetch variants if missing
           try {
-            console.log(
-              `Variants missing for product ${currentProduct._id}, fetching...`
-            );
             productVariants = await fetchVariantsForProduct(currentProduct._id);
 
-            // Build enhanced options from fetched variants
             if (productVariants.length > 0) {
               const builtOptions =
                 buildProductOptionsFromVariants(productVariants);
               if (builtOptions.length > 0) {
                 enhancedOptions = builtOptions;
-                console.log(
-                  `Enhanced options built from ${productVariants.length} variants`
-                );
               }
             }
           } catch (err) {
@@ -404,16 +368,13 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             error.set(
               err instanceof Error ? err.message : "Failed to fetch variants"
             );
-            // Continue with existing product data
           }
         }
 
-        // Set variants
         if (productVariants.length > 0) {
           variants.set(productVariants);
           updateQuantityFromVariant(productVariants[0]);
         } else {
-          // Fallback to single variant
           const singleVariant: productsV3.Variant = {
             _id: "default",
             visible: true,
@@ -435,7 +396,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           updateQuantityFromVariant(singleVariant);
         }
 
-        // Set options (either original or enhanced)
         if (enhancedOptions.length > 0) {
           const optionsMap: Record<string, string[]> = {};
           enhancedOptions.forEach((option: any) => {
