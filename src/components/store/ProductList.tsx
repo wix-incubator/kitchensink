@@ -494,69 +494,24 @@ export const ProductGridContent = ({
                                       </div>
 
                                       <div className="space-y-2">
-                                        {/* Add to Cart Button */}
+                                        {/* Add to Cart Button with variant service */}
                                         <ProductVariantSelector.Trigger>
                                           {({
                                             onAddToCart,
                                             canAddToCart,
                                             isLoading,
-                                            price: variantPrice,
-                                            inStock,
-                                            isPreOrderEnabled,
-                                            error,
-                                            availableQuantity,
                                           }) => (
-                                            <div className="space-y-1">
-                                              <button
-                                                onClick={onAddToCart}
-                                                disabled={
-                                                  !canAddToCart || isLoading
-                                                }
-                                                className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                title={
-                                                  !canAddToCart && !isLoading
-                                                    ? "Please select all required options"
-                                                    : ""
-                                                }
-                                              >
-                                                {isLoading ? (
-                                                  <div className="flex items-center justify-center gap-2">
-                                                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                                    Adding...
-                                                  </div>
-                                                ) : !inStock &&
-                                                  isPreOrderEnabled ? (
-                                                  "Pre Order"
-                                                ) : (
-                                                  "Add to Cart"
-                                                )}
-                                              </button>
-
-                                              {/* Display variant price if different from base price */}
-                                              {variantPrice &&
-                                                variantPrice !== price && (
-                                                  <div className="text-xs text-content-secondary text-center">
-                                                    Selected: {variantPrice}
-                                                  </div>
-                                                )}
-
-                                              {/* Show error if any */}
-                                              {error && (
-                                                <div className="text-xs text-status-error text-center">
-                                                  {error}
-                                                </div>
-                                              )}
-
-                                              {/* Show available quantity if limited */}
-                                              {availableQuantity !== null &&
-                                                availableQuantity < 10 &&
-                                                availableQuantity > 0 && (
-                                                  <div className="text-xs text-status-warning text-center">
-                                                    Only {availableQuantity}{" "}
-                                                    left
-                                                  </div>
-                                                )}
-                                            </div>
+                                            <button
+                                              onClick={onAddToCart}
+                                              disabled={
+                                                !canAddToCart || isLoading
+                                              }
+                                              className="w-full btn-primary py-2 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                              {isLoading
+                                                ? "Adding..."
+                                                : "Add to Cart"}
+                                            </button>
                                           )}
                                         </ProductVariantSelector.Trigger>
 
