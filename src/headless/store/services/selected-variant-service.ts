@@ -16,7 +16,7 @@ const fetchVariantsByProductId = async (
   try {
     const { items } = await readOnlyVariantsV3
       .queryVariants({
-        fields: ["CURRENCY", "WEIGHT_MEASUREMENT_UNIT_INFO"],
+        fields: [],
       })
       .eq("productData.productId", productId)
       .find();
