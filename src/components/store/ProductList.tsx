@@ -189,7 +189,11 @@ export const ProductGridContent = ({productPageRoute}: {productPageRoute: string
                                   slug,
                                   description,
                                 }) => (
-                                  <div className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col">
+                                  <div
+                                    data-testid="product-item"
+                                    data-product-available={available}
+                                    className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col"
+                                    >
                                     <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                                       {image ? (
                                         <WixMediaImage
