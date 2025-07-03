@@ -45,7 +45,9 @@ export const ProductGridContent = ({
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<{[key: string]: boolean}>({});
+  const [showSuccessMessage, setShowSuccessMessage] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const openQuickView = (product: productsV3.V3Product) => {
     setQuickViewProduct(product);
@@ -58,7 +60,7 @@ export const ProductGridContent = ({
   };
 
   const handleShowSuccessMessage = (productId: string, show: boolean) => {
-    setShowSuccessMessage(prev => ({ ...prev, [productId]: show }));
+    setShowSuccessMessage((prev) => ({ ...prev, [productId]: show }));
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
@@ -85,15 +87,7 @@ export const ProductGridContent = ({
     return (
       <ServicesManagerProvider servicesManager={servicesManager}>
         <FilteredCollection.Item key={product._id} product={product}>
-          {({
-            title,
-            image,
-            price,
-            compareAtPrice,
-            available,
-            slug,
-            description,
-          }) => (
+          {({ title, image, available, slug, description }) => (
             <div
               data-testid="product-item"
               data-product-available={available}
@@ -214,7 +208,8 @@ export const ProductGridContent = ({
                                           .toLowerCase()
                                           .includes("color");
                                         const hasColorCode =
-                                          choice.colorCode || choice.media?.image;
+                                          choice.colorCode ||
+                                          choice.media?.image;
 
                                         // Only render if visible
                                         if (!isVisible) return null;
@@ -231,7 +226,8 @@ export const ProductGridContent = ({
                                                     ? "border-brand-primary shadow-md ring-1 ring-brand-primary/30"
                                                     : "border-color-swatch hover:border-color-swatch-hover"
                                                 } ${
-                                                  (!isInStock && !isPreOrderEnabled)
+                                                  !isInStock &&
+                                                  !isPreOrderEnabled
                                                     ? "grayscale opacity-50"
                                                     : ""
                                                 }`}
@@ -243,39 +239,42 @@ export const ProductGridContent = ({
                                                 onClick={onSelect}
                                               />
                                               {/* Stock indicator for color swatches */}
-                                              {(!isInStock && !isPreOrderEnabled) && (
-                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                  <svg
-                                                    className="w-3 h-3 text-status-error"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                  >
-                                                    <path
-                                                      strokeLinecap="round"
-                                                      strokeLinejoin="round"
-                                                      strokeWidth="2"
-                                                      d="M6 18L18 6M6 6l12 12"
-                                                    />
-                                                  </svg>
-                                                </div>
-                                              )}
+                                              {!isInStock &&
+                                                !isPreOrderEnabled && (
+                                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <svg
+                                                      className="w-3 h-3 text-status-error"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      stroke="currentColor"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                      />
+                                                    </svg>
+                                                  </div>
+                                                )}
                                               {/* Tooltip */}
                                               <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                                 {String(value)}
-                                                {(!isInStock && !isPreOrderEnabled) && " (Out of Stock)"}
+                                                {!isInStock &&
+                                                  !isPreOrderEnabled &&
+                                                  " (Out of Stock)"}
                                               </div>
                                             </div>
                                           );
                                         } else {
                                           return (
-                                            <span 
+                                            <span
                                               className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
                                                 isSelected
                                                   ? "bg-brand-primary text-content-primary border-brand-primary"
                                                   : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
                                               } ${
-                                                (!isInStock && !isPreOrderEnabled)
+                                                !isInStock && !isPreOrderEnabled
                                                   ? "opacity-50 line-through"
                                                   : ""
                                               }`}
@@ -315,54 +314,47 @@ export const ProductGridContent = ({
                   <SelectedVariant.Price>
                     {({ price, compareAtPrice }) => {
                       return compareAtPrice &&
-                        parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
-                          <>
-                            <div className="text-xl font-bold text-content-primary">
-                              {price}
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div className="text-sm font-medium text-content-faded line-through">
-                                {compareAtPrice}
-                              </div>
-                              <ProductVariantSelector.Stock>
-                                {({ inStock, isPreOrderEnabled, status }) => (
-                                  <div className="flex items-center gap-2">
-                                    <span className={`text-sm ${
-                                      inStock 
-                                        ? "text-status-success" 
-                                        : isPreOrderEnabled 
-                                        ? "text-status-warning" 
-                                        : "text-status-error"
-                                    }`}>
-                                      {status}
-                                    </span>
-                                  </div>
-                                )}
-                              </ProductVariantSelector.Stock>
-                            </div>
-                          </>
-                        ) : (
-                          <div className="flex items-center justify-between">
-                            <div className="text-xl font-bold text-content-primary">
-                              {price}
-                            </div>
-                            <ProductVariantSelector.Stock>
-                              {({ inStock, isPreOrderEnabled, status }) => (
-                                <div className="flex items-center gap-2">
-                                  <span className={`text-sm ${
-                                    inStock 
-                                      ? "text-status-success" 
-                                      : isPreOrderEnabled 
-                                      ? "text-status-warning" 
-                                      : "text-status-error"
-                                  }`}>
-                                    {status}
-                                  </span>
-                                </div>
-                              )}
-                            </ProductVariantSelector.Stock>
+                        parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) >
+                          0 ? (
+                        <>
+                          <div className="text-xl font-bold text-content-primary">
+                            {price}
                           </div>
-                        );
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-medium text-content-faded line-through">
+                              {compareAtPrice}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {available ? (
+                                <span className="text-status-success text-sm">
+                                  In Stock
+                                </span>
+                              ) : (
+                                <span className="text-status-error text-sm">
+                                  Out of Stock
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <div className="text-xl font-bold text-content-primary">
+                            {price}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {available ? (
+                              <span className="text-status-success text-sm">
+                                In Stock
+                              </span>
+                            ) : (
+                              <span className="text-status-error text-sm">
+                                Out of Stock
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
                     }}
                   </SelectedVariant.Price>
                 </div>
@@ -393,7 +385,9 @@ export const ProductGridContent = ({
                         isLoading={isLoading}
                         isPreOrderEnabled={isPreOrderEnabled}
                         inStock={inStock}
-                        onShowSuccessMessage={(show: boolean) => handleShowSuccessMessage(product._id!, show)}
+                        onShowSuccessMessage={(show: boolean) =>
+                          handleShowSuccessMessage(product._id!, show)
+                        }
                         isQuickView={true} // This will hide the Buy Now button for list items
                       />
                     </div>
