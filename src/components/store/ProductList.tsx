@@ -1,5 +1,5 @@
 import React from "react";
-import { productsV3, readOnlyVariantsV3 } from "@wix/stores";
+import { productsV3 } from "@wix/stores";
 import ProductFilters from "./ProductFilters";
 import StoreHeader from "./StoreHeader";
 import { WixMediaImage } from "../../headless/media/components";
@@ -32,44 +32,9 @@ import { useState, useEffect } from "react";
 import { useService } from "@wix/services-manager-react";
 import { useNavigation } from "../NavigationContext";
 
-// Hook to fetch variant data for a product using Read-Only Variants V3 API
-const useProductVariants = (productId: string) => {
-  const [variants, setVariants] = useState<productsV3.Variant[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+// Variants are now handled automatically by the SelectedVariantService
 
-  useEffect(() => {
-    if (!productId) return;
-
-    const fetchVariants = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        // Use the Read-Only Variants V3 API to query variants for this product
-        const variantsQuery = await readOnlyVariantsV3
-          .queryVariants()
-          .eq("productData.productId", productId)
-          .find();
-
-        setVariants(variantsQuery.items || []);
-      } catch (err) {
-        console.error("Failed to fetch variants:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch variants"
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchVariants();
-  }, [productId]);
-
-  return { variants, isLoading, error };
-};
-
-// Enhanced Product Item component with variant data
+// Enhanced Product Item component - variants are now handled by the service
 const ProductItemWithVariants = ({
   product,
   productPageRoute,
@@ -79,97 +44,11 @@ const ProductItemWithVariants = ({
 }) => {
   const Navigation = useNavigation();
   const currentCartService = useService(CurrentCartServiceDefinition);
-  const { variants, isLoading: variantsLoading } = useProductVariants(
-    product._id || ""
-  );
 
-  // Transform variant data to build comprehensive product options
-  const buildProductOptionsFromVariants = () => {
-    if (!variants.length) return product.options || [];
-
-    console.log("Building options from variants:", variants.length);
-
-    // Extract all unique options and choices from variants
-    const optionsMap = new Map();
-
-    variants.forEach((variant, variantIndex) => {
-      // Cast to any since ReadOnlyVariants V3 API has different structure than productsV3.Variant
-      const variantData = variant as any;
-      console.log(`Variant ${variantIndex}:`, variantData.optionChoices);
-
-      if (variantData.optionChoices) {
-        variantData.optionChoices.forEach((optionChoice: any) => {
-          const { optionName, choiceName, renderType } =
-            optionChoice.optionChoiceNames || {};
-          const { optionId, choiceId } = optionChoice.optionChoiceIds || {};
-
-          console.log("Processing choice:", {
-            optionName,
-            choiceName,
-            renderType,
-            optionId,
-            choiceId,
-          });
-
-          if (!optionName || !choiceName) return;
-
-          if (!optionsMap.has(optionName)) {
-            optionsMap.set(optionName, {
-              _id: optionId,
-              name: optionName,
-              optionRenderType: renderType,
-              choicesSettings: {
-                choices: [],
-              },
-            });
-            console.log(`Created new option: ${optionName}`);
-          }
-
-          const option = optionsMap.get(optionName);
-          const existingChoice = option.choicesSettings.choices.find(
-            (choice: any) => choice.choiceId === choiceId
-          );
-
-          if (!existingChoice) {
-            const newChoice = {
-              choiceId: choiceId,
-              name: choiceName,
-              value: choiceName,
-              colorCode: optionChoice.colorCode || null, // Add color code if available
-              media: optionChoice.media || null, // Add media if available
-            };
-            option.choicesSettings.choices.push(newChoice);
-            console.log(`Added choice to ${optionName}:`, newChoice);
-          } else {
-            console.log(
-              `Choice already exists: ${choiceName} in ${optionName}`
-            );
-          }
-        });
-      }
-    });
-
-    const result = Array.from(optionsMap.values());
-    console.log("Final built options:", result);
-    return result;
-  };
-
-  // Create enhanced product data with fetched variants and built options
-  const enhancedOptions = buildProductOptionsFromVariants();
-  const productWithVariants = {
-    ...product,
-    options: enhancedOptions.length > 0 ? enhancedOptions : product.options,
-    variantsInfo: {
-      ...product.variantsInfo,
-      variants:
-        variants.length > 0 ? variants : product.variantsInfo?.variants || [],
-    },
-  };
-
-  // Create services for each product with enhanced variant data
+  // Create services for each product - the SelectedVariantService will handle variant fetching
   const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService, {
-      product: productWithVariants,
+      product: product,
     })
     .addService(
       CurrentCartServiceDefinition,
@@ -182,19 +61,9 @@ const ProductItemWithVariants = ({
     });
   const [servicesManager] = useState(() => createServicesManager(servicesMap));
 
-  // Force service initialization with enhanced product data
-  useEffect(() => {
-    const productService = servicesManager.getService(ProductServiceDefinition);
-
-    // Ensure the product service has the enhanced product data
-    if (productService && productWithVariants) {
-      productService.product.set(productWithVariants);
-    }
-  }, [servicesManager, productWithVariants, variants.length]);
-
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
-      <FilteredCollection.Item product={productWithVariants}>
+      <FilteredCollection.Item product={product}>
         {({
           title,
           image,
@@ -400,14 +269,7 @@ const ProductItemWithVariants = ({
               </ProductVariantSelector.Options>
             </div>
 
-            {/* Show loading state for variants */}
-            {variantsLoading && variants.length === 0 && (
-              <div className="mb-2">
-                <div className="text-xs text-content-muted animate-pulse">
-                  Loading variants...
-                </div>
-              </div>
-            )}
+            {/* Variant loading is now handled by the service */}
 
             {/* Real-time Stock Status */}
             <ProductVariantSelector.Stock>

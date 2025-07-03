@@ -1,7 +1,7 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3, readOnlyVariantsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
@@ -85,8 +85,8 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       let mediaToDisplay: productsV3.ProductMedia[] = [];
 
       const productItemsImages =
-      product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
-      [];
+        product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
+        [];
 
       if (productItemsImages.length) {
         mediaToDisplay = productItemsImages;
@@ -242,23 +242,211 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       initialProduct as any
     );
 
-    const init = (currentProduct: V3Product | null) => {
+    // Add fetching state for variants
+    const isFetchingVariants: Signal<boolean> = signalsService.signal(
+      false as any
+    );
+
+    // Effect to update main isLoading state when variant fetching changes
+    signalsService.effect(() => {
+      const originalLoading = isLoading.get();
+      const variantFetching = isFetchingVariants.get();
+      const shouldBeLoading = originalLoading || variantFetching;
+
+      if (isLoading.get() !== shouldBeLoading) {
+        isLoading.set(shouldBeLoading);
+      }
+    });
+
+    // Function to fetch variants using queryVariants API
+    const fetchVariantsForProduct = async (
+      productId: string
+    ): Promise<productsV3.Variant[]> => {
+      try {
+        isFetchingVariants.set(true);
+        console.log(`Fetching variants for product: ${productId}`);
+
+        const variantsQuery = await readOnlyVariantsV3
+          .queryVariants()
+          .eq("productData.productId", productId)
+          .find();
+
+        const fetchedVariants = variantsQuery.items || [];
+        console.log(
+          `Fetched ${fetchedVariants.length} variants for product ${productId}`
+        );
+
+        return fetchedVariants;
+      } catch (err) {
+        console.error("Failed to fetch variants:", err);
+        throw err;
+      } finally {
+        isFetchingVariants.set(false);
+      }
+    };
+
+    // Function to build product options from variants
+    const buildProductOptionsFromVariants = (
+      variants: productsV3.Variant[]
+    ): any[] => {
+      if (!variants.length) return [];
+
+      console.log("Building options from variants:", variants.length);
+
+      const optionsMap = new Map();
+
+      variants.forEach((variant, variantIndex) => {
+        const variantData = variant as any;
+        console.log(`Variant ${variantIndex}:`, variantData.optionChoices);
+
+        if (variantData.optionChoices) {
+          variantData.optionChoices.forEach((optionChoice: any) => {
+            const { optionName, choiceName, renderType } =
+              optionChoice.optionChoiceNames || {};
+            const { optionId, choiceId } = optionChoice.optionChoiceIds || {};
+
+            console.log("Processing choice:", {
+              optionName,
+              choiceName,
+              renderType,
+              optionId,
+              choiceId,
+            });
+
+            if (!optionName || !choiceName) return;
+
+            if (!optionsMap.has(optionName)) {
+              optionsMap.set(optionName, {
+                _id: optionId,
+                name: optionName,
+                optionRenderType: renderType,
+                choicesSettings: {
+                  choices: [],
+                },
+              });
+              console.log(`Created new option: ${optionName}`);
+            }
+
+            const option = optionsMap.get(optionName);
+            const existingChoice = option.choicesSettings.choices.find(
+              (choice: any) => choice.choiceId === choiceId
+            );
+
+            if (!existingChoice) {
+              const newChoice = {
+                choiceId: choiceId,
+                name: choiceName,
+                value: choiceName,
+                colorCode: optionChoice.colorCode || null,
+                media: optionChoice.media || null,
+              };
+              option.choicesSettings.choices.push(newChoice);
+              console.log(`Added choice to ${optionName}:`, newChoice);
+            } else {
+              console.log(
+                `Choice already exists: ${choiceName} in ${optionName}`
+              );
+            }
+          });
+        }
+      });
+
+      const result = Array.from(optionsMap.values());
+      console.log("Final built options:", result);
+      return result;
+    };
+
+    const init = async (currentProduct: V3Product | null) => {
       if (currentProduct) {
         v3Product.set(currentProduct);
         productId.set(currentProduct._id || "");
         ribbonLabel.set(currentProduct.ribbon?.name || null);
-  
+
         const actualPrice = currentProduct.actualPriceRange?.minValue?.amount;
         const compareAtPrice =
           currentProduct.compareAtPriceRange?.minValue?.amount;
-  
+
         basePrice.set(parsePrice(actualPrice));
         discountPrice.set(compareAtPrice ? parsePrice(compareAtPrice) : null);
         isOnSale.set(
-          !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
+          !!compareAtPrice &&
+            parsePrice(compareAtPrice) > parsePrice(actualPrice)
         );
-  
-        if (currentProduct.options) {
+
+        let productVariants: productsV3.Variant[] = [];
+        let enhancedOptions: any[] = currentProduct.options || [];
+
+        // Check if we have variants in the product data
+        if (currentProduct.variantsInfo?.variants?.length) {
+          productVariants = currentProduct.variantsInfo.variants;
+          console.log(`Using existing variants: ${productVariants.length}`);
+        } else if (currentProduct._id) {
+          // Fetch variants if missing
+          try {
+            console.log(
+              `Variants missing for product ${currentProduct._id}, fetching...`
+            );
+            productVariants = await fetchVariantsForProduct(currentProduct._id);
+
+            // Build enhanced options from fetched variants
+            if (productVariants.length > 0) {
+              const builtOptions =
+                buildProductOptionsFromVariants(productVariants);
+              if (builtOptions.length > 0) {
+                enhancedOptions = builtOptions;
+                console.log(
+                  `Enhanced options built from ${productVariants.length} variants`
+                );
+              }
+            }
+          } catch (err) {
+            console.error("Error fetching variants:", err);
+            error.set(
+              err instanceof Error ? err.message : "Failed to fetch variants"
+            );
+            // Continue with existing product data
+          }
+        }
+
+        // Set variants
+        if (productVariants.length > 0) {
+          variants.set(productVariants);
+          updateQuantityFromVariant(productVariants[0]);
+        } else {
+          // Fallback to single variant
+          const singleVariant: productsV3.Variant = {
+            _id: "default",
+            visible: true,
+            choices: [],
+            price: {
+              actualPrice: currentProduct.actualPriceRange?.minValue,
+              compareAtPrice: currentProduct.compareAtPriceRange?.minValue,
+            },
+            inventoryStatus: {
+              inStock:
+                currentProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                currentProduct.inventory?.availabilityStatus ===
+                  "PARTIALLY_OUT_OF_STOCK",
+              preorderEnabled:
+                currentProduct.inventory?.preorderStatus === "ENABLED",
+            },
+          };
+          variants.set([singleVariant]);
+          updateQuantityFromVariant(singleVariant);
+        }
+
+        // Set options (either original or enhanced)
+        if (enhancedOptions.length > 0) {
+          const optionsMap: Record<string, string[]> = {};
+          enhancedOptions.forEach((option: any) => {
+            if (option.name && option.choicesSettings?.choices) {
+              optionsMap[option.name] = option.choicesSettings.choices.map(
+                (choice: any) => choice.name || ""
+              );
+            }
+          });
+          options.set(optionsMap);
+        } else if (currentProduct.options) {
           const optionsMap: Record<string, string[]> = {};
           currentProduct.options.forEach((option: any) => {
             if (option.name && option.choicesSettings?.choices) {
@@ -268,34 +456,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             }
           });
           options.set(optionsMap);
-        }
-  
-        if (currentProduct.variantsInfo?.variants) {
-          variants.set(currentProduct.variantsInfo.variants);
-  
-          if (currentProduct.variantsInfo.variants.length > 0) {
-            updateQuantityFromVariant(currentProduct.variantsInfo.variants[0]);
-          }
-        } else {
-          const singleVariant: productsV3.Variant = {
-            _id: "default",
-            visible: true,
-            choices: [],
-            price: {
-              actualPrice: initialProduct.actualPriceRange?.minValue,
-              compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
-            },
-            inventoryStatus: {
-              inStock:
-                initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-                initialProduct.inventory?.availabilityStatus ===
-                  "PARTIALLY_OUT_OF_STOCK",
-              preorderEnabled:
-                initialProduct.inventory?.preorderStatus === "ENABLED",
-            },
-          };
-          variants.set([singleVariant]);
-          updateQuantityFromVariant(singleVariant);
         }
       }
     };
@@ -704,7 +864,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       decrementQuantity,
 
       selectedVariant,
-      finalPrice, 
+      finalPrice,
       isLowStock,
 
       product,
