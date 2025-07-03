@@ -554,9 +554,6 @@ export async function loadCollectionServiceConfig(
     const categoriesConfig = await loadCategoriesConfig();
     const categories = categoriesConfig.categories;
 
-    // Parse URL parameters for initial state
-    const { initialSort, initialFilters } = parseURLParams(searchParams);
-
     // Build search options with category filter
     const searchOptions = buildSearchOptions(
       undefined,
@@ -568,6 +565,12 @@ export async function loadCollectionServiceConfig(
     searchOptions.paging = { limit: pageSize };
 
     const productResults = await searchProducts(searchOptions);
+
+    // Parse URL parameters for initial state
+    const { initialSort, initialFilters } = parseURLParams(
+      searchParams,
+      productResults.products || []
+    );
 
     return {
       initialProducts: productResults.products || [],
