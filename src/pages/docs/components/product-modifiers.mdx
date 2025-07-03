@@ -1,0 +1,514 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+---
+
+# ProductModifiers Components
+
+The `ProductModifiers` namespace contains headless components for managing product modifiers, custom text inputs, and additional product customization options. These components provide reactive modifier data and selection functionality through render props, making them perfect building blocks for product customization UIs.
+
+## Overview
+
+```tsx
+import { ProductModifiers } from "headless/store/components";
+
+// All available components
+const { Modifiers, Modifier, Choice, FreeText, ToggleFreeText } =
+  ProductModifiers;
+```
+
+## Components
+
+### Modifiers
+
+Provides access to all product modifiers with availability checking.
+
+#### Props
+
+- `children`: Render prop function receiving `ModifiersRenderProps`
+
+#### Render Props
+
+- `modifiers: ProductModifier[]` - Array of product modifiers
+- `hasModifiers: boolean` - Whether product has modifiers
+
+#### Example
+
+```tsx
+<ProductModifiers.Modifiers>
+  {({ modifiers, hasModifiers }) => (
+    <>
+      {hasModifiers ? (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold">Customize Your Product</h3>
+          {modifiers.map((modifier) => (
+            <div key={modifier.name}>
+              {/* Render individual modifiers here */}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No customization options available</p>
+      )}
+    </>
+  )}
+</ProductModifiers.Modifiers>
+```
+
+### Modifier
+
+Handles individual modifier display and interaction.
+
+#### Props
+
+- `modifier: ProductModifier` - Product modifier data
+- `children`: Render prop function receiving `ModifierRenderProps`
+
+#### Render Props
+
+- `name: string` - Modifier name
+- `type: ModifierType` - Modifier type (SWATCH_CHOICES, TEXT_CHOICES, FREE_TEXT)
+- `choices: ModifierChoice[]` - Available choices for this modifier
+- `hasChoices: boolean` - Whether modifier has predefined choices
+- `mandatory: boolean` - Whether modifier is required
+
+#### Example
+
+```tsx
+<ProductModifiers.Modifier modifier={modifier}>
+  {({ name, type, choices, hasChoices, mandatory }) => (
+    <div className="space-y-3">
+      <h4 className="font-medium">
+        {name} {mandatory && <span className="text-red-500">*</span>}
+      </h4>
+
+      {type === "SWATCH_CHOICES" && hasChoices && (
+        <div className="flex flex-wrap gap-2">
+          {choices.map((choice) => (
+            <ProductModifiers.Choice
+              key={choice.value}
+              modifier={modifier}
+              choice={choice}
+            >
+              {({ value, isSelected, colorCode, onSelect }) => (
+                <button
+                  onClick={onSelect}
+                  className={`w-10 h-10 rounded-full border-4 ${
+                    isSelected ? "border-blue-500" : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: colorCode }}
+                  title={value}
+                />
+              )}
+            </ProductModifiers.Choice>
+          ))}
+        </div>
+      )}
+
+      {type === "TEXT_CHOICES" && hasChoices && (
+        <div className="flex flex-wrap gap-2">
+          {choices.map((choice) => (
+            <ProductModifiers.Choice
+              key={choice.value}
+              modifier={modifier}
+              choice={choice}
+            >
+              {({ value, isSelected, onSelect }) => (
+                <button
+                  onClick={onSelect}
+                  className={`px-4 py-2 border rounded-lg ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {value}
+                </button>
+              )}
+            </ProductModifiers.Choice>
+          ))}
+        </div>
+      )}
+
+      {type === "FREE_TEXT" && (
+        <ProductModifiers.FreeText modifier={modifier}>
+          {({
+            value,
+            onChange,
+            placeholder,
+            charCount,
+            isOverLimit,
+            maxChars,
+          }) => (
+            <div className="space-y-2">
+              <textarea
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                maxLength={maxChars}
+                className="w-full px-3 py-2 border rounded-lg"
+                rows={3}
+              />
+              {maxChars && (
+                <div
+                  className={`text-xs text-right ${
+                    isOverLimit ? "text-red-600" : "text-gray-500"
+                  }`}
+                >
+                  {charCount}/{maxChars} characters
+                </div>
+              )}
+            </div>
+          )}
+        </ProductModifiers.FreeText>
+      )}
+    </div>
+  )}
+</ProductModifiers.Modifier>
+```
+
+### Choice
+
+Handles individual modifier choice selection for swatch and text choices.
+
+#### Props
+
+- `modifier: ProductModifier` - Parent modifier data
+- `choice: ModifierChoice` - Choice data
+- `children`: Render prop function receiving `ChoiceRenderProps`
+
+#### Render Props
+
+- `value: string` - Choice value/label
+- `isSelected: boolean` - Whether this choice is currently selected
+- `colorCode?: string` - Color code for swatch choices
+- `onSelect: () => void` - Function to select this choice
+
+#### Example
+
+```tsx
+<ProductModifiers.Choice modifier={modifier} choice={choice}>
+  {({ value, isSelected, colorCode, onSelect }) => (
+    <button
+      onClick={onSelect}
+      className={`px-4 py-2 border rounded-lg transition-all ${
+        isSelected
+          ? "border-blue-500 bg-blue-50 shadow-md"
+          : "border-gray-300 hover:border-gray-400"
+      }`}
+      style={colorCode ? { backgroundColor: colorCode } : undefined}
+    >
+      {colorCode ? <span className="sr-only">{value}</span> : value}
+    </button>
+  )}
+</ProductModifiers.Choice>
+```
+
+### FreeText
+
+Manages free text input for custom modifiers.
+
+#### Props
+
+- `modifier: ProductModifier` - Modifier data for free text input
+- `children`: Render prop function receiving `FreeTextRenderProps`
+
+#### Render Props
+
+- `value: string` - Current text value
+- `onChange: (value: string) => void` - Function to update text value
+- `placeholder: string` - Placeholder text
+- `charCount: number` - Current character count
+- `isOverLimit: boolean` - Whether character limit is exceeded
+- `maxChars?: number` - Maximum character limit
+
+#### Example
+
+```tsx
+<ProductModifiers.FreeText modifier={modifier}>
+  {({ value, onChange, placeholder, charCount, isOverLimit, maxChars }) => (
+    <div className="space-y-2">
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        maxLength={maxChars}
+        className={`w-full px-3 py-2 border rounded-lg resize-none ${
+          isOverLimit ? "border-red-500" : "border-gray-300"
+        }`}
+        rows={3}
+      />
+
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-600">Custom text for {modifier.name}</span>
+        {maxChars && (
+          <span className={`${isOverLimit ? "text-red-600" : "text-gray-500"}`}>
+            {charCount}/{maxChars}
+          </span>
+        )}
+      </div>
+
+      {isOverLimit && (
+        <p className="text-red-600 text-sm">
+          Text exceeds maximum length limit
+        </p>
+      )}
+    </div>
+  )}
+</ProductModifiers.FreeText>
+```
+
+### ToggleFreeText
+
+Provides toggle functionality for optional free text modifiers.
+
+#### Props
+
+- `modifier: ProductModifier` - Modifier data for toggle functionality
+- `children`: Render prop function receiving `ToggleFreeTextRenderProps`
+
+#### Render Props
+
+- `isTextInputShown: boolean` - Whether text input is currently shown
+- `onToggle: () => void` - Function to toggle text input visibility
+
+#### Example
+
+```tsx
+<ProductModifiers.ToggleFreeText modifier={modifier}>
+  {({ isTextInputShown, onToggle }) => (
+    <div className="space-y-3">
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isTextInputShown}
+          onChange={onToggle}
+          className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+        />
+        <span className="text-gray-700">
+          Add custom {modifier.name.toLowerCase()}
+        </span>
+      </label>
+
+      {isTextInputShown && (
+        <ProductModifiers.FreeText modifier={modifier}>
+          {(freeTextProps) => (
+            <div className="ml-6">
+              {/* Render free text input */}
+              <FreeTextInput {...freeTextProps} />
+            </div>
+          )}
+        </ProductModifiers.FreeText>
+      )}
+    </div>
+  )}
+</ProductModifiers.ToggleFreeText>
+```
+
+## Usage Patterns
+
+### Complete Modifier Section
+
+```tsx
+<ProductModifiers.Modifiers>
+  {({ modifiers, hasModifiers }) => (
+    <>
+      {hasModifiers && (
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Customize Your Product</h3>
+
+          {modifiers.map((modifier) => (
+            <ProductModifiers.Modifier key={modifier.name} modifier={modifier}>
+              {({ name, type, choices, hasChoices, mandatory }) => (
+                <div className="space-y-3">
+                  <h4 className="font-medium">
+                    {name}
+                    {mandatory && <span className="text-red-500 ml-1">*</span>}
+                  </h4>
+
+                  {/* Handle different modifier types */}
+                  {type === "SWATCH_CHOICES" && hasChoices && (
+                    <SwatchChoices modifier={modifier} choices={choices} />
+                  )}
+
+                  {type === "TEXT_CHOICES" && hasChoices && (
+                    <TextChoices modifier={modifier} choices={choices} />
+                  )}
+
+                  {type === "FREE_TEXT" && (
+                    <>
+                      {mandatory ? (
+                        <ProductModifiers.FreeText modifier={modifier}>
+                          {(props) => <CustomTextInput {...props} />}
+                        </ProductModifiers.FreeText>
+                      ) : (
+                        <ProductModifiers.ToggleFreeText modifier={modifier}>
+                          {({ isTextInputShown, onToggle }) => (
+                            <OptionalTextInput
+                              modifier={modifier}
+                              isShown={isTextInputShown}
+                              onToggle={onToggle}
+                            />
+                          )}
+                        </ProductModifiers.ToggleFreeText>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </ProductModifiers.Modifier>
+          ))}
+        </div>
+      )}
+    </>
+  )}
+</ProductModifiers.Modifiers>
+```
+
+### Conditional Modifier Display
+
+```tsx
+<ProductModifiers.Modifiers>
+  {({ modifiers, hasModifiers }) => {
+    const colorModifiers = modifiers.filter((m) => m.type === "SWATCH_CHOICES");
+    const textModifiers = modifiers.filter((m) => m.type === "TEXT_CHOICES");
+    const customModifiers = modifiers.filter((m) => m.type === "FREE_TEXT");
+
+    return (
+      <div className="space-y-8">
+        {/* Color Options */}
+        {colorModifiers.length > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Color Options</h3>
+            {/* Render color modifiers */}
+          </div>
+        )}
+
+        {/* Size/Style Options */}
+        {textModifiers.length > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Options</h3>
+            {/* Render text modifiers */}
+          </div>
+        )}
+
+        {/* Custom Text */}
+        {customModifiers.length > 0 && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Personalization</h3>
+            {/* Render custom text modifiers */}
+          </div>
+        )}
+      </div>
+    );
+  }}
+</ProductModifiers.Modifiers>
+```
+
+## Service Dependencies
+
+These components depend on the `ProductModifiersService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `ProductModifiersService`.
+
+```tsx
+import { ServicesManagerProvider } from "@wix/services-manager-react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
+import {
+  ProductModifiersServiceDefinition,
+  ProductModifiersService,
+} from "../headless/store/services/product-modifiers-service";
+
+<ServicesManagerProvider
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          ProductModifiersServiceDefinition,
+          ProductModifiersService,
+          modifiersConfig
+        )
+      )
+    )[0]
+  }
+>
+  {/* Your ProductModifiers components here */}
+</ServicesManagerProvider>;
+```
+
+## TypeScript Support
+
+All components export comprehensive TypeScript interfaces for both props and render props:
+
+```tsx
+import type {
+  ModifiersProps,
+  ModifiersRenderProps,
+  ModifierProps,
+  ModifierRenderProps,
+  ChoiceProps,
+  ChoiceRenderProps,
+  FreeTextProps,
+  FreeTextRenderProps,
+  ToggleFreeTextProps,
+  ToggleFreeTextRenderProps,
+} from "../headless/store/components/ProductModifiers";
+```
+
+## Testing
+
+These headless components are easy to test by providing mock render functions:
+
+```tsx
+import { render } from "@testing-library/react";
+import { ProductModifiers } from "../headless/store/components";
+
+test("ProductModifiers.Modifiers renders correctly", () => {
+  const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
+
+  render(
+    <ServicesManagerProvider servicesManager={mockServicesManager}>
+      <ProductModifiers.Modifiers>{mockRenderProp}</ProductModifiers.Modifiers>
+    </ServicesManagerProvider>
+  );
+
+  expect(mockRenderProp).toHaveBeenCalledWith({
+    modifiers: mockModifiers,
+    hasModifiers: true,
+  });
+});
+```
+
+## Accessibility
+
+When implementing these components, consider accessibility best practices:
+
+```tsx
+<ProductModifiers.Choice modifier={modifier} choice={choice}>
+  {({ value, isSelected, onSelect }) => (
+    <button
+      onClick={onSelect}
+      className={`px-4 py-2 border rounded-lg ${
+        isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300"
+      }`}
+      aria-pressed={isSelected}
+      aria-label={`Select ${value} for ${modifier.name}`}
+    >
+      {value}
+    </button>
+  )}
+</ProductModifiers.Choice>
+
+<ProductModifiers.FreeText modifier={modifier}>
+  {({ value, onChange, placeholder }) => (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      aria-label={`Custom text for ${modifier.name}`}
+      aria-describedby={`${modifier.name}-description`}
+      className="w-full px-3 py-2 border rounded-lg"
+    />
+  )}
+</ProductModifiers.FreeText>
+```
