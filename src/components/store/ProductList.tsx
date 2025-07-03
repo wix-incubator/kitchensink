@@ -314,15 +314,35 @@ export const ProductGridContent = ({
                 <div className="space-y-1">
                   <SelectedVariant.Price>
                     {({ price, compareAtPrice }) =>
-                      compareAtPrice &&
-                      parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
-                        <>
-                          <div className="text-xl font-bold text-content-primary">
-                            {price}
-                          </div>
+                      {
+                        console.log({price});
+                        return compareAtPrice &&
+                        parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 ? (
+                          <>
+                            <div className="text-xl font-bold text-content-primary">
+                              {price}
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="text-sm font-medium text-content-faded line-through">
+                                {compareAtPrice}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {available ? (
+                                  <span className="text-status-success text-sm">
+                                    In Stock
+                                  </span>
+                                ) : (
+                                  <span className="text-status-error text-sm">
+                                    Out of Stock
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
                           <div className="flex items-center justify-between">
-                            <div className="text-sm font-medium text-content-faded line-through">
-                              {compareAtPrice}
+                            <div className="text-xl font-bold text-content-primary">
+                              {price}
                             </div>
                             <div className="flex items-center gap-2">
                               {available ? (
@@ -336,25 +356,8 @@ export const ProductGridContent = ({
                               )}
                             </div>
                           </div>
-                        </>
-                      ) : (
-                        <div className="flex items-center justify-between">
-                          <div className="text-xl font-bold text-content-primary">
-                            {price}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {available ? (
-                              <span className="text-status-success text-sm">
-                                In Stock
-                              </span>
-                            ) : (
-                              <span className="text-status-error text-sm">
-                                Out of Stock
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )
+                        )
+                      }
                     }
                   </SelectedVariant.Price>
                 </div>

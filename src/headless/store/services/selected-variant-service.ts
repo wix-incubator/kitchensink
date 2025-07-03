@@ -21,6 +21,8 @@ const fetchVariantsByProductId = async (
       .eq("productData.productId", productId)
       .find();
 
+    console.log({ items }); 
+
     return items.map(({optionChoices, ...rest}) => ({
       ...rest,
       choices: optionChoices as productsV3.Variant["choices"],
@@ -357,11 +359,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       signalsService.computed<any>((() => {
         const prod = v3Product.get();
         const choices = selectedChoices.get();
+        const variantsList = variants.get();
 
-        if (!prod?.variantsInfo?.variants) return null;
+        // Use variants from product if available, otherwise use variants from API
+        const availableVariants = prod?.variantsInfo?.variants || variantsList;
+        
+        if (!availableVariants || availableVariants.length === 0) return null;
 
         return (
-          prod.variantsInfo.variants.find((variant: any) => {
+          availableVariants.find((variant: any) => {
             const variantChoices = processVariantChoices(variant);
 
             if (
