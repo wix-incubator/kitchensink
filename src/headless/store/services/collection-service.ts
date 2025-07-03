@@ -46,12 +46,16 @@ const buildSearchOptions = (
   const searchOptions: any = {
     search: {},
     fields: [
-      "PLAIN_DESCRIPTION",
-      "MEDIA_ITEMS_INFO",
-      "CURRENCY",
-      "THUMBNAIL",
-      "URL",
-      "ALL_CATEGORIES_INFO",
+      "DESCRIPTION" as any,
+      "DIRECT_CATEGORIES_INFO" as any,
+      "BREADCRUMBS_INFO" as any,
+      "INFO_SECTION" as any,
+      "MEDIA_ITEMS_INFO" as any,
+      "PLAIN_DESCRIPTION" as any,
+      "THUMBNAIL" as any,
+      "URL" as any,
+      "VARIANT_OPTION_CHOICE_NAMES" as any,
+      "WEIGHT_MEASUREMENT_UNIT_INFO" as any,
     ],
   };
 
@@ -150,14 +154,14 @@ const buildSearchOptions = (
         break;
       case "recommended":
         searchOptions.search.sort = [
-          { 
-            fieldName: "allCategoriesInfo.categories.index", 
+          {
+            fieldName: "allCategoriesInfo.categories.index",
             selectItemsBy: [
               {
-                "allCategoriesInfo.categories.id": selectedCategory
-              }
-            ]
-          }
+                "allCategoriesInfo.categories.id": selectedCategory,
+              },
+            ],
+          },
         ];
         break;
     }
@@ -180,7 +184,7 @@ export const CollectionService = implementService.withConfig<{
   const collectionFilters = getService(FilterServiceDefinition);
   const categoryService = getService(CategoryServiceDefinition);
   const sortService = getService(SortServiceDefinition);
-  
+
   const hasMoreProducts: Signal<boolean> = signalsService.signal(
     (config.initialHasMore ?? true) as any
   );
@@ -344,7 +348,6 @@ export const CollectionService = implementService.withConfig<{
     // All filtering (categories, price, options) is now handled server-side
     debouncedRefresh(false);
   });
-
 
   // Initialize catalog data when the service starts
   const initializeCatalogData = async () => {

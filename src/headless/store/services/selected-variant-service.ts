@@ -1,13 +1,35 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3, readOnlyVariantsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
+
+// Add a function to fetch variants from the API
+const fetchVariantsByProductId = async (
+  productId: string
+): Promise<productsV3.Variant[]> => {
+  try {
+    const { items } = await readOnlyVariantsV3
+      .queryVariants({
+        fields: [],
+      })
+      .eq("productData.productId", productId)
+      .find();
+
+    return items.map(({optionChoices, ...rest}) => ({
+      ...rest,
+      choices: optionChoices as productsV3.Variant["choices"],
+    }));
+  } catch (error) {
+    console.error("Failed to fetch variants:", error);
+    return [];
+  }
+};
 
 export interface SelectedVariantServiceAPI {
   selectedQuantity: Signal<number>;
@@ -86,8 +108,8 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       let mediaToDisplay: productsV3.ProductMedia[] = [];
 
       const productItemsImages =
-      product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
-      [];
+        product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
+        [];
 
       if (productItemsImages.length) {
         mediaToDisplay = productItemsImages;
@@ -155,11 +177,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           );
         }) || null
       );
-    };
-
-    const getDefaultVariant = (): productsV3.Variant | null => {
-      const variantsList = variants.get();
-      return variantsList[0] || null;
     };
 
     const updateVariantInventoryQuantities = async (
@@ -248,17 +265,18 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         v3Product.set(currentProduct);
         productId.set(currentProduct._id || "");
         ribbonLabel.set(currentProduct.ribbon?.name || null);
-  
+
         const actualPrice = currentProduct.actualPriceRange?.minValue?.amount;
         const compareAtPrice =
           currentProduct.compareAtPriceRange?.minValue?.amount;
-  
+
         basePrice.set(parsePrice(actualPrice));
         discountPrice.set(compareAtPrice ? parsePrice(compareAtPrice) : null);
         isOnSale.set(
-          !!compareAtPrice && parsePrice(compareAtPrice) > parsePrice(actualPrice)
+          !!compareAtPrice &&
+            parsePrice(compareAtPrice) > parsePrice(actualPrice)
         );
-  
+
         if (currentProduct.options) {
           const optionsMap: Record<string, string[]> = {};
           currentProduct.options.forEach((option: any) => {
@@ -270,33 +288,57 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           });
           options.set(optionsMap);
         }
-  
+
         if (currentProduct.variantsInfo?.variants) {
           variants.set(currentProduct.variantsInfo.variants);
-  
+
           if (currentProduct.variantsInfo.variants.length > 0) {
             updateQuantityFromVariant(currentProduct.variantsInfo.variants[0]);
           }
         } else {
-          const singleVariant: productsV3.Variant = {
-            _id: "default",
-            visible: true,
-            choices: [],
-            price: {
-              actualPrice: initialProduct.actualPriceRange?.minValue,
-              compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
-            },
-            inventoryStatus: {
-              inStock:
-                initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-                initialProduct.inventory?.availabilityStatus ===
-                  "PARTIALLY_OUT_OF_STOCK",
-              preorderEnabled:
-                initialProduct.inventory?.preorderStatus === "ENABLED",
-            },
-          };
-          variants.set([singleVariant]);
-          updateQuantityFromVariant(singleVariant);
+          if (currentProduct.variantSummary!.variantCount! > 1) {
+            // Fetch variants using the API
+            isLoading.set(true);
+            error.set(null);
+            fetchVariantsByProductId(currentProduct._id || "")
+              .then((fetchedVariants) => {
+                variants.set(fetchedVariants);
+                if (fetchedVariants.length > 0) {
+                  updateQuantityFromVariant(fetchedVariants[0]);
+                }
+                isLoading.set(false);
+              })
+              .catch((err) => {
+                console.error("Failed to fetch variants:", err);
+                error.set(
+                  err instanceof Error
+                    ? err.message
+                    : "Failed to fetch variants"
+                );
+                isLoading.set(false);
+                variants.set([]);
+              });
+          } else {
+            const singleVariant: productsV3.Variant = {
+              _id: "default",
+              visible: true,
+              choices: [],
+              price: {
+                actualPrice: initialProduct.actualPriceRange?.minValue,
+                compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
+              },
+              inventoryStatus: {
+                inStock:
+                  initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                  initialProduct.inventory?.availabilityStatus ===
+                    "PARTIALLY_OUT_OF_STOCK",
+                preorderEnabled:
+                  initialProduct.inventory?.preorderStatus === "ENABLED",
+              },
+            };
+            variants.set([singleVariant]);
+            updateQuantityFromVariant(singleVariant);
+          }
         }
       }
     };
@@ -308,13 +350,13 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
       signalsService.computed<any>((() => {
-        const prod = v3Product.get();
         const choices = selectedChoices.get();
+        const variantsList = variants.get();
 
-        if (!prod?.variantsInfo?.variants) return null;
+        if (!variantsList || variantsList.length === 0) return null;
 
         return (
-          prod.variantsInfo.variants.find((variant: any) => {
+          variantsList.find((variant: any) => {
             const variantChoices = processVariantChoices(variant);
 
             if (
@@ -604,7 +646,11 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const getChoiceInfo = (
       optionName: string,
       choiceValue: string
-    ): { isAvailable: boolean; isInStock: boolean; isPreOrderEnabled: boolean } => {
+    ): {
+      isAvailable: boolean;
+      isInStock: boolean;
+      isPreOrderEnabled: boolean;
+    } => {
       // Create hypothetical choices with this choice selected
       const currentChoices = selectedChoices.get();
       const hypotheticalChoices = {
@@ -636,7 +682,8 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       const isAvailable = !!matchingVariant;
       const isInStock = matchingVariant?.inventoryStatus?.inStock === true;
-      const isPreOrderEnabled = matchingVariant?.inventoryStatus?.preorderEnabled === true;
+      const isPreOrderEnabled =
+        matchingVariant?.inventoryStatus?.preorderEnabled === true;
 
       return { isAvailable, isInStock, isPreOrderEnabled };
     };
