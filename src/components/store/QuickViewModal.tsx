@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { productsV3 } from "@wix/stores";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider, useService } from "@wix/services-manager-react";
 import { createServicesManager, createServicesMap } from "@wix/services-manager";
 import ProductDetails from "./ProductDetails";
 import { useNavigation } from "../NavigationContext";
@@ -9,7 +9,6 @@ import {
   ProductServiceDefinition,
 } from "../../headless/store/services/product-service";
 import {
-  CurrentCartService,
   CurrentCartServiceDefinition,
 } from "../../headless/ecom/services/current-cart-service";
 import {
@@ -37,6 +36,9 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(null);
+  
+  // Get the existing cart service from the parent context
+  const parentCartService = useService(CurrentCartServiceDefinition);
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -87,16 +89,7 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
     }
   }, [showSuccessMessage]);
 
-  // Create service configs from full product data
-  const productServiceConfig = {
-    product: fullProduct || product,
-  };
-
-  const currentCartServiceConfig = {
-    // Empty cart config for the modal
-  };
-
-  // Create services manager with all required services - recreate when fullProduct changes
+  // Create services manager with all required services EXCEPT cart service - recreate when fullProduct changes
   const [servicesManager, setServicesManager] = useState<any>(null);
   
   useEffect(() => {
@@ -105,7 +98,8 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })
-        .addService(CurrentCartServiceDefinition, CurrentCartService, currentCartServiceConfig)
+        // Use the existing cart service from parent context instead of creating new one
+        .addService(CurrentCartServiceDefinition, () => parentCartService)
         .addService(SelectedVariantServiceDefinition, SelectedVariantService)
         .addService(ProductModifiersServiceDefinition, ProductModifiersService)
         .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
@@ -114,7 +108,7 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
 
       setServicesManager(createServicesManager(servicesMap));
     }
-  }, [fullProduct]);
+  }, [fullProduct, parentCartService]);
 
   if (!isOpen) return null;
 
@@ -194,7 +188,7 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
               </ServicesManagerProvider>
               
               {/* View Full Product Page Link */}
-              <div className="mt-12 pt-8 border-t border-brand-subtle">
+              <div className="mt-6 pt-6 border-t border-brand-subtle">
                 <Navigation
                   route={`${productPageRoute}/${product.slug}`}
                   className="w-full text-content-primary font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
