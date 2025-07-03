@@ -36,6 +36,9 @@ function SortDropdownContent({
         <option value="" className="bg-surface-primary text-content-primary">
           Latest Arrivals
         </option>
+        <option value="recommended" className="bg-surface-primary text-content-primary">
+          Recommended
+        </option>
         <option value="name-asc" className="bg-surface-primary text-content-primary">
           Name (A-Z)
         </option>
