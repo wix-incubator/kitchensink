@@ -1,7 +1,7 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3, readOnlyVariantsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
@@ -9,597 +9,44 @@ import { MediaGalleryServiceDefinition } from "../../media/services/media-galler
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
 
-const fetchedVariants = {
-  variants: [
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "11d9ed62-6471-4d68-a3c7-53d3a6a6d785",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "8",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "110",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: true,
-        preorderEnabled: false,
-      },
-      _id: "cd44e966-0bdc-4b56-bbb8-0a758c382599",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "11d9ed62-6471-4d68-a3c7-53d3a6a6d785",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "8",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "67726289-f8f6-43a5-9675-3657e6076ba5",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "11d9ed62-6471-4d68-a3c7-53d3a6a6d785",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "8",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "6c687066-6cd8-4469-ac88-962cb980c1b4",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "11d9ed62-6471-4d68-a3c7-53d3a6a6d785",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "8",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "839766e2-13e6-438e-8fb0-5bb71e3ba568",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "3853cc77-7cc3-4cc8-b0db-1c0175b99d6f",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "9",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "64637e81-f70c-4f0c-aec1-92f3dc1b3ba8",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "3853cc77-7cc3-4cc8-b0db-1c0175b99d6f",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "9",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "1285c600-a7bd-45a5-b088-d5215dbc7d63",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "3853cc77-7cc3-4cc8-b0db-1c0175b99d6f",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "9",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "f46394ab-08fb-4c97-851f-232f5af0eb49",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "3853cc77-7cc3-4cc8-b0db-1c0175b99d6f",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "9",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "d90b833a-b781-4908-b201-cde240ca6c7c",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "2c341d5e-cfae-403d-bcb4-55d6d20c9214",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "10",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "1a0e21c4-e886-4faa-bfd9-0a15dde82342",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "2c341d5e-cfae-403d-bcb4-55d6d20c9214",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "10",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "92ac92ea-b925-4025-8e02-872fc10f1a41",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Black",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "fb518278-982f-4399-8ebf-c8e796d7bd95",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "2c341d5e-cfae-403d-bcb4-55d6d20c9214",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "10",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "5fd77963-2756-4b0d-a353-5f7d387a1646",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "1",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "d0bc6ea8-18fd-435e-bd91-0026a24dac78",
-    },
-    {
-      visible: true,
-      choices: [
-        {
-          optionChoiceIds: {
-            optionId: "c7647f03-2af1-4e78-96ea-373f5b563236",
-            choiceId: "2c341d5e-cfae-403d-bcb4-55d6d20c9214",
-          },
-          optionChoiceNames: {
-            optionName: "Size",
-            choiceName: "10",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "ea9db20d-2e1a-4fe7-825f-b45a82a9d1e7",
-            choiceId: "60d2c02b-8bff-4f03-aa66-a93b536116c4",
-          },
-          optionChoiceNames: {
-            optionName: "Color",
-            choiceName: "Cognac",
-            renderType: "SWATCH_CHOICES",
-          },
-        },
-        {
-          optionChoiceIds: {
-            optionId: "7bd46ae0-6a02-48c0-8c04-3a3feb491314",
-            choiceId: "ad743633-060a-4551-b070-6a01873f9524",
-          },
-          optionChoiceNames: {
-            optionName: "Something",
-            choiceName: "2",
-            renderType: "TEXT_CHOICES",
-          },
-        },
-      ],
-      price: {
-        actualPrice: {
-          amount: "0",
-        },
-      },
-      physicalProperties: {},
-      inventoryStatus: {
-        inStock: false,
-        preorderEnabled: false,
-      },
-      _id: "888b44ba-3f21-4819-b045-eff2f78db923",
-    },
-  ],
+// Add a function to fetch variants from the API
+const fetchVariantsByProductId = async (
+  productId: string
+): Promise<productsV3.Variant[]> => {
+  try {
+    const { items } = await readOnlyVariantsV3
+      .queryVariants({
+        fields: ["CURRENCY", "WEIGHT_MEASUREMENT_UNIT_INFO"],
+      })
+      .eq("productData.productId", productId)
+      .find();
+
+    // Transform ReadOnlyVariant to productsV3.Variant format
+    return items.map((readOnlyVariant) => ({
+      _id: readOnlyVariant._id,
+      visible: readOnlyVariant.visible,
+      choices:
+        readOnlyVariant.optionChoices?.map((choice) => ({
+          optionChoiceIds: choice.optionChoiceIds,
+          optionChoiceNames: choice.optionChoiceNames
+            ? {
+                optionName: choice.optionChoiceNames.optionName,
+                choiceName: choice.optionChoiceNames.choiceName,
+                renderType: choice.optionChoiceNames.renderType as any,
+              }
+            : undefined,
+        })) || [],
+      price: readOnlyVariant.price,
+      physicalProperties: readOnlyVariant.physicalProperties || {},
+      inventoryStatus: readOnlyVariant.inventoryStatus,
+      sku: readOnlyVariant.sku,
+      barcode: readOnlyVariant.barcode,
+      media: readOnlyVariant.media,
+    }));
+  } catch (error) {
+    console.error("Failed to fetch variants:", error);
+    return [];
+  }
 };
 
 export interface SelectedVariantServiceAPI {
@@ -873,10 +320,27 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           }
         } else {
           if (currentProduct.variantSummary!.variantCount! > 1) {
-            variants.set(fetchedVariants.variants as any);
-            if (fetchedVariants.variants.length > 0) {
-              updateQuantityFromVariant(fetchedVariants.variants[0] as any);
-            }
+            // Fetch variants using the API
+            isLoading.set(true);
+            error.set(null);
+            fetchVariantsByProductId(currentProduct._id || "")
+              .then((fetchedVariants) => {
+                variants.set(fetchedVariants);
+                if (fetchedVariants.length > 0) {
+                  updateQuantityFromVariant(fetchedVariants[0]);
+                }
+                isLoading.set(false);
+              })
+              .catch((err) => {
+                console.error("Failed to fetch variants:", err);
+                error.set(
+                  err instanceof Error
+                    ? err.message
+                    : "Failed to fetch variants"
+                );
+                isLoading.set(false);
+                variants.set([]);
+              });
           } else {
             const singleVariant: productsV3.Variant = {
               _id: "default",
