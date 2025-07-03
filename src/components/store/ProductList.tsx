@@ -28,6 +28,7 @@ export const ProductGridContent = ({
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
+    console.log({ product });
     return (
       <FilteredCollection.Item key={product._id} product={product}>
         {({
