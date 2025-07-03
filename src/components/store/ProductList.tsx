@@ -82,8 +82,6 @@ export const ProductGridContent = ({
       createServicesManager(servicesMap)
     );
 
-    console.log({ product });
-
     return (
       <ServicesManagerProvider servicesManager={servicesManager}>
         <FilteredCollection.Item key={product._id} product={product}>

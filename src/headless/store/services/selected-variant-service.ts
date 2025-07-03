@@ -21,27 +21,9 @@ const fetchVariantsByProductId = async (
       .eq("productData.productId", productId)
       .find();
 
-    // Transform ReadOnlyVariant to productsV3.Variant format
-    return items.map((readOnlyVariant) => ({
-      _id: readOnlyVariant._id,
-      visible: readOnlyVariant.visible,
-      choices:
-        readOnlyVariant.optionChoices?.map((choice) => ({
-          optionChoiceIds: choice.optionChoiceIds,
-          optionChoiceNames: choice.optionChoiceNames
-            ? {
-                optionName: choice.optionChoiceNames.optionName,
-                choiceName: choice.optionChoiceNames.choiceName,
-                renderType: choice.optionChoiceNames.renderType as any,
-              }
-            : undefined,
-        })) || [],
-      price: readOnlyVariant.price,
-      physicalProperties: readOnlyVariant.physicalProperties || {},
-      inventoryStatus: readOnlyVariant.inventoryStatus,
-      sku: readOnlyVariant.sku,
-      barcode: readOnlyVariant.barcode,
-      media: readOnlyVariant.media,
+    return items.map(({optionChoices, ...rest}) => ({
+      ...rest,
+      choices: optionChoices as productsV3.Variant["choices"],
     }));
   } catch (error) {
     console.error("Failed to fetch variants:", error);
