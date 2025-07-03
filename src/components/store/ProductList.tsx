@@ -10,6 +10,7 @@ import {
 } from "../../headless/store/components";
 import { useNavigation } from "../NavigationContext";
 import QuickViewModal from "./QuickViewModal";
+import { ProductActionButtons } from "./ProductActionButtons";
 import {
   createServicesMap,
   createServicesManager,
@@ -44,6 +45,7 @@ export const ProductGridContent = ({
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<{[key: string]: boolean}>({});
 
   const openQuickView = (product: productsV3.V3Product) => {
     setQuickViewProduct(product);
@@ -53,6 +55,10 @@ export const ProductGridContent = ({
   const closeQuickView = () => {
     setIsQuickViewOpen(false);
     setTimeout(() => setQuickViewProduct(null), 300); // Allow animation to complete
+  };
+
+  const handleShowSuccessMessage = (productId: string, show: boolean) => {
+    setShowSuccessMessage(prev => ({ ...prev, [productId]: show }));
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
@@ -95,6 +101,15 @@ export const ProductGridContent = ({
               data-product-available={available}
               className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
             >
+              {/* Success Message */}
+              {showSuccessMessage[product._id!] && (
+                <div className="absolute top-2 right-2 z-10">
+                  <div className="bg-status-success-light border border-status-success rounded-lg px-3 py-1 text-status-success text-sm font-medium">
+                    Added to Cart!
+                  </div>
+                </div>
+              )}
+
               <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                 {image ? (
                   <WixMediaImage
@@ -165,11 +180,6 @@ export const ProductGridContent = ({
                 {title}
               </h3>
 
-              {/* <ProductVariantSelector.Options>
-                {({ options, hasOptions, selectedChoices }) => (
-                  console.log({ options }), (<>options</>)
-                )}
-              </ProductVariantSelector.Options> */}
               {/* Product Options */}
               <ProductVariantSelector.Options>
                 {({ options, hasOptions }) => (
@@ -352,11 +362,43 @@ export const ProductGridContent = ({
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              {/* Action Buttons */}
+              <div className="space-y-2">
+                {/* Add to Cart Button */}
+                <ProductVariantSelector.Trigger>
+                  {({
+                    onAddToCart,
+                    canAddToCart,
+                    isLoading,
+                    error,
+                    isPreOrderEnabled,
+                    inStock,
+                  }) => (
+                    <div className="space-y-2">
+                      {error && (
+                        <div className="bg-status-danger-light border border-status-danger rounded-lg p-2">
+                          <p className="text-status-error text-xs">{error}</p>
+                        </div>
+                      )}
+
+                      <ProductActionButtons
+                        onAddToCart={onAddToCart}
+                        canAddToCart={canAddToCart}
+                        isLoading={isLoading}
+                        isPreOrderEnabled={isPreOrderEnabled}
+                        inStock={inStock}
+                        onShowSuccessMessage={(show: boolean) => handleShowSuccessMessage(product._id!, show)}
+                        isQuickView={true} // This will hide the Buy Now button for list items
+                      />
+                    </div>
+                  )}
+                </ProductVariantSelector.Trigger>
+
+                {/* View Product Button */}
                 <Navigation
                   data-testid="view-product-button"
                   route={`${productPageRoute}/${slug}`}
-                  className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-primary"
+                  className="w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
                 >
                   View Product
                   <svg
