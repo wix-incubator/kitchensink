@@ -324,7 +324,7 @@ export const ProductGridContent = ({
                               <div className="text-sm font-medium text-content-faded line-through">
                                 {compareAtPrice}
                               </div>
-                              <SelectedVariant.Stock>
+                              <ProductVariantSelector.Stock>
                                 {({ inStock, isPreOrderEnabled, status }) => (
                                   <div className="flex items-center gap-2">
                                     <span className={`text-sm ${
@@ -338,7 +338,7 @@ export const ProductGridContent = ({
                                     </span>
                                   </div>
                                 )}
-                              </SelectedVariant.Stock>
+                              </ProductVariantSelector.Stock>
                             </div>
                           </>
                         ) : (
@@ -346,7 +346,7 @@ export const ProductGridContent = ({
                             <div className="text-xl font-bold text-content-primary">
                               {price}
                             </div>
-                            <SelectedVariant.Stock>
+                            <ProductVariantSelector.Stock>
                               {({ inStock, isPreOrderEnabled, status }) => (
                                 <div className="flex items-center gap-2">
                                   <span className={`text-sm ${
@@ -360,7 +360,7 @@ export const ProductGridContent = ({
                                   </span>
                                 </div>
                               )}
-                            </SelectedVariant.Stock>
+                            </ProductVariantSelector.Stock>
                           </div>
                         );
                     }}
