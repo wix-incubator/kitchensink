@@ -267,38 +267,34 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           options.set(optionsMap);
         }
 
-        if (currentProduct.variantsInfo?.variants) {
-          variants.set(currentProduct.variantsInfo.variants);
+        if (
+          currentProduct.variantSummary!.variantCount! > 1
+        ) {
+          variants.set(currentProduct.variantsInfo?.variants || []);
 
-          if (currentProduct.variantsInfo.variants.length > 0) {
-            updateQuantityFromVariant(currentProduct.variantsInfo.variants[0]);
+          if (currentProduct.variantsInfo?.variants?.length) {
+            updateQuantityFromVariant(currentProduct.variantsInfo?.variants[0]);
           }
         } else {
-          if (currentProduct.variantSummary!.variantCount! > 1) {
-            // Variants should now be provided by the collection service
-            // If they're not available, set empty variants for now
-            variants.set([]);
-          } else {
-            const singleVariant: productsV3.Variant = {
-              _id: "default",
-              visible: true,
-              choices: [],
-              price: {
-                actualPrice: initialProduct.actualPriceRange?.minValue,
-                compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
-              },
-              inventoryStatus: {
-                inStock:
-                  initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-                  initialProduct.inventory?.availabilityStatus ===
-                    "PARTIALLY_OUT_OF_STOCK",
-                preorderEnabled:
-                  initialProduct.inventory?.preorderStatus === "ENABLED",
-              },
-            };
-            variants.set([singleVariant]);
-            updateQuantityFromVariant(singleVariant);
-          }
+          const singleVariant: productsV3.Variant = {
+            _id: "default",
+            visible: true,
+            choices: [],
+            price: {
+              actualPrice: initialProduct.actualPriceRange?.minValue,
+              compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
+            },
+            inventoryStatus: {
+              inStock:
+                initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                initialProduct.inventory?.availabilityStatus ===
+                  "PARTIALLY_OUT_OF_STOCK",
+              preorderEnabled:
+                initialProduct.inventory?.preorderStatus === "ENABLED",
+            },
+          };
+          variants.set([singleVariant]);
+          updateQuantityFromVariant(singleVariant);
         }
       }
     };
