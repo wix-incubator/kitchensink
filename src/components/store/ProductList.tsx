@@ -5,6 +5,7 @@ import StoreHeader from "./StoreHeader";
 import { WixMediaImage } from "../../headless/media/components";
 import {
   FilteredCollection,
+  Product,
   ProductVariantSelector,
   SelectedVariant,
 } from "../../headless/store/components";
@@ -300,11 +301,20 @@ export const ProductGridContent = ({
                 )}
               </ProductVariantSelector.Options>
 
-              {description && (
-                <p className="text-content-muted text-sm mb-3 line-clamp-2">
-                  {description}
-                </p>
-              )}
+              <Product.Description>
+                {({ plainDescription }) => (
+                  <>
+                    {plainDescription && (
+                      <p
+                      className="text-content-muted text-sm mb-3 line-clamp-2"
+                      dangerouslySetInnerHTML={{
+                        __html: plainDescription,
+                      }}
+                      />
+                    )}
+                  </>
+                )}
+              </Product.Description>
 
               <div className="mt-auto mb-3">
                 <div className="space-y-1">
