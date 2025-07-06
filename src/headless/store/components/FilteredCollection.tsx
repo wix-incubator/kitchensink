@@ -103,6 +103,7 @@ interface FilteredItemProps {
   children: (data: {
     title: string;
     image: string | null;
+    imageAltText: string | null;
     price: string;
     compareAtPrice: string | null;
     available: boolean;
@@ -118,6 +119,7 @@ export const Item: React.FC<FilteredItemProps> = ({
   // Safe conversion of product data with type safety guards
   const title = String(product.name || "");
   const image = product.media?.main?.image || null;
+  const imageAltText = product.media?.main?.altText || "";
   const price =
     product.actualPriceRange?.minValue?.formattedAmount ||
     product.actualPriceRange?.maxValue?.formattedAmount ||
@@ -146,6 +148,7 @@ export const Item: React.FC<FilteredItemProps> = ({
       {children({
         title,
         image,
+        imageAltText,
         price: String(price),
         compareAtPrice,
         available,
