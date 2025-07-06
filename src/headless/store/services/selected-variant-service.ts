@@ -281,16 +281,16 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             visible: true,
             choices: [],
             price: {
-              actualPrice: initialProduct.actualPriceRange?.minValue,
-              compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
+              actualPrice: currentProduct.actualPriceRange?.minValue,
+              compareAtPrice: currentProduct.compareAtPriceRange?.minValue,
             },
             inventoryStatus: {
               inStock:
-                initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-                initialProduct.inventory?.availabilityStatus ===
+                currentProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                currentProduct.inventory?.availabilityStatus ===
                   "PARTIALLY_OUT_OF_STOCK",
               preorderEnabled:
-                initialProduct.inventory?.preorderStatus === "ENABLED",
+                currentProduct.inventory?.preorderStatus === "ENABLED",
             },
           };
           variants.set([singleVariant]);
@@ -457,7 +457,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         const catalogReference: any = {
           catalogItemId: prod._id,
           appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          options: variant?._id
+          options: variant?._id && variant._id !== "default"
             ? {
                 variantId: variant._id,
                 preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled,

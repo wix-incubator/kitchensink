@@ -620,12 +620,12 @@ export async function loadCollectionServiceConfig(
 const fetchMissingVariants = async (
   products: productsV3.V3Product[]
 ): Promise<productsV3.V3Product[]> => {
-  // Find products that need variants
+  // Find products that need variants (both single and multi-variant products)
   const productsNeedingVariants = products.filter(
     (product) =>
       !product.variantsInfo?.variants &&
       product.variantSummary?.variantCount &&
-      product.variantSummary.variantCount > 1
+      product.variantSummary.variantCount > 0
   );
 
   if (productsNeedingVariants.length === 0) {
