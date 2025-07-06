@@ -1,35 +1,13 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3, readOnlyVariantsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
-
-// Add a function to fetch variants from the API
-const fetchVariantsByProductId = async (
-  productId: string
-): Promise<productsV3.Variant[]> => {
-  try {
-    const { items } = await readOnlyVariantsV3
-      .queryVariants({
-        fields: [],
-      })
-      .eq("productData.productId", productId)
-      .find();
-
-    return items.map(({optionChoices, ...rest}) => ({
-      ...rest,
-      choices: optionChoices as productsV3.Variant["choices"],
-    }));
-  } catch (error) {
-    console.error("Failed to fetch variants:", error);
-    return [];
-  }
-};
 
 export interface SelectedVariantServiceAPI {
   selectedQuantity: Signal<number>;
@@ -289,56 +267,34 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           options.set(optionsMap);
         }
 
-        if (currentProduct.variantsInfo?.variants) {
-          variants.set(currentProduct.variantsInfo.variants);
+        if (
+          currentProduct.variantSummary!.variantCount! > 1
+        ) {
+          variants.set(currentProduct.variantsInfo?.variants || []);
 
-          if (currentProduct.variantsInfo.variants.length > 0) {
-            updateQuantityFromVariant(currentProduct.variantsInfo.variants[0]);
+          if (currentProduct.variantsInfo?.variants?.length) {
+            updateQuantityFromVariant(currentProduct.variantsInfo?.variants[0]);
           }
         } else {
-          if (currentProduct.variantSummary!.variantCount! > 1) {
-            // Fetch variants using the API
-            isLoading.set(true);
-            error.set(null);
-            fetchVariantsByProductId(currentProduct._id || "")
-              .then((fetchedVariants) => {
-                variants.set(fetchedVariants);
-                if (fetchedVariants.length > 0) {
-                  updateQuantityFromVariant(fetchedVariants[0]);
-                }
-                isLoading.set(false);
-              })
-              .catch((err) => {
-                console.error("Failed to fetch variants:", err);
-                error.set(
-                  err instanceof Error
-                    ? err.message
-                    : "Failed to fetch variants"
-                );
-                isLoading.set(false);
-                variants.set([]);
-              });
-          } else {
-            const singleVariant: productsV3.Variant = {
-              _id: "default",
-              visible: true,
-              choices: [],
-              price: {
-                actualPrice: initialProduct.actualPriceRange?.minValue,
-                compareAtPrice: initialProduct.compareAtPriceRange?.minValue,
-              },
-              inventoryStatus: {
-                inStock:
-                  initialProduct.inventory?.availabilityStatus === "IN_STOCK" ||
-                  initialProduct.inventory?.availabilityStatus ===
-                    "PARTIALLY_OUT_OF_STOCK",
-                preorderEnabled:
-                  initialProduct.inventory?.preorderStatus === "ENABLED",
-              },
-            };
-            variants.set([singleVariant]);
-            updateQuantityFromVariant(singleVariant);
-          }
+          const singleVariant: productsV3.Variant = {
+            _id: "default",
+            visible: true,
+            choices: [],
+            price: {
+              actualPrice: currentProduct.actualPriceRange?.minValue,
+              compareAtPrice: currentProduct.compareAtPriceRange?.minValue,
+            },
+            inventoryStatus: {
+              inStock:
+                currentProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                currentProduct.inventory?.availabilityStatus ===
+                  "PARTIALLY_OUT_OF_STOCK",
+              preorderEnabled:
+                currentProduct.inventory?.preorderStatus === "ENABLED",
+            },
+          };
+          variants.set([singleVariant]);
+          updateQuantityFromVariant(singleVariant);
         }
       }
     };
@@ -501,7 +457,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         const catalogReference: any = {
           catalogItemId: prod._id,
           appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          options: variant?._id
+          options: variant?._id && variant._id !== "default"
             ? {
                 variantId: variant._id,
                 preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled,
