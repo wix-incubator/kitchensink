@@ -58,14 +58,14 @@ export default function ProductDetails({
   isQuickView?: boolean;
 }) {
   const Navigation = useNavigation();
-  const variantService = useService(
-    SelectedVariantServiceDefinition
-  );
+  const variantService = useService(SelectedVariantServiceDefinition);
 
-  
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12" data-testid="product-details">
+      <div
+        className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+        data-testid="product-details"
+      >
         {/* Product Images */}
         <div className="space-y-4">
           {/* Main Image */}
@@ -161,11 +161,11 @@ export default function ProductDetails({
           </div>
 
           {/* Thumbnail Images */}
-          <MediaGallery.Indicator>
-            {({ total }) => (
+          <MediaGallery.ThumbnailList>
+            {({ items }) => (
               <div className="grid grid-cols-4 gap-4">
-                {Array.from({ length: total }).map((_, i) => (
-                  <MediaGallery.Thumbnail key={i} index={i}>
+                {items.map((_, i) => (
+                  <MediaGallery.ThumbnailItem key={i} index={i}>
                     {({ src, isActive, onSelect, alt }) => (
                       <div
                         onClick={onSelect}
@@ -200,11 +200,11 @@ export default function ProductDetails({
                         )}
                       </div>
                     )}
-                  </MediaGallery.Thumbnail>
+                  </MediaGallery.ThumbnailItem>
                 ))}
               </div>
             )}
-          </MediaGallery.Indicator>
+          </MediaGallery.ThumbnailList>
         </div>
 
         {/* Product Info */}
@@ -213,7 +213,10 @@ export default function ProductDetails({
           <div>
             <Product.Name>
               {({ name }) => (
-                <h1 className="text-4xl font-bold text-content-primary mb-4" data-testid="product-name">
+                <h1
+                  className="text-4xl font-bold text-content-primary mb-4"
+                  data-testid="product-name"
+                >
                   {name}
                 </h1>
               )}
@@ -235,7 +238,7 @@ export default function ProductDetails({
             </SelectedVariant.Price>
             {isQuickView && (
               <SelectedVariant.SKU>
-                {({ sku }) => (
+                {({ sku }) =>
                   sku && (
                     <>
                       <br />
@@ -244,7 +247,7 @@ export default function ProductDetails({
                       </div>
                     </>
                   )
-                )}
+                }
               </SelectedVariant.SKU>
             )}
           </div>
@@ -333,7 +336,9 @@ export default function ProductDetails({
                                                       ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
                                                       : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
                                                   } ${
-                                                    (!isInStock && !isPreOrderEnabled) && !isQuickView
+                                                    !isInStock &&
+                                                    !isPreOrderEnabled &&
+                                                    !isQuickView
                                                       ? "grayscale"
                                                       : ""
                                                   }`}
@@ -343,40 +348,9 @@ export default function ProductDetails({
                                                       "var(--theme-text-content-40)",
                                                   }}
                                                 />
-                                                {(!isInStock && !isPreOrderEnabled) && !isQuickView && (
-                                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                    <svg
-                                                      className="w-6 h-6 text-status-error"
-                                                      fill="none"
-                                                      viewBox="0 0 24 24"
-                                                      stroke="currentColor"
-                                                    >
-                                                      <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                      />
-                                                    </svg>
-                                                  </div>
-                                                )}
-                                              </div>
-                                            ) : (
-                                              isVisible && (!isQuickView || isInStock) && (
-                                                // Regular Text Button
-                                                <div className="relative">
-                                                  <button
-                                                    data-testid="product-modifier-choice-button"
-                                                    onClick={onSelect}
-                                                    className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
-                                                      isSelected
-                                                        ? "product-option-active"
-                                                        : "product-option-inactive"
-                                                    }`}
-                                                  >
-                                                    {value}
-                                                  </button>
-                                                  {(!isInStock && !isPreOrderEnabled) && !isQuickView && (
+                                                {!isInStock &&
+                                                  !isPreOrderEnabled &&
+                                                  !isQuickView && (
                                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                                       <svg
                                                         className="w-6 h-6 text-status-error"
@@ -393,6 +367,42 @@ export default function ProductDetails({
                                                       </svg>
                                                     </div>
                                                   )}
+                                              </div>
+                                            ) : (
+                                              isVisible &&
+                                              (!isQuickView || isInStock) && (
+                                                // Regular Text Button
+                                                <div className="relative">
+                                                  <button
+                                                    data-testid="product-modifier-choice-button"
+                                                    onClick={onSelect}
+                                                    className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                      isSelected
+                                                        ? "product-option-active"
+                                                        : "product-option-inactive"
+                                                    }`}
+                                                  >
+                                                    {value}
+                                                  </button>
+                                                  {!isInStock &&
+                                                    !isPreOrderEnabled &&
+                                                    !isQuickView && (
+                                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                        <svg
+                                                          className="w-6 h-6 text-status-error"
+                                                          fill="none"
+                                                          viewBox="0 0 24 24"
+                                                          stroke="currentColor"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                          />
+                                                        </svg>
+                                                      </div>
+                                                    )}
                                                 </div>
                                               )
                                             )}
@@ -445,7 +455,10 @@ export default function ProductDetails({
                         modifier={modifier}
                       >
                         {({ name, type, choices, hasChoices, mandatory }) => (
-                          <div className="space-y-3" data-testid="product-modifiers">
+                          <div
+                            className="space-y-3"
+                            data-testid="product-modifiers"
+                          >
                             <h4 className="text-md font-medium text-content-primary">
                               {name}{" "}
                               {mandatory && (
@@ -715,50 +728,51 @@ export default function ProductDetails({
       </div>
 
       {/* Current Cart Summary */}
-      {!isQuickView && 
-      <div className="mt-12 pt-8 border-t border-brand-subtle">
-        <CurrentCart.Summary>
-          {({ subtotal, itemCount }) => (
-            <>
-              {itemCount > 0 && (
-                <div className="bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle">
-                  <h3 className="text-xl font-semibold text-content-primary mb-4">
-                    Cart Summary
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-content-secondary">
-                      {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
-                    </span>
-                    <span className="text-xl font-bold text-content-primary">
-                      {subtotal}
-                    </span>
-                  </div>
-                  <Navigation
-                    data-testid="view-cart-button"
-                    route="/cart"
-                    className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
-                  >
-                    View Cart
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+      {!isQuickView && (
+        <div className="mt-12 pt-8 border-t border-brand-subtle">
+          <CurrentCart.Summary>
+            {({ subtotal, itemCount }) => (
+              <>
+                {itemCount > 0 && (
+                  <div className="bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle">
+                    <h3 className="text-xl font-semibold text-content-primary mb-4">
+                      Cart Summary
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <span className="text-content-secondary">
+                        {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
+                      </span>
+                      <span className="text-xl font-bold text-content-primary">
+                        {subtotal}
+                      </span>
+                    </div>
+                    <Navigation
+                      data-testid="view-cart-button"
+                      route="/cart"
+                      className="mt-4 w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Navigation>
-                </div>
-              )}
-            </>
-          )}
-        </CurrentCart.Summary>
-      </div>}
+                      View Cart
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </Navigation>
+                  </div>
+                )}
+              </>
+            )}
+          </CurrentCart.Summary>
+        </div>
+      )}
     </>
   );
 }

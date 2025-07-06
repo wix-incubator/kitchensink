@@ -154,9 +154,9 @@ const ProductImageGallery = () => {
               </MediaGallery.Next>
 
               <MediaGallery.Indicator>
-                {({ current, total, hasMedia }) => (
+                {({ current, total }) => (
                   <>
-                    {hasMedia && total > 1 && (
+                    {total > 1 && (
                       <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
                         {current} / {total}
                       </div>
@@ -169,37 +169,33 @@ const ProductImageGallery = () => {
         }}
       </MediaGallery.Viewport>
 
-      <MediaGallery.Indicator>
-        {({ total, hasMedia }) => (
-          <>
-            {hasMedia && total > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {Array.from({ length: total }).map((_, index) => (
-                  <MediaGallery.Thumbnail key={index} index={index}>
-                    {({ src, isActive, onSelect }) => (
-                      <button
-                        onClick={onSelect}
-                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                          isActive
-                            ? "border-teal-500 ring-2 ring-teal-500/30"
-                            : "border-white/20 hover:border-white/40"
-                        }`}
-                      >
-                        {src && (
-                          <WixMediaImage
-                            media={{ image: src }}
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-                      </button>
+      <MediaGallery.ThumbnailList>
+        {({ items }) => (
+          <div className="flex gap-2 overflow-x-auto">
+            {items.map((_, index) => (
+              <MediaGallery.ThumbnailItem key={index} index={index}>
+                {({ src, isActive, onSelect }) => (
+                  <button
+                    onClick={onSelect}
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                      isActive
+                        ? "border-teal-500 ring-2 ring-teal-500/30"
+                        : "border-white/20 hover:border-white/40"
+                    }`}
+                  >
+                    {src && (
+                      <WixMediaImage
+                        media={{ image: src }}
+                        className="w-full h-full object-cover"
+                      />
                     )}
-                  </MediaGallery.Thumbnail>
-                ))}
-              </div>
-            )}
-          </>
+                  </button>
+                )}
+              </MediaGallery.ThumbnailItem>
+            ))}
+          </div>
         )}
-      </MediaGallery.Indicator>
+      </MediaGallery.ThumbnailList>
     </div>
   );
 };
@@ -295,7 +291,13 @@ const ProductInfo = ({
       </SelectedVariant.Price>
 
       <ProductVariantSelector.Stock>
-        {({ inStock, status, availableQuantity, trackInventory, isPreOrderEnabled }) => {
+        {({
+          inStock,
+          status,
+          availableQuantity,
+          trackInventory,
+          isPreOrderEnabled,
+        }) => {
           const isLowStock =
             trackInventory &&
             availableQuantity !== null &&
@@ -303,7 +305,7 @@ const ProductInfo = ({
             availableQuantity > 0;
 
           const isNotInStockButPreOrderEnabled = isPreOrderEnabled && !inStock;
-          
+
           return (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -404,21 +406,27 @@ const ProductInfo = ({
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isInStock && !isPreOrderEnabled}
+                                          disabled={
+                                            !isInStock && !isPreOrderEnabled
+                                          }
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
                                               ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                              : (isInStock || isPreOrderEnabled)
+                                              : isInStock || isPreOrderEnabled
                                               ? "border-white/30 hover:border-white/60 hover:scale-105"
                                               : "border-white/10 opacity-50 cursor-not-allowed"
-                                          } ${(!isInStock && !isPreOrderEnabled) ? "grayscale" : ""}`}
+                                          } ${
+                                            !isInStock && !isPreOrderEnabled
+                                              ? "grayscale"
+                                              : ""
+                                          }`}
                                           style={{
                                             backgroundColor:
                                               choice.colorCode || "#000000",
                                           }}
                                         />
-                                        {(!isInStock && !isPreOrderEnabled) && (
+                                        {!isInStock && !isPreOrderEnabled && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -440,18 +448,20 @@ const ProductInfo = ({
                                       <div className="relative">
                                         <button
                                           onClick={onSelect}
-                                          disabled={!isInStock && !isPreOrderEnabled}
+                                          disabled={
+                                            !isInStock && !isPreOrderEnabled
+                                          }
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
                                               ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                              : (isInStock || isPreOrderEnabled)
+                                              : isInStock || isPreOrderEnabled
                                               ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
                                               : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
                                           }`}
                                         >
                                           {value}
                                         </button>
-                                        {(!isInStock && !isPreOrderEnabled) && (
+                                        {!isInStock && !isPreOrderEnabled && (
                                           <div className="absolute inset-0 flex items-center justify-center">
                                             <svg
                                               className="w-6 h-6 text-red-400"
@@ -1015,10 +1025,7 @@ export default function ProductDetailPage({
     .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     })
-    .addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-    )
+    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(
       SocialSharingServiceDefinition,
       SocialSharingService,

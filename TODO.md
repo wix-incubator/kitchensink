@@ -7,6 +7,7 @@
 - [ ] start using wix image in this project
 - [x] find a better solution for withDocsWrapper so it won't be in the pages code
 - [ ] Make sure it's explained that headless components should be namespaced under one root component that acts as the composite that the component is describing
+- [x] Make sure all headless components that work with lists have the same pattern: <SomeComp>List and <SomeComp>Item.
 
 Components List:
 
@@ -17,4 +18,12 @@ Components List:
 - [ ] Selected Variant
   - [x] Details (sku, weight)
   - [x] Price
-- [ ] Product Media Gallery
+- [x] Media Gallery
+  - [x] Viewport
+  - [x] Thumbnail (ThumbnailList and ThumbnailItem)
+    - ^ These 2 should support both Image and Video
+      - [x] Image
+      - [ ] Video
+  - [x] Indicator
+  - [x] Next
+  - [x] Previous

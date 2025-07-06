@@ -1,7 +1,6 @@
 import type { ServiceAPI } from "@wix/services-definitions";
 import { useService } from "@wix/services-manager-react";
 import { ProductServiceDefinition } from "../services/product-service";
-import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
 import type { productsV3 } from "@wix/stores";
 
 /**

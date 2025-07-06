@@ -46,19 +46,54 @@ export const Viewport = (props: ViewportProps) => {
 };
 
 /**
- * Props for Thumbnail headless component
+ * Props for ThumbnailList headless component
  */
-export interface ThumbnailProps {
-  /** Index of the media item */
-  index: number;
-  /** Render prop function that receives thumbnail data */
-  children: (props: ThumbnailRenderProps) => React.ReactNode;
+export interface ThumbnailListProps {
+  /** Render prop function that receives thumbnail list data */
+  children: (props: ThumbnailListRenderProps) => React.ReactNode;
 }
 
 /**
- * Render props for Thumbnail component
+ * Render props for ThumbnailList component
  */
-export interface ThumbnailRenderProps {
+export interface ThumbnailListRenderProps {
+  /** Array of media items */
+  items: any[];
+}
+
+/**
+ * Headless component for managing a list of thumbnails
+ */
+export const ThumbnailList = (props: ThumbnailListProps) => {
+  const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
+    typeof MediaGalleryServiceDefinition
+  >;
+
+  const mediaToDisplay = mediaService.mediaToDisplay.get();
+
+  if (mediaToDisplay.length <= 1) {
+    return null;
+  }
+
+  return props.children({
+    items: mediaToDisplay,
+  });
+};
+
+/**
+ * Props for ThumbnailItem headless component
+ */
+export interface ThumbnailItemProps {
+  /** Index of the media item */
+  index: number;
+  /** Render prop function that receives thumbnail data */
+  children: (props: ThumbnailItemRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for ThumbnailItem component
+ */
+export interface ThumbnailItemRenderProps {
   /** Media item data */
   item: any | null; // V3 media item structure
   /** Thumbnail image URL */
@@ -76,7 +111,7 @@ export interface ThumbnailRenderProps {
 /**
  * Headless component for individual media thumbnail
  */
-export const Thumbnail = (props: ThumbnailProps) => {
+export const ThumbnailItem = (props: ThumbnailItemProps) => {
   const mediaService = useService(MediaGalleryServiceDefinition) as ServiceAPI<
     typeof MediaGalleryServiceDefinition
   >;
@@ -124,10 +159,6 @@ export interface NextRenderProps {
   onNext: () => void;
   /** Whether there is a next media available */
   canGoNext: boolean;
-  /** Current media index */
-  currentIndex: number;
-  /** Total number of media */
-  totalMedia: number;
 }
 
 /**
@@ -149,8 +180,6 @@ export const Next = (props: NextProps) => {
   return props.children({
     onNext: mediaService.nextMedia,
     canGoNext,
-    currentIndex,
-    totalMedia,
   });
 };
 
@@ -170,10 +199,6 @@ export interface PreviousRenderProps {
   onPrevious: () => void;
   /** Whether there is a previous media available */
   canGoPrevious: boolean;
-  /** Current media index */
-  currentIndex: number;
-  /** Total number of media */
-  totalMedia: number;
 }
 
 /**
@@ -195,8 +220,6 @@ export const Previous = (props: PreviousProps) => {
   return props.children({
     onPrevious: mediaService.previousMedia,
     canGoPrevious,
-    currentIndex,
-    totalMedia,
   });
 };
 
@@ -216,8 +239,6 @@ export interface IndicatorRenderProps {
   current: number;
   /** Total number of media */
   total: number;
-  /** Whether gallery has media */
-  hasMedia: boolean;
 }
 
 /**
@@ -238,6 +259,5 @@ export const Indicator = (props: IndicatorProps) => {
   return props.children({
     current: currentIndex + 1,
     total: totalMedia,
-    hasMedia: totalMedia > 0,
   });
 };
