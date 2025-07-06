@@ -91,11 +91,10 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   onAddToCart,
   className = "",
 }) => {
+  const cartService = useService(CurrentCartServiceDefinition);
+  
   const handleBuyNow = async () => {
     try {
-      const cartService = useService(
-        CurrentCartServiceDefinition
-      );
       await cartService.clearCart();
       await onAddToCart();
       await cartService.proceedToCheckout();
