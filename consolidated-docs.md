@@ -6194,41 +6194,27 @@ await catalogService.loadCatalogOptions();
 await catalogService.loadCatalogOptions("category-id");
 ```
 
-## Usage Examples
-
-### Complete Filter Panel
+## Usage Example
 
 ```tsx
-function FilterPanel() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
+function CatalogFilterPanel() {
+  const catalogOptionsService = useService(CatalogOptionsServiceDefinition);
   
-  const catalogOptions = catalogService.catalogOptions.get();
-  const isLoading = catalogService.isLoading.get();
-  const error = catalogService.error.get();
-  
-  const [selectedFilters, setSelectedFilters] = useState({});
-  
-  const handleFilterChange = (optionId: string, choiceId: string, selected: boolean) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [optionId]: {
-        ...prev[optionId],
-        [choiceId]: selected
-      }
-    }));
-  };
+  const catalogOptions = catalogOptionsService.catalogOptions.get();
+  const isLoading = catalogOptionsService.isLoading.get();
+  const error = catalogOptionsService.error.get();
   
   if (isLoading) {
     return (
       <div className="filter-panel-loading">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <div className="space-y-4">
+        <div className="animate-pulse space-y-4">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-              <div className="grid grid-cols-3 gap-2">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-8 bg-gray-300 rounded"></div>
+            <div key={index}>
+              <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
+              <div className="space-y-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-3 bg-gray-200 rounded w-16"></div>
                 ))}
               </div>
             </div>
@@ -6242,451 +6228,127 @@ function FilterPanel() {
     return (
       <div className="filter-panel-error">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <div className="text-center py-8 border rounded-lg">
-          <p className="text-red-500 mb-2">Failed to load filters</p>
-          <button
-            onClick={() => catalogService.loadCatalogOptions()}
-            className="text-blue-500 hover:text-blue-700"
-          >
-            Try Again
-          </button>
+        <p className="text-red-500 text-sm">{error}</p>
+      </div>
+    );
+  }
+  
+  const renderFilterOption = (option: any) => {
+    if (option.optionType === "color") {
+      return (
+        <div key={option.key} className="filter-group">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+          <div className="flex flex-wrap gap-2">
+            {option.values.map((value: any) => (
+              <button
+                key={value.key}
+                onClick={() => {
+                  // Toggle filter selection logic would go here
+                  console.log('Selected color:', value.value);
+                }}
+                className="w-8 h-8 rounded-full border-2 border-gray-300 hover:border-gray-400 transition-colors"
+                style={{ backgroundColor: value.color || value.value }}
+                title={value.value}
+              >
+                <span className="sr-only">{value.value}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (option.optionType === "size") {
+      // Sort sizes intelligently
+      const sortedValues = [...option.values].sort((a, b) => {
+        const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        const aIndex = sizeOrder.indexOf(a.value);
+        const bIndex = sizeOrder.indexOf(b.value);
+        
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex - bIndex;
+        }
+        
+        // Fallback to alphabetical for non-standard sizes
+        return a.value.localeCompare(b.value);
+      });
+      
+      return (
+        <div key={option.key} className="filter-group">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+          <div className="flex flex-wrap gap-2">
+            {sortedValues.map((value: any) => (
+              <button
+                key={value.key}
+                onClick={() => {
+                  console.log('Selected size:', value.value);
+                }}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+              >
+                {value.value}
+                {value.productCount > 0 && (
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({value.productCount})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    // Default rendering for other option types
+    return (
+      <div key={option.key} className="filter-group">
+        <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+        <div className="space-y-2">
+          {option.values.map((value: any) => (
+            <label key={value.key} className="flex items-center">
+              <input
+                type="checkbox"
+                onChange={() => {
+                  console.log('Selected option:', value.value);
+                }}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">
+                {value.value}
+                {value.productCount > 0 && (
+                  <span className="text-gray-500 ml-1">
+                    ({value.productCount})
+                  </span>
+                )}
+              </span>
+            </label>
+          ))}
         </div>
       </div>
     );
-  }
-  
-  if (!catalogOptions || catalogOptions.length === 0) {
-    return (
-      <div className="filter-panel-empty">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <p className="text-gray-500 text-center py-8">
-          No filter options available
-        </p>
-      </div>
-    );
-  }
+  };
   
   return (
-    <div className="filter-panel">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
+    <div className="catalog-filter-panel">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Filter Products
+      </h3>
       
       <div className="space-y-6">
-        {catalogOptions.map(option => (
-          <div key={option.id} className="filter-group">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">
-              {option.name}
-            </h4>
-            
-            <div className="space-y-2">
-              {option.choices.map(choice => (
-                <label
-                  key={choice.id}
-                  className="flex items-center space-x-3 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedFilters[option.id]?.[choice.id] || false}
-                    onChange={(e) => handleFilterChange(option.id, choice.id, e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  
-                  <div className="flex items-center space-x-2">
-                    {choice.colorCode && (
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{ backgroundColor: choice.colorCode }}
-                      />
-                    )}
-                    <span className="text-sm text-gray-700">{choice.name}</span>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        ))}
+        {catalogOptions.map(renderFilterOption)}
       </div>
       
-      <div className="mt-6 pt-6 border-t">
+      <div className="mt-6 pt-4 border-t">
         <button
-          onClick={() => setSelectedFilters({})}
-          className="text-sm text-blue-600 hover:text-blue-800"
+          onClick={() => {
+            // Clear all filters logic
+            console.log('Clear all filters');
+          }}
+          className="text-sm text-blue-500 hover:text-blue-700"
         >
           Clear all filters
         </button>
       </div>
     </div>
-  );
-}
-```
-
-### Color Swatch Filter
-
-```tsx
-function ColorSwatchFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedColors, setSelectedColors] = useState(new Set());
-  
-  const colorOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('color')
-  );
-  
-  if (!colorOption) return null;
-  
-  const handleColorToggle = (colorId: string) => {
-    const newSelected = new Set(selectedColors);
-    if (newSelected.has(colorId)) {
-      newSelected.delete(colorId);
-    } else {
-      newSelected.add(colorId);
-    }
-    setSelectedColors(newSelected);
-  };
-  
-  return (
-    <div className="color-swatch-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        {colorOption.name}
-      </h4>
-      
-      <div className="flex flex-wrap gap-2">
-        {colorOption.choices.map(choice => (
-          <button
-            key={choice.id}
-            onClick={() => handleColorToggle(choice.id)}
-            className={`
-              w-8 h-8 rounded-full border-2 transition-all
-              ${selectedColors.has(choice.id)
-                ? 'border-blue-500 scale-110'
-                : 'border-gray-300 hover:border-gray-400'
-              }
-            `}
-            style={{ backgroundColor: choice.colorCode || '#f3f4f6' }}
-            title={choice.name}
-          >
-            {selectedColors.has(choice.id) && (
-              <span className="text-white text-xs">✓</span>
-            )}
-          </button>
-        ))}
-      </div>
-      
-      {selectedColors.size > 0 && (
-        <div className="mt-2">
-          <p className="text-sm text-gray-600">
-            {selectedColors.size} color{selectedColors.size > 1 ? 's' : ''} selected
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Size Filter with Smart Sorting
-
-```tsx
-function SizeFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedSizes, setSelectedSizes] = useState(new Set());
-  
-  const sizeOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('size')
-  );
-  
-  if (!sizeOption) return null;
-  
-  // The service already handles intelligent sorting
-  const sortedSizes = sizeOption.choices;
-  
-  const handleSizeToggle = (sizeId: string) => {
-    const newSelected = new Set(selectedSizes);
-    if (newSelected.has(sizeId)) {
-      newSelected.delete(sizeId);
-    } else {
-      newSelected.add(sizeId);
-    }
-    setSelectedSizes(newSelected);
-  };
-  
-  return (
-    <div className="size-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        {sizeOption.name}
-      </h4>
-      
-      <div className="grid grid-cols-4 gap-2">
-        {sortedSizes.map(choice => (
-          <button
-            key={choice.id}
-            onClick={() => handleSizeToggle(choice.id)}
-            className={`
-              px-3 py-2 text-sm border rounded-md transition-colors
-              ${selectedSizes.has(choice.id)
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-              }
-            `}
-          >
-            {choice.name}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Inventory Status Filter
-
-```tsx
-function InventoryStatusFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedStatuses, setSelectedStatuses] = useState(new Set());
-  
-  const inventoryOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('inventory') || 
-    option.name.toLowerCase().includes('availability')
-  );
-  
-  if (!inventoryOption) return null;
-  
-  const handleStatusToggle = (statusId: string) => {
-    const newSelected = new Set(selectedStatuses);
-    if (newSelected.has(statusId)) {
-      newSelected.delete(statusId);
-    } else {
-      newSelected.add(statusId);
-    }
-    setSelectedStatuses(newSelected);
-  };
-  
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'in_stock':
-        return '✅';
-      case 'out_of_stock':
-        return '❌';
-      case 'pre_order':
-        return '⏳';
-      default:
-        return '📦';
-    }
-  };
-  
-  return (
-    <div className="inventory-status-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Availability
-      </h4>
-      
-      <div className="space-y-2">
-        {inventoryOption.choices.map(choice => (
-          <label
-            key={choice.id}
-            className="flex items-center space-x-3 cursor-pointer"
-          >
-            <input
-              type="checkbox"
-              checked={selectedStatuses.has(choice.id)}
-              onChange={(e) => handleStatusToggle(choice.id)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            
-            <div className="flex items-center space-x-2">
-              <span>{getStatusIcon(choice.name)}</span>
-              <span className="text-sm text-gray-700">
-                {choice.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-              </span>
-            </div>
-          </label>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category-Specific Options
-
-```tsx
-function CategoryOptionsFilter({ categoryId }: { categoryId?: string }) {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const isLoading = catalogService.isLoading.get();
-  
-  // Load options for specific category
-  useEffect(() => {
-    catalogService.loadCatalogOptions(categoryId);
-  }, [categoryId]);
-  
-  if (isLoading) {
-    return <div>Loading category options...</div>;
-  }
-  
-  if (!catalogOptions || catalogOptions.length === 0) {
-    return (
-      <div className="category-options-empty">
-        <p className="text-gray-500 text-center py-8">
-          No filter options available for this category
-        </p>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="category-options-filter">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Filter Products
-      </h3>
-      
-      <div className="space-y-4">
-        {catalogOptions.map(option => (
-          <div key={option.id} className="filter-group">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">
-              {option.name}
-            </h4>
-            
-            <div className="flex flex-wrap gap-2">
-              {option.choices.map(choice => (
-                <button
-                  key={choice.id}
-                  className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                >
-                  {choice.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Mobile Filter Modal
-
-```tsx
-import { useState } from "react";
-
-function MobileFilterModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedFilters, setSelectedFilters] = useState({});
-  
-  const handleApplyFilters = () => {
-    // Apply filters logic here
-    console.log('Applying filters:', selectedFilters);
-    setIsOpen(false);
-  };
-  
-  const getFilterCount = () => {
-    return Object.values(selectedFilters).reduce((count, filters) => {
-      return count + Object.values(filters).filter(Boolean).length;
-    }, 0);
-  };
-  
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-        </svg>
-        <span>Filter</span>
-        {getFilterCount() > 0 && (
-          <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-1">
-            {getFilterCount()}
-          </span>
-        )}
-      </button>
-      
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50">
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[80vh] overflow-auto">
-            <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Filters</h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="p-4 space-y-6">
-              {catalogOptions?.map(option => (
-                <div key={option.id} className="filter-group">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">
-                    {option.name}
-                  </h4>
-                  
-                  <div className="space-y-2">
-                    {option.choices.map(choice => (
-                      <label
-                        key={choice.id}
-                        className="flex items-center space-x-3 cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters[option.id]?.[choice.id] || false}
-                          onChange={(e) => {
-                            setSelectedFilters(prev => ({
-                              ...prev,
-                              [option.id]: {
-                                ...prev[option.id],
-                                [choice.id]: e.target.checked
-                              }
-                            }));
-                          }}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        
-                        <div className="flex items-center space-x-2">
-                          {choice.colorCode && (
-                            <div
-                              className="w-4 h-4 rounded-full border border-gray-300"
-                              style={{ backgroundColor: choice.colorCode }}
-                            />
-                          )}
-                          <span className="text-sm text-gray-700">{choice.name}</span>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="sticky bottom-0 bg-white border-t px-4 py-3 flex gap-3">
-              <button
-                onClick={() => setSelectedFilters({})}
-                className="flex-1 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                Clear All
-              </button>
-              <button
-                onClick={handleApplyFilters}
-                className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                Apply Filters ({getFilterCount()})
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 ```
@@ -6844,313 +6506,156 @@ await priceRangeService.loadCatalogPriceRange();
 await priceRangeService.loadCatalogPriceRange("category-id");
 ```
 
-## Usage Examples
-
-### Price Range Slider
+## Usage Example
 
 ```tsx
-import { useState, useEffect } from "react";
-
-function PriceRangeSlider() {
+function PriceRangeFilter() {
   const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
   
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
+  const priceRange = priceRangeService.priceRange.get();
   const isLoading = priceRangeService.isLoading.get();
+  const error = priceRangeService.error.get();
   
-  const [selectedRange, setSelectedRange] = useState([0, 1000]);
+  const [selectedMin, setSelectedMin] = useState(priceRange?.min || 0);
+  const [selectedMax, setSelectedMax] = useState(priceRange?.max || 1000);
   
   useEffect(() => {
-    if (catalogPriceRange) {
-      setSelectedRange([catalogPriceRange.minPrice, catalogPriceRange.maxPrice]);
+    if (priceRange) {
+      setSelectedMin(priceRange.min);
+      setSelectedMax(priceRange.max);
     }
-  }, [catalogPriceRange]);
+  }, [priceRange]);
   
   if (isLoading) {
     return (
       <div className="price-range-loading">
         <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+          <div className="h-2 bg-gray-300 rounded w-full mb-4"></div>
+          <div className="flex gap-2">
+            <div className="h-8 bg-gray-300 rounded flex-1"></div>
+            <div className="h-8 bg-gray-300 rounded flex-1"></div>
+          </div>
         </div>
       </div>
     );
   }
   
-  if (!catalogPriceRange) {
-    return null;
+  if (error || !priceRange) {
+    return (
+      <div className="price-range-error">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+        <p className="text-red-500 text-sm">{error || 'Unable to load price range'}</p>
+      </div>
+    );
   }
   
-  const handleRangeChange = (values: number[]) => {
-    setSelectedRange(values);
-    // Apply price filter logic here
+  const handleSliderChange = (values: number[]) => {
+    setSelectedMin(values[0]);
+    setSelectedMax(values[1]);
+  };
+  
+  const handleApplyRange = () => {
+    // Apply price range filter logic
+    console.log('Apply price range:', { min: selectedMin, max: selectedMax });
+  };
+  
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
   };
   
   return (
-    <div className="price-range-slider">
+    <div className="price-range-filter">
       <h4 className="text-sm font-medium text-gray-900 mb-3">
         Price Range
       </h4>
       
-      <div className="mb-4">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>${selectedRange[0]}</span>
-          <span>${selectedRange[1]}</span>
-        </div>
-        
-        {/* Custom range slider or use a library like react-slider */}
+      <div className="space-y-4">
+        {/* Range Slider */}
         <div className="relative">
           <input
             type="range"
-            min={catalogPriceRange.minPrice}
-            max={catalogPriceRange.maxPrice}
-            value={selectedRange[0]}
-            onChange={(e) => handleRangeChange([parseInt(e.target.value), selectedRange[1]])}
+            min={priceRange.min}
+            max={priceRange.max}
+            value={selectedMin}
+            onChange={(e) => {
+              const value = Math.min(Number(e.target.value), selectedMax - 1);
+              setSelectedMin(value);
+            }}
             className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
           <input
             type="range"
-            min={catalogPriceRange.minPrice}
-            max={catalogPriceRange.maxPrice}
-            value={selectedRange[1]}
-            onChange={(e) => handleRangeChange([selectedRange[0], parseInt(e.target.value)])}
+            min={priceRange.min}
+            max={priceRange.max}
+            value={selectedMax}
+            onChange={(e) => {
+              const value = Math.max(Number(e.target.value), selectedMin + 1);
+              setSelectedMax(value);
+            }}
             className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
+          
+          <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <span>{formatPrice(priceRange.min)}</span>
+            <span>{formatPrice(priceRange.max)}</span>
+          </div>
         </div>
-      </div>
-      
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>${catalogPriceRange.minPrice}</span>
-        <span>${catalogPriceRange.maxPrice}</span>
-      </div>
-    </div>
-  );
-}
-```
-
-### Price Range Input Fields
-
-```tsx
-function PriceRangeInputs() {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  
-  useEffect(() => {
-    if (catalogPriceRange) {
-      setMinPrice(catalogPriceRange.minPrice.toString());
-      setMaxPrice(catalogPriceRange.maxPrice.toString());
-    }
-  }, [catalogPriceRange]);
-  
-  if (!catalogPriceRange) {
-    return null;
-  }
-  
-  const handleApplyFilter = () => {
-    const min = Math.max(parseFloat(minPrice) || 0, catalogPriceRange.minPrice);
-    const max = Math.min(parseFloat(maxPrice) || catalogPriceRange.maxPrice, catalogPriceRange.maxPrice);
-    
-    // Apply price filter logic
-    console.log('Applying price filter:', { min, max });
-  };
-  
-  return (
-    <div className="price-range-inputs">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Price Range
-      </h4>
-      
-      <div className="flex items-center space-x-2 mb-3">
-        <div className="flex-1">
-          <label className="block text-xs text-gray-600 mb-1">Min</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+        
+        {/* Input Fields */}
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">Min</label>
             <input
               type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              min={catalogPriceRange.minPrice}
-              max={catalogPriceRange.maxPrice}
-              className="w-full pl-6 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="0"
+              value={selectedMin}
+              onChange={(e) => {
+                const value = Math.max(priceRange.min, Number(e.target.value));
+                setSelectedMin(Math.min(value, selectedMax - 1));
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              min={priceRange.min}
+              max={selectedMax - 1}
+            />
+          </div>
+          
+          <div className="flex items-center justify-center mt-4">
+            <span className="text-gray-400">-</span>
+          </div>
+          
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">Max</label>
+            <input
+              type="number"
+              value={selectedMax}
+              onChange={(e) => {
+                const value = Math.min(priceRange.max, Number(e.target.value));
+                setSelectedMax(Math.max(value, selectedMin + 1));
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              min={selectedMin + 1}
+              max={priceRange.max}
             />
           </div>
         </div>
         
-        <div className="flex-shrink-0 pt-6">
-          <span className="text-gray-400">-</span>
+        {/* Selected Range Display */}
+        <div className="text-center text-sm text-gray-600">
+          {formatPrice(selectedMin)} - {formatPrice(selectedMax)}
         </div>
         
-        <div className="flex-1">
-          <label className="block text-xs text-gray-600 mb-1">Max</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              min={catalogPriceRange.minPrice}
-              max={catalogPriceRange.maxPrice}
-              className="w-full pl-6 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="1000"
-            />
-          </div>
-        </div>
-      </div>
-      
-      <button
-        onClick={handleApplyFilter}
-        className="w-full py-2 px-3 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
-      >
-        Apply Filter
-      </button>
-      
-      <div className="mt-2 text-xs text-gray-500 text-center">
-        Range: ${catalogPriceRange.minPrice} - ${catalogPriceRange.maxPrice}
-      </div>
-    </div>
-  );
-}
-```
-
-### Price Range Buckets
-
-```tsx
-function PriceRangeBuckets() {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const [selectedBucket, setSelectedBucket] = useState(null);
-  
-  if (!catalogPriceRange) {
-    return null;
-  }
-  
-  const createPriceBuckets = (min: number, max: number) => {
-    const range = max - min;
-    const bucketSize = Math.ceil(range / 5); // Create 5 buckets
-    
-    const buckets = [];
-    for (let i = 0; i < 5; i++) {
-      const bucketMin = min + (i * bucketSize);
-      const bucketMax = i === 4 ? max : min + ((i + 1) * bucketSize) - 1;
-      
-      buckets.push({
-        id: i,
-        label: `$${bucketMin} - $${bucketMax}`,
-        min: bucketMin,
-        max: bucketMax
-      });
-    }
-    
-    return buckets;
-  };
-  
-  const priceBuckets = createPriceBuckets(catalogPriceRange.minPrice, catalogPriceRange.maxPrice);
-  
-  return (
-    <div className="price-range-buckets">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Price Range
-      </h4>
-      
-      <div className="space-y-2">
+        {/* Apply Button */}
         <button
-          onClick={() => setSelectedBucket(null)}
-          className={`
-            w-full text-left px-3 py-2 rounded-md text-sm transition-colors
-            ${selectedBucket === null
-              ? 'bg-blue-50 text-blue-700 border border-blue-200'
-              : 'hover:bg-gray-50 border border-gray-200'
-            }
-          `}
+          onClick={handleApplyRange}
+          className="w-full px-3 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
         >
-          All Prices
+          Apply Price Filter
         </button>
-        
-        {priceBuckets.map(bucket => (
-          <button
-            key={bucket.id}
-            onClick={() => setSelectedBucket(bucket.id)}
-            className={`
-              w-full text-left px-3 py-2 rounded-md text-sm transition-colors
-              ${selectedBucket === bucket.id
-                ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                : 'hover:bg-gray-50 border border-gray-200'
-              }
-            `}
-          >
-            {bucket.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category-Specific Price Range
-
-```tsx
-function CategoryPriceRange({ categoryId }: { categoryId?: string }) {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const isLoading = priceRangeService.isLoading.get();
-  
-  useEffect(() => {
-    priceRangeService.loadCatalogPriceRange(categoryId);
-  }, [categoryId]);
-  
-  if (isLoading) {
-    return <div>Loading price range for category...</div>;
-  }
-  
-  if (!catalogPriceRange) {
-    return (
-      <div className="category-price-range-empty">
-        <p className="text-gray-500 text-sm">
-          No price data available for this category
-        </p>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="category-price-range">
-      <h4 className="text-sm font-medium text-gray-900 mb-2">
-        Price Range for Category
-      </h4>
-      
-      <div className="bg-gray-50 rounded-lg p-3">
-        <div className="flex justify-between items-center">
-          <div className="text-center">
-            <p className="text-xs text-gray-600">Lowest</p>
-            <p className="text-lg font-semibold text-green-600">
-              ${catalogPriceRange.minPrice}
-            </p>
-          </div>
-          
-          <div className="flex-1 mx-4">
-            <div className="h-2 bg-gradient-to-r from-green-400 to-red-400 rounded-full"></div>
-          </div>
-          
-          <div className="text-center">
-            <p className="text-xs text-gray-600">Highest</p>
-            <p className="text-lg font-semibold text-red-600">
-              ${catalogPriceRange.maxPrice}
-            </p>
-          </div>
-        </div>
-        
-        <div className="mt-2 text-center">
-          <p className="text-xs text-gray-600">
-            Average: ${Math.round((catalogPriceRange.minPrice + catalogPriceRange.maxPrice) / 2)}
-          </p>
-        </div>
       </div>
     </div>
   );
@@ -7384,82 +6889,41 @@ await categoryService.loadCategories();
 const categories = categoryService.categories.get();
 ```
 
-## Usage Examples
-
-### Category Navigation Menu
+## Usage Example
 
 ```tsx
-import { useService } from "@wix/services-manager-react";
-import { CategoryServiceDefinition } from "../services/category-service";
-
-function CategoryNavigation() {
+function CategoryNavigationMenu() {
   const categoryService = useService(CategoryServiceDefinition);
   
   const categories = categoryService.categories.get();
   const selectedCategory = categoryService.selectedCategory.get();
+  const isLoading = categoryService.isLoading.get();
   
-  return (
-    <nav className="category-nav">
-      <div className="flex flex-wrap gap-2">
-        {/* All Products Button */}
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            px-4 py-2 rounded-lg text-sm font-medium transition-colors
-            ${selectedCategory === null
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }
-          `}
-        >
-          All Products
-        </button>
-        
-        {/* Category Buttons */}
-        {categories.map(category => (
-          <button
-            key={category._id}
-            onClick={() => categoryService.setSelectedCategory(category._id)}
-            className={`
-              px-4 py-2 rounded-lg text-sm font-medium transition-colors
-              ${selectedCategory === category._id
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }
-            `}
-          >
-            {category.name}
-          </button>
-        ))}
+  if (isLoading) {
+    return (
+      <div className="category-navigation-loading">
+        <div className="animate-pulse space-y-2">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="h-4 bg-gray-300 rounded w-24"></div>
+          ))}
+        </div>
       </div>
-    </nav>
-  );
-}
-```
-
-### Category Sidebar
-
-```tsx
-function CategorySidebar() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
+    );
+  }
   
   return (
-    <aside className="category-sidebar w-64 bg-white border-r">
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Categories
-        </h3>
-        
-        <div className="space-y-1">
-          {/* All Products */}
+    <nav className="category-navigation">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Shop by Category
+      </h3>
+      
+      <ul className="space-y-2">
+        <li>
           <button
             onClick={() => categoryService.setSelectedCategory(null)}
             className={`
-              w-full text-left px-3 py-2 rounded-lg text-sm transition-colors
-              ${selectedCategory === null
+              w-full text-left px-3 py-2 rounded-lg transition-colors
+              ${!selectedCategory
                 ? 'bg-blue-50 text-blue-700 font-medium'
                 : 'text-gray-700 hover:bg-gray-50'
               }
@@ -7467,174 +6931,30 @@ function CategorySidebar() {
           >
             All Products
           </button>
-          
-          {/* Category List */}
-          {categories.map(category => (
+        </li>
+        
+        {categories.map(category => (
+          <li key={category._id}>
             <button
-              key={category._id}
-              onClick={() => categoryService.setSelectedCategory(category._id)}
+              onClick={() => categoryService.setSelectedCategory(category)}
               className={`
-                w-full text-left px-3 py-2 rounded-lg text-sm transition-colors
-                ${selectedCategory === category._id
+                w-full text-left px-3 py-2 rounded-lg transition-colors
+                ${selectedCategory?._id === category._id
                   ? 'bg-blue-50 text-blue-700 font-medium'
                   : 'text-gray-700 hover:bg-gray-50'
                 }
               `}
             >
               {category.name}
+              {category.numberOfProducts > 0 && (
+                <span className="text-sm text-gray-500 ml-1">
+                  ({category.numberOfProducts})
+                </span>
+              )}
             </button>
-          ))}
-        </div>
-      </div>
-    </aside>
-  );
-}
-```
-
-### Category Dropdown
-
-```tsx
-function CategoryDropdown() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  const selectedCategoryName = selectedCategory 
-    ? categories.find(cat => cat._id === selectedCategory)?.name || 'Unknown'
-    : 'All Categories';
-  
-  return (
-    <div className="category-dropdown">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Filter by Category:
-      </label>
-      <select
-        value={selectedCategory || ''}
-        onChange={(e) => categoryService.setSelectedCategory(e.target.value || null)}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="">All Categories</option>
-        {categories.map(category => (
-          <option key={category._id} value={category._id}>
-            {category.name}
-          </option>
+          </li>
         ))}
-      </select>
-    </div>
-  );
-}
-```
-
-### Category Grid with Images
-
-```tsx
-function CategoryGrid() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  return (
-    <div className="category-grid">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
-        Shop by Category
-      </h3>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {/* All Products Card */}
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            relative group overflow-hidden rounded-lg aspect-square
-            ${selectedCategory === null
-              ? 'ring-2 ring-blue-500'
-              : 'hover:scale-105 transition-transform'
-            }
-          `}
-        >
-          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-            <span className="text-white font-semibold text-lg">
-              All Products
-            </span>
-          </div>
-        </button>
-        
-        {/* Category Cards */}
-        {categories.map(category => (
-          <button
-            key={category._id}
-            onClick={() => categoryService.setSelectedCategory(category._id)}
-            className={`
-              relative group overflow-hidden rounded-lg aspect-square
-              ${selectedCategory === category._id
-                ? 'ring-2 ring-blue-500'
-                : 'hover:scale-105 transition-transform'
-              }
-            `}
-          >
-            {category.media?.[0] ? (
-              <img
-                src={category.media[0].url}
-                alt={category.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">No Image</span>
-              </div>
-            )}
-            
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="text-white font-semibold text-lg">
-                {category.name}
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category Breadcrumbs
-
-```tsx
-function CategoryBreadcrumbs() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  const selectedCategoryData = selectedCategory 
-    ? categories.find(cat => cat._id === selectedCategory)
-    : null;
-  
-  return (
-    <nav className="category-breadcrumbs mb-4">
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
-        <a href="/" className="hover:text-blue-500">Home</a>
-        <span>›</span>
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            hover:text-blue-500 transition-colors
-            ${selectedCategory === null ? 'text-blue-500 font-medium' : ''}
-          `}
-        >
-          Store
-        </button>
-        
-        {selectedCategoryData && (
-          <>
-            <span>›</span>
-            <span className="text-gray-900 font-medium">
-              {selectedCategoryData.name}
-            </span>
-          </>
-        )}
-      </div>
+      </ul>
     </nav>
   );
 }
@@ -8998,139 +8318,7 @@ const allFilled = modifierService.areAllRequiredModifiersFilled();
 const colorValue = modifierService.getModifierValue("Color");
 ```
 
-## Usage Examples
-
-### Swatch Color Selector
-
-```tsx
-function ColorSwatchSelector({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="color-swatch-selector">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <div className="flex flex-wrap gap-2">
-        {modifier.choices?.map((choice: any) => (
-          <button
-            key={choice._id}
-            onClick={() => modifierService.setModifierChoice(modifier.name, choice.value)}
-            className={`
-              w-10 h-10 rounded-full border-2 transition-all
-              ${selectedValue?.choiceValue === choice.value
-                ? 'border-blue-500 scale-110'
-                : 'border-gray-300 hover:border-gray-400'
-              }
-            `}
-            style={{ backgroundColor: choice.color || '#f3f4f6' }}
-            title={choice.description}
-          >
-            {selectedValue?.choiceValue === choice.value && (
-              <span className="text-white text-xs">✓</span>
-            )}
-          </button>
-        ))}
-      </div>
-      
-      {selectedValue && (
-        <p className="text-sm text-gray-600 mt-1">
-          Selected: {selectedValue.choiceValue}
-        </p>
-      )}
-    </div>
-  );
-}
-```
-
-### Text Choice Dropdown
-
-```tsx
-function TextChoiceDropdown({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="text-choice-dropdown">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <select
-        value={selectedValue?.choiceValue || ''}
-        onChange={(e) => {
-          if (e.target.value) {
-            modifierService.setModifierChoice(modifier.name, e.target.value);
-          } else {
-            modifierService.clearModifier(modifier.name);
-          }
-        }}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="">Select {modifier.name}</option>
-        {modifier.choices?.map((choice: any) => (
-          <option key={choice._id} value={choice.value}>
-            {choice.description}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-```
-
-### Free Text Input
-
-```tsx
-function FreeTextInput({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="free-text-input">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <textarea
-        value={selectedValue?.freeTextValue || ''}
-        onChange={(e) => {
-          if (e.target.value.trim()) {
-            modifierService.setModifierFreeText(modifier.name, e.target.value);
-          } else {
-            modifierService.clearModifier(modifier.name);
-          }
-        }}
-        placeholder={`Enter ${modifier.name.toLowerCase()}...`}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        rows={3}
-      />
-      
-      {modifier.maxLength && (
-        <p className="text-sm text-gray-500 mt-1">
-          {(selectedValue?.freeTextValue || '').length}/{modifier.maxLength} characters
-        </p>
-      )}
-    </div>
-  );
-}
-```
-
-### Complete Modifier Form
+## Usage Example
 
 ```tsx
 function ProductModifierForm() {
@@ -9147,14 +8335,97 @@ function ProductModifierForm() {
   }
   
   const renderModifier = (modifier: any) => {
-    const renderType = modifier.modifierRenderType;
+    const isRequired = modifierService.isModifierRequired(modifier.name);
+    const selectedValue = selectedModifiers[modifier.name];
     
-    if (renderType === "SWATCH_CHOICES") {
-      return <ColorSwatchSelector modifier={modifier} />;
-    } else if (renderType === "TEXT_CHOICES") {
-      return <TextChoiceDropdown modifier={modifier} />;
-    } else if (renderType === "FREE_TEXT") {
-      return <FreeTextInput modifier={modifier} />;
+    if (modifier.modifierRenderType === "SWATCH_CHOICES") {
+      return (
+        <div className="color-swatch-selector">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <div className="flex flex-wrap gap-2">
+            {modifier.choices?.map((choice: any) => (
+              <button
+                key={choice._id}
+                onClick={() => modifierService.setModifierChoice(modifier.name, choice.value)}
+                className={`
+                  w-10 h-10 rounded-full border-2 transition-all
+                  ${selectedValue?.choiceValue === choice.value
+                    ? 'border-blue-500 scale-110'
+                    : 'border-gray-300 hover:border-gray-400'
+                  }
+                `}
+                style={{ backgroundColor: choice.color || '#f3f4f6' }}
+                title={choice.description}
+              >
+                {selectedValue?.choiceValue === choice.value && (
+                  <span className="text-white text-xs">✓</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    } else if (modifier.modifierRenderType === "TEXT_CHOICES") {
+      return (
+        <div className="text-choice-dropdown">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <select
+            value={selectedValue?.choiceValue || ''}
+            onChange={(e) => {
+              if (e.target.value) {
+                modifierService.setModifierChoice(modifier.name, e.target.value);
+              } else {
+                modifierService.clearModifier(modifier.name);
+              }
+            }}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select {modifier.name}</option>
+            {modifier.choices?.map((choice: any) => (
+              <option key={choice._id} value={choice.value}>
+                {choice.description}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+    } else if (modifier.modifierRenderType === "FREE_TEXT") {
+      return (
+        <div className="free-text-input">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <textarea
+            value={selectedValue?.freeTextValue || ''}
+            onChange={(e) => {
+              if (e.target.value.trim()) {
+                modifierService.setModifierFreeText(modifier.name, e.target.value);
+              } else {
+                modifierService.clearModifier(modifier.name);
+              }
+            }}
+            placeholder={`Enter ${modifier.name.toLowerCase()}...`}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            rows={3}
+          />
+          
+          {modifier.maxLength && (
+            <p className="text-sm text-gray-500 mt-1">
+              {(selectedValue?.freeTextValue || '').length}/{modifier.maxLength} characters
+            </p>
+          )}
+        </div>
+      );
     }
     
     return null;
@@ -9186,134 +8457,7 @@ function ProductModifierForm() {
           )}
         </div>
       )}
-      
-      <div className="mt-4 flex gap-2">
-        <button
-          onClick={() => modifierService.clearAllModifiers()}
-          className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-        >
-          Clear All
-        </button>
-        
-        <button
-          disabled={hasRequiredModifiers && !allRequiredFilled}
-          className={`
-            px-4 py-2 rounded-md text-sm font-medium
-            ${hasRequiredModifiers && !allRequiredFilled
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-500 text-white hover:bg-blue-600'
-            }
-          `}
-        >
-          Add to Cart
-        </button>
-      </div>
     </div>
-  );
-}
-```
-
-### Modifier Summary
-
-```tsx
-function ModifierSummary() {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const hasModifiers = modifierService.hasModifiers.get();
-  
-  const modifierEntries = Object.entries(selectedModifiers);
-  
-  if (!hasModifiers || modifierEntries.length === 0) {
-    return null;
-  }
-  
-  return (
-    <div className="modifier-summary">
-      <h4 className="text-sm font-medium text-gray-900 mb-2">
-        Customizations:
-      </h4>
-      
-      <div className="space-y-1">
-        {modifierEntries.map(([name, value]) => (
-          <div key={name} className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">{name}:</span>
-            <span className="font-medium">
-              {value.choiceValue || value.freeTextValue}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-## Validation and Error Handling
-
-### Required Modifier Validation
-
-```tsx
-function AddToCartButton() {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const hasRequiredModifiers = modifierService.hasRequiredModifiers();
-  const allRequiredFilled = modifierService.areAllRequiredModifiersFilled();
-  
-  const canAddToCart = !hasRequiredModifiers || allRequiredFilled;
-  
-  const handleAddToCart = () => {
-    if (!canAddToCart) {
-      // Show validation message
-      alert("Please complete all required customization options");
-      return;
-    }
-    
-    // Add to cart logic
-    const selectedModifiers = modifierService.selectedModifiers.get();
-    // ... cart logic with modifiers
-  };
-  
-  return (
-    <button
-      onClick={handleAddToCart}
-      disabled={!canAddToCart}
-      className={`
-        w-full py-3 px-4 rounded-lg font-medium transition-colors
-        ${canAddToCart
-          ? 'bg-blue-500 text-white hover:bg-blue-600'
-          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }
-      `}
-    >
-      {canAddToCart ? 'Add to Cart' : 'Complete Customization'}
-    </button>
-  );
-}
-```
-
-### Individual Modifier Validation
-
-```tsx
-function ModifierValidation({ modifierName }: { modifierName: string }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const isRequired = modifierService.isModifierRequired(modifierName);
-  const modifierValue = modifierService.getModifierValue(modifierName);
-  
-  const hasValue = modifierValue && (
-    modifierValue.choiceValue || 
-    (modifierValue.freeTextValue && modifierValue.freeTextValue.trim())
-  );
-  
-  if (!isRequired || hasValue) {
-    return null;
-  }
-  
-  return (
-    <p className="text-sm text-red-600 mt-1">
-      This customization is required
-    </p>
   );
 }
 ```
@@ -9479,9 +8623,7 @@ const isLoading = productService.isLoading.get();
 const error = productService.error.get();
 ```
 
-## Usage Examples
-
-### Product Detail Page
+## Usage Example
 
 ```tsx
 import { useService } from "@wix/services-manager-react";
@@ -9574,173 +8716,6 @@ function ProductDetailPage() {
             Add to Cart
           </button>
         </div>
-      </div>
-    </div>
-  );
-}
-```
-
-### Product with Variants
-
-```tsx
-function ProductWithVariants() {
-  const productService = useService(ProductServiceDefinition);
-  
-  const product = productService.product.get();
-  const isLoading = productService.isLoading.get();
-  const error = productService.error.get();
-  
-  if (isLoading || error) {
-    return <div>Loading...</div>;
-  }
-  
-  return (
-    <div className="product-page">
-      <div className="product-header">
-        <h1>{product.name}</h1>
-        <p>{product.description}</p>
-      </div>
-      
-      {/* Product Variants */}
-      {product.productOptions && product.productOptions.length > 0 && (
-        <div className="variants-section">
-          <h3>Available Options:</h3>
-          <div className="variants-grid">
-            {product.productOptions.map((option, index) => (
-              <div key={index} className="variant-option">
-                <label className="font-medium">{option.name}:</label>
-                <div className="flex gap-2 mt-1">
-                  {option.choices?.map((choice, choiceIndex) => (
-                    <button
-                      key={choiceIndex}
-                      className="px-3 py-1 border rounded hover:bg-gray-50"
-                    >
-                      {choice.description}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {/* Product Info */}
-      <div className="product-info">
-        <div className="price">
-          <span className="text-2xl font-bold">${product.price?.price}</span>
-          {product.price?.compareAtPrice && (
-            <span className="text-gray-500 line-through ml-2">
-              ${product.price.compareAtPrice}
-            </span>
-          )}
-        </div>
-        
-        <div className="stock-info">
-          {product.manageVariants && (
-            <p className="text-sm text-gray-600">
-              Stock varies by selected options
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
-### Product Breadcrumbs
-
-```tsx
-function ProductBreadcrumbs() {
-  const productService = useService(ProductServiceDefinition);
-  
-  const product = productService.product.get();
-  const isLoading = productService.isLoading.get();
-  
-  if (isLoading || !product.breadcrumbs) {
-    return null;
-  }
-  
-  return (
-    <nav className="breadcrumbs mb-4">
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
-        <a href="/" className="hover:text-blue-500">Home</a>
-        <span>›</span>
-        <a href="/store" className="hover:text-blue-500">Store</a>
-        
-        {product.breadcrumbs.map((breadcrumb, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <span>›</span>
-            <a
-              href={breadcrumb.url}
-              className="hover:text-blue-500"
-            >
-              {breadcrumb.name}
-            </a>
-          </div>
-        ))}
-        
-        <span>›</span>
-        <span className="text-gray-900 font-medium">{product.name}</span>
-      </div>
-    </nav>
-  );
-}
-```
-
-### Product Media Gallery
-
-```tsx
-import { useState } from "react";
-
-function ProductMediaGallery() {
-  const productService = useService(ProductServiceDefinition);
-  const [selectedImage, setSelectedImage] = useState(0);
-  
-  const product = productService.product.get();
-  const isLoading = productService.isLoading.get();
-  
-  if (isLoading || !product.media || product.media.length === 0) {
-    return (
-      <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-        <span className="text-gray-500">No images available</span>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="media-gallery">
-      {/* Main Image */}
-      <div className="main-image mb-4">
-        <img
-          src={product.media[selectedImage]?.url}
-          alt={`${product.name} - Image ${selectedImage + 1}`}
-          className="w-full h-96 object-cover rounded-lg"
-        />
-      </div>
-      
-      {/* Thumbnail Grid */}
-      <div className="thumbnails grid grid-cols-6 gap-2">
-        {product.media.map((media, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedImage(index)}
-            className={`
-              aspect-square rounded border-2 overflow-hidden transition-colors
-              ${selectedImage === index 
-                ? 'border-blue-500' 
-                : 'border-gray-200 hover:border-gray-400'
-              }
-            `}
-          >
-            <img
-              src={media.url}
-              alt={`${product.name} thumbnail ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </button>
-        ))}
       </div>
     </div>
   );
@@ -10021,9 +8996,7 @@ await relatedService.loadRelatedProducts("product-id", 6);
 await relatedService.refreshRelatedProducts();
 ```
 
-## Usage Examples
-
-### Related Products Grid
+## Usage Example
 
 ```tsx
 function RelatedProductsGrid() {
@@ -10115,248 +9088,6 @@ function RelatedProductsGrid() {
         ))}
       </div>
     </div>
-  );
-}
-```
-
-### Related Products Carousel
-
-```tsx
-import { useState } from "react";
-
-function RelatedProductsCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const relatedService = useService(RelatedProductsServiceDefinition);
-  
-  const relatedProducts = relatedService.relatedProducts.get();
-  const isLoading = relatedService.isLoading.get();
-  const hasRelatedProducts = relatedService.hasRelatedProducts.get();
-  
-  if (isLoading || !hasRelatedProducts) {
-    return null;
-  }
-  
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(relatedProducts.length / itemsPerPage);
-  
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalPages);
-  };
-  
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
-  };
-  
-  const currentProducts = relatedProducts.slice(
-    currentIndex * itemsPerPage,
-    (currentIndex + 1) * itemsPerPage
-  );
-  
-  return (
-    <div className="related-products-carousel">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Related Products
-        </h3>
-        
-        <div className="flex gap-2">
-          <button
-            onClick={prevSlide}
-            disabled={totalPages <= 1}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-          >
-            ←
-          </button>
-          <button
-            onClick={nextSlide}
-            disabled={totalPages <= 1}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-          >
-            →
-          </button>
-        </div>
-      </div>
-      
-      <div className="relative overflow-hidden">
-        <div className="flex transition-transform duration-300">
-          {currentProducts.map(product => (
-            <div key={product._id} className="flex-shrink-0 w-1/3 px-2">
-              <div className="product-card">
-                <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-                  {product.media?.[0] && (
-                    <img
-                      src={product.media[0].url}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-                
-                <div className="mt-2">
-                  <h4 className="text-sm font-medium text-gray-900 truncate">
-                    {product.name}
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    ${product.price?.price}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 space-x-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Compact Related Products List
-
-```tsx
-function CompactRelatedProductsList() {
-  const relatedService = useService(RelatedProductsServiceDefinition);
-  
-  const relatedProducts = relatedService.relatedProducts.get();
-  const isLoading = relatedService.isLoading.get();
-  const hasRelatedProducts = relatedService.hasRelatedProducts.get();
-  
-  if (isLoading || !hasRelatedProducts) {
-    return null;
-  }
-  
-  return (
-    <div className="compact-related-products">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Related Products
-      </h4>
-      
-      <div className="space-y-2">
-        {relatedProducts.slice(0, 3).map(product => (
-          <div key={product._id} className="flex items-center space-x-3">
-            <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded overflow-hidden">
-              {product.media?.[0] && (
-                <img
-                  src={product.media[0].url}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              )}
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {product.name}
-              </p>
-              <p className="text-sm text-gray-600">
-                ${product.price?.price}
-              </p>
-            </div>
-            
-            <button className="flex-shrink-0 text-blue-500 hover:text-blue-700 text-sm">
-              View
-            </button>
-          </div>
-        ))}
-      </div>
-      
-      {relatedProducts.length > 3 && (
-        <button className="text-blue-500 hover:text-blue-700 text-sm mt-2">
-          See all {relatedProducts.length} related products
-        </button>
-      )}
-    </div>
-  );
-}
-```
-
-### Related Products Modal
-
-```tsx
-import { useState } from "react";
-
-function RelatedProductsModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const relatedService = useService(RelatedProductsServiceDefinition);
-  
-  const relatedProducts = relatedService.relatedProducts.get();
-  const hasRelatedProducts = relatedService.hasRelatedProducts.get();
-  
-  if (!hasRelatedProducts) {
-    return null;
-  }
-  
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="text-blue-500 hover:text-blue-700 text-sm"
-      >
-        View Related Products ({relatedProducts.length})
-      </button>
-      
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50">
-          <div className="absolute inset-4 bg-white rounded-lg overflow-auto">
-            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Related Products
-              </h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {relatedProducts.map(product => (
-                  <div key={product._id} className="product-card">
-                    <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-                      {product.media?.[0] && (
-                        <img
-                          src={product.media[0].url}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                    
-                    <div className="mt-2">
-                      <h4 className="text-sm font-medium text-gray-900 truncate">
-                        {product.name}
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        ${product.price?.price}
-                      </p>
-                    </div>
-                    
-                    <button className="mt-2 w-full bg-blue-500 text-white py-1 px-2 rounded text-sm hover:bg-blue-600 transition-colors">
-                      View Product
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 ```
@@ -11216,9 +9947,7 @@ if (!nativeShareSuccess) {
 }
 ```
 
-## Usage Examples
-
-### Complete Social Sharing Widget
+## Usage Example
 
 ```tsx
 function SocialSharingWidget() {
@@ -11333,206 +10062,7 @@ function getPlatformIcon(iconName: string) {
 }
 ```
 
-### Compact Share Button
 
-```tsx
-import { useState } from "react";
-
-function CompactShareButton() {
-  const [isOpen, setIsOpen] = useState(false);
-  const sharingService = useService(SocialSharingServiceDefinition);
-  
-  const availablePlatforms = sharingService.availablePlatforms.get();
-  const productUrl = "https://example.com/product/123";
-  const productTitle = "Amazing Product";
-  
-  const handleQuickShare = async () => {
-    // Try native sharing first
-    const success = await sharingService.shareNative({
-      title: productTitle,
-      text: "Check out this product!",
-      url: productUrl
-    });
-    
-    // If native sharing fails, open dropdown
-    if (!success) {
-      setIsOpen(!isOpen);
-    }
-  };
-  
-  return (
-    <div className="relative">
-      <button
-        onClick={handleQuickShare}
-        className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        <span>📤</span>
-        <span>Share</span>
-      </button>
-      
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-          <div className="p-2 space-y-1">
-            {availablePlatforms.map(platform => (
-              <button
-                key={platform.name}
-                onClick={() => {
-                  handleShare(platform.name);
-                  setIsOpen(false);
-                }}
-                className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 transition-colors"
-              >
-                <span className="mr-2" style={{ color: platform.color }}>
-                  {getPlatformIcon(platform.icon)}
-                </span>
-                {platform.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Share with Custom Content
-
-```tsx
-function CustomShareContent() {
-  const sharingService = useService(SocialSharingServiceDefinition);
-  
-  const productUrl = "https://example.com/product/123";
-  const productTitle = "Premium Headphones";
-  const productPrice = "$99.99";
-  
-  const shareConfigurations = {
-    facebook: {
-      title: productTitle,
-      description: `Premium quality headphones for just ${productPrice}. Perfect for music lovers!`
-    },
-    twitter: {
-      text: `🎧 Check out these amazing ${productTitle} for only ${productPrice}! #headphones #music #deals`,
-      hashtags: ["headphones", "music", "deals", "audio"]
-    },
-    linkedin: {
-      title: productTitle,
-      summary: `Professional-grade headphones perfect for work and entertainment. High-quality audio at ${productPrice}.`
-    },
-    whatsapp: {
-      text: `Hey! I found these great ${productTitle} for ${productPrice}. Thought you might be interested!`
-    },
-    email: {
-      subject: `Check out these ${productTitle}`,
-      body: `I thought you might be interested in these ${productTitle}. They're available for ${productPrice} and have great reviews!`
-    }
-  };
-  
-  const handleCustomShare = (platform: string) => {
-    const config = shareConfigurations[platform];
-    
-    switch (platform) {
-      case "facebook":
-        sharingService.shareToFacebook(productUrl, config.title, config.description);
-        break;
-      case "twitter":
-        sharingService.shareToTwitter(productUrl, config.text, config.hashtags);
-        break;
-      case "linkedin":
-        sharingService.shareToLinkedIn(productUrl, config.title, config.summary);
-        break;
-      case "whatsapp":
-        sharingService.shareToWhatsApp(productUrl, config.text);
-        break;
-      case "email":
-        sharingService.shareToEmail(productUrl, config.subject, config.body);
-        break;
-    }
-  };
-  
-  return (
-    <div className="custom-share-content">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Share with custom content:
-      </h4>
-      
-      <div className="grid grid-cols-2 gap-2">
-        {Object.keys(shareConfigurations).map(platform => (
-          <button
-            key={platform}
-            onClick={() => handleCustomShare(platform)}
-            className="flex items-center gap-2 px-3 py-2 border rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <span className="capitalize">{platform}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Share Analytics Dashboard
-
-```tsx
-function ShareAnalytics() {
-  const sharingService = useService(SocialSharingServiceDefinition);
-  
-  const shareCount = sharingService.shareCount.get();
-  const lastSharedPlatform = sharingService.lastSharedPlatform.get();
-  
-  // This would typically come from a more comprehensive analytics service
-  const [shareHistory, setShareHistory] = useState([]);
-  
-  const getShareStats = () => {
-    // Mock analytics data
-    return {
-      totalShares: shareCount,
-      mostPopularPlatform: lastSharedPlatform,
-      platformBreakdown: {
-        Facebook: Math.floor(shareCount * 0.4),
-        Twitter: Math.floor(shareCount * 0.3),
-        WhatsApp: Math.floor(shareCount * 0.2),
-        Email: Math.floor(shareCount * 0.1)
-      }
-    };
-  };
-  
-  const stats = getShareStats();
-  
-  return (
-    <div className="share-analytics">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Share Analytics
-      </h4>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Total Shares:</span>
-          <span className="font-medium">{stats.totalShares}</span>
-        </div>
-        
-        <div className="flex justify-between text-sm">
-          <span>Most Popular:</span>
-          <span className="font-medium">{stats.mostPopularPlatform || "None"}</span>
-        </div>
-        
-        <div className="mt-3">
-          <h5 className="text-xs font-medium text-gray-700 mb-2">Platform Breakdown:</h5>
-          <div className="space-y-1">
-            {Object.entries(stats.platformBreakdown).map(([platform, count]) => (
-              <div key={platform} className="flex justify-between text-xs">
-                <span>{platform}:</span>
-                <span>{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
 
 ## Server-Side Configuration
 
@@ -11757,9 +10287,7 @@ await sortService.setSortBy("name-desc");
 await sortService.setSortBy("");
 ```
 
-## Usage Examples
-
-### Sort Dropdown
+## Usage Example
 
 ```tsx
 import { useService } from "@wix/services-manager-react";
@@ -11800,181 +10328,7 @@ function SortDropdown() {
 }
 ```
 
-### Sort Button Group
 
-```tsx
-function SortButtonGroup() {
-  const sortService = useService(SortServiceDefinition);
-  
-  const currentSort = sortService.currentSort.get();
-  
-  const sortOptions = [
-    { value: "", label: "Newest", icon: "🆕" },
-    { value: "recommended", label: "Popular", icon: "⭐" },
-    { value: "price-asc", label: "Price ↑", icon: "💰" },
-    { value: "price-desc", label: "Price ↓", icon: "💸" },
-    { value: "name-asc", label: "A-Z", icon: "🔤" },
-    { value: "name-desc", label: "Z-A", icon: "🔠" },
-  ];
-  
-  return (
-    <div className="sort-buttons">
-      <h3 className="text-sm font-medium text-gray-700 mb-3">Sort by:</h3>
-      <div className="flex flex-wrap gap-2">
-        {sortOptions.map(option => (
-          <button
-            key={option.value}
-            onClick={() => sortService.setSortBy(option.value as any)}
-            className={`
-              flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-              ${currentSort === option.value
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }
-            `}
-          >
-            <span>{option.icon}</span>
-            <span>{option.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Mobile Sort Modal
-
-```tsx
-import { useState } from "react";
-
-function MobileSortModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const sortService = useService(SortServiceDefinition);
-  
-  const currentSort = sortService.currentSort.get();
-  
-  const sortOptions = [
-    { value: "", label: "Newest" },
-    { value: "recommended", label: "Recommended" },
-    { value: "name-asc", label: "Name A-Z" },
-    { value: "name-desc", label: "Name Z-A" },
-    { value: "price-asc", label: "Price: Low to High" },
-    { value: "price-desc", label: "Price: High to Low" },
-  ];
-  
-  const currentSortLabel = sortOptions.find(opt => opt.value === currentSort)?.label || "Newest";
-  
-  return (
-    <>
-      {/* Sort Trigger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-        </svg>
-        <span>{currentSortLabel}</span>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      
-      {/* Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50">
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg">
-            <div className="border-b px-4 py-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Sort Products</h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="p-4">
-              <div className="space-y-2">
-                {sortOptions.map(option => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      sortService.setSortBy(option.value as any);
-                      setIsOpen(false);
-                    }}
-                    className={`
-                      w-full text-left px-4 py-3 rounded-lg transition-colors
-                      ${currentSort === option.value
-                        ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                        : 'hover:bg-gray-50'
-                      }
-                    `}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{option.label}</span>
-                      {currentSort === option.value && (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-```
-
-### Sort with Results Count
-
-```tsx
-function SortWithResults() {
-  const sortService = useService(SortServiceDefinition);
-  const collectionService = useService(CollectionServiceDefinition);
-  
-  const currentSort = sortService.currentSort.get();
-  const totalProducts = collectionService.totalProducts.get();
-  
-  const sortOptions = [
-    { value: "", label: "Newest" },
-    { value: "recommended", label: "Recommended" },
-    { value: "price-asc", label: "Price ↑" },
-    { value: "price-desc", label: "Price ↓" },
-    { value: "name-asc", label: "A-Z" },
-    { value: "name-desc", label: "Z-A" },
-  ];
-  
-  return (
-    <div className="flex items-center justify-between mb-6">
-      <div className="text-sm text-gray-600">
-        {totalProducts} products
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">Sort:</span>
-        <select
-          value={currentSort}
-          onChange={(e) => sortService.setSortBy(e.target.value as any)}
-          className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          {sortOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-}
-```
 
 ## URL Integration
 
