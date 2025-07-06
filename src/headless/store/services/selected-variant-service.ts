@@ -1,35 +1,13 @@
 import { defineService, implementService } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3, readOnlyVariantsV3 } from "@wix/stores";
+import { productsV3, inventoryItemsV3 } from "@wix/stores";
 import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
 import { ProductServiceDefinition } from "./product-service";
 import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
-
-// Add a function to fetch variants from the API
-const fetchVariantsByProductId = async (
-  productId: string
-): Promise<productsV3.Variant[]> => {
-  try {
-    const { items } = await readOnlyVariantsV3
-      .queryVariants({
-        fields: [],
-      })
-      .eq("productData.productId", productId)
-      .find();
-
-    return items.map(({optionChoices, ...rest}) => ({
-      ...rest,
-      choices: optionChoices as productsV3.Variant["choices"],
-    }));
-  } catch (error) {
-    console.error("Failed to fetch variants:", error);
-    return [];
-  }
-};
 
 export interface SelectedVariantServiceAPI {
   selectedQuantity: Signal<number>;
@@ -297,27 +275,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           }
         } else {
           if (currentProduct.variantSummary!.variantCount! > 1) {
-            // Fetch variants using the API
-            isLoading.set(true);
-            error.set(null);
-            fetchVariantsByProductId(currentProduct._id || "")
-              .then((fetchedVariants) => {
-                variants.set(fetchedVariants);
-                if (fetchedVariants.length > 0) {
-                  updateQuantityFromVariant(fetchedVariants[0]);
-                }
-                isLoading.set(false);
-              })
-              .catch((err) => {
-                console.error("Failed to fetch variants:", err);
-                error.set(
-                  err instanceof Error
-                    ? err.message
-                    : "Failed to fetch variants"
-                );
-                isLoading.set(false);
-                variants.set([]);
-              });
+            // Variants should now be provided by the collection service
+            // If they're not available, set empty variants for now
+            variants.set([]);
           } else {
             const singleVariant: productsV3.Variant = {
               _id: "default",

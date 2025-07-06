@@ -5,7 +5,8 @@ import {
 } from "@wix/services-definitions";
 import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 import type { Signal } from "../../Signal";
-import { productsV3 } from "@wix/stores";
+
+import { productsV3, readOnlyVariantsV3 } from "@wix/stores";
 import { FilterServiceDefinition, type Filter } from "./filter-service";
 import { CategoryServiceDefinition } from "./category-service";
 import { SortServiceDefinition, type SortBy } from "./sort-service";
@@ -22,7 +23,14 @@ const searchProducts = async (searchOptions: any) => {
     fields: searchOptions.fields || [],
   };
 
-  return await productsV3.searchProducts(searchParams, options);
+  const result = await productsV3.searchProducts(searchParams, options);
+  
+  // Fetch missing variants for all products in one batch request
+  if (result.products) {
+    result.products = await fetchMissingVariants(result.products);
+  }
+
+  return result;
 };
 
 export interface CollectionServiceAPI {
@@ -607,3 +615,71 @@ export async function loadCollectionServiceConfig(
     };
   }
 }
+
+// Add function to fetch missing variants for all products in one request
+const fetchMissingVariants = async (
+  products: productsV3.V3Product[]
+): Promise<productsV3.V3Product[]> => {
+  // Find products that need variants
+  const productsNeedingVariants = products.filter(
+    (product) =>
+      !product.variantsInfo?.variants &&
+      product.variantSummary?.variantCount &&
+      product.variantSummary.variantCount > 1
+  );
+
+  if (productsNeedingVariants.length === 0) {
+    return products;
+  }
+
+  try {
+    const productIds = productsNeedingVariants
+      .map((p) => p._id)
+      .filter(Boolean) as string[];
+
+    if (productIds.length === 0) {
+      return products;
+    }
+
+    // Fetch all variants for these products in one request
+    const { items } = await readOnlyVariantsV3
+      .queryVariants({
+        fields: [],
+      })
+      .in("productData.productId", productIds)
+      .find();
+
+    // Group variants by product ID
+    const variantsByProductId = new Map<string, productsV3.Variant[]>();
+    items.forEach((item) => {
+      const productId = item.productData?.productId;
+      if (productId) {
+        if (!variantsByProductId.has(productId)) {
+          variantsByProductId.set(productId, []);
+        }
+        variantsByProductId.get(productId)!.push({
+          ...item,
+          choices: item.optionChoices as productsV3.Variant["choices"],
+        });
+      }
+    });
+
+    // Update products with their variants
+    return products.map((product) => {
+      const variants = variantsByProductId.get(product._id || "");
+      if (variants && variants.length > 0) {
+        return {
+          ...product,
+          variantsInfo: {
+            ...product.variantsInfo,
+            variants,
+          },
+        };
+      }
+      return product;
+    });
+  } catch (error) {
+    console.error("Failed to fetch missing variants:", error);
+    return products;
+  }
+};
