@@ -105,41 +105,27 @@ await catalogService.loadCatalogOptions();
 await catalogService.loadCatalogOptions("category-id");
 ```
 
-## Usage Examples
-
-### Complete Filter Panel
+## Usage Example
 
 ```tsx
-function FilterPanel() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
+function CatalogFilterPanel() {
+  const catalogOptionsService = useService(CatalogOptionsServiceDefinition);
   
-  const catalogOptions = catalogService.catalogOptions.get();
-  const isLoading = catalogService.isLoading.get();
-  const error = catalogService.error.get();
-  
-  const [selectedFilters, setSelectedFilters] = useState({});
-  
-  const handleFilterChange = (optionId: string, choiceId: string, selected: boolean) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [optionId]: {
-        ...prev[optionId],
-        [choiceId]: selected
-      }
-    }));
-  };
+  const catalogOptions = catalogOptionsService.catalogOptions.get();
+  const isLoading = catalogOptionsService.isLoading.get();
+  const error = catalogOptionsService.error.get();
   
   if (isLoading) {
     return (
       <div className="filter-panel-loading">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <div className="space-y-4">
+        <div className="animate-pulse space-y-4">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-              <div className="grid grid-cols-3 gap-2">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-8 bg-gray-300 rounded"></div>
+            <div key={index}>
+              <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
+              <div className="space-y-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-3 bg-gray-200 rounded w-16"></div>
                 ))}
               </div>
             </div>
@@ -153,451 +139,127 @@ function FilterPanel() {
     return (
       <div className="filter-panel-error">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <div className="text-center py-8 border rounded-lg">
-          <p className="text-red-500 mb-2">Failed to load filters</p>
-          <button
-            onClick={() => catalogService.loadCatalogOptions()}
-            className="text-blue-500 hover:text-blue-700"
-          >
-            Try Again
-          </button>
+        <p className="text-red-500 text-sm">{error}</p>
+      </div>
+    );
+  }
+  
+  const renderFilterOption = (option: any) => {
+    if (option.optionType === "color") {
+      return (
+        <div key={option.key} className="filter-group">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+          <div className="flex flex-wrap gap-2">
+            {option.values.map((value: any) => (
+              <button
+                key={value.key}
+                onClick={() => {
+                  // Toggle filter selection logic would go here
+                  console.log('Selected color:', value.value);
+                }}
+                className="w-8 h-8 rounded-full border-2 border-gray-300 hover:border-gray-400 transition-colors"
+                style={{ backgroundColor: value.color || value.value }}
+                title={value.value}
+              >
+                <span className="sr-only">{value.value}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    if (option.optionType === "size") {
+      // Sort sizes intelligently
+      const sortedValues = [...option.values].sort((a, b) => {
+        const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        const aIndex = sizeOrder.indexOf(a.value);
+        const bIndex = sizeOrder.indexOf(b.value);
+        
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex - bIndex;
+        }
+        
+        // Fallback to alphabetical for non-standard sizes
+        return a.value.localeCompare(b.value);
+      });
+      
+      return (
+        <div key={option.key} className="filter-group">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+          <div className="flex flex-wrap gap-2">
+            {sortedValues.map((value: any) => (
+              <button
+                key={value.key}
+                onClick={() => {
+                  console.log('Selected size:', value.value);
+                }}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:border-gray-400 hover:bg-gray-50 transition-colors"
+              >
+                {value.value}
+                {value.productCount > 0 && (
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({value.productCount})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    // Default rendering for other option types
+    return (
+      <div key={option.key} className="filter-group">
+        <h4 className="text-sm font-medium text-gray-900 mb-2">{option.name}</h4>
+        <div className="space-y-2">
+          {option.values.map((value: any) => (
+            <label key={value.key} className="flex items-center">
+              <input
+                type="checkbox"
+                onChange={() => {
+                  console.log('Selected option:', value.value);
+                }}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <span className="ml-2 text-sm text-gray-700">
+                {value.value}
+                {value.productCount > 0 && (
+                  <span className="text-gray-500 ml-1">
+                    ({value.productCount})
+                  </span>
+                )}
+              </span>
+            </label>
+          ))}
         </div>
       </div>
     );
-  }
-  
-  if (!catalogOptions || catalogOptions.length === 0) {
-    return (
-      <div className="filter-panel-empty">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
-        <p className="text-gray-500 text-center py-8">
-          No filter options available
-        </p>
-      </div>
-    );
-  }
+  };
   
   return (
-    <div className="filter-panel">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
+    <div className="catalog-filter-panel">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Filter Products
+      </h3>
       
       <div className="space-y-6">
-        {catalogOptions.map(option => (
-          <div key={option.id} className="filter-group">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">
-              {option.name}
-            </h4>
-            
-            <div className="space-y-2">
-              {option.choices.map(choice => (
-                <label
-                  key={choice.id}
-                  className="flex items-center space-x-3 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedFilters[option.id]?.[choice.id] || false}
-                    onChange={(e) => handleFilterChange(option.id, choice.id, e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  
-                  <div className="flex items-center space-x-2">
-                    {choice.colorCode && (
-                      <div
-                        className="w-4 h-4 rounded-full border border-gray-300"
-                        style={{ backgroundColor: choice.colorCode }}
-                      />
-                    )}
-                    <span className="text-sm text-gray-700">{choice.name}</span>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        ))}
+        {catalogOptions.map(renderFilterOption)}
       </div>
       
-      <div className="mt-6 pt-6 border-t">
+      <div className="mt-6 pt-4 border-t">
         <button
-          onClick={() => setSelectedFilters({})}
-          className="text-sm text-blue-600 hover:text-blue-800"
+          onClick={() => {
+            // Clear all filters logic
+            console.log('Clear all filters');
+          }}
+          className="text-sm text-blue-500 hover:text-blue-700"
         >
           Clear all filters
         </button>
       </div>
     </div>
-  );
-}
-```
-
-### Color Swatch Filter
-
-```tsx
-function ColorSwatchFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedColors, setSelectedColors] = useState(new Set());
-  
-  const colorOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('color')
-  );
-  
-  if (!colorOption) return null;
-  
-  const handleColorToggle = (colorId: string) => {
-    const newSelected = new Set(selectedColors);
-    if (newSelected.has(colorId)) {
-      newSelected.delete(colorId);
-    } else {
-      newSelected.add(colorId);
-    }
-    setSelectedColors(newSelected);
-  };
-  
-  return (
-    <div className="color-swatch-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        {colorOption.name}
-      </h4>
-      
-      <div className="flex flex-wrap gap-2">
-        {colorOption.choices.map(choice => (
-          <button
-            key={choice.id}
-            onClick={() => handleColorToggle(choice.id)}
-            className={`
-              w-8 h-8 rounded-full border-2 transition-all
-              ${selectedColors.has(choice.id)
-                ? 'border-blue-500 scale-110'
-                : 'border-gray-300 hover:border-gray-400'
-              }
-            `}
-            style={{ backgroundColor: choice.colorCode || '#f3f4f6' }}
-            title={choice.name}
-          >
-            {selectedColors.has(choice.id) && (
-              <span className="text-white text-xs">✓</span>
-            )}
-          </button>
-        ))}
-      </div>
-      
-      {selectedColors.size > 0 && (
-        <div className="mt-2">
-          <p className="text-sm text-gray-600">
-            {selectedColors.size} color{selectedColors.size > 1 ? 's' : ''} selected
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-```
-
-### Size Filter with Smart Sorting
-
-```tsx
-function SizeFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedSizes, setSelectedSizes] = useState(new Set());
-  
-  const sizeOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('size')
-  );
-  
-  if (!sizeOption) return null;
-  
-  // The service already handles intelligent sorting
-  const sortedSizes = sizeOption.choices;
-  
-  const handleSizeToggle = (sizeId: string) => {
-    const newSelected = new Set(selectedSizes);
-    if (newSelected.has(sizeId)) {
-      newSelected.delete(sizeId);
-    } else {
-      newSelected.add(sizeId);
-    }
-    setSelectedSizes(newSelected);
-  };
-  
-  return (
-    <div className="size-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        {sizeOption.name}
-      </h4>
-      
-      <div className="grid grid-cols-4 gap-2">
-        {sortedSizes.map(choice => (
-          <button
-            key={choice.id}
-            onClick={() => handleSizeToggle(choice.id)}
-            className={`
-              px-3 py-2 text-sm border rounded-md transition-colors
-              ${selectedSizes.has(choice.id)
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-              }
-            `}
-          >
-            {choice.name}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Inventory Status Filter
-
-```tsx
-function InventoryStatusFilter() {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedStatuses, setSelectedStatuses] = useState(new Set());
-  
-  const inventoryOption = catalogOptions?.find(option => 
-    option.name.toLowerCase().includes('inventory') || 
-    option.name.toLowerCase().includes('availability')
-  );
-  
-  if (!inventoryOption) return null;
-  
-  const handleStatusToggle = (statusId: string) => {
-    const newSelected = new Set(selectedStatuses);
-    if (newSelected.has(statusId)) {
-      newSelected.delete(statusId);
-    } else {
-      newSelected.add(statusId);
-    }
-    setSelectedStatuses(newSelected);
-  };
-  
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'in_stock':
-        return '✅';
-      case 'out_of_stock':
-        return '❌';
-      case 'pre_order':
-        return '⏳';
-      default:
-        return '📦';
-    }
-  };
-  
-  return (
-    <div className="inventory-status-filter">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Availability
-      </h4>
-      
-      <div className="space-y-2">
-        {inventoryOption.choices.map(choice => (
-          <label
-            key={choice.id}
-            className="flex items-center space-x-3 cursor-pointer"
-          >
-            <input
-              type="checkbox"
-              checked={selectedStatuses.has(choice.id)}
-              onChange={(e) => handleStatusToggle(choice.id)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            
-            <div className="flex items-center space-x-2">
-              <span>{getStatusIcon(choice.name)}</span>
-              <span className="text-sm text-gray-700">
-                {choice.name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-              </span>
-            </div>
-          </label>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category-Specific Options
-
-```tsx
-function CategoryOptionsFilter({ categoryId }: { categoryId?: string }) {
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const isLoading = catalogService.isLoading.get();
-  
-  // Load options for specific category
-  useEffect(() => {
-    catalogService.loadCatalogOptions(categoryId);
-  }, [categoryId]);
-  
-  if (isLoading) {
-    return <div>Loading category options...</div>;
-  }
-  
-  if (!catalogOptions || catalogOptions.length === 0) {
-    return (
-      <div className="category-options-empty">
-        <p className="text-gray-500 text-center py-8">
-          No filter options available for this category
-        </p>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="category-options-filter">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Filter Products
-      </h3>
-      
-      <div className="space-y-4">
-        {catalogOptions.map(option => (
-          <div key={option.id} className="filter-group">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">
-              {option.name}
-            </h4>
-            
-            <div className="flex flex-wrap gap-2">
-              {option.choices.map(choice => (
-                <button
-                  key={choice.id}
-                  className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                >
-                  {choice.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Mobile Filter Modal
-
-```tsx
-import { useState } from "react";
-
-function MobileFilterModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const catalogService = useService(CatalogOptionsServiceDefinition);
-  
-  const catalogOptions = catalogService.catalogOptions.get();
-  const [selectedFilters, setSelectedFilters] = useState({});
-  
-  const handleApplyFilters = () => {
-    // Apply filters logic here
-    console.log('Applying filters:', selectedFilters);
-    setIsOpen(false);
-  };
-  
-  const getFilterCount = () => {
-    return Object.values(selectedFilters).reduce((count, filters) => {
-      return count + Object.values(filters).filter(Boolean).length;
-    }, 0);
-  };
-  
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-        </svg>
-        <span>Filter</span>
-        {getFilterCount() > 0 && (
-          <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-1">
-            {getFilterCount()}
-          </span>
-        )}
-      </button>
-      
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50">
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[80vh] overflow-auto">
-            <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Filters</h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="p-4 space-y-6">
-              {catalogOptions?.map(option => (
-                <div key={option.id} className="filter-group">
-                  <h4 className="text-sm font-medium text-gray-900 mb-3">
-                    {option.name}
-                  </h4>
-                  
-                  <div className="space-y-2">
-                    {option.choices.map(choice => (
-                      <label
-                        key={choice.id}
-                        className="flex items-center space-x-3 cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters[option.id]?.[choice.id] || false}
-                          onChange={(e) => {
-                            setSelectedFilters(prev => ({
-                              ...prev,
-                              [option.id]: {
-                                ...prev[option.id],
-                                [choice.id]: e.target.checked
-                              }
-                            }));
-                          }}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        
-                        <div className="flex items-center space-x-2">
-                          {choice.colorCode && (
-                            <div
-                              className="w-4 h-4 rounded-full border border-gray-300"
-                              style={{ backgroundColor: choice.colorCode }}
-                            />
-                          )}
-                          <span className="text-sm text-gray-700">{choice.name}</span>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="sticky bottom-0 bg-white border-t px-4 py-3 flex gap-3">
-              <button
-                onClick={() => setSelectedFilters({})}
-                className="flex-1 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                Clear All
-              </button>
-              <button
-                onClick={handleApplyFilters}
-                className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                Apply Filters ({getFilterCount()})
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 ```

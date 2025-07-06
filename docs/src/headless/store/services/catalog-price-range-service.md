@@ -70,313 +70,156 @@ await priceRangeService.loadCatalogPriceRange();
 await priceRangeService.loadCatalogPriceRange("category-id");
 ```
 
-## Usage Examples
-
-### Price Range Slider
+## Usage Example
 
 ```tsx
-import { useState, useEffect } from "react";
-
-function PriceRangeSlider() {
+function PriceRangeFilter() {
   const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
   
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
+  const priceRange = priceRangeService.priceRange.get();
   const isLoading = priceRangeService.isLoading.get();
+  const error = priceRangeService.error.get();
   
-  const [selectedRange, setSelectedRange] = useState([0, 1000]);
+  const [selectedMin, setSelectedMin] = useState(priceRange?.min || 0);
+  const [selectedMax, setSelectedMax] = useState(priceRange?.max || 1000);
   
   useEffect(() => {
-    if (catalogPriceRange) {
-      setSelectedRange([catalogPriceRange.minPrice, catalogPriceRange.maxPrice]);
+    if (priceRange) {
+      setSelectedMin(priceRange.min);
+      setSelectedMax(priceRange.max);
     }
-  }, [catalogPriceRange]);
+  }, [priceRange]);
   
   if (isLoading) {
     return (
       <div className="price-range-loading">
         <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+          <div className="h-2 bg-gray-300 rounded w-full mb-4"></div>
+          <div className="flex gap-2">
+            <div className="h-8 bg-gray-300 rounded flex-1"></div>
+            <div className="h-8 bg-gray-300 rounded flex-1"></div>
+          </div>
         </div>
       </div>
     );
   }
   
-  if (!catalogPriceRange) {
-    return null;
+  if (error || !priceRange) {
+    return (
+      <div className="price-range-error">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+        <p className="text-red-500 text-sm">{error || 'Unable to load price range'}</p>
+      </div>
+    );
   }
   
-  const handleRangeChange = (values: number[]) => {
-    setSelectedRange(values);
-    // Apply price filter logic here
+  const handleSliderChange = (values: number[]) => {
+    setSelectedMin(values[0]);
+    setSelectedMax(values[1]);
+  };
+  
+  const handleApplyRange = () => {
+    // Apply price range filter logic
+    console.log('Apply price range:', { min: selectedMin, max: selectedMax });
+  };
+  
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
   };
   
   return (
-    <div className="price-range-slider">
+    <div className="price-range-filter">
       <h4 className="text-sm font-medium text-gray-900 mb-3">
         Price Range
       </h4>
       
-      <div className="mb-4">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>${selectedRange[0]}</span>
-          <span>${selectedRange[1]}</span>
-        </div>
-        
-        {/* Custom range slider or use a library like react-slider */}
+      <div className="space-y-4">
+        {/* Range Slider */}
         <div className="relative">
           <input
             type="range"
-            min={catalogPriceRange.minPrice}
-            max={catalogPriceRange.maxPrice}
-            value={selectedRange[0]}
-            onChange={(e) => handleRangeChange([parseInt(e.target.value), selectedRange[1]])}
+            min={priceRange.min}
+            max={priceRange.max}
+            value={selectedMin}
+            onChange={(e) => {
+              const value = Math.min(Number(e.target.value), selectedMax - 1);
+              setSelectedMin(value);
+            }}
             className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
           <input
             type="range"
-            min={catalogPriceRange.minPrice}
-            max={catalogPriceRange.maxPrice}
-            value={selectedRange[1]}
-            onChange={(e) => handleRangeChange([selectedRange[0], parseInt(e.target.value)])}
+            min={priceRange.min}
+            max={priceRange.max}
+            value={selectedMax}
+            onChange={(e) => {
+              const value = Math.max(Number(e.target.value), selectedMin + 1);
+              setSelectedMax(value);
+            }}
             className="absolute w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
+          
+          <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <span>{formatPrice(priceRange.min)}</span>
+            <span>{formatPrice(priceRange.max)}</span>
+          </div>
         </div>
-      </div>
-      
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>${catalogPriceRange.minPrice}</span>
-        <span>${catalogPriceRange.maxPrice}</span>
-      </div>
-    </div>
-  );
-}
-```
-
-### Price Range Input Fields
-
-```tsx
-function PriceRangeInputs() {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  
-  useEffect(() => {
-    if (catalogPriceRange) {
-      setMinPrice(catalogPriceRange.minPrice.toString());
-      setMaxPrice(catalogPriceRange.maxPrice.toString());
-    }
-  }, [catalogPriceRange]);
-  
-  if (!catalogPriceRange) {
-    return null;
-  }
-  
-  const handleApplyFilter = () => {
-    const min = Math.max(parseFloat(minPrice) || 0, catalogPriceRange.minPrice);
-    const max = Math.min(parseFloat(maxPrice) || catalogPriceRange.maxPrice, catalogPriceRange.maxPrice);
-    
-    // Apply price filter logic
-    console.log('Applying price filter:', { min, max });
-  };
-  
-  return (
-    <div className="price-range-inputs">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Price Range
-      </h4>
-      
-      <div className="flex items-center space-x-2 mb-3">
-        <div className="flex-1">
-          <label className="block text-xs text-gray-600 mb-1">Min</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+        
+        {/* Input Fields */}
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">Min</label>
             <input
               type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              min={catalogPriceRange.minPrice}
-              max={catalogPriceRange.maxPrice}
-              className="w-full pl-6 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="0"
+              value={selectedMin}
+              onChange={(e) => {
+                const value = Math.max(priceRange.min, Number(e.target.value));
+                setSelectedMin(Math.min(value, selectedMax - 1));
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              min={priceRange.min}
+              max={selectedMax - 1}
+            />
+          </div>
+          
+          <div className="flex items-center justify-center mt-4">
+            <span className="text-gray-400">-</span>
+          </div>
+          
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">Max</label>
+            <input
+              type="number"
+              value={selectedMax}
+              onChange={(e) => {
+                const value = Math.min(priceRange.max, Number(e.target.value));
+                setSelectedMax(Math.max(value, selectedMin + 1));
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              min={selectedMin + 1}
+              max={priceRange.max}
             />
           </div>
         </div>
         
-        <div className="flex-shrink-0 pt-6">
-          <span className="text-gray-400">-</span>
+        {/* Selected Range Display */}
+        <div className="text-center text-sm text-gray-600">
+          {formatPrice(selectedMin)} - {formatPrice(selectedMax)}
         </div>
         
-        <div className="flex-1">
-          <label className="block text-xs text-gray-600 mb-1">Max</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              min={catalogPriceRange.minPrice}
-              max={catalogPriceRange.maxPrice}
-              className="w-full pl-6 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="1000"
-            />
-          </div>
-        </div>
-      </div>
-      
-      <button
-        onClick={handleApplyFilter}
-        className="w-full py-2 px-3 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
-      >
-        Apply Filter
-      </button>
-      
-      <div className="mt-2 text-xs text-gray-500 text-center">
-        Range: ${catalogPriceRange.minPrice} - ${catalogPriceRange.maxPrice}
-      </div>
-    </div>
-  );
-}
-```
-
-### Price Range Buckets
-
-```tsx
-function PriceRangeBuckets() {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const [selectedBucket, setSelectedBucket] = useState(null);
-  
-  if (!catalogPriceRange) {
-    return null;
-  }
-  
-  const createPriceBuckets = (min: number, max: number) => {
-    const range = max - min;
-    const bucketSize = Math.ceil(range / 5); // Create 5 buckets
-    
-    const buckets = [];
-    for (let i = 0; i < 5; i++) {
-      const bucketMin = min + (i * bucketSize);
-      const bucketMax = i === 4 ? max : min + ((i + 1) * bucketSize) - 1;
-      
-      buckets.push({
-        id: i,
-        label: `$${bucketMin} - $${bucketMax}`,
-        min: bucketMin,
-        max: bucketMax
-      });
-    }
-    
-    return buckets;
-  };
-  
-  const priceBuckets = createPriceBuckets(catalogPriceRange.minPrice, catalogPriceRange.maxPrice);
-  
-  return (
-    <div className="price-range-buckets">
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Price Range
-      </h4>
-      
-      <div className="space-y-2">
+        {/* Apply Button */}
         <button
-          onClick={() => setSelectedBucket(null)}
-          className={`
-            w-full text-left px-3 py-2 rounded-md text-sm transition-colors
-            ${selectedBucket === null
-              ? 'bg-blue-50 text-blue-700 border border-blue-200'
-              : 'hover:bg-gray-50 border border-gray-200'
-            }
-          `}
+          onClick={handleApplyRange}
+          className="w-full px-3 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
         >
-          All Prices
+          Apply Price Filter
         </button>
-        
-        {priceBuckets.map(bucket => (
-          <button
-            key={bucket.id}
-            onClick={() => setSelectedBucket(bucket.id)}
-            className={`
-              w-full text-left px-3 py-2 rounded-md text-sm transition-colors
-              ${selectedBucket === bucket.id
-                ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                : 'hover:bg-gray-50 border border-gray-200'
-              }
-            `}
-          >
-            {bucket.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category-Specific Price Range
-
-```tsx
-function CategoryPriceRange({ categoryId }: { categoryId?: string }) {
-  const priceRangeService = useService(CatalogPriceRangeServiceDefinition);
-  
-  const catalogPriceRange = priceRangeService.catalogPriceRange.get();
-  const isLoading = priceRangeService.isLoading.get();
-  
-  useEffect(() => {
-    priceRangeService.loadCatalogPriceRange(categoryId);
-  }, [categoryId]);
-  
-  if (isLoading) {
-    return <div>Loading price range for category...</div>;
-  }
-  
-  if (!catalogPriceRange) {
-    return (
-      <div className="category-price-range-empty">
-        <p className="text-gray-500 text-sm">
-          No price data available for this category
-        </p>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="category-price-range">
-      <h4 className="text-sm font-medium text-gray-900 mb-2">
-        Price Range for Category
-      </h4>
-      
-      <div className="bg-gray-50 rounded-lg p-3">
-        <div className="flex justify-between items-center">
-          <div className="text-center">
-            <p className="text-xs text-gray-600">Lowest</p>
-            <p className="text-lg font-semibold text-green-600">
-              ${catalogPriceRange.minPrice}
-            </p>
-          </div>
-          
-          <div className="flex-1 mx-4">
-            <div className="h-2 bg-gradient-to-r from-green-400 to-red-400 rounded-full"></div>
-          </div>
-          
-          <div className="text-center">
-            <p className="text-xs text-gray-600">Highest</p>
-            <p className="text-lg font-semibold text-red-600">
-              ${catalogPriceRange.maxPrice}
-            </p>
-          </div>
-        </div>
-        
-        <div className="mt-2 text-center">
-          <p className="text-xs text-gray-600">
-            Average: ${Math.round((catalogPriceRange.minPrice + catalogPriceRange.maxPrice) / 2)}
-          </p>
-        </div>
       </div>
     </div>
   );

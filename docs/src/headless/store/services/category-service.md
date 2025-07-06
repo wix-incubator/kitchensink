@@ -101,82 +101,41 @@ await categoryService.loadCategories();
 const categories = categoryService.categories.get();
 ```
 
-## Usage Examples
-
-### Category Navigation Menu
+## Usage Example
 
 ```tsx
-import { useService } from "@wix/services-manager-react";
-import { CategoryServiceDefinition } from "../services/category-service";
-
-function CategoryNavigation() {
+function CategoryNavigationMenu() {
   const categoryService = useService(CategoryServiceDefinition);
   
   const categories = categoryService.categories.get();
   const selectedCategory = categoryService.selectedCategory.get();
+  const isLoading = categoryService.isLoading.get();
   
-  return (
-    <nav className="category-nav">
-      <div className="flex flex-wrap gap-2">
-        {/* All Products Button */}
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            px-4 py-2 rounded-lg text-sm font-medium transition-colors
-            ${selectedCategory === null
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }
-          `}
-        >
-          All Products
-        </button>
-        
-        {/* Category Buttons */}
-        {categories.map(category => (
-          <button
-            key={category._id}
-            onClick={() => categoryService.setSelectedCategory(category._id)}
-            className={`
-              px-4 py-2 rounded-lg text-sm font-medium transition-colors
-              ${selectedCategory === category._id
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }
-            `}
-          >
-            {category.name}
-          </button>
-        ))}
+  if (isLoading) {
+    return (
+      <div className="category-navigation-loading">
+        <div className="animate-pulse space-y-2">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="h-4 bg-gray-300 rounded w-24"></div>
+          ))}
+        </div>
       </div>
-    </nav>
-  );
-}
-```
-
-### Category Sidebar
-
-```tsx
-function CategorySidebar() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
+    );
+  }
   
   return (
-    <aside className="category-sidebar w-64 bg-white border-r">
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Categories
-        </h3>
-        
-        <div className="space-y-1">
-          {/* All Products */}
+    <nav className="category-navigation">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Shop by Category
+      </h3>
+      
+      <ul className="space-y-2">
+        <li>
           <button
             onClick={() => categoryService.setSelectedCategory(null)}
             className={`
-              w-full text-left px-3 py-2 rounded-lg text-sm transition-colors
-              ${selectedCategory === null
+              w-full text-left px-3 py-2 rounded-lg transition-colors
+              ${!selectedCategory
                 ? 'bg-blue-50 text-blue-700 font-medium'
                 : 'text-gray-700 hover:bg-gray-50'
               }
@@ -184,174 +143,30 @@ function CategorySidebar() {
           >
             All Products
           </button>
-          
-          {/* Category List */}
-          {categories.map(category => (
+        </li>
+        
+        {categories.map(category => (
+          <li key={category._id}>
             <button
-              key={category._id}
-              onClick={() => categoryService.setSelectedCategory(category._id)}
+              onClick={() => categoryService.setSelectedCategory(category)}
               className={`
-                w-full text-left px-3 py-2 rounded-lg text-sm transition-colors
-                ${selectedCategory === category._id
+                w-full text-left px-3 py-2 rounded-lg transition-colors
+                ${selectedCategory?._id === category._id
                   ? 'bg-blue-50 text-blue-700 font-medium'
                   : 'text-gray-700 hover:bg-gray-50'
                 }
               `}
             >
               {category.name}
+              {category.numberOfProducts > 0 && (
+                <span className="text-sm text-gray-500 ml-1">
+                  ({category.numberOfProducts})
+                </span>
+              )}
             </button>
-          ))}
-        </div>
-      </div>
-    </aside>
-  );
-}
-```
-
-### Category Dropdown
-
-```tsx
-function CategoryDropdown() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  const selectedCategoryName = selectedCategory 
-    ? categories.find(cat => cat._id === selectedCategory)?.name || 'Unknown'
-    : 'All Categories';
-  
-  return (
-    <div className="category-dropdown">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Filter by Category:
-      </label>
-      <select
-        value={selectedCategory || ''}
-        onChange={(e) => categoryService.setSelectedCategory(e.target.value || null)}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="">All Categories</option>
-        {categories.map(category => (
-          <option key={category._id} value={category._id}>
-            {category.name}
-          </option>
+          </li>
         ))}
-      </select>
-    </div>
-  );
-}
-```
-
-### Category Grid with Images
-
-```tsx
-function CategoryGrid() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  return (
-    <div className="category-grid">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
-        Shop by Category
-      </h3>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {/* All Products Card */}
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            relative group overflow-hidden rounded-lg aspect-square
-            ${selectedCategory === null
-              ? 'ring-2 ring-blue-500'
-              : 'hover:scale-105 transition-transform'
-            }
-          `}
-        >
-          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-            <span className="text-white font-semibold text-lg">
-              All Products
-            </span>
-          </div>
-        </button>
-        
-        {/* Category Cards */}
-        {categories.map(category => (
-          <button
-            key={category._id}
-            onClick={() => categoryService.setSelectedCategory(category._id)}
-            className={`
-              relative group overflow-hidden rounded-lg aspect-square
-              ${selectedCategory === category._id
-                ? 'ring-2 ring-blue-500'
-                : 'hover:scale-105 transition-transform'
-              }
-            `}
-          >
-            {category.media?.[0] ? (
-              <img
-                src={category.media[0].url}
-                alt={category.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">No Image</span>
-              </div>
-            )}
-            
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="text-white font-semibold text-lg">
-                {category.name}
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-### Category Breadcrumbs
-
-```tsx
-function CategoryBreadcrumbs() {
-  const categoryService = useService(CategoryServiceDefinition);
-  
-  const categories = categoryService.categories.get();
-  const selectedCategory = categoryService.selectedCategory.get();
-  
-  const selectedCategoryData = selectedCategory 
-    ? categories.find(cat => cat._id === selectedCategory)
-    : null;
-  
-  return (
-    <nav className="category-breadcrumbs mb-4">
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
-        <a href="/" className="hover:text-blue-500">Home</a>
-        <span>›</span>
-        <button
-          onClick={() => categoryService.setSelectedCategory(null)}
-          className={`
-            hover:text-blue-500 transition-colors
-            ${selectedCategory === null ? 'text-blue-500 font-medium' : ''}
-          `}
-        >
-          Store
-        </button>
-        
-        {selectedCategoryData && (
-          <>
-            <span>›</span>
-            <span className="text-gray-900 font-medium">
-              {selectedCategoryData.name}
-            </span>
-          </>
-        )}
-      </div>
+      </ul>
     </nav>
   );
 }

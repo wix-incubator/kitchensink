@@ -119,139 +119,7 @@ const allFilled = modifierService.areAllRequiredModifiersFilled();
 const colorValue = modifierService.getModifierValue("Color");
 ```
 
-## Usage Examples
-
-### Swatch Color Selector
-
-```tsx
-function ColorSwatchSelector({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="color-swatch-selector">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <div className="flex flex-wrap gap-2">
-        {modifier.choices?.map((choice: any) => (
-          <button
-            key={choice._id}
-            onClick={() => modifierService.setModifierChoice(modifier.name, choice.value)}
-            className={`
-              w-10 h-10 rounded-full border-2 transition-all
-              ${selectedValue?.choiceValue === choice.value
-                ? 'border-blue-500 scale-110'
-                : 'border-gray-300 hover:border-gray-400'
-              }
-            `}
-            style={{ backgroundColor: choice.color || '#f3f4f6' }}
-            title={choice.description}
-          >
-            {selectedValue?.choiceValue === choice.value && (
-              <span className="text-white text-xs">✓</span>
-            )}
-          </button>
-        ))}
-      </div>
-      
-      {selectedValue && (
-        <p className="text-sm text-gray-600 mt-1">
-          Selected: {selectedValue.choiceValue}
-        </p>
-      )}
-    </div>
-  );
-}
-```
-
-### Text Choice Dropdown
-
-```tsx
-function TextChoiceDropdown({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="text-choice-dropdown">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <select
-        value={selectedValue?.choiceValue || ''}
-        onChange={(e) => {
-          if (e.target.value) {
-            modifierService.setModifierChoice(modifier.name, e.target.value);
-          } else {
-            modifierService.clearModifier(modifier.name);
-          }
-        }}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="">Select {modifier.name}</option>
-        {modifier.choices?.map((choice: any) => (
-          <option key={choice._id} value={choice.value}>
-            {choice.description}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-```
-
-### Free Text Input
-
-```tsx
-function FreeTextInput({ modifier }: { modifier: any }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const selectedValue = selectedModifiers[modifier.name];
-  const isRequired = modifierService.isModifierRequired(modifier.name);
-  
-  return (
-    <div className="free-text-input">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {modifier.name}
-        {isRequired && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      
-      <textarea
-        value={selectedValue?.freeTextValue || ''}
-        onChange={(e) => {
-          if (e.target.value.trim()) {
-            modifierService.setModifierFreeText(modifier.name, e.target.value);
-          } else {
-            modifierService.clearModifier(modifier.name);
-          }
-        }}
-        placeholder={`Enter ${modifier.name.toLowerCase()}...`}
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        rows={3}
-      />
-      
-      {modifier.maxLength && (
-        <p className="text-sm text-gray-500 mt-1">
-          {(selectedValue?.freeTextValue || '').length}/{modifier.maxLength} characters
-        </p>
-      )}
-    </div>
-  );
-}
-```
-
-### Complete Modifier Form
+## Usage Example
 
 ```tsx
 function ProductModifierForm() {
@@ -268,14 +136,97 @@ function ProductModifierForm() {
   }
   
   const renderModifier = (modifier: any) => {
-    const renderType = modifier.modifierRenderType;
+    const isRequired = modifierService.isModifierRequired(modifier.name);
+    const selectedValue = selectedModifiers[modifier.name];
     
-    if (renderType === "SWATCH_CHOICES") {
-      return <ColorSwatchSelector modifier={modifier} />;
-    } else if (renderType === "TEXT_CHOICES") {
-      return <TextChoiceDropdown modifier={modifier} />;
-    } else if (renderType === "FREE_TEXT") {
-      return <FreeTextInput modifier={modifier} />;
+    if (modifier.modifierRenderType === "SWATCH_CHOICES") {
+      return (
+        <div className="color-swatch-selector">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <div className="flex flex-wrap gap-2">
+            {modifier.choices?.map((choice: any) => (
+              <button
+                key={choice._id}
+                onClick={() => modifierService.setModifierChoice(modifier.name, choice.value)}
+                className={`
+                  w-10 h-10 rounded-full border-2 transition-all
+                  ${selectedValue?.choiceValue === choice.value
+                    ? 'border-blue-500 scale-110'
+                    : 'border-gray-300 hover:border-gray-400'
+                  }
+                `}
+                style={{ backgroundColor: choice.color || '#f3f4f6' }}
+                title={choice.description}
+              >
+                {selectedValue?.choiceValue === choice.value && (
+                  <span className="text-white text-xs">✓</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    } else if (modifier.modifierRenderType === "TEXT_CHOICES") {
+      return (
+        <div className="text-choice-dropdown">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <select
+            value={selectedValue?.choiceValue || ''}
+            onChange={(e) => {
+              if (e.target.value) {
+                modifierService.setModifierChoice(modifier.name, e.target.value);
+              } else {
+                modifierService.clearModifier(modifier.name);
+              }
+            }}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select {modifier.name}</option>
+            {modifier.choices?.map((choice: any) => (
+              <option key={choice._id} value={choice.value}>
+                {choice.description}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+    } else if (modifier.modifierRenderType === "FREE_TEXT") {
+      return (
+        <div className="free-text-input">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {modifier.name}
+            {isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          
+          <textarea
+            value={selectedValue?.freeTextValue || ''}
+            onChange={(e) => {
+              if (e.target.value.trim()) {
+                modifierService.setModifierFreeText(modifier.name, e.target.value);
+              } else {
+                modifierService.clearModifier(modifier.name);
+              }
+            }}
+            placeholder={`Enter ${modifier.name.toLowerCase()}...`}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            rows={3}
+          />
+          
+          {modifier.maxLength && (
+            <p className="text-sm text-gray-500 mt-1">
+              {(selectedValue?.freeTextValue || '').length}/{modifier.maxLength} characters
+            </p>
+          )}
+        </div>
+      );
     }
     
     return null;
@@ -307,134 +258,7 @@ function ProductModifierForm() {
           )}
         </div>
       )}
-      
-      <div className="mt-4 flex gap-2">
-        <button
-          onClick={() => modifierService.clearAllModifiers()}
-          className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-        >
-          Clear All
-        </button>
-        
-        <button
-          disabled={hasRequiredModifiers && !allRequiredFilled}
-          className={`
-            px-4 py-2 rounded-md text-sm font-medium
-            ${hasRequiredModifiers && !allRequiredFilled
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-500 text-white hover:bg-blue-600'
-            }
-          `}
-        >
-          Add to Cart
-        </button>
-      </div>
     </div>
-  );
-}
-```
-
-### Modifier Summary
-
-```tsx
-function ModifierSummary() {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const selectedModifiers = modifierService.selectedModifiers.get();
-  const hasModifiers = modifierService.hasModifiers.get();
-  
-  const modifierEntries = Object.entries(selectedModifiers);
-  
-  if (!hasModifiers || modifierEntries.length === 0) {
-    return null;
-  }
-  
-  return (
-    <div className="modifier-summary">
-      <h4 className="text-sm font-medium text-gray-900 mb-2">
-        Customizations:
-      </h4>
-      
-      <div className="space-y-1">
-        {modifierEntries.map(([name, value]) => (
-          <div key={name} className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">{name}:</span>
-            <span className="font-medium">
-              {value.choiceValue || value.freeTextValue}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-```
-
-## Validation and Error Handling
-
-### Required Modifier Validation
-
-```tsx
-function AddToCartButton() {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const hasRequiredModifiers = modifierService.hasRequiredModifiers();
-  const allRequiredFilled = modifierService.areAllRequiredModifiersFilled();
-  
-  const canAddToCart = !hasRequiredModifiers || allRequiredFilled;
-  
-  const handleAddToCart = () => {
-    if (!canAddToCart) {
-      // Show validation message
-      alert("Please complete all required customization options");
-      return;
-    }
-    
-    // Add to cart logic
-    const selectedModifiers = modifierService.selectedModifiers.get();
-    // ... cart logic with modifiers
-  };
-  
-  return (
-    <button
-      onClick={handleAddToCart}
-      disabled={!canAddToCart}
-      className={`
-        w-full py-3 px-4 rounded-lg font-medium transition-colors
-        ${canAddToCart
-          ? 'bg-blue-500 text-white hover:bg-blue-600'
-          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }
-      `}
-    >
-      {canAddToCart ? 'Add to Cart' : 'Complete Customization'}
-    </button>
-  );
-}
-```
-
-### Individual Modifier Validation
-
-```tsx
-function ModifierValidation({ modifierName }: { modifierName: string }) {
-  const modifierService = useService(ProductModifiersServiceDefinition);
-  
-  const isRequired = modifierService.isModifierRequired(modifierName);
-  const modifierValue = modifierService.getModifierValue(modifierName);
-  
-  const hasValue = modifierValue && (
-    modifierValue.choiceValue || 
-    (modifierValue.freeTextValue && modifierValue.freeTextValue.trim())
-  );
-  
-  if (!isRequired || hasValue) {
-    return null;
-  }
-  
-  return (
-    <p className="text-sm text-red-600 mt-1">
-      This customization is required
-    </p>
   );
 }
 ```
