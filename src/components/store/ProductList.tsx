@@ -85,7 +85,7 @@ export const ProductGridContent = ({
     return (
       <ServicesManagerProvider servicesManager={servicesManager}>
         <FilteredCollection.Item key={product._id} product={product}>
-          {({ title, image, available, slug, description }) => (
+          {({ title, image, imageAltText, available, slug, description }) => (
             <div
               data-testid="product-item"
               data-product-available={available}
@@ -105,6 +105,7 @@ export const ProductGridContent = ({
                   <WixMediaImage
                     media={{ image: image }}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    alt={imageAltText || ""}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -166,9 +167,14 @@ export const ProductGridContent = ({
                 </div>
               )}
 
-              <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
-                {title}
-              </h3>
+              <Navigation
+                data-testid="title-navigation"
+                route={`${productPageRoute}/${slug}`}
+              >
+                <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
+                  {title}
+                </h3>
+              </Navigation>
 
               {/* Product Options */}
               <ProductVariantSelector.Options>

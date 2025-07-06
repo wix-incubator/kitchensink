@@ -60,9 +60,8 @@ export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
             {...tag.props}
             {...tag.meta}
             {...dataAttr}
-          >
-            {tag.children}
-          </script>
+            dangerouslySetInnerHTML={{ __html: tag.children || "" }}
+          />
         );
       }
       return null;
