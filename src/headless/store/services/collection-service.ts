@@ -542,7 +542,8 @@ function parseOptionFilters(
 
 export async function loadCollectionServiceConfig(
   categoryId?: string,
-  searchParams?: URLSearchParams
+  searchParams?: URLSearchParams,
+  preloadedCategories?: any[]
 ): Promise<
   ServiceFactoryConfig<typeof CollectionService> & {
     initialCursor?: string;
@@ -552,10 +553,15 @@ export async function loadCollectionServiceConfig(
   }
 > {
   try {
-    // Load categories for service configuration
-    const { loadCategoriesConfig } = await import("./category-service");
-    const categoriesConfig = await loadCategoriesConfig();
-    const categories = categoriesConfig.categories;
+    // Use pre-loaded categories if provided, otherwise load them
+    let categories: any[];
+    if (preloadedCategories) {
+      categories = preloadedCategories;
+    } else {
+      const { loadCategoriesConfig } = await import("./category-service");
+      const categoriesConfig = await loadCategoriesConfig();
+      categories = categoriesConfig.categories;
+    }
 
     // Build search options with category filter
     const searchOptions = buildSearchOptions(

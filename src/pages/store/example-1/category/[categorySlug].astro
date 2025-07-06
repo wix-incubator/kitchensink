@@ -10,20 +10,23 @@ import { SEO } from "../../../../headless/seo/components";
 // Get category slug from URL params
 const { categorySlug } = Astro.params;
 
-// Load categories to find the matching category ID
-const categoriesConfig = await loadCategoriesConfig();
+// Load categories and cart config in parallel (cart is independent)
+const [categoriesConfig, currentCartServiceConfig] = await Promise.all([
+  loadCategoriesConfig(),
+  loadCurrentCartServiceConfig(),
+]);
 
 // Find category by its real slug
 const selectedCategory = categoriesConfig.categories.find(
   (cat: any) => cat.slug === categorySlug
 );
 
-// Load initial data for services with selected category
+// Load collection config with selected category (pass pre-loaded categories)
 const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
   selectedCategory?._id || undefined,
-  Astro.url.searchParams
+  Astro.url.searchParams,
+  categoriesConfig.categories
 );
-const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 
 // If category not found, return 404
 if (!selectedCategory) {
