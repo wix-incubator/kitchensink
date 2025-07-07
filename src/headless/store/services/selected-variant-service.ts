@@ -675,12 +675,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const IsAllVariantsAreOutOfStock = (): boolean => {
       const variantsList = variants.get();
-      
+
       // All variants must be out of stock AND none should have preorder enabled
-      return variantsList?.every(variant => 
-        !variant.inventoryStatus?.inStock && 
-        !variant.inventoryStatus?.preorderEnabled
-      ) ?? true;
+      return (
+        variantsList?.every(
+          variant =>
+            !variant.inventoryStatus?.inStock &&
+            !variant.inventoryStatus?.preorderEnabled
+        ) ?? true
+      );
     };
 
     return {
