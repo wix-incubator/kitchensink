@@ -618,7 +618,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       // Get all variants and find one that matches these choices
       const variantsList = variants.get();
-      const matchingVariant = variantsList.find(variant => {
+      const matchingVariants = variantsList.filter(variant => {
         if (!variant.choices) return false;
 
         const variantChoices: Record<string, string> = {};
@@ -638,10 +638,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         );
       });
 
-      const isAvailable = !!matchingVariant;
-      const isInStock = matchingVariant?.inventoryStatus?.inStock === true;
+      const isAvailable = matchingVariants.length > 0;
+
+      const isInStock = matchingVariants.some(
+        variant => variant.inventoryStatus?.inStock === true
+      );
+
+      const firstMatchingVariant = matchingVariants[0];
       const isPreOrderEnabled =
-        matchingVariant?.inventoryStatus?.preorderEnabled === true;
+        firstMatchingVariant?.inventoryStatus?.preorderEnabled === true;
 
       return { isAvailable, isInStock, isPreOrderEnabled };
     };
