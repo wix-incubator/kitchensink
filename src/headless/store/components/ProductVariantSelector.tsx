@@ -294,7 +294,7 @@ export interface StockRenderProps {
   /** Stock status message */
   status: string;
   /** Whether stock tracking is enabled */
-  trackQuantity: boolean;
+  trackInventory: boolean;
   /** Current variant id */
   currentVariantId: string | null;
   /** Available quantity */
@@ -311,7 +311,7 @@ export const Stock = (props: StockProps) => {
 
   const inStock = variantService.isInStock.get();
   const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
-  const trackQuantity = variantService.trackQuantity.get();
+  const trackInventory = variantService.trackQuantity.get();
   const currentVariantId = variantService.selectedVariantId.get();
   const availableQuantity = variantService.quantityAvailable.get();
   const currentVariant = variantService.currentVariant.get();
@@ -333,7 +333,7 @@ export const Stock = (props: StockProps) => {
     isPreOrderEnabled,
     currentVariantId,
     status,
-    trackQuantity,
+    trackInventory,
   });
 };
 

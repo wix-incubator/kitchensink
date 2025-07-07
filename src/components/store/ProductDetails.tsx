@@ -667,7 +667,7 @@ export default function ProductDetails({
                 isPreOrderEnabled,
                 status,
                 availableQuantity,
-                trackQuantity,
+                trackInventory,
                 currentVariantId,
               }) =>
                 (!!status || currentVariantId) && (
@@ -687,7 +687,7 @@ export default function ProductDetails({
                       }`}
                     >
                       {status}
-                      {trackQuantity && availableQuantity !== null && (
+                      {trackInventory && availableQuantity !== null && (
                         <span className="text-content-muted ml-1">
                           ({availableQuantity} available)
                         </span>
