@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CurrentCart } from '../../headless/ecom/components';
 import { WixMediaImage } from '../../headless/media/components';
 
@@ -100,44 +100,69 @@ export function MiniCartIcon() {
 }
 
 export function MiniCartContent() {
+  // Cleanup effect to restore body scroll on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'unset';
+      }
+    };
+  }, []);
+
   return (
     <>
       {/* Cart Modal */}
       <CurrentCart.Content>
-        {({ isOpen, onClose }) => (
-          <>
-            {isOpen && (
-              <div className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm">
-                <div className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl">
-                  <CurrentCart.Summary>
-                    {({ itemCount }) => (
-                      <div className="flex items-center justify-between p-6 border-b border-surface-subtle">
-                        <h2 className="text-xl font-bold text-content-primary">
-                          Shopping Cart ({itemCount})
-                        </h2>
-                        <button
-                          onClick={onClose}
-                          className="p-2 text-content-primary hover:text-brand-light transition-colors"
-                        >
-                          <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    )}
-                  </CurrentCart.Summary>
+        {({ isOpen, onClose }) => {
+          // Lock body scroll when modal is open
+          if (typeof document !== 'undefined') {
+            if (isOpen) {
+              document.body.style.overflow = 'hidden';
+            } else {
+              document.body.style.overflow = 'unset';
+            }
+          }
 
-                  <div className="flex-1 overflow-y-auto p-6">
+          return (
+            <>
+              {isOpen && (
+                <div 
+                  className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm"
+                  onClick={onClose}
+                >
+                  <div 
+                    className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <CurrentCart.Summary>
+                      {({ itemCount }) => (
+                        <div className="flex items-center justify-between p-6 border-b border-surface-subtle flex-shrink-0">
+                          <h2 className="text-xl font-bold text-content-primary">
+                            Shopping Cart ({itemCount})
+                          </h2>
+                          <button
+                            onClick={onClose}
+                            className="p-2 text-content-primary hover:text-brand-light transition-colors"
+                          >
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </CurrentCart.Summary>
+
+                    <div className="flex-1 overflow-y-auto p-6 min-h-0">
                     <CurrentCart.Items>
                       {({ hasItems, items }) => (
                         <>
@@ -285,7 +310,7 @@ export function MiniCartContent() {
                     </CurrentCart.Items>
                   </div>
 
-                  <div className="border-t border-surface-subtle p-6">
+                  <div className="border-t border-surface-subtle p-6 flex-shrink-0">
                     <CurrentCart.Notes>
                       {({ notes, onNotesChange }) => (
                         <div>
@@ -437,12 +462,13 @@ export function MiniCartContent() {
                         );
                       }}
                     </CurrentCart.Summary>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          );
+        }}
       </CurrentCart.Content>
     </>
   );
