@@ -667,10 +667,10 @@ export default function ProductDetails({
                 isPreOrderEnabled,
                 status,
                 availableQuantity,
-                trackInventory,
+                trackQuantity,
                 currentVariantId,
               }) =>
-                currentVariantId && (
+                (!!status || currentVariantId) && (
                   <div className="flex items-center gap-2">
                     <div
                       className={`w-3 h-3 rounded-full ${
@@ -687,7 +687,7 @@ export default function ProductDetails({
                       }`}
                     >
                       {status}
-                      {trackInventory && availableQuantity !== null && (
+                      {trackQuantity && availableQuantity !== null && (
                         <span className="text-content-muted ml-1">
                           ({availableQuantity} available)
                         </span>
