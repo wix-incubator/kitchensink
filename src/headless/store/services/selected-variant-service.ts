@@ -62,6 +62,7 @@ export interface SelectedVariantServiceAPI {
   isChoiceInStock: (optionName: string, choiceValue: string) => boolean;
   isChoicePreOrderEnabled: (optionName: string, choiceValue: string) => boolean;
   hasAnySelections: () => boolean;
+  IsAllVariantsAreOutOfStock: () => boolean;
 }
 
 export const SelectedVariantServiceDefinition =
@@ -672,6 +673,19 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       return Object.keys(currentChoices).length > 0;
     };
 
+    const IsAllVariantsAreOutOfStock = (): boolean => {
+      const variantsList = variants.get();
+
+      // All variants must be out of stock AND none should have preorder enabled
+      return (
+        variantsList?.every(
+          variant =>
+            !variant.inventoryStatus?.inStock &&
+            !variant.inventoryStatus?.preorderEnabled
+        ) ?? true
+      );
+    };
+
     return {
       selectedChoices,
       selectedVariantId,
@@ -721,6 +735,8 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       product,
       productOptions,
       currency,
+
+      IsAllVariantsAreOutOfStock,
     };
   }
 );
