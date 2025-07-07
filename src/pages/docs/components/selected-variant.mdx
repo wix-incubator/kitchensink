@@ -108,14 +108,18 @@ Provides comprehensive details about the selected variant including SKU, weight,
     <div className="border-t pt-6 mt-6">
       <h3 className="text-lg font-semibold mb-4">Product Details</h3>
       <dl className="space-y-3">
-        <div className="flex justify-between">
-          <dt className="text-gray-600">SKU:</dt>
-          <dd className="font-medium">{hasSku ? sku : 'N/A'}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt className="text-gray-600">Weight:</dt>
-          <dd className="font-medium">{hasWeight ? weight : 'N/A'}</dd>
-        </div>
+        {hasSku && (
+          <div className="flex justify-between">
+            <dt className="text-gray-600">SKU:</dt>
+            <dd className="font-medium">{sku}</dd>
+          </div>
+        )}
+        {hasWeight && (
+          <div className="flex justify-between">
+            <dt className="text-gray-600">Weight:</dt>
+            <dd className="font-medium">{weight}</dd>
+          </div>
+        )}
       </dl>
     </div>
   )}
@@ -192,33 +196,33 @@ Provides comprehensive details about the selected variant including SKU, weight,
       <h3 className="text-xl font-semibold mb-6">Specifications</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="spec-group">
-          <h4 className="font-medium text-gray-900 mb-3">
-            Product Information
-          </h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Product Code:</span>
-              <span className="font-medium">
-                {hasSku ? sku : 'Not specified'}
-              </span>
+        {hasSku && (
+          <div className="spec-group">
+            <h4 className="font-medium text-gray-900 mb-3">
+              Product Information
+            </h4>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Product Code:</span>
+                <span className="font-medium">{sku}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="spec-group">
-          <h4 className="font-medium text-gray-900 mb-3">
-            Physical Properties
-          </h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Weight:</span>
-              <span className="font-medium">
-                {hasWeight ? weight : 'Not specified'}
-              </span>
+        {hasWeight && (
+          <div className="spec-group">
+            <h4 className="font-medium text-gray-900 mb-3">
+              Physical Properties
+            </h4>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Weight:</span>
+                <span className="font-medium">{weight}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )}
@@ -401,18 +405,22 @@ When implementing these components, consider accessibility best practices:
     <div className="product-details" role="region" aria-labelledby="details-heading">
       <h3 id="details-heading">Product Details</h3>
       <dl>
-        <div>
-          <dt>SKU:</dt>
-          <dd aria-label={`Product SKU: ${hasSku ? sku : 'Not available'}`}>
-            {hasSku ? sku : "N/A"}
-          </dd>
-        </div>
-        <div>
-          <dt>Weight:</dt>
-          <dd aria-label={`Product weight: ${hasWeight ? weight : 'Not specified'}`}>
-            {hasWeight ? weight : "N/A"}
-          </dd>
-        </div>
+        {hasSku && (
+          <div>
+            <dt>SKU:</dt>
+            <dd aria-label={`Product SKU: ${sku}`}>
+              {sku}
+            </dd>
+          </div>
+        )}
+        {hasWeight && (
+          <div>
+            <dt>Weight:</dt>
+            <dd aria-label={`Product weight: ${weight}`}>
+              {weight}
+            </dd>
+          </div>
+        )}
       </dl>
     </div>
   )}
