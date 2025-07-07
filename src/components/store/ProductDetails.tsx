@@ -419,20 +419,20 @@ export default function ProductDetails({
                       </div>
                     ))}
 
-                    {/* Reset Button - appears after all options */}
-                    {Object.keys(selectedChoices).length > 0 && (
-                      <div className="pt-4">
-                        <button
-                          onClick={() => {
-                            // Reset all selections
-                            variantService.resetSelections();
-                          }}
-                          className="text-sm text-brand-primary hover:text-brand-light transition-colors"
-                        >
-                          Reset Selections
-                        </button>
-                      </div>
-                    )}
+                    <ProductVariantSelector.Reset>
+                      {({ onReset, hasSelections }) =>
+                        hasSelections && (
+                          <div className="pt-4">
+                            <button
+                              onClick={onReset}
+                              className="text-sm text-brand-primary hover:text-brand-light transition-colors"
+                            >
+                              Reset Selections
+                            </button>
+                          </div>
+                        )
+                      }
+                    </ProductVariantSelector.Reset>
                   </div>
                 )}
               </>

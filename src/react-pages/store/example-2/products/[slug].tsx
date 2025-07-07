@@ -491,16 +491,20 @@ const ProductInfo = ({
                   }
                 </ProductVariantSelector.Option>
               ))}
-              {variantService.hasAnySelections() && (
-                <div className="pt-2">
-                  <button
-                    onClick={() => variantService.resetSelections()}
-                    className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
-                  >
-                    Reset Selections
-                  </button>
-                </div>
-              )}
+              <ProductVariantSelector.Reset>
+                {({ onReset, hasSelections }) =>
+                  hasSelections && (
+                    <div className="pt-2">
+                      <button
+                        onClick={onReset}
+                        className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+                      >
+                        Reset Selections
+                      </button>
+                    </div>
+                  )
+                }
+              </ProductVariantSelector.Reset>
             </div>
           ) : null
         }

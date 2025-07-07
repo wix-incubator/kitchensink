@@ -146,12 +146,15 @@ export const Choice = (props: ChoiceProps) => {
 
   // Check if this choice is available based on current selections
   const isVisible = variantService.isChoiceAvailable(optionName, choiceValue);
-  
+
   // Check if this choice results in an in-stock variant
   const isInStock = variantService.isChoiceInStock(optionName, choiceValue);
-  
+
   // Check if this choice is available for pre-order
-  const isPreOrderEnabled = variantService.isChoicePreOrderEnabled(optionName, choiceValue);
+  const isPreOrderEnabled = variantService.isChoicePreOrderEnabled(
+    optionName,
+    choiceValue
+  );
 
   const value = choiceValue;
 
@@ -330,5 +333,44 @@ export const Stock = (props: StockProps) => {
     currentVariantId,
     status,
     trackInventory,
+  });
+};
+
+/**
+ * Props for Reset headless component
+ */
+export interface ResetProps {
+  /** Render prop function that receives reset data */
+  children: (props: ResetRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for Reset component
+ */
+export interface ResetRenderProps {
+  /** Function to reset all selections */
+  onReset: () => void;
+  /** Whether the reset button should be rendered */
+  hasSelections: boolean;
+}
+
+/**
+ * Headless component for resetting variant selections
+ */
+export const Reset = (props: ResetProps) => {
+  const variantService = useService(
+    SelectedVariantServiceDefinition
+  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+
+  const selectedChoices = variantService.selectedChoices.get();
+  const hasSelections = Object.keys(selectedChoices).length > 0;
+
+  const onReset = () => {
+    variantService.resetSelections();
+  };
+
+  return props.children({
+    onReset,
+    hasSelections,
   });
 };
