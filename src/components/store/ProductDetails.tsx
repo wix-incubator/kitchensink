@@ -58,7 +58,6 @@ export default function ProductDetails({
   isQuickView?: boolean;
 }) {
   const Navigation = useNavigation();
-  const variantService = useService(SelectedVariantServiceDefinition);
 
   return (
     <>

@@ -1,25 +1,20 @@
-import React from "react";
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import { PageDocsRegistration } from "../../../components/DocsMode";
 import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import {
-  BookingServicesService,
-  BookingServicesServiceDefinition,
-} from "../../../headless/bookings/services/booking-services-service";
+  BookingSelection,
+  BookingServices,
+} from "../../../headless/bookings/components";
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/services/booking-selection-service";
 import {
-  BookingServices,
-  BookingSelection,
-} from "../../../headless/bookings/components";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
+  BookingServicesService,
+  BookingServicesServiceDefinition,
+} from "../../../headless/bookings/services/booking-services-service";
 import { WixMediaImage } from "../../../headless/media/components";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 
 interface BookingsPageProps {
   bookingServicesConfig: any;
@@ -30,21 +25,6 @@ export default function BookingsPage({
   bookingServicesConfig,
   bookingSelectionConfig,
 }: BookingsPageProps) {
-  // Create services manager with both booking services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        bookingServicesConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
-
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -52,7 +32,19 @@ export default function BookingsPage({
         description="Traditional booking flow with service grid display, detailed service pages, and integrated booking calendar."
         docsUrl="/docs/examples/bookings-example-1"
       />
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices
+        servicesMap={createServicesMap()
+          .addService(
+            BookingServicesServiceDefinition,
+            BookingServicesService,
+            bookingServicesConfig
+          )
+          .addService(
+            BookingSelectionServiceDefinition,
+            BookingSelectionService,
+            bookingSelectionConfig
+          )}
+      >
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           {/* Hero Section */}
           <div className="border-b border-white/10">
@@ -303,7 +295,7 @@ export default function BookingsPage({
             </BookingServices.ServicesList>
           </div>
         </div>
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

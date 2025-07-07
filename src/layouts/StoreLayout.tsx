@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { WixServices } from "@wix/services-manager-react";
 import {
   createServicesManager,
   createServicesMap,
@@ -10,11 +10,9 @@ import {
 } from "../headless/ecom/services/current-cart-service";
 import { MiniCartContent, MiniCartIcon } from "../components/ecom/MiniCart";
 
-
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
-  servicesManager?: any; // Allow passing an existing services manager
   showSuccessMessage?: boolean;
   onSuccessMessageChange?: (show: boolean) => void;
 }
@@ -22,24 +20,10 @@ interface StoreLayoutProps {
 export function StoreLayout({
   children,
   currentCartServiceConfig,
-  servicesManager: externalServicesManager,
   showSuccessMessage = false,
   onSuccessMessageChange,
 }: StoreLayoutProps) {
   const [internalShowSuccess, setInternalShowSuccess] = useState(false);
-
-  // Use external services manager if provided, otherwise create one with just cart service
-  const [internalServicesManager] = useState(() => 
-    createServicesManager(
-      createServicesMap().addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartServiceConfig
-      )
-    )
-  );
-  
-  const servicesManager = externalServicesManager || internalServicesManager;
 
   const actualShowSuccess = onSuccessMessageChange
     ? showSuccessMessage
@@ -47,7 +31,13 @@ export function StoreLayout({
   const setShowSuccess = onSuccessMessageChange || setInternalShowSuccess;
 
   return (
-    <ServicesManagerProvider servicesManager={servicesManager}>
+    <WixServices
+      servicesMap={createServicesMap().addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartServiceConfig
+      )}
+    >
       {/* Success Message */}
       {actualShowSuccess && (
         <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
@@ -76,6 +66,6 @@ export function StoreLayout({
       {children}
 
       <MiniCartContent />
-    </ServicesManagerProvider>
+    </WixServices>
   );
 }

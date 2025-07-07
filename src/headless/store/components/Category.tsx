@@ -10,6 +10,7 @@ import {
   type CategoryServiceAPI,
 } from "../services/category-service";
 import { categories } from "@wix/categories";
+import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 
 const CategoryContext = createContext<CategoryServiceAPI | null>(null);
 
@@ -17,9 +18,7 @@ interface CategoryProviderProps {
   children: ReactNode;
 }
 
-export const Provider: React.FC<CategoryProviderProps> = ({
-  children,
-}) => {
+export const Provider: React.FC<CategoryProviderProps> = ({ children }) => {
   const service = useService(CategoryServiceDefinition);
 
   return (
@@ -51,8 +50,10 @@ export const List: React.FC<CategoryListProps> = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     service.selectedCategory.get()
   );
+  const signalsService = useService(SignalsServiceDefinition);
   const categories = service.categories.get();
-  service.selectedCategory.subscribe((categoryId) => {
+  signalsService.effect(() => {
+    const categoryId = service.selectedCategory.get();
     if (categoryId !== selectedCategory) {
       setSelectedCategory(categoryId);
     }

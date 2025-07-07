@@ -3,14 +3,18 @@ import {
   createServicesManager,
   createServicesMap,
 } from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { WixServices } from "@wix/services-manager-react";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
 } from "../../../../headless/bookings/services/booking-services-service";
 import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
 import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
-import { BookingServices, BookingAvailability, BookingSelection } from "../../../../headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "../../../../headless/bookings/components";
 import { WixMediaImage } from "../../../../headless/media/components";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
@@ -620,26 +624,6 @@ export default function BookNowPage({
   bookingAvailabilityConfig,
   bookingSelectionConfig,
 }: BookNowPageProps) {
-  // Create services manager with all required services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        bookingServicesConfig
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        bookingAvailabilityConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
-
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -647,11 +631,28 @@ export default function BookNowPage({
         description="Complete step-by-step booking flow with calendar, time selection, and booking confirmation."
         docsUrl="/docs/examples/step-by-step-booking"
       />
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices
+        servicesMap={createServicesMap()
+          .addService(
+            BookingServicesServiceDefinition,
+            BookingServicesService,
+            bookingServicesConfig
+          )
+          .addService(
+            BookingAvailabilityServiceDefinition,
+            BookingAvailabilityService,
+            bookingAvailabilityConfig
+          )
+          .addService(
+            BookingSelectionServiceDefinition,
+            BookingSelectionService,
+            bookingSelectionConfig
+          )}
+      >
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           <BookNowContent serviceId={serviceId} />
         </div>
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

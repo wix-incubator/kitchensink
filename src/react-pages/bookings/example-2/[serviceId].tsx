@@ -1,18 +1,13 @@
-import React from "react";
-import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import { PageDocsRegistration } from "../../../components/DocsMode";
+import { BookingService } from "../../../headless/bookings/components";
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
 } from "../../../headless/bookings/services/booking-service-service";
-import { BookingService } from "../../../headless/bookings/components";
 import { WixMediaImage } from "../../../headless/media/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../../components/DocsMode";
 
 interface ServiceDetailPageProps {
   bookingServiceConfig: any;
@@ -282,15 +277,6 @@ const ServiceDetailSection = () => {
 export default function ServiceDetailPage({
   bookingServiceConfig,
 }: ServiceDetailPageProps) {
-  // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      BookingServiceServiceDefinition,
-      BookingServiceService,
-      bookingServiceConfig
-    )
-  ));
-
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -298,11 +284,17 @@ export default function ServiceDetailPage({
         description="Detailed service information page with comprehensive service details, images, and booking options."
         docsUrl="/docs/examples/service-detail"
       />
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices
+        servicesMap={createServicesMap().addService(
+          BookingServiceServiceDefinition,
+          BookingServiceService,
+          bookingServiceConfig
+        )}
+      >
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           <ServiceDetailSection />
         </div>
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

@@ -4,7 +4,7 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { WixServices } from "@wix/services-manager-react";
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
@@ -17,7 +17,11 @@ import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/services/booking-selection-service";
-import { BookingService, BookingAvailability,  BookingSelection} from "../../../headless/bookings/components";
+import {
+  BookingService,
+  BookingAvailability,
+  BookingSelection,
+} from "../../../headless/bookings/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
@@ -487,26 +491,6 @@ export default function ServiceBookingPage({
   bookingAvailabilityConfig,
   bookingSelectionConfig,
 }: ServiceBookingPageProps) {
-  // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServiceServiceDefinition,
-        BookingServiceService,
-        bookingServiceConfig
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        bookingAvailabilityConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
-
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -514,7 +498,24 @@ export default function ServiceBookingPage({
         description="Complete booking flow with calendar, time slots, and booking summary for a specific service."
         docsUrl="/docs/examples/service-booking-flow"
       />
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices
+        servicesMap={createServicesMap()
+          .addService(
+            BookingServiceServiceDefinition,
+            BookingServiceService,
+            bookingServiceConfig
+          )
+          .addService(
+            BookingAvailabilityServiceDefinition,
+            BookingAvailabilityService,
+            bookingAvailabilityConfig
+          )
+          .addService(
+            BookingSelectionServiceDefinition,
+            BookingSelectionService,
+            bookingSelectionConfig
+          )}
+      >
         {/* Auto-select the service on page load */}
         <ServiceAutoSelector serviceId={serviceId} />
 
@@ -633,7 +634,7 @@ export default function ServiceBookingPage({
             </div>
           </div>
         </div>
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

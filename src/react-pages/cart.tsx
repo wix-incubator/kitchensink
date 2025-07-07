@@ -1,16 +1,12 @@
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import CartContent from "../components/ecom/Cart";
 import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { useState } from "react";
-import "../styles/theme-1.css";
-import {
-  CurrentCartServiceDefinition,
   CurrentCartService,
+  CurrentCartServiceDefinition,
 } from "../headless/ecom/services/current-cart-service";
 import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
-import CartContent from "../components/ecom/Cart";
+import "../styles/theme-1.css";
 
 interface CartPageProps {
   data?: any;
@@ -18,19 +14,17 @@ interface CartPageProps {
 
 export default function CartPage({ data }: CartPageProps) {
   // Create services manager with cart service
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      data || { initialCart: null }
-    )
-  ));
+  const servicesMap = createServicesMap().addService(
+    CurrentCartServiceDefinition,
+    CurrentCartService,
+    data || { initialCart: null }
+  );
 
   return (
     <KitchensinkLayout>
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices servicesMap={servicesMap}>
         <CartContent />
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

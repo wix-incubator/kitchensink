@@ -16,7 +16,10 @@ export const CategoryServiceDefinition =
 export interface CategoryServiceConfig {
   categories: categories.Category[];
   initialCategoryId?: string | null;
-  onCategoryChange?: (categoryId: string | null, category: categories.Category | null) => void;
+  onCategoryChange?: (
+    categoryId: string | null,
+    category: categories.Category | null
+  ) => void;
 }
 
 export const CategoryService =
@@ -35,7 +38,7 @@ export const CategoryService =
       const loadCategories = async () => {
         const { categories: loadedCategories } = await loadCategoriesConfig();
         categories.set(loadedCategories);
-      }
+      };
 
       // Track if this is the initial load to prevent navigation on service creation
       let isInitialLoad = true;
@@ -45,7 +48,8 @@ export const CategoryService =
       };
 
       // Subscribe to category changes and handle navigation as a side effect
-      selectedCategory.subscribe((categoryId) => {
+      signalsService.effect(() => {
+        const categoryId = selectedCategory.get();
         // Skip navigation on initial load (when service is first created)
         if (isInitialLoad) {
           isInitialLoad = false;
@@ -54,10 +58,10 @@ export const CategoryService =
 
         // If a navigation handler is provided, use it
         if (config.onCategoryChange) {
-          const category = categoryId 
+          const category = categoryId
             ? config.categories.find((cat) => cat._id === categoryId) || null
             : null;
-          
+
           config.onCategoryChange(categoryId, category);
         }
       });
@@ -86,10 +90,14 @@ export async function loadCategoriesConfig() {
     const fetchedCategories = categoriesResponse.items || [];
 
     // Sort categories to put "all-products" first, keep the rest in original order
-    const allProductsCategory = fetchedCategories.find(cat => cat.slug === "all-products");
-    const otherCategories = fetchedCategories.filter(cat => cat.slug !== "all-products");
-    
-    const allCategories = allProductsCategory 
+    const allProductsCategory = fetchedCategories.find(
+      (cat) => cat.slug === "all-products"
+    );
+    const otherCategories = fetchedCategories.filter(
+      (cat) => cat.slug !== "all-products"
+    );
+
+    const allCategories = allProductsCategory
       ? [allProductsCategory, ...otherCategories]
       : fetchedCategories;
 

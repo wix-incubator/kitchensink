@@ -4,7 +4,7 @@ import {
   createServicesMap,
 } from "@wix/services-manager";
 import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { WixServices } from "@wix/services-manager-react";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
@@ -252,27 +252,19 @@ const ServicesListSection = () => {
 export default function BookingsServicesPage({
   bookingServicesConfig,
 }: BookingsServicesPageProps) {
-  // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      BookingServicesServiceDefinition,
-      BookingServicesService,
-      bookingServicesConfig
-    )
-  ));
-
   return (
     <KitchensinkLayout>
-      <PageDocsRegistration
-        title="All Services Listing"
-        description="Complete services listing page with grid layout, filtering, and detailed service information cards."
-        docsUrl="/docs/examples/services-listing"
-      />
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices
+        servicesMap={createServicesMap().addService(
+          BookingServicesServiceDefinition,
+          BookingServicesService,
+          bookingServicesConfig
+        )}
+      >
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           <ServicesListSection />
         </div>
-      </ServicesManagerProvider>
+      </WixServices>
     </KitchensinkLayout>
   );
 }

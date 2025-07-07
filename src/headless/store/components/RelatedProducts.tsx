@@ -36,21 +36,10 @@ export const List = (props: ListProps) => {
     typeof RelatedProductsServiceDefinition
   >;
 
-  const [products, setProducts] = React.useState<productsV3.V3Product[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [hasProducts, setHasProducts] = React.useState(false);
-
-  React.useEffect(() => {
-    const unsubscribes = [
-      service.relatedProducts.subscribe(setProducts),
-      service.isLoading.subscribe(setIsLoading),
-      service.error.subscribe(setError),
-      service.hasRelatedProducts.subscribe(setHasProducts),
-    ];
-
-    return () => unsubscribes.forEach((fn) => fn());
-  }, [service]);
+  const products = service.relatedProducts.get();
+  const isLoading = service.isLoading.get();
+  const error = service.error.get();
+  const hasProducts = service.hasRelatedProducts.get();
 
   return props.children({
     products,

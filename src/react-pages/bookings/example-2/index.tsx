@@ -1,17 +1,12 @@
-import React from "react";
-import {
-  createServicesManager,
-  createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import { PageDocsRegistration } from "../../../components/DocsMode";
+import { BookingServices } from "../../../headless/bookings/components";
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
 } from "../../../headless/bookings/services/booking-services-service";
-import { BookingServices } from "../../../headless/bookings/components";
 import { WixMediaImage } from "../../../headless/media/components";
-import { PageDocsRegistration } from "../../../components/DocsMode";
 
 interface BookingsHomePageProps {
   bookingServicesConfig: any;
@@ -232,17 +227,14 @@ const ServicesPreviewSection = () => {
 export default function BookingsHomePage({
   bookingServicesConfig,
 }: BookingsHomePageProps) {
-  // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      BookingServicesServiceDefinition,
-      BookingServicesService,
-      bookingServicesConfig
-    )
-  ));
-
   return (
-    <ServicesManagerProvider servicesManager={servicesManager}>
+    <WixServices
+      servicesMap={createServicesMap().addService(
+        BookingServicesServiceDefinition,
+        BookingServicesService,
+        bookingServicesConfig
+      )}
+    >
       <PageDocsRegistration
         title="Bookings Example 2 - Personal Brand"
         description="Modern, personal brand-focused design with storytelling elements and streamlined booking process."
@@ -253,6 +245,6 @@ export default function BookingsHomePage({
         <AboutSection />
         <ServicesPreviewSection />
       </div>
-    </ServicesManagerProvider>
+    </WixServices>
   );
 }

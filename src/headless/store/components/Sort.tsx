@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { SortServiceDefinition, type SortBy } from "../services/sort-service";
 import { useService } from "@wix/services-manager-react";
+import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
 
 interface SortContextValue {
   currentSort: SortBy;
@@ -23,17 +24,17 @@ interface ProviderProps {
 
 export function Provider({ children }: ProviderProps) {
   const sortService = useService(SortServiceDefinition);
+  const signalsService = useService(SignalsServiceDefinition);
   const [currentSort, setCurrentSort] = useState<SortBy>("");
 
   useEffect(() => {
-    const unsubscribe = sortService.currentSort.subscribe((sort: SortBy) => {
+    signalsService.effect(() => {
+      const sort = sortService.currentSort.get();
       setCurrentSort(sort);
     });
 
     // Initialize with current value
     setCurrentSort(sortService.currentSort.get());
-
-    return unsubscribe;
   }, [sortService]);
 
   const setSortBy = (sortBy: SortBy) => {
