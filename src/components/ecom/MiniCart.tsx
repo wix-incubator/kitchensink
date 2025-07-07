@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CurrentCart } from '../../headless/ecom/components';
 import { WixMediaImage } from '../../headless/media/components';
 
@@ -100,14 +100,6 @@ export function MiniCartIcon() {
 }
 
 export function MiniCartContent() {
-  // Cleanup effect to restore body scroll on unmount
-  useEffect(() => {
-    return () => {
-      if (typeof document !== 'undefined') {
-        document.body.style.overflow = 'unset';
-      }
-    };
-  }, []);
 
   return (
     <>
