@@ -19,4 +19,3 @@ export const GET: APIRoute = async ({ url, redirect }) => {
   const redirectUrl = `/store/example-2/category/${categorySlug}${url.search}`;
   return redirect(redirectUrl);
 };
-

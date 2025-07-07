@@ -104,345 +104,364 @@ export function MiniCartContent() {
     <>
       {/* Cart Modal */}
       <CurrentCart.Content>
-        {({ isOpen, onClose }) => (
-          <>
-            {isOpen && (
-              <div className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm">
-                <div className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl">
-                  <CurrentCart.Summary>
-                    {({ itemCount }) => (
-                      <div className="flex items-center justify-between p-6 border-b border-surface-subtle">
-                        <h2 className="text-xl font-bold text-content-primary">
-                          Shopping Cart ({itemCount})
-                        </h2>
-                        <button
-                          onClick={onClose}
-                          className="p-2 text-content-primary hover:text-brand-light transition-colors"
-                        >
-                          <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+        {({ isOpen, onClose }) => {
+          // Lock body scroll when modal is open
+          if (typeof document !== 'undefined') {
+            if (isOpen) {
+              document.body.style.overflow = 'hidden';
+            } else {
+              document.body.style.overflow = 'unset';
+            }
+          }
+
+          return (
+            <>
+              {isOpen && (
+                <div
+                  className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm"
+                  onClick={onClose}
+                >
+                  <div
+                    className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <CurrentCart.Summary>
+                      {({ itemCount }) => (
+                        <div className="flex items-center justify-between p-6 border-b border-surface-subtle flex-shrink-0">
+                          <h2 className="text-xl font-bold text-content-primary">
+                            Shopping Cart ({itemCount})
+                          </h2>
+                          <button
+                            onClick={onClose}
+                            className="p-2 text-content-primary hover:text-brand-light transition-colors"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    )}
-                  </CurrentCart.Summary>
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </CurrentCart.Summary>
 
-                  <div className="flex-1 overflow-y-auto p-6">
-                    <CurrentCart.Items>
-                      {({ hasItems, items }) => (
-                        <>
-                          {hasItems ? (
-                            <div className="space-y-4">
-                              {items.map(item => (
-                                <CurrentCart.Item key={item._id} item={item}>
-                                  {({
-                                    title,
-                                    image,
-                                    price,
-                                    quantity,
-                                    selectedOptions,
-                                    onIncrease,
-                                    onDecrease,
-                                    onRemove,
-                                  }) => (
-                                    <div className="flex gap-4 p-4 bg-surface-card rounded-xl border border-surface-subtle">
-                                      <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
-                                        {image && (
-                                          <WixMediaImage
-                                            media={{ image: image }}
-                                            width={64}
-                                            height={64}
-                                          />
-                                        )}
-                                      </div>
+                    <div className="flex-1 overflow-y-auto p-6 min-h-0">
+                      <CurrentCart.Items>
+                        {({ hasItems, items }) => (
+                          <>
+                            {hasItems ? (
+                              <div className="space-y-4">
+                                {items.map(item => (
+                                  <CurrentCart.Item key={item._id} item={item}>
+                                    {({
+                                      title,
+                                      image,
+                                      price,
+                                      quantity,
+                                      selectedOptions,
+                                      onIncrease,
+                                      onDecrease,
+                                      onRemove,
+                                    }) => (
+                                      <div className="flex gap-4 p-4 bg-surface-card rounded-xl border border-surface-subtle">
+                                        <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
+                                          {image && (
+                                            <WixMediaImage
+                                              media={{ image: image }}
+                                              width={64}
+                                              height={64}
+                                            />
+                                          )}
+                                        </div>
 
-                                      <div className="flex-1 min-w-0">
-                                        <h3 className="text-content-primary font-medium text-sm truncate">
-                                          {title}
-                                        </h3>
-                                        {selectedOptions.length > 0 && (
-                                          <div className="mt-1 mb-2">
-                                            <div className="flex flex-wrap gap-1">
-                                              {selectedOptions.map(
-                                                (option, index) => {
-                                                  const isColor =
-                                                    typeof option.value ===
-                                                    'object';
-                                                  const text = isColor
-                                                    ? (option.value as any).name
-                                                    : option.value;
-                                                  const color = isColor
-                                                    ? (option.value as any).code
-                                                    : null;
+                                        <div className="flex-1 min-w-0">
+                                          <h3 className="text-content-primary font-medium text-sm truncate">
+                                            {title}
+                                          </h3>
+                                          {selectedOptions.length > 0 && (
+                                            <div className="mt-1 mb-2">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedOptions.map(
+                                                  (option, index) => {
+                                                    const isColor =
+                                                      typeof option.value ===
+                                                      'object';
+                                                    const text = isColor
+                                                      ? (option.value as any)
+                                                          .name
+                                                      : option.value;
+                                                    const color = isColor
+                                                      ? (option.value as any)
+                                                          .code
+                                                      : null;
 
-                                                  return (
-                                                    <div
-                                                      key={index}
-                                                      className="flex items-center gap-1 text-xs text-content-light"
-                                                    >
-                                                      <span>
-                                                        {option.name}:
-                                                      </span>
-                                                      <div className="flex items-center gap-1">
-                                                        {color && (
-                                                          <div
-                                                            className="w-3 h-3 rounded-full border border-surface-strong"
-                                                            style={{
-                                                              backgroundColor:
-                                                                color,
-                                                            }}
-                                                            title={text}
-                                                          />
+                                                    return (
+                                                      <div
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-xs text-content-light"
+                                                      >
+                                                        <span>
+                                                          {option.name}:
+                                                        </span>
+                                                        <div className="flex items-center gap-1">
+                                                          {color && (
+                                                            <div
+                                                              className="w-3 h-3 rounded-full border border-surface-strong"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  color,
+                                                              }}
+                                                              title={text}
+                                                            />
+                                                          )}
+                                                          <span className="font-medium">
+                                                            {text}
+                                                          </span>
+                                                        </div>
+                                                        {index <
+                                                          selectedOptions.length -
+                                                            1 && (
+                                                          <span className="text-content-subtle">
+                                                            ,
+                                                          </span>
                                                         )}
-                                                        <span className="font-medium">
-                                                          {text}
-                                                        </span>
                                                       </div>
-                                                      {index <
-                                                        selectedOptions.length -
-                                                          1 && (
-                                                        <span className="text-content-subtle">
-                                                          ,
-                                                        </span>
-                                                      )}
-                                                    </div>
-                                                  );
-                                                }
-                                              )}
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
                                             </div>
-                                          </div>
-                                        )}
-                                        <p className="text-accent font-semibold text-sm mt-1">
-                                          {price}
-                                        </p>
+                                          )}
+                                          <p className="text-accent font-semibold text-sm mt-1">
+                                            {price}
+                                          </p>
 
-                                        <div className="flex items-center justify-between mt-3">
-                                          <div className="flex items-center gap-2">
+                                          <div className="flex items-center justify-between mt-3">
+                                            <div className="flex items-center gap-2">
+                                              <button
+                                                onClick={onDecrease}
+                                                className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
+                                              >
+                                                -
+                                              </button>
+                                              <span className="text-content-primary text-sm w-6 text-center">
+                                                {quantity}
+                                              </span>
+                                              <button
+                                                onClick={onIncrease}
+                                                className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
+                                              >
+                                                +
+                                              </button>
+                                            </div>
+
                                             <button
-                                              onClick={onDecrease}
-                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
+                                              onClick={onRemove}
+                                              className="text-status-danger hover:text-status-error text-xs transition-colors"
                                             >
-                                              -
-                                            </button>
-                                            <span className="text-content-primary text-sm w-6 text-center">
-                                              {quantity}
-                                            </span>
-                                            <button
-                                              onClick={onIncrease}
-                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
-                                            >
-                                              +
+                                              Remove
                                             </button>
                                           </div>
-
-                                          <button
-                                            onClick={onRemove}
-                                            className="text-status-danger hover:text-status-error text-xs transition-colors"
-                                          >
-                                            Remove
-                                          </button>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </CurrentCart.Item>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="text-center py-8">
-                              <div className="w-16 h-16 bg-surface-interactive rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg
-                                  className="w-8 h-8 text-content-muted"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
-                                  />
-                                </svg>
-                              </div>
-                              <p className="text-content-muted">
-                                Your cart is empty
-                              </p>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </CurrentCart.Items>
-                  </div>
-
-                  <div className="border-t border-surface-subtle p-6">
-                    <CurrentCart.Notes>
-                      {({ notes, onNotesChange }) => (
-                        <div>
-                          <label className="block text-xs font-medium text-content-secondary mb-2">
-                            Notes:
-                          </label>
-                          <textarea
-                            value={notes}
-                            onChange={e => onNotesChange(e.target.value)}
-                            placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
-                            rows={2}
-                            className="w-full px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none transition-colors duration-200 resize-vertical mb-4"
-                          />
-                        </div>
-                      )}
-                    </CurrentCart.Notes>
-
-                    {/* Coupon Code */}
-                    <CurrentCart.Coupon>
-                      {({
-                        appliedCoupon,
-                        onApply,
-                        onRemove,
-                        isLoading,
-                        error,
-                      }) => (
-                        <div className="mb-4">
-                          {appliedCoupon ? (
-                            <div className="flex items-center justify-between p-2 bg-status-success-light border border-status-success rounded">
-                              <span className="text-status-success text-xs font-medium">
-                                Coupon: {appliedCoupon}
-                              </span>
-                              <button
-                                onClick={onRemove}
-                                disabled={isLoading}
-                                className="text-status-danger hover:text-status-error text-xs disabled:opacity-50"
-                              >
-                                {isLoading ? 'Removing...' : 'Remove'}
-                              </button>
-                            </div>
-                          ) : (
-                            <CouponFormMini
-                              onApply={onApply}
-                              isLoading={isLoading}
-                            />
-                          )}
-                          {error && error.includes('coupon') && (
-                            <div className="bg-status-danger-light border border-status-danger rounded p-2 mt-2">
-                              <p className="text-status-danger text-xs">
-                                {error}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </CurrentCart.Coupon>
-                    <CurrentCart.Summary>
-                      {({
-                        subtotal,
-                        discount,
-                        appliedCoupon,
-                        shipping,
-                        tax,
-                        total,
-                        itemCount,
-                        isTotalsLoading,
-                      }) => {
-                        const LoadingOrValue = ({
-                          children,
-                        }: {
-                          children: string;
-                        }) =>
-                          isTotalsLoading ? (
-                            <span className="text-content-muted">
-                              Calculating...
-                            </span>
-                          ) : (
-                            children
-                          );
-
-                        return (
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-content-secondary">
-                                  Subtotal ({itemCount}{' '}
-                                  {itemCount === 1 ? 'item' : 'items'})
-                                </span>
-                                <span className="text-content-primary font-semibold">
-                                  <LoadingOrValue>{subtotal}</LoadingOrValue>
-                                </span>
-                              </div>
-                              {appliedCoupon && discount && (
-                                <div className="flex justify-between">
-                                  <span className="text-status-success">
-                                    Discount
-                                  </span>
-                                  <span className="text-status-success font-semibold">
-                                    {isTotalsLoading ? (
-                                      <span className="text-content-muted">
-                                        Calculating...
-                                      </span>
-                                    ) : (
-                                      `-${discount}`
                                     )}
-                                  </span>
+                                  </CurrentCart.Item>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-8">
+                                <div className="w-16 h-16 bg-surface-interactive rounded-full flex items-center justify-center mx-auto mb-4">
+                                  <svg
+                                    className="w-8 h-8 text-content-muted"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
+                                    />
+                                  </svg>
                                 </div>
-                              )}
-                              <div className="flex justify-between">
-                                <span className="text-content-secondary">
-                                  Shipping
-                                </span>
-                                <span className="text-content-primary font-semibold">
-                                  <LoadingOrValue>{shipping}</LoadingOrValue>
-                                </span>
+                                <p className="text-content-muted">
+                                  Your cart is empty
+                                </p>
                               </div>
-                              <div className="flex justify-between">
-                                <span className="text-content-secondary">
-                                  Tax
-                                </span>
-                                <span className="text-content-primary font-semibold">
-                                  <LoadingOrValue>{tax}</LoadingOrValue>
-                                </span>
-                              </div>
-                              <div className="border-t border-surface-interactive pt-2">
-                                <div className="flex justify-between">
-                                  <span className="text-content-primary font-bold">
-                                    Total
-                                  </span>
-                                  <span className="text-content-primary font-bold text-lg">
-                                    <LoadingOrValue>{total}</LoadingOrValue>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
+                            )}
+                          </>
+                        )}
+                      </CurrentCart.Items>
+                    </div>
 
-                            <CurrentCart.Checkout>
-                              {({ onProceed, canCheckout }) => (
-                                <button
-                                  onClick={onProceed}
-                                  disabled={!canCheckout}
-                                  className="w-full bg-gradient-primary bg-gradient-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
-                                >
-                                  Proceed to Checkout
-                                </button>
-                              )}
-                            </CurrentCart.Checkout>
+                    <div className="border-t border-surface-subtle p-6 flex-shrink-0">
+                      <CurrentCart.Notes>
+                        {({ notes, onNotesChange }) => (
+                          <div>
+                            <label className="block text-xs font-medium text-content-secondary mb-2">
+                              Notes:
+                            </label>
+                            <textarea
+                              value={notes}
+                              onChange={e => onNotesChange(e.target.value)}
+                              placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+                              rows={2}
+                              className="w-full px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none transition-colors duration-200 resize-vertical mb-4"
+                            />
                           </div>
-                        );
-                      }}
-                    </CurrentCart.Summary>
+                        )}
+                      </CurrentCart.Notes>
+
+                      {/* Coupon Code */}
+                      <CurrentCart.Coupon>
+                        {({
+                          appliedCoupon,
+                          onApply,
+                          onRemove,
+                          isLoading,
+                          error,
+                        }) => (
+                          <div className="mb-4">
+                            {appliedCoupon ? (
+                              <div className="flex items-center justify-between p-2 bg-status-success-light border border-status-success rounded">
+                                <span className="text-status-success text-xs font-medium">
+                                  Coupon: {appliedCoupon}
+                                </span>
+                                <button
+                                  onClick={onRemove}
+                                  disabled={isLoading}
+                                  className="text-status-danger hover:text-status-error text-xs disabled:opacity-50"
+                                >
+                                  {isLoading ? 'Removing...' : 'Remove'}
+                                </button>
+                              </div>
+                            ) : (
+                              <CouponFormMini
+                                onApply={onApply}
+                                isLoading={isLoading}
+                              />
+                            )}
+                            {error && error.includes('coupon') && (
+                              <div className="bg-status-danger-light border border-status-danger rounded p-2 mt-2">
+                                <p className="text-status-danger text-xs">
+                                  {error}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </CurrentCart.Coupon>
+                      <CurrentCart.Summary>
+                        {({
+                          subtotal,
+                          discount,
+                          appliedCoupon,
+                          shipping,
+                          tax,
+                          total,
+                          itemCount,
+                          isTotalsLoading,
+                        }) => {
+                          const LoadingOrValue = ({
+                            children,
+                          }: {
+                            children: string;
+                          }) =>
+                            isTotalsLoading ? (
+                              <span className="text-content-muted">
+                                Calculating...
+                              </span>
+                            ) : (
+                              children
+                            );
+
+                          return (
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-content-secondary">
+                                    Subtotal ({itemCount}{' '}
+                                    {itemCount === 1 ? 'item' : 'items'})
+                                  </span>
+                                  <span className="text-content-primary font-semibold">
+                                    <LoadingOrValue>{subtotal}</LoadingOrValue>
+                                  </span>
+                                </div>
+                                {appliedCoupon && discount && (
+                                  <div className="flex justify-between">
+                                    <span className="text-status-success">
+                                      Discount
+                                    </span>
+                                    <span className="text-status-success font-semibold">
+                                      {isTotalsLoading ? (
+                                        <span className="text-content-muted">
+                                          Calculating...
+                                        </span>
+                                      ) : (
+                                        `-${discount}`
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="flex justify-between">
+                                  <span className="text-content-secondary">
+                                    Shipping
+                                  </span>
+                                  <span className="text-content-primary font-semibold">
+                                    <LoadingOrValue>{shipping}</LoadingOrValue>
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-content-secondary">
+                                    Tax
+                                  </span>
+                                  <span className="text-content-primary font-semibold">
+                                    <LoadingOrValue>{tax}</LoadingOrValue>
+                                  </span>
+                                </div>
+                                <div className="border-t border-surface-interactive pt-2">
+                                  <div className="flex justify-between">
+                                    <span className="text-content-primary font-bold">
+                                      Total
+                                    </span>
+                                    <span className="text-content-primary font-bold text-lg">
+                                      <LoadingOrValue>{total}</LoadingOrValue>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <CurrentCart.Checkout>
+                                {({ onProceed, canCheckout }) => (
+                                  <button
+                                    onClick={onProceed}
+                                    disabled={!canCheckout}
+                                    className="w-full bg-gradient-primary bg-gradient-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                  >
+                                    Proceed to Checkout
+                                  </button>
+                                )}
+                              </CurrentCart.Checkout>
+                            </div>
+                          );
+                        }}
+                      </CurrentCart.Summary>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          );
+        }}
       </CurrentCart.Content>
     </>
   );
