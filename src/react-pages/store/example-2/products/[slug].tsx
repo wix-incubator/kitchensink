@@ -289,11 +289,11 @@ const ProductInfo = ({
           inStock,
           status,
           availableQuantity,
-          trackInventory,
+          trackQuantity,
           isPreOrderEnabled,
         }) => {
           const isLowStock =
-            trackInventory &&
+            trackQuantity &&
             availableQuantity !== null &&
             availableQuantity <= 5 &&
             availableQuantity > 0;
