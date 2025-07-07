@@ -1,13 +1,12 @@
-import React from "react";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../components/DocsMode";
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../components/DocsMode';
 
 interface BookingsIntroPageProps {
   bookingServicesConfig: any;
 }
 
 export default function BookingsIntroPage({
-  bookingServicesConfig,
+  bookingServicesConfig: _bookingServicesConfig,
 }: BookingsIntroPageProps) {
   return (
     <KitchensinkLayout>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, type ReactNode } from "react";
+import React, { createContext, useContext, type ReactNode } from 'react';
 
 export interface NavigationProps {
   route: string;
@@ -10,16 +10,13 @@ export type NavigationComponent = React.ComponentType<NavigationProps>;
 
 const NavigationContext = createContext<NavigationComponent | null>(null);
 
-const DefaultNavigationComponent: NavigationComponent = ({ 
+const DefaultNavigationComponent: NavigationComponent = ({
   route,
   children,
-  ...props 
+  ...props
 }) => {
   return (
-    <a 
-      href={route} 
-      {...props}
-    >
+    <a href={route} {...props}>
       {children}
     </a>
   );
@@ -30,9 +27,9 @@ export interface NavigationProviderProps {
   navigationComponent?: NavigationComponent;
 }
 
-export const NavigationProvider: React.FC<NavigationProviderProps> = ({ 
-  children, 
-  navigationComponent = DefaultNavigationComponent 
+export const NavigationProvider: React.FC<NavigationProviderProps> = ({
+  children,
+  navigationComponent = DefaultNavigationComponent,
 }) => {
   return (
     <NavigationContext.Provider value={navigationComponent}>
@@ -43,6 +40,6 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
 
 export const useNavigation = (): NavigationComponent => {
   const navigationComponent = useContext(NavigationContext);
-  
+
   return navigationComponent || DefaultNavigationComponent;
 };

@@ -1,8 +1,8 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import BookingsPage from "../../../react-pages/bookings/example-1/index";
-import { loadBookingServicesServiceConfig } from "../../../headless/bookings/services/booking-services-service";
-import { loadBookingSelectionServiceConfig } from "../../../headless/bookings/services/booking-selection-service";
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BookingsPage from '../../../react-pages/bookings/example-1/index';
+import { loadBookingServicesServiceConfig } from '../../../headless/bookings/services/booking-services-service';
+import { loadBookingSelectionServiceConfig } from '../../../headless/bookings/services/booking-selection-service';
 
 // Load initial data for services
 const bookingServicesConfig = await loadBookingServicesServiceConfig();

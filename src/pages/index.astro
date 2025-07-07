@@ -1,8 +1,8 @@
 ---
-import { loadSEOTagsServiceConfig } from "../headless/seo/services/seo-tags-service";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import HomePage from "../react-pages/index";
-import { SEO } from "../headless/seo/components";
+import { loadSEOTagsServiceConfig } from '../headless/seo/services/seo-tags-service';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomePage from '../react-pages/index';
+import { SEO } from '../headless/seo/components';
 
 export const prerender = true;
 
@@ -12,18 +12,18 @@ export const prerender = true;
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
   itemData: {
-    pageName: "Home",
+    pageName: 'Home',
     seoData: {
       tags: [
         {
-          type: "title",
-          children: "Wix Kitchensink",
+          type: 'title',
+          children: 'Wix Kitchensink',
         },
         {
-          type: "meta",
+          type: 'meta',
           props: {
-            name: "description",
-            content: "Explore all Wix features and implementations",
+            name: 'description',
+            content: 'Explore all Wix features and implementations',
           },
         },
       ],

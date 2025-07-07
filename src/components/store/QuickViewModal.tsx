@@ -6,7 +6,7 @@ import { CurrentCartServiceDefinition } from "../../headless/ecom/services/curre
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from "../../headless/media/services/media-gallery-service";
+} from '../../headless/media/services/media-gallery-service';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
@@ -131,7 +131,7 @@ export default function QuickViewModal({
       {/* Modal Container */}
       <div
         className="relative w-full max-w-6xl mx-4 max-h-[90vh] bg-surface-card rounded-2xl border border-brand-subtle shadow-2xl animate-[slideUp_0.3s_ease-out] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
@@ -195,7 +195,6 @@ export default function QuickViewModal({
               >
                 <ProductDetails
                   setShowSuccessMessage={setShowSuccessMessage}
-                  cartUrl="/cart"
                   isQuickView={true}
                 />
               </WixServices>

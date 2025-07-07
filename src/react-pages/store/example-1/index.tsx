@@ -9,23 +9,23 @@ import ProductList from "../../../components/store/ProductList";
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
-} from "../../../headless/store/services/catalog-options-service";
+} from '../../../headless/store/services/catalog-options-service';
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from "../../../headless/store/services/catalog-price-range-service";
+} from '../../../headless/store/services/catalog-price-range-service';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from "../../../headless/store/services/category-service";
+} from '../../../headless/store/services/category-service';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from "../../../headless/store/services/collection-service";
+} from '../../../headless/store/services/collection-service';
 import {
   FilterService,
   FilterServiceDefinition,
-} from "../../../headless/store/services/filter-service";
+} from '../../../headless/store/services/filter-service';
 import {
   SortService,
   SortServiceDefinition,
@@ -47,8 +47,8 @@ export default function StoreCollectionPage({
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
   const handleCategoryChange = (categoryId: string | null, category: any) => {
-    if (typeof window !== "undefined") {
-      const basePath = "/store/example-1";
+    if (typeof window !== 'undefined') {
+      const basePath = '/store/example-1';
       let newPath;
 
       if (categoryId === null) {

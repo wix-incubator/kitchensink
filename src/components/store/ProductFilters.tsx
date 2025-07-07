@@ -1,9 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import {
-  type AvailableOptions,
-  type Filter,
-  defaultFilter,
-} from "../../headless/store/services/filter-service";
+import React, { useState, useCallback, useEffect } from 'react';
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
@@ -28,17 +23,9 @@ interface ProductFiltersProps {
   isFiltered: boolean;
 }
 
-interface ProductOption {
-  id: string;
-  name: string;
-  choices: { id: string; name: string; colorCode?: string }[];
-  optionRenderType?: string;
-  availableOptions: AvailableOptions;
-}
-
 export const ProductFilters: React.FC<ProductFiltersProps> = ({
   onFiltersChange,
-  className = "",
+  className = '',
   availableOptions,
   currentFilters,
   clearFilters,
@@ -62,7 +49,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   useEffect(() => {
     setTempPriceRange(priceRange);
-  }, [priceRange]); 
+  }, [priceRange]);
 
   useEffect(() => {
     setTempPriceRange(currentFilters.priceRange);
@@ -92,19 +79,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     const handleMouseUp = () => handlePriceRangeCommit();
     const handleTouchEnd = () => handlePriceRangeCommit();
 
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleTouchEnd);
 
     return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [handlePriceRangeCommit]);
 
   // Handle option selection
   const handleOptionChange = useCallback(
     (optionId: string, choiceId: string, checked: boolean) => {
-      setSelectedOptions((prev) => {
+      setSelectedOptions(prev => {
         const newOptions = { ...prev };
         if (!newOptions[optionId]) {
           newOptions[optionId] = [];
@@ -116,7 +103,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           }
         } else {
           newOptions[optionId] = newOptions[optionId].filter(
-            (id) => id !== choiceId
+            id => id !== choiceId
           );
           if (newOptions[optionId].length === 0) {
             delete newOptions[optionId];
@@ -171,7 +158,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
           >
             <svg
               className={`w-5 h-5 transition-transform ${
-                isExpanded ? "rotate-180" : ""
+                isExpanded ? 'rotate-180' : ''
               }`}
               fill="none"
               viewBox="0 0 24 24"
@@ -188,7 +175,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         </div>
       </div>
 
-      <div className={`space-y-6 ${isExpanded ? "block" : "hidden lg:block"}`}>
+      <div className={`space-y-6 ${isExpanded ? 'block' : 'hidden lg:block'}`}>
         {/* Price Range Filter - Only show if valid price range is available */}
         {priceRange.min < priceRange.max && priceRange.max > 0 && (
           <div>
@@ -228,7 +215,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   min={priceRange.min}
                   max={priceRange.max}
                   value={tempPriceRange.min}
-                  onChange={(e) =>
+                  onChange={e =>
                     handlePriceRangeChange({
                       ...tempPriceRange,
                       min: Math.min(Number(e.target.value), tempPriceRange.max),
@@ -250,7 +237,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   min={priceRange.min}
                   max={priceRange.max}
                   value={tempPriceRange.max}
-                  onChange={(e) =>
+                  onChange={e =>
                     handlePriceRangeChange({
                       ...tempPriceRange,
                       max: Math.max(Number(e.target.value), tempPriceRange.min),
@@ -276,7 +263,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <input
                     type="number"
                     value={tempPriceRange.min}
-                    onChange={(e) => {
+                    onChange={e => {
                       const value = Math.max(
                         priceRange.min,
                         Math.min(Number(e.target.value), tempPriceRange.max)
@@ -294,7 +281,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <input
                     type="number"
                     value={tempPriceRange.max}
-                    onChange={(e) => {
+                    onChange={e => {
                       const value = Math.min(
                         priceRange.max,
                         Math.max(Number(e.target.value), tempPriceRange.min)
@@ -311,16 +298,16 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         )}
 
         {/* Product Options Filters */}
-        {productOptions.map((option) => (
+        {productOptions.map(option => (
           <div key={option.id}>
             <h4 className="text-content-primary font-medium mb-3">
               {String(option.name)}
             </h4>
 
             {/* Color Swatch Options */}
-            {option.optionRenderType === "SWATCH_CHOICES" ? (
+            {option.optionRenderType === 'SWATCH_CHOICES' ? (
               <div className="flex flex-wrap gap-4 mb-8">
-                {option.choices.map((choice) => (
+                {option.choices.map(choice => (
                   <label
                     key={choice.id}
                     className="cursor-pointer group relative mb-6"
@@ -331,7 +318,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       checked={
                         selectedOptions[option.id]?.includes(choice.id) || false
                       }
-                      onChange={(e) =>
+                      onChange={e =>
                         handleOptionChange(
                           option.id,
                           choice.id,
@@ -343,12 +330,12 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                     <div
                       className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
                         selectedOptions[option.id]?.includes(choice.id)
-                          ? "border-content-primary shadow-lg scale-110 ring-2 ring-brand-primary"
-                          : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
+                          ? 'border-content-primary shadow-lg scale-110 ring-2 ring-brand-primary'
+                          : 'border-color-swatch hover:border-color-swatch-hover hover:scale-105'
                       }`}
                       style={{
                         backgroundColor:
-                          choice.colorCode || "var(--theme-text-content-40)",
+                          choice.colorCode || 'var(--theme-text-content-40)',
                       }}
                     />
                     <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-content-light opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -360,7 +347,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             ) : (
               /* Regular Text Options */
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {option.choices.map((choice) => (
+                {option.choices.map(choice => (
                   <label
                     key={choice.id}
                     className="flex items-center gap-3 cursor-pointer group"
@@ -370,7 +357,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       checked={
                         selectedOptions[option.id]?.includes(choice.id) || false
                       }
-                      onChange={(e) =>
+                      onChange={e =>
                         handleOptionChange(
                           option.id,
                           choice.id,

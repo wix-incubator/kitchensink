@@ -1,6 +1,6 @@
-import { CurrentCart } from "../../headless/ecom/components";
-import { WixMediaImage } from "../../headless/media/components";
-import { useNavigation } from "../NavigationContext";
+import { CurrentCart } from '../../headless/ecom/components';
+import { WixMediaImage } from '../../headless/media/components';
+import { useNavigation } from '../NavigationContext';
 
 export default function CartContent() {
   const Navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function CartContent() {
                 <CurrentCart.Trigger>
                   {({ itemCount }) => (
                     <p className="text-content-secondary text-xl">
-                      {itemCount} {itemCount === 1 ? "item" : "items"} in your
+                      {itemCount} {itemCount === 1 ? 'item' : 'items'} in your
                       cart
                     </p>
                   )}
@@ -55,7 +55,6 @@ export default function CartContent() {
                 </div>
               )}
 
-
               {/* Empty Cart */}
               <CurrentCart.Items>
                 {({ hasItems, items }) => (
@@ -91,7 +90,9 @@ export default function CartContent() {
                             e.currentTarget.classList.add('btn-primary:hover');
                           }}
                           onMouseLeave={(e: any) => {
-                            e.currentTarget.classList.remove('btn-primary:hover');
+                            e.currentTarget.classList.remove(
+                              'btn-primary:hover'
+                            );
                             e.currentTarget.classList.add('btn-primary');
                           }}
                         >
@@ -199,7 +200,7 @@ export default function CartContent() {
                                                 (option, index) => {
                                                   const isColor =
                                                     typeof option.value ===
-                                                    "object";
+                                                    'object';
                                                   const text = isColor
                                                     ? (option.value as any).name
                                                     : option.value;
@@ -337,7 +338,7 @@ export default function CartContent() {
                                     </label>
                                     <textarea
                                       value={notes}
-                                      onChange={(e) =>
+                                      onChange={e =>
                                         onNotesChange(e.target.value)
                                       }
                                       placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
@@ -369,36 +370,42 @@ export default function CartContent() {
                                           disabled={isLoading}
                                           className="text-status-error hover:text-status-error/80 text-sm disabled:opacity-50"
                                         >
-                                          {isLoading ? "Removing..." : "Remove"}
+                                          {isLoading ? 'Removing...' : 'Remove'}
                                         </button>
                                       </div>
                                     ) : (
-                                                                             <form
-                                         onSubmit={(e) => {
-                                           e.preventDefault();
-                                           const formData = new FormData(e.currentTarget);
-                                           const code = formData.get('couponCode') as string;
-                                           if (code?.trim()) {
-                                             onApply(code.trim());
-                                           }
-                                         }}
-                                         className="space-y-3"
-                                       >
-                                         <input
-                                           type="text"
-                                           name="couponCode"
-                                           placeholder="Enter promo code"
-                                           className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200"
-                                           disabled={isLoading}
-                                         />
-                                         <button
-                                           type="submit"
-                                           disabled={isLoading}
-                                           className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
-                                         >
-                                           {isLoading ? "Applying..." : "Apply Coupon"}
-                                         </button>
-                                       </form>
+                                      <form
+                                        onSubmit={e => {
+                                          e.preventDefault();
+                                          const formData = new FormData(
+                                            e.currentTarget
+                                          );
+                                          const code = formData.get(
+                                            'couponCode'
+                                          ) as string;
+                                          if (code?.trim()) {
+                                            onApply(code.trim());
+                                          }
+                                        }}
+                                        className="space-y-3"
+                                      >
+                                        <input
+                                          type="text"
+                                          name="couponCode"
+                                          placeholder="Enter promo code"
+                                          className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200"
+                                          disabled={isLoading}
+                                        />
+                                        <button
+                                          type="submit"
+                                          disabled={isLoading}
+                                          className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
+                                        >
+                                          {isLoading
+                                            ? 'Applying...'
+                                            : 'Apply Coupon'}
+                                        </button>
+                                      </form>
                                     )}
                                   </div>
                                 )}
@@ -414,7 +421,6 @@ export default function CartContent() {
                                 tax,
                                 total,
                                 itemCount,
-                                canCheckout,
                                 isTotalsLoading,
                               }) => {
                                 const LoadingOrValue = ({
@@ -435,8 +441,8 @@ export default function CartContent() {
                                     <div className="space-y-3">
                                       <div className="flex justify-between text-lg text-content-primary">
                                         <span>
-                                          Subtotal ({itemCount}{" "}
-                                          {itemCount === 1 ? "item" : "items"})
+                                          Subtotal ({itemCount}{' '}
+                                          {itemCount === 1 ? 'item' : 'items'})
                                         </span>
                                         <span className="font-semibold">
                                           <LoadingOrValue>
@@ -448,7 +454,8 @@ export default function CartContent() {
                                         <div className="flex justify-between text-lg text-status-success">
                                           <span>Discount</span>
                                           <span className="font-semibold">
-                                            -<LoadingOrValue>
+                                            -
+                                            <LoadingOrValue>
                                               {discount}
                                             </LoadingOrValue>
                                           </span>
@@ -504,12 +511,14 @@ export default function CartContent() {
                                               !canProceed || checkoutLoading
                                             }
                                             className={`w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                              canProceed ? "btn-primary" : "bg-surface-primary"
+                                              canProceed
+                                                ? 'btn-primary'
+                                                : 'bg-surface-primary'
                                             }`}
                                             style={{
                                               cursor: !canProceed
-                                                ? "not-allowed"
-                                                : "pointer",
+                                                ? 'not-allowed'
+                                                : 'pointer',
                                             }}
                                           >
                                             {checkoutLoading ? (
@@ -536,7 +545,7 @@ export default function CartContent() {
                                                 Processing...
                                               </span>
                                             ) : (
-                                              "Proceed to Checkout"
+                                              'Proceed to Checkout'
                                             )}
                                           </button>
                                         </div>
@@ -581,4 +590,4 @@ export default function CartContent() {
       </div>
     </div>
   );
-};
+}

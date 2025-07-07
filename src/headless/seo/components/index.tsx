@@ -1,1 +1,1 @@
-export * as SEO from "./SEO";
+export * as SEO from './SEO';

@@ -1,6 +1,6 @@
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { ReadOnlySignal, Signal } from "../../Signal";
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { ReadOnlySignal, Signal } from '../../Signal';
 
 export interface MediaGalleryServiceAPI {
   selectedMediaIndex: Signal<number>;
@@ -16,7 +16,7 @@ export interface MediaGalleryServiceAPI {
 }
 
 export const MediaGalleryServiceDefinition =
-  defineService<MediaGalleryServiceAPI>("mediaGallery");
+  defineService<MediaGalleryServiceAPI>('mediaGallery');
 
 export type MediaItem = {
   image?: string | null;

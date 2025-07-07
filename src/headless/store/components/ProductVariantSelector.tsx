@@ -1,8 +1,8 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { SelectedVariantServiceDefinition } from "../services/selected-variant-service";
-import { ProductModifiersServiceDefinition } from "../services/product-modifiers-service";
-import { productsV3 } from "@wix/stores";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { SelectedVariantServiceDefinition } from '../services/selected-variant-service';
+import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
+import { productsV3 } from '@wix/stores';
 
 /**
  * Props for Options headless component
@@ -79,7 +79,7 @@ export const Option = (props: OptionProps) => {
   const selectedChoices = variantService.selectedChoices.get();
   const { option } = props;
 
-  const name = option.name || "";
+  const name = option.name || '';
   const choices = option.choicesSettings?.choices || [];
   const selectedValue = selectedChoices[name] || null;
 
@@ -139,8 +139,8 @@ export const Choice = (props: ChoiceProps) => {
   const selectedChoices = variantService.selectedChoices.get();
   const { option, choice } = props;
 
-  const optionName = option.name || "";
-  const choiceValue = choice.name || "";
+  const optionName = option.name || '';
+  const choiceValue = choice.name || '';
 
   const isSelected = selectedChoices[optionName] === choiceValue;
 
@@ -319,11 +319,11 @@ export const Stock = (props: StockProps) => {
   // Determine status based on stock and pre-order availability
   let status: string;
   if (inStock) {
-    status = "In Stock";
+    status = 'In Stock';
   } else if (isPreOrderEnabled) {
-    status = "Available for Pre-Order";
+    status = 'Available for Pre-Order';
   } else {
-    status = "Out of Stock";
+    status = 'Out of Stock';
   }
 
   return props.children({

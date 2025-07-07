@@ -1,4 +1,4 @@
-import "../../styles/theme-1.css";
+import '../../styles/theme-1.css';
 import {
   createServicesManager,
   createServicesMap,
@@ -20,19 +20,18 @@ import {
   CurrentMemberService,
   CurrentMemberServiceDefinition,
   type CurrentMemberServiceConfig,
-} from "../../headless/members/services/current-member-service";
-import { CurrentMemberProfile } from "../../headless/members/components";
+} from '../../headless/members/services/current-member-service';
+import { CurrentMemberProfile } from '../../headless/members/components';
 import {
   ProfileUpdateService,
   ProfileUpdateServiceDefinition,
   type ProfileUpdateServiceConfig,
-} from "../../headless/members/services/profile-update-service";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
+} from '../../headless/members/services/profile-update-service';
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 import {
-  loadPhotoUploadServiceConfig,
   PhotoUploadService,
   PhotoUploadServiceDefinition,
-} from "../../headless/members/services/photo-upload-service";
+} from '../../headless/members/services/photo-upload-service';
 
 interface ProfilePageProps {
   currentMemberServiceConfig?: CurrentMemberServiceConfig;
@@ -115,7 +114,7 @@ export function ProfilePage({
                     </button>
                     {/* Status Badge */}
                     <CurrentMemberProfile.ActivityStatus>
-                      {({ isActive }) => (
+                      {({ isActive: _isActive }) => (
                         <div className="absolute -bottom-1 -left-2 w-6 h-6 bg-[var(--theme-text-success)] rounded-full border-2 border-[var(--theme-text-content)] flex items-center justify-center">
                           <CheckIcon className="w-3 h-3 text-[var(--theme-text-content)]" />
                         </div>

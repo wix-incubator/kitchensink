@@ -1,5 +1,3 @@
-import React from "react";
-
 export const SignOutIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

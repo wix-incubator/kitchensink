@@ -1,5 +1,3 @@
-import React from "react";
-
 export const UserIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

@@ -1,6 +1,6 @@
-import React from "react";
-import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
-import { useService } from "@wix/services-manager-react";
+import React from 'react';
+import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import { useService } from '@wix/services-manager-react';
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -38,10 +38,10 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   onClick,
   isPreOrderEnabled,
   inStock,
-  className = "",
+  className = '',
 }) => {
   const buttonText =
-    !inStock && isPreOrderEnabled ? "Pre Order" : "Add to Cart";
+    !inStock && isPreOrderEnabled ? 'Pre Order' : 'Add to Cart';
 
   return (
     <button
@@ -49,7 +49,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       className={`flex-1 text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
-        disabled ? "bg-surface-primary cursor-not-allowed" : "btn-primary"
+        disabled ? 'bg-surface-primary cursor-not-allowed' : 'btn-primary'
       } ${className}`}
     >
       {isLoading ? (
@@ -89,17 +89,17 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   disabled,
   isLoading,
   onAddToCart,
-  className = "",
+  className = '',
 }) => {
   const cartService = useService(CurrentCartServiceDefinition);
-  
+
   const handleBuyNow = async () => {
     try {
       await cartService.clearCart();
       await onAddToCart();
       await cartService.proceedToCheckout();
     } catch (error) {
-      console.error("Buy now failed:", error);
+      console.error('Buy now failed:', error);
     }
   };
 
@@ -129,7 +129,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
           Processing...
         </span>
       ) : (
-        "Buy Now"
+        'Buy Now'
       )}
     </button>
   );
@@ -151,7 +151,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
     setTimeout(() => onShowSuccessMessage(false), 3000);
 
     if (isPreOrderEnabled) {
-      window.location.href = "/cart";
+      window.location.href = '/cart';
     }
   };
 

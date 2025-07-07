@@ -3,9 +3,9 @@ import {
   implementService,
   type ServiceFactoryConfig,
   type Signal,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import { seoTags } from "@wix/seo";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import { seoTags } from '@wix/seo';
 
 export interface SEOTagsServiceAPI {
   // @ts-ignore
@@ -17,7 +17,7 @@ export interface SEOTagsServiceAPI {
 }
 
 export const SEOTagsServiceDefinition =
-  defineService<SEOTagsServiceAPI>("seoTagsService");
+  defineService<SEOTagsServiceAPI>('seoTagsService');
 
 export type SEOTagsServiceConfig = {
   tags: seoTags.Tag[];
@@ -45,11 +45,11 @@ export const SEOTagsService =
         const updatedConfig = await loadSEOTagsServiceConfig({
           pageUrl: pageURL,
           itemType,
-          itemData
-        })
+          itemData,
+        });
 
         tags.set(updatedConfig.tags);
-        appendNewTags(updatedConfig.tags)
+        appendNewTags(updatedConfig.tags);
       };
 
       return { seoTags: tags, updateSeoTags };
@@ -87,9 +87,10 @@ async function resolveStaticPageSeoTags(
 /**
  * Loads the SEO tags service configuration for a given page.
  *
- * @param {string} pageUrl - The full URL of the page where SEO tags will be applied.
- * @param {seoTags.ItemType} itemType - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST) for item pages.
- * @param {seoTags.SlugData | seoTags.PageNameData} itemData - Item metadata (slug for item pages or pageName for static pages).
+ * @param {Object} params - The configuration parameters.
+ * @param {string} params.pageUrl - The full URL of the page where SEO tags will be applied.
+ * @param {seoTags.ItemType} [params.itemType] - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST) for item pages.
+ * @param {seoTags.SlugData | seoTags.PageNameData} params.itemData - Item metadata (slug for item pages or pageName for static pages).
  * @returns {Promise<SEOTagsServiceConfig>} Promise resolving to SEO tags service configuration.
  *
  * @example
@@ -97,9 +98,9 @@ async function resolveStaticPageSeoTags(
  * // Static page configuration
  * const config = await loadSEOTagsServiceConfig({
  *   pageUrl: "https://mysite.com/store",
- *   itemData: { 
- *     pageName: "Store Home", 
- *     seoData: { tags: [] } 
+ *   itemData: {
+ *     pageName: "Store Home",
+ *     seoData: { tags: [] }
  *   }
  * });
  * ```
@@ -147,42 +148,42 @@ export async function loadSEOTagsServiceConfig({
 }
 
 function appendNewTags(tags: seoTags.Tag[]) {
-  if(typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   const newTagElements: HTMLElement[] = [];
   try {
-    tags.forEach((tag) => {
+    tags.forEach(tag => {
       const el = createTagElement(tag);
       if (el) newTagElements.push(el);
     });
 
     document.head
       .querySelectorAll('[wix-seo-tags="true"]')
-      .forEach((el) => el.remove());
+      .forEach(el => el.remove());
 
-    newTagElements.forEach((el) => document.head.appendChild(el));
+    newTagElements.forEach(el => document.head.appendChild(el));
   } catch (err) {
-    console.error("SEO tag update failed", err);
+    console.error('SEO tag update failed', err);
   }
 
   function createTagElement(tag: any): HTMLElement | null {
     let el: HTMLElement | null = null;
-    if (tag.type === "title") {
-      el = document.createElement("title");
-      el.textContent = tag.children || "";
-    } else if (tag.type === "meta") {
-      el = document.createElement("meta");
+    if (tag.type === 'title') {
+      el = document.createElement('title');
+      el.textContent = tag.children || '';
+    } else if (tag.type === 'meta') {
+      el = document.createElement('meta');
       setAttributes(el, tag.props);
-    } else if (tag.type === "link") {
-      el = document.createElement("link");
+    } else if (tag.type === 'link') {
+      el = document.createElement('link');
       setAttributes(el, tag.props);
-    } else if (tag.type === "script") {
-      el = document.createElement("script");
+    } else if (tag.type === 'script') {
+      el = document.createElement('script');
       setAttributes(el, tag.props);
       setAttributes(el, tag.meta);
       if (tag.children) el.textContent = tag.children;
     }
-    if (el) el.setAttribute("wix-seo-tags", "true");
+    if (el) el.setAttribute('wix-seo-tags', 'true');
     return el;
   }
 

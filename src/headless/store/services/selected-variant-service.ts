@@ -1,10 +1,10 @@
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal, ReadOnlySignal } from "../../Signal";
-import { productsV3, inventoryItemsV3 } from "@wix/stores";
-import { CurrentCartServiceDefinition } from "../../ecom/services/current-cart-service";
-import { ProductServiceDefinition } from "./product-service";
-import { MediaGalleryServiceDefinition } from "../../media/services/media-gallery-service";
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal, ReadOnlySignal } from '../../Signal';
+import { productsV3, inventoryItemsV3 } from '@wix/stores';
+import { CurrentCartServiceDefinition } from '../../ecom/services/current-cart-service';
+import { ProductServiceDefinition } from './product-service';
+import { MediaGalleryServiceDefinition } from '../../media/services/media-gallery-service';
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
@@ -37,7 +37,7 @@ export interface SelectedVariantServiceAPI {
 
   selectedVariant: () => productsV3.Variant | null;
   finalPrice: () => number;
-  isLowStock: (threshold?: number) => boolean;
+  isLowStock: () => boolean;
 
   setSelectedChoices: (choices: Record<string, string>) => void;
   addToCart: (
@@ -65,7 +65,7 @@ export interface SelectedVariantServiceAPI {
 }
 
 export const SelectedVariantServiceDefinition =
-  defineService<SelectedVariantServiceAPI>("selectedVariant");
+  defineService<SelectedVariantServiceAPI>('selectedVariant');
 
 export const SelectedVariantService = implementService.withConfig<{}>()(
   SelectedVariantServiceDefinition,
@@ -86,7 +86,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       let mediaToDisplay: productsV3.ProductMedia[] = [];
 
       const productItemsImages =
-        product?.media?.itemsInfo?.items?.map((item) => item).filter(Boolean) ??
+        product?.media?.itemsInfo?.items?.map(item => item).filter(Boolean) ??
         [];
 
       if (productItemsImages.length) {
@@ -98,7 +98,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       // Get images based on selected choices if available
       let selectedChoicesImages: productsV3.ProductMedia[] = [];
 
-      Object.keys(selectedChoicesValue).forEach((choiceKey) => {
+      Object.keys(selectedChoicesValue).forEach(choiceKey => {
         const productOption = product?.options
           ?.find((option: any) => option.name === choiceKey)
           ?.choicesSettings?.choices?.find(
@@ -147,11 +147,11 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       selectedChoices: Record<string, string>
     ): productsV3.Variant | null => {
       return (
-        variants.find((variant) => {
+        variants.find(variant => {
           const variantChoices = processVariantChoices(variant);
           const choiceKeys = Object.keys(selectedChoices);
           return choiceKeys.every(
-            (key) => variantChoices[key] === selectedChoices[key]
+            key => variantChoices[key] === selectedChoices[key]
           );
         }) || null
       );
@@ -168,7 +168,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         // Use the correct Wix inventoryItemsV3.queryInventoryItems() API
         const queryResult = await inventoryItemsV3
           .queryInventoryItems()
-          .eq("variantId", variantId)
+          .eq('variantId', variantId)
           .find();
 
         const inventoryItem = queryResult.items?.[0];
@@ -188,7 +188,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           quantityAvailable.set(null);
         }
       } catch (error) {
-        console.error("Failed to fetch inventory quantity:", error);
+        console.error('Failed to fetch inventory quantity:', error);
         // Fallback on error
         quantityAvailable.set(null);
         trackQuantity.set(false);
@@ -228,8 +228,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     );
     const trackQuantity: Signal<boolean> = signalsService.signal(false as any);
     const selectedQuantity: Signal<number> = signalsService.signal(1 as any);
-    const productId: Signal<string> = signalsService.signal("" as any);
-    const sku: Signal<string> = signalsService.signal("" as any);
+    const productId: Signal<string> = signalsService.signal('' as any);
     const ribbonLabel: Signal<string | null> = signalsService.signal(
       null as any
     );
@@ -241,7 +240,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const init = (currentProduct: V3Product | null) => {
       if (currentProduct) {
         v3Product.set(currentProduct);
-        productId.set(currentProduct._id || "");
+        productId.set(currentProduct._id || '');
         ribbonLabel.set(currentProduct.ribbon?.name || null);
 
         const actualPrice = currentProduct.actualPriceRange?.minValue?.amount;
@@ -260,16 +259,14 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           currentProduct.options.forEach((option: any) => {
             if (option.name && option.choicesSettings?.choices) {
               optionsMap[option.name] = option.choicesSettings.choices.map(
-                (choice: any) => choice.name || ""
+                (choice: any) => choice.name || ''
               );
             }
           });
           options.set(optionsMap);
         }
 
-        if (
-          currentProduct.variantSummary!.variantCount! > 1
-        ) {
+        if (currentProduct.variantSummary!.variantCount! > 1) {
           variants.set(currentProduct.variantsInfo?.variants || []);
 
           if (currentProduct.variantsInfo?.variants?.length) {
@@ -277,7 +274,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           }
         } else {
           const singleVariant: productsV3.Variant = {
-            _id: "default",
+            _id: 'default',
             visible: true,
             choices: [],
             price: {
@@ -286,11 +283,11 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             },
             inventoryStatus: {
               inStock:
-                currentProduct.inventory?.availabilityStatus === "IN_STOCK" ||
+                currentProduct.inventory?.availabilityStatus === 'IN_STOCK' ||
                 currentProduct.inventory?.availabilityStatus ===
-                  "PARTIALLY_OUT_OF_STOCK",
+                  'PARTIALLY_OUT_OF_STOCK',
               preorderEnabled:
-                currentProduct.inventory?.preorderStatus === "ENABLED",
+                currentProduct.inventory?.preorderStatus === 'ENABLED',
             },
           };
           variants.set([singleVariant]);
@@ -356,7 +353,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         rawAmount = prod.actualPriceRange.minValue.amount;
       }
 
-      return rawAmount ? `$${rawAmount}` : "";
+      return rawAmount ? `$${rawAmount}` : '';
     });
 
     const currentCompareAtPrice: ReadOnlySignal<string | null> =
@@ -412,13 +409,13 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const currency: ReadOnlySignal<string> = signalsService.computed(() => {
       const prod = v3Product.get();
-      return prod?.currency || "USD";
+      return prod?.currency || 'USD';
     });
 
     const selectedVariant = (): productsV3.Variant | null => {
       const variantId = selectedVariantId.get();
       const variantsList = variants.get();
-      return variantsList.find((v) => v._id === variantId) || null;
+      return variantsList.find(v => v._id === variantId) || null;
     };
 
     const finalPrice = (): number => {
@@ -427,7 +424,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       return discount !== null ? discount : base;
     };
 
-    const isLowStock = (threshold: number = 5): boolean => {
+    const isLowStock = (): boolean => {
+      // Note: Currently always returns false as inventory quantity tracking
+      // is handled separately by the inventory service
       return false;
     };
 
@@ -450,19 +449,21 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         const variant = currentVariant.get();
 
         if (!prod?._id) {
-          throw new Error("Product not found");
+          throw new Error('Product not found');
         }
 
         // Build catalog reference with modifiers if provided
         const catalogReference: any = {
           catalogItemId: prod._id,
-          appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          options: variant?._id && variant._id !== "default"
-            ? {
-                variantId: variant._id,
-                preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled,
-              }
-            : undefined,
+          appId: '215238eb-22a5-4c36-9e7b-e7c08025e04e',
+          options:
+            variant?._id && variant._id !== 'default'
+              ? {
+                  variantId: variant._id,
+                  preOrderRequested:
+                    !!variant?.inventoryStatus?.preorderEnabled,
+                }
+              : undefined,
         };
 
         // Transform and add modifiers to catalog reference if they exist
@@ -476,7 +477,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           Object.values(modifiers).forEach((modifierValue: any) => {
             const modifierName = modifierValue.modifierName;
             const productModifier = productModifiers.find(
-              (m) => m.name === modifierName
+              m => m.name === modifierName
             );
 
             if (!productModifier) return;
@@ -484,15 +485,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             const renderType = productModifier.modifierRenderType;
 
             if (
-              renderType === "TEXT_CHOICES" ||
-              renderType === "SWATCH_CHOICES"
+              renderType === 'TEXT_CHOICES' ||
+              renderType === 'SWATCH_CHOICES'
             ) {
               // For choice modifiers, use the modifier key and choice value
               const modifierKey = (productModifier as any).key || modifierName;
               if (modifierValue.choiceValue) {
                 options[modifierKey] = modifierValue.choiceValue;
               }
-            } else if (renderType === "FREE_TEXT") {
+            } else if (renderType === 'FREE_TEXT') {
               // For free text modifiers, use the freeTextSettings key
               const freeTextKey =
                 (productModifier.freeTextSettings as any)?.key || modifierName;
@@ -527,7 +528,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
         await cartService.addToCart(lineItems);
       } catch (err) {
-        error.set(err instanceof Error ? err.message : "Failed to add to cart");
+        error.set(err instanceof Error ? err.message : 'Failed to add to cart');
       } finally {
         isLoading.set(false);
       }
@@ -541,7 +542,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const selectVariantById = (id: string) => {
       const variantsList = variants.get();
-      const variant = variantsList.find((v) => v._id === id);
+      const variant = variantsList.find(v => v._id === id);
       if (variant) {
         const variantChoices = processVariantChoices(variant);
         selectedChoices.set(variantChoices);
@@ -582,7 +583,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       // Get all possible choices for this option that result in valid variants
       const availableChoices = new Set<string>();
 
-      variantsList.forEach((variant) => {
+      variantsList.forEach(variant => {
         const variantChoices = processVariantChoices(variant);
 
         // Check if this variant matches all currently selected choices (except for the option we're checking)
@@ -616,7 +617,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       // Get all variants and find one that matches these choices
       const variantsList = variants.get();
-      const matchingVariant = variantsList.find((variant) => {
+      const matchingVariant = variantsList.find(variant => {
         if (!variant.choices) return false;
 
         const variantChoices: Record<string, string> = {};

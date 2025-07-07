@@ -1,4 +1,4 @@
-import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
+import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
 
 export default function NotFoundPage() {
   return (

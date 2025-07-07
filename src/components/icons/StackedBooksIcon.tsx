@@ -1,5 +1,3 @@
-import React from "react";
-
 export const BookOpenIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

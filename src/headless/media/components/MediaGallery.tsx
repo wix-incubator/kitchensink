@@ -1,6 +1,6 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { MediaGalleryServiceDefinition } from "../services/media-gallery-service";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { MediaGalleryServiceDefinition } from '../services/media-gallery-service';
 
 /**
  * Props for Viewport headless component

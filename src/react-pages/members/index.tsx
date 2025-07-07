@@ -1,6 +1,6 @@
-import { PageDocsRegistration } from "../../components/DocsMode";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import "../../styles/theme-1.css";
+import { PageDocsRegistration } from '../../components/DocsMode';
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
+import '../../styles/theme-1.css';
 
 export function MembersPage() {
   return (
@@ -48,10 +48,10 @@ export function MembersPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
           <div className="bg-[var(--theme-bg-options)] backdrop-blur-lg rounded-3xl shadow-2xl border border-[var(--theme-border-primary-10)] p-8 md:p-12 mb-16">
             <div className="text-center mb-12">
-                              <h2 className="text-4xl font-bold text-[var(--theme-text-content)] mb-6">
-                  What is Wix Members?
-                </h2>
-                <p className="text-xl text-[var(--theme-text-content-80)] max-w-3xl mx-auto leading-relaxed">
+              <h2 className="text-4xl font-bold text-[var(--theme-text-content)] mb-6">
+                What is Wix Members?
+              </h2>
+              <p className="text-xl text-[var(--theme-text-content-80)] max-w-3xl mx-auto leading-relaxed">
                 Wix Members provides a comprehensive suite of tools for user
                 authentication, profile management, and social engagement. It
                 allows you to build secure, scalable, and interactive member
@@ -62,7 +62,10 @@ export function MembersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Authentication */}
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'var(--theme-gradient-primary)' }}>
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: 'var(--theme-gradient-primary)' }}
+                >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
                     fill="none"
@@ -88,7 +91,10 @@ export function MembersPage() {
 
               {/* Profile Management */}
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'var(--theme-gradient-secondary)' }}>
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: 'var(--theme-gradient-secondary)' }}
+                >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
                     fill="none"
@@ -114,7 +120,10 @@ export function MembersPage() {
 
               {/* Social Features */}
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'var(--theme-gradient-accent)' }}>
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: 'var(--theme-gradient-accent)' }}
+                >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
                     fill="none"
@@ -159,7 +168,10 @@ export function MembersPage() {
             >
               <div className="bg-[var(--theme-bg-options)] backdrop-blur-lg rounded-3xl shadow-2xl border border-[var(--theme-border-primary-10)] p-8 h-full hover:bg-[var(--theme-bg-primary-10)] transition-all duration-300">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'var(--theme-gradient-primary-50)' }}>
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                    style={{ background: 'var(--theme-gradient-primary-50)' }}
+                  >
                     <svg
                       className="w-8 h-8 text-[var(--theme-text-content)]"
                       fill="none"
@@ -174,7 +186,10 @@ export function MembersPage() {
                       />
                     </svg>
                   </div>
-                  <div className="px-3 py-1 backdrop-blur-sm rounded-full border border-[var(--theme-border-primary-30)]" style={{ background: 'var(--theme-primary-500-20)' }}>
+                  <div
+                    className="px-3 py-1 backdrop-blur-sm rounded-full border border-[var(--theme-border-primary-30)]"
+                    style={{ background: 'var(--theme-primary-500-20)' }}
+                  >
                     <span className="text-[var(--theme-text-accent)] text-sm font-medium">
                       Live Example
                     </span>

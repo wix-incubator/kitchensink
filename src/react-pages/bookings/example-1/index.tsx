@@ -8,7 +8,7 @@ import {
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
-} from "../../../headless/bookings/services/booking-selection-service";
+} from '../../../headless/bookings/services/booking-selection-service';
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
@@ -65,7 +65,7 @@ export default function BookingsPage({
           {/* Services Header */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <BookingServices.ServicesHeader>
-              {({ summaryText, isLoading, hasServices }) => (
+              {({ summaryText, isLoading, hasServices: _hasServices }) => (
                 <div className="flex items-center justify-between mb-8">
                   <div>
                     <h2 className="text-3xl font-bold text-white">
@@ -148,7 +148,7 @@ export default function BookingsPage({
 
                 return (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {services.map((service) => (
+                    {services.map(service => (
                       <BookingServices.ServiceListItem
                         key={service._id}
                         service={service}
@@ -274,13 +274,13 @@ export default function BookingsPage({
                                     disabled={!canBookOnline}
                                     className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
                                       canBookOnline
-                                        ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
-                                        : "bg-white/10 text-white/40 cursor-not-allowed"
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105'
+                                        : 'bg-white/10 text-white/40 cursor-not-allowed'
                                     }`}
                                   >
                                     {canBookOnline
-                                      ? "Book Now"
-                                      : "Booking Unavailable"}
+                                      ? 'Book Now'
+                                      : 'Booking Unavailable'}
                                   </button>
                                 )}
                               </BookingSelection.ServiceSelector>

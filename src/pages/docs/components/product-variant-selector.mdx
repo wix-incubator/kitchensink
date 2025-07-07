@@ -9,7 +9,7 @@ The `ProductVariantSelector` namespace contains headless components for managing
 ## Overview
 
 ```tsx
-import { ProductVariantSelector } from "headless/store/components";
+import { ProductVariantSelector } from 'headless/store/components';
 
 // All available components
 const {
@@ -46,7 +46,7 @@ Provides access to all product options and currently selected values.
     <>
       {hasOptions ? (
         <div className="space-y-6">
-          {options.map((option) => (
+          {options.map(option => (
             <div key={option.name}>
               <h3 className="font-semibold mb-3">{option.name}</h3>
               {/* Render option choices here */}
@@ -87,7 +87,7 @@ Provides choices for a specific product option.
       <h4 className="font-medium mb-2">{optionName}</h4>
       {hasChoices && (
         <div className="flex flex-wrap gap-2">
-          {choices.map((choice) => (
+          {choices.map(choice => (
             <div key={choice.value || choice.description}>
               {/* Individual choice selection here */}
             </div>
@@ -129,9 +129,9 @@ Handles individual choice selection within an option.
       disabled={!isAvailable}
       className={`px-4 py-2 border rounded-lg transition-colors ${
         isSelected
-          ? "bg-blue-500 text-white border-blue-500"
-          : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
-      } ${!isAvailable ? "opacity-50 cursor-not-allowed" : ""}`}
+          ? 'bg-blue-500 text-white border-blue-500'
+          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+      } ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       {displayValue}
     </button>
@@ -170,7 +170,7 @@ Manages the add to cart functionality with current variant state.
         disabled={!canAddToCart || isLoading}
         className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
       >
-        {isLoading ? "Adding..." : canAddToCart ? "Add to Cart" : "Unavailable"}
+        {isLoading ? 'Adding...' : canAddToCart ? 'Add to Cart' : 'Unavailable'}
       </button>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -232,11 +232,11 @@ Displays the current stock status for the selected variant.
     <div className="flex items-center gap-2">
       <div
         className={`w-3 h-3 rounded-full ${
-          inStock ? "bg-green-500" : "bg-red-500"
+          inStock ? 'bg-green-500' : 'bg-red-500'
         }`}
       />
       <span
-        className={`text-sm ${inStock ? "text-green-600" : "text-red-600"}`}
+        className={`text-sm ${inStock ? 'text-green-600' : 'text-red-600'}`}
       >
         {status}
         {trackInventory && quantity !== null && (
@@ -274,7 +274,7 @@ Displays the current stock status for the selected variant.
       <>
         {hasOptions && (
           <div className="space-y-6">
-            {options.map((option) => (
+            {options.map(option => (
               <div key={option.name}>
                 <ProductVariantSelector.ProductOptionChoices option={option}>
                   {({ optionName, choices, hasChoices }) => (
@@ -284,7 +284,7 @@ Displays the current stock status for the selected variant.
                       </h3>
                       {hasChoices && (
                         <div className="flex flex-wrap gap-3">
-                          {choices.map((choice) => (
+                          {choices.map(choice => (
                             <ProductVariantSelector.ChoiceSelection
                               key={choice.value || choice.description}
                               option={option}
@@ -295,8 +295,8 @@ Displays the current stock status for the selected variant.
                                   onClick={selectChoice}
                                   className={`px-4 py-2 border rounded-lg ${
                                     isSelected
-                                      ? "border-blue-500 bg-blue-50"
-                                      : "border-gray-300"
+                                      ? 'border-blue-500 bg-blue-50'
+                                      : 'border-gray-300'
                                   }`}
                                 >
                                   {displayValue}
@@ -323,7 +323,7 @@ Displays the current stock status for the selected variant.
       <div className="flex items-center gap-2">
         <div
           className={`w-2 h-2 rounded-full ${
-            inStock ? "bg-green-500" : "bg-red-500"
+            inStock ? 'bg-green-500' : 'bg-red-500'
           }`}
         />
         <span className="text-sm text-gray-600">{status}</span>
@@ -339,7 +339,7 @@ Displays the current stock status for the selected variant.
         disabled={!canAddToCart}
         className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg"
       >
-        {isLoading ? "Adding to Cart..." : "Add to Cart"}
+        {isLoading ? 'Adding to Cart...' : 'Add to Cart'}
       </button>
     )}
   </ProductVariantSelector.AddToCartTrigger>
@@ -353,8 +353,8 @@ Displays the current stock status for the selected variant.
   {({ options }) => (
     <>
       {options
-        .filter((option) => option.optionType === "color")
-        .map((option) => (
+        .filter(option => option.optionType === 'color')
+        .map(option => (
           <ProductVariantSelector.ProductOptionChoices
             key={option.name}
             option={option}
@@ -363,7 +363,7 @@ Displays the current stock status for the selected variant.
               <div>
                 <h3 className="font-medium mb-3">{optionName}</h3>
                 <div className="flex gap-2">
-                  {choices.map((choice) => (
+                  {choices.map(choice => (
                     <ProductVariantSelector.ChoiceSelection
                       key={choice.description}
                       option={option}
@@ -373,7 +373,7 @@ Displays the current stock status for the selected variant.
                         <button
                           onClick={selectChoice}
                           className={`w-12 h-12 rounded-full border-2 ${
-                            isSelected ? "border-gray-800" : "border-gray-300"
+                            isSelected ? 'border-gray-800' : 'border-gray-300'
                           }`}
                           style={{
                             backgroundColor: description?.toLowerCase(),
@@ -422,7 +422,7 @@ const [quantity, setQuantity] = useState(1);
         disabled={!canAddToCart || isLoading}
         className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white py-2 px-6 rounded-lg"
       >
-        {isLoading ? "Adding..." : `Add ${quantity} to Cart`}
+        {isLoading ? 'Adding...' : `Add ${quantity} to Cart`}
       </button>
     )}
   </ProductVariantSelector.AddToCartTrigger>
@@ -434,24 +434,28 @@ const [quantity, setQuantity] = useState(1);
 These components depend on the `SelectedVariantService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `SelectedVariantService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   SelectedVariantServiceDefinition,
   SelectedVariantService,
-} from "../headless/store/selected-variant-service";
+} from '../headless/store/selected-variant-service';
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      variantConfig
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          SelectedVariantServiceDefinition,
+          SelectedVariantService,
+          variantConfig
+        )
+      )
+    )[0]
+  }
 >
   {/* Your ProductVariantSelector components here */}
 </ServicesManagerProvider>;
@@ -475,7 +479,7 @@ import type {
   ProductPriceRenderProps,
   StockStatusProps,
   StockStatusRenderProps,
-} from "../headless/store/ProductVariantSelector";
+} from '../headless/store/ProductVariantSelector';
 ```
 
 ## Testing
@@ -483,10 +487,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { ProductVariantSelector } from "../headless/store/components";
+import { render } from '@testing-library/react';
+import { ProductVariantSelector } from '../headless/store/components';
 
-test("ProductOptions renders correctly", () => {
+test('ProductOptions renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(

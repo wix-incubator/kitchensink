@@ -2,14 +2,14 @@ import {
   ProfileFormField,
   ProfileUpdateProgress,
   ProfileUpdateTrigger,
-} from "../headless/members/components/ProfileUpdate";
-import { PencilIcon } from "./icons/PencilIcon";
-import { CloseIcon } from "./icons/CloseIcon";
-import { UserIcon } from "./icons/UserIcon";
-import { BriefcaseIcon } from "./icons/BriefcaseIcon";
-import { MailIcon } from "./icons/MailIcon";
-import { LocationMarkerIcon } from "./icons/LocationMarkerIcon";
-import { CheckIcon } from "./icons/CheckIcon";
+} from '../headless/members/components/ProfileUpdate';
+import { PencilIcon } from './icons/PencilIcon';
+import { CloseIcon } from './icons/CloseIcon';
+import { UserIcon } from './icons/UserIcon';
+import { BriefcaseIcon } from './icons/BriefcaseIcon';
+import { MailIcon } from './icons/MailIcon';
+import { LocationMarkerIcon } from './icons/LocationMarkerIcon';
+import { CheckIcon } from './icons/CheckIcon';
 
 interface UpdateProfileDialogProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ export default function UpdateProfileDialog({
   return (
     <div
       className="fixed inset-0 z-50 bg-[var(--theme-bg-tooltip)] backdrop-blur-sm"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onClick={e => e.target === e.currentTarget && onClose()}
     >
       {/* Dialog Container */}
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -62,7 +62,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Enter your first name"
                       />
@@ -79,7 +79,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Enter your last name"
                       />
@@ -96,7 +96,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Your display name"
                       />
@@ -113,7 +113,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Your title or role"
                       />
@@ -130,7 +130,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="date"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                       />
                     </div>
@@ -145,7 +145,7 @@ export default function UpdateProfileDialog({
                       </label>
                       <select
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                       >
                         <option value="PUBLIC">Public</option>
@@ -173,7 +173,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Your company name"
                       />
@@ -190,7 +190,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="Your job title"
                       />
@@ -216,7 +216,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="email1@example.com, email2@example.com"
                       />
@@ -236,7 +236,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="+1-555-123-4567, +1-555-987-6543"
                       />
@@ -266,7 +266,7 @@ export default function UpdateProfileDialog({
                         <input
                           type="text"
                           value={value}
-                          onChange={(e) => onChange(e.target.value)}
+                          onChange={e => onChange(e.target.value)}
                           className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                           placeholder="123 Main Street"
                         />
@@ -285,7 +285,7 @@ export default function UpdateProfileDialog({
                         <input
                           type="text"
                           value={value}
-                          onChange={(e) => onChange(e.target.value)}
+                          onChange={e => onChange(e.target.value)}
                           className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                           placeholder="Apt 4B, Suite 100, etc."
                         />
@@ -303,7 +303,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="New York"
                       />
@@ -320,7 +320,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="NY"
                       />
@@ -337,7 +337,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="10001"
                       />
@@ -354,7 +354,7 @@ export default function UpdateProfileDialog({
                       <input
                         type="text"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={e => onChange(e.target.value)}
                         className="w-full px-4 py-3 bg-[var(--theme-bg-options)] border border-[var(--theme-border-primary-20)] rounded-lg text-[var(--theme-text-content)] placeholder-[var(--theme-text-content-50)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary-500)] focus:border-transparent transition-all"
                         placeholder="US"
                         maxLength={2}
@@ -377,13 +377,13 @@ export default function UpdateProfileDialog({
                       <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
                         <div className="flex items-center gap-3">
                           <div>
-                            {updateState.type === "loading" && (
+                            {updateState.type === 'loading' && (
                               <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
                             )}
-                            {updateState.type === "success" && (
+                            {updateState.type === 'success' && (
                               <CheckIcon className="w-6 h-6 text-[var(--theme-text-success)]" />
                             )}
-                            {updateState.type === "error" && (
+                            {updateState.type === 'error' && (
                               <CloseIcon className="w-6 h-6 text-[var(--theme-text-error)]" />
                             )}
                           </div>
@@ -416,23 +416,27 @@ export default function UpdateProfileDialog({
                       disabled={!canUpdate}
                       className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
                       style={{
-                        background: canUpdate ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
-                        cursor: !canUpdate ? 'not-allowed' : 'pointer'
+                        background: canUpdate
+                          ? 'var(--theme-btn-primary)'
+                          : 'var(--theme-bg-options)',
+                        cursor: !canUpdate ? 'not-allowed' : 'pointer',
                       }}
-                      onMouseEnter={(e) => {
+                      onMouseEnter={e => {
                         if (canUpdate) {
-                          e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                          e.currentTarget.style.background =
+                            'var(--theme-btn-primary-hover)';
                         }
                       }}
-                      onMouseLeave={(e) => {
+                      onMouseLeave={e => {
                         if (canUpdate) {
-                          e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                          e.currentTarget.style.background =
+                            'var(--theme-btn-primary)';
                         }
                       }}
                     >
                       <span className="flex items-center justify-center gap-3">
                         <CheckIcon className="w-5 h-5" />
-                        {isUpdating ? "Updating..." : "Update Profile"}
+                        {isUpdating ? 'Updating...' : 'Update Profile'}
                       </span>
                     </button>
                     <button

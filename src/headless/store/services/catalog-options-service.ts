@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { productsV3, customizationsV3 } from "@wix/stores";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { productsV3, customizationsV3 } from '@wix/stores';
 
 export interface ProductOption {
   id: string;
@@ -45,7 +45,7 @@ const matchesAggregationName = (
   aggregationNames: string[]
 ): boolean => {
   return aggregationNames.some(
-    (aggName) => aggName.toLowerCase() === name.toLowerCase()
+    aggName => aggName.toLowerCase() === name.toLowerCase()
   );
 };
 
@@ -73,14 +73,14 @@ const buildCategoryFilter = (categoryId?: string) => {
 
   return {
     visible: true,
-    "allCategoriesInfo.categories": {
+    'allCategoriesInfo.categories': {
       $matchItems: [{ _id: { $in: [categoryId] } }],
     },
   };
 };
 
 export const CatalogOptionsServiceDefinition =
-  defineService<CatalogOptionsServiceAPI>("catalogOptions");
+  defineService<CatalogOptionsServiceAPI>('catalogOptions');
 
 export const CatalogOptionsService = implementService.withConfig<{}>()(
   CatalogOptionsServiceDefinition,
@@ -101,33 +101,33 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
         const aggregationRequest = {
           aggregations: [
             {
-              name: "optionNames",
-              fieldPath: "options.name",
-              type: "VALUE" as const,
+              name: 'optionNames',
+              fieldPath: 'options.name',
+              type: 'VALUE' as const,
               value: {
                 limit: 20,
-                sortType: "VALUE" as const,
-                sortDirection: "ASC" as const,
+                sortType: 'VALUE' as const,
+                sortDirection: 'ASC' as const,
               },
             },
             {
-              name: "choiceNames",
-              fieldPath: "options.choicesSettings.choices.name",
-              type: "VALUE" as const,
+              name: 'choiceNames',
+              fieldPath: 'options.choicesSettings.choices.name',
+              type: 'VALUE' as const,
               value: {
                 limit: 50,
-                sortType: "VALUE" as const,
-                sortDirection: "ASC" as const,
+                sortType: 'VALUE' as const,
+                sortDirection: 'ASC' as const,
               },
             },
             {
-              name: "inventoryStatus",
-              fieldPath: "inventory.availabilityStatus",
-              type: "VALUE" as const,
+              name: 'inventoryStatus',
+              fieldPath: 'inventory.availabilityStatus',
+              type: 'VALUE' as const,
               value: {
                 limit: 10,
-                sortType: "VALUE" as const,
-                sortDirection: "ASC" as const,
+                sortType: 'VALUE' as const,
+                sortDirection: 'ASC' as const,
               },
             },
           ],
@@ -142,15 +142,15 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
 
         const optionNames = extractAggregationValues(
           aggregationResponse,
-          "optionNames"
+          'optionNames'
         );
         const choiceNames = extractAggregationValues(
           aggregationResponse,
-          "choiceNames"
+          'choiceNames'
         );
         const inventoryStatuses = extractAggregationValues(
           aggregationResponse,
-          "inventoryStatus"
+          'inventoryStatus'
         );
 
         // Step 2: Get option structure from customizations API
@@ -162,23 +162,23 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
         // Step 3: Build options by matching customizations with aggregation data
         const options: ProductOption[] = customizations
           .filter(
-            (customization) =>
+            customization =>
               customization.name &&
               customization._id &&
-              customization.customizationType === "PRODUCT_OPTION" &&
+              customization.customizationType === 'PRODUCT_OPTION' &&
               matchesAggregationName(customization.name, optionNames)
           )
-          .map((customization) => {
+          .map(customization => {
             const choices: ProductChoice[] = (
               customization.choicesSettings?.choices || []
             )
               .filter(
-                (choice) =>
+                choice =>
                   choice._id &&
                   choice.name &&
                   matchesAggregationName(choice.name, choiceNames)
               )
-              .map((choice) => ({
+              .map(choice => ({
                 id: choice._id!,
                 name: choice.name!,
                 colorCode: choice.colorCode,
@@ -191,37 +191,37 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
               optionRenderType: customization.customizationRenderType,
             };
           })
-          .filter((option) => option.choices.length > 0);
+          .filter(option => option.choices.length > 0);
 
         // Step 4: Add inventory filter if there are multiple inventory statuses
         if (inventoryStatuses.length > 1) {
           const inventoryChoices: ProductChoice[] = inventoryStatuses.map(
-            (status) => ({
+            status => ({
               id: status.toUpperCase(), // Use uppercase to match actual availabilityStatus values
               name:
-                status.toUpperCase() === "IN_STOCK"
-                  ? "In Stock"
-                  : status.toUpperCase() === "OUT_OF_STOCK"
-                  ? "Out of Stock"
-                  : status.toUpperCase() === "PARTIALLY_OUT_OF_STOCK"
-                  ? "Partially out of stock"
-                  : status,
+                status.toUpperCase() === 'IN_STOCK'
+                  ? 'In Stock'
+                  : status.toUpperCase() === 'OUT_OF_STOCK'
+                    ? 'Out of Stock'
+                    : status.toUpperCase() === 'PARTIALLY_OUT_OF_STOCK'
+                      ? 'Partially out of stock'
+                      : status,
             })
           );
 
           options.push({
-            id: "inventory-filter",
-            name: "Availability",
+            id: 'inventory-filter',
+            name: 'Availability',
             choices: inventoryChoices,
-            optionRenderType: "TEXT_CHOICES",
+            optionRenderType: 'TEXT_CHOICES',
           });
         }
 
         catalogOptions.set(options);
       } catch (err) {
-        console.error("Failed to load catalog options:", err);
+        console.error('Failed to load catalog options:', err);
         error.set(
-          err instanceof Error ? err.message : "Failed to load catalog options"
+          err instanceof Error ? err.message : 'Failed to load catalog options'
         );
         catalogOptions.set([]);
       } finally {

@@ -1,7 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { ProductServiceDefinition } from "../services/product-service";
-import type { productsV3 } from "@wix/stores";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { ProductServiceDefinition } from '../services/product-service';
+import type { productsV3 } from '@wix/stores';
 
 /**
  * Props for ProductName headless component
@@ -48,9 +48,9 @@ export interface ProductDescriptionProps {
  */
 export interface ProductDescriptionRenderProps {
   /** Product description (may contain HTML) */
-  description: NonNullable<productsV3.V3Product["description"]>;
+  description: NonNullable<productsV3.V3Product['description']>;
   /** Product plain description */
-  plainDescription: NonNullable<productsV3.V3Product["plainDescription"]>;
+  plainDescription: NonNullable<productsV3.V3Product['plainDescription']>;
 }
 
 /**

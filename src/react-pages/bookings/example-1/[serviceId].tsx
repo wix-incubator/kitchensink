@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from 'react';
 import {
   createServicesManager,
   createServicesMap,
@@ -8,11 +8,11 @@ import { WixServices } from "@wix/services-manager-react";
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
-} from "../../../headless/bookings/services/booking-service-service";
+} from '../../../headless/bookings/services/booking-service-service';
 import {
   BookingAvailabilityService,
   BookingAvailabilityServiceDefinition,
-} from "../../../headless/bookings/services/booking-availability-service";
+} from '../../../headless/bookings/services/booking-availability-service';
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
@@ -36,7 +36,7 @@ interface ServiceBookingPageProps {
 const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
   return (
     <BookingService.Service>
-      {({ service, loadService }) => {
+      {({ service, loadService: _loadService }) => {
         const currentService = service;
 
         return (
@@ -83,7 +83,7 @@ const CalendarSection = () => {
       <BookingAvailability.Calendar>
         {({
           selectedDate,
-          availableDates,
+          availableDates: _availableDates,
           isLoading,
           selectDate,
           hasAvailableSlots,
@@ -156,8 +156,8 @@ const CalendarSection = () => {
 
                 <h4 className="text-lg font-medium text-white">
                   {selectedDate.toLocaleDateString([], {
-                    month: "long",
-                    year: "numeric",
+                    month: 'long',
+                    year: 'numeric',
                   })}
                 </h4>
 
@@ -181,16 +181,14 @@ const CalendarSection = () => {
 
               {/* Calendar Grid */}
               <div className="grid grid-cols-7 gap-1 mb-2">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <div
-                      key={day}
-                      className="p-2 text-center text-sm font-medium text-white/70"
-                    >
-                      {day}
-                    </div>
-                  )
-                )}
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div
+                    key={day}
+                    className="p-2 text-center text-sm font-medium text-white/70"
+                  >
+                    {day}
+                  </div>
+                ))}
               </div>
 
               <div className="grid grid-cols-7 gap-1">
@@ -212,13 +210,13 @@ const CalendarSection = () => {
                       disabled={isPast || !hasSlots}
                       className={`p-2 text-sm rounded-lg transition-colors ${
                         isPast
-                          ? "text-white/30 cursor-not-allowed"
+                          ? 'text-white/30 cursor-not-allowed'
                           : isSelected
-                          ? "bg-blue-500 text-white"
-                          : hasSlots
-                          ? "hover:bg-white/10 text-white"
-                          : "text-white/40 cursor-not-allowed"
-                      } ${isToday ? "font-bold" : ""}`}
+                            ? 'bg-blue-500 text-white'
+                            : hasSlots
+                              ? 'hover:bg-white/10 text-white'
+                              : 'text-white/40 cursor-not-allowed'
+                      } ${isToday ? 'font-bold' : ''}`}
                     >
                       {date.getDate()}
                       {hasSlots && !isSelected && (
@@ -296,8 +294,8 @@ const TimeSlotsSection = () => {
                           disabled={!isBookable}
                           className={`w-full p-3 rounded-lg border text-left transition-colors ${
                             isBookable
-                              ? "border-white/20 hover:border-blue-400 hover:bg-white/10 text-white"
-                              : "border-white/10 bg-white/5 text-white/40 cursor-not-allowed"
+                              ? 'border-white/20 hover:border-blue-400 hover:bg-white/10 text-white'
+                              : 'border-white/10 bg-white/5 text-white/40 cursor-not-allowed'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -394,7 +392,7 @@ const BookingSummarySection = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    {summary.startTime} - {summary.endTime} ({summary.duration}{" "}
+                    {summary.startTime} - {summary.endTime} ({summary.duration}{' '}
                     min)
                   </div>
 
@@ -438,8 +436,8 @@ const BookingSummarySection = () => {
                   disabled={!canBook || isBooking}
                   className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
                     canBook && !isBooking
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
-                      : "bg-white/10 text-white/40 cursor-not-allowed"
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105'
+                      : 'bg-white/10 text-white/40 cursor-not-allowed'
                   }`}
                 >
                   {isBooking ? (
@@ -466,7 +464,7 @@ const BookingSummarySection = () => {
                       Processing...
                     </span>
                   ) : (
-                    "Book Now"
+                    'Book Now'
                   )}
                 </button>
 
@@ -568,10 +566,10 @@ export default function ServiceBookingPage({
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                                 index < currentStep
-                                  ? "bg-blue-500 text-white"
+                                  ? 'bg-blue-500 text-white'
                                   : index === currentStep
-                                  ? "bg-blue-500/20 text-blue-300 border-2 border-blue-400"
-                                  : "bg-white/10 text-white/40"
+                                    ? 'bg-blue-500/20 text-blue-300 border-2 border-blue-400'
+                                    : 'bg-white/10 text-white/40'
                               }`}
                             >
                               {index + 1}
@@ -579,8 +577,8 @@ export default function ServiceBookingPage({
                             <span
                               className={`ml-2 text-sm font-medium ${
                                 index <= currentStep
-                                  ? "text-white"
-                                  : "text-white/40"
+                                  ? 'text-white'
+                                  : 'text-white/40'
                               }`}
                             >
                               {step}

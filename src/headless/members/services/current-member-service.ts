@@ -1,13 +1,13 @@
-import { members } from "@wix/members";
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
+import { members } from '@wix/members';
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
 
 export const CurrentMemberServiceDefinition = defineService<{
   currentMember: Signal<members.Member>;
   updateMember: (member: members.UpdateMember) => Promise<void>;
   refreshCurrentMember: () => Promise<void>;
-}>("currentMember");
+}>('currentMember');
 
 export type CurrentMemberServiceConfig = {
   member: members.Member;
@@ -24,7 +24,7 @@ export const CurrentMemberService =
 
       const refreshCurrentMember = async () => {
         const { member } = await members.getCurrentMember({
-          fieldsets: ["FULL"],
+          fieldsets: ['FULL'],
         });
         if (member) {
           currentMember.set(member);
@@ -33,7 +33,7 @@ export const CurrentMemberService =
 
       return {
         currentMember,
-        updateMember: async (update) => {
+        updateMember: async update => {
           const newMember = await members.updateMember(
             currentMember.get()._id!,
             update
@@ -47,7 +47,7 @@ export const CurrentMemberService =
 
 export async function loadCurrentMemberServiceConfig(): Promise<CurrentMemberServiceConfig> {
   const { member } = await members.getCurrentMember({
-    fieldsets: ["FULL"],
+    fieldsets: ['FULL'],
   });
   return {
     member: member!,

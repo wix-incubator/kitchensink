@@ -12,11 +12,11 @@ import {
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from "../../../../headless/store/services/product-modifiers-service";
+} from '../../../../headless/store/services/product-modifiers-service';
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../../../headless/store/services/product-service";
+} from '../../../../headless/store/services/product-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,

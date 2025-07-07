@@ -13,7 +13,7 @@ import {
   ProfileFormField,
   ProfileUpdateProgress,
   ProfileUpdateTrigger,
-} from "headless/members/components";
+} from 'headless/members/components';
 ```
 
 ## Components
@@ -45,9 +45,9 @@ Manages state and validation for individual profile form fields.
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         className={`w-full px-3 py-2 border rounded-lg ${
-          isValid ? "border-gray-300" : "border-red-300"
+          isValid ? 'border-gray-300' : 'border-red-300'
         }`}
         placeholder="Enter your first name"
       />
@@ -85,10 +85,10 @@ Provides real-time feedback on profile update operations.
         <div
           className={`p-3 rounded-lg ${
             isSuccess
-              ? "bg-green-100 text-green-800"
+              ? 'bg-green-100 text-green-800'
               : isError
-              ? "bg-red-100 text-red-800"
-              : "bg-blue-100 text-blue-800"
+                ? 'bg-red-100 text-red-800'
+                : 'bg-blue-100 text-blue-800'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -131,15 +131,15 @@ Handles the profile update submission process with smart enable/disable logic.
       disabled={!canUpdate}
       className={`px-6 py-2 rounded-lg font-medium transition-colors ${
         canUpdate
-          ? "bg-green-600 hover:bg-green-700 text-white"
-          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          ? 'bg-green-600 hover:bg-green-700 text-white'
+          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
       }`}
     >
       {isUpdating
-        ? "Updating..."
+        ? 'Updating...'
         : hasChanges
-        ? "Save Changes"
-        : "Update Profile"}
+          ? 'Save Changes'
+          : 'Update Profile'}
     </button>
   )}
 </ProfileUpdateTrigger>
@@ -181,7 +181,7 @@ The `ProfileFormField` component supports the following field types:
           <input
             type="text"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
             placeholder="Enter your first name"
           />
@@ -196,7 +196,7 @@ The `ProfileFormField` component supports the following field types:
           <input
             type="text"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
             placeholder="Enter your last name"
           />
@@ -212,7 +212,7 @@ The `ProfileFormField` component supports the following field types:
         {hasMessage && (
           <div
             className={`p-3 rounded-lg ${
-              updateState.type === "success" ? "bg-green-100" : "bg-red-100"
+              updateState.type === 'success' ? 'bg-green-100' : 'bg-red-100'
             }`}
           >
             {updateState.message}
@@ -230,7 +230,7 @@ The `ProfileFormField` component supports the following field types:
         disabled={!canUpdate}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg disabled:bg-gray-300"
       >
-        {isUpdating ? "Updating..." : "Update Profile"}
+        {isUpdating ? 'Updating...' : 'Update Profile'}
       </button>
     )}
   </ProfileUpdateTrigger>
@@ -258,11 +258,11 @@ function ProfileUpdateForm() {
                 <input
                   type="text"
                   value={value}
-                  onChange={(e) => onChange(e.target.value)}
+                  onChange={e => onChange(e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg transition-colors ${
                     isDirty && !isValid
-                      ? "border-red-300 focus:border-red-500"
-                      : "border-gray-300 focus:border-blue-500"
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-300 focus:border-blue-500'
                   }`}
                   placeholder="Enter your first name"
                 />
@@ -280,11 +280,11 @@ function ProfileUpdateForm() {
                 <input
                   type="text"
                   value={value}
-                  onChange={(e) => onChange(e.target.value)}
+                  onChange={e => onChange(e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg transition-colors ${
                     isDirty && !isValid
-                      ? "border-red-300 focus:border-red-500"
-                      : "border-gray-300 focus:border-blue-500"
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-300 focus:border-blue-500'
                   }`}
                   placeholder="Enter your last name"
                 />
@@ -308,7 +308,7 @@ function ProfileUpdateForm() {
                 <input
                   type="text"
                   value={value}
-                  onChange={(e) => onChange(e.target.value)}
+                  onChange={e => onChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   placeholder="Your company name"
                 />
@@ -325,7 +325,7 @@ function ProfileUpdateForm() {
                 <input
                   type="text"
                   value={value}
-                  onChange={(e) => onChange(e.target.value)}
+                  onChange={e => onChange(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   placeholder="Your job title"
                 />
@@ -344,10 +344,10 @@ function ProfileUpdateForm() {
                 <div
                   className={`p-4 rounded-lg ${
                     isSuccess
-                      ? "bg-green-100 text-green-800"
+                      ? 'bg-green-100 text-green-800'
                       : isError
-                      ? "bg-red-100 text-red-800"
-                      : "bg-blue-100 text-blue-800"
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-blue-100 text-blue-800'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -370,11 +370,11 @@ function ProfileUpdateForm() {
                 disabled={!canUpdate}
                 className={`flex-1 py-3 px-6 rounded-lg font-medium transition-colors ${
                   canUpdate
-                    ? "bg-green-600 hover:bg-green-700 text-white"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {isUpdating ? "Updating..." : "Save Changes"}
+                {isUpdating ? 'Updating...' : 'Save Changes'}
               </button>
 
               {hasChanges && (
@@ -399,28 +399,32 @@ function ProfileUpdateForm() {
 These components depend on the `ProfileUpdateService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `ProfileUpdateService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   ProfileUpdateServiceDefinition,
   ProfileUpdateService,
-} from "../headless/members/profile-update-service";
+} from '../headless/members/profile-update-service';
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      ProfileUpdateServiceDefinition,
-      ProfileUpdateService,
-      {
-        // Service configuration options
-        validateOnChange: true,
-        autoSave: false,
-      }
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          ProfileUpdateServiceDefinition,
+          ProfileUpdateService,
+          {
+            // Service configuration options
+            validateOnChange: true,
+            autoSave: false,
+          }
+        )
+      )
+    )[0]
+  }
 >
   {/* Your ProfileUpdate components here */}
 </ServicesManagerProvider>;
@@ -456,7 +460,7 @@ import type {
   ProfileUpdateProgressRenderProps,
   ProfileUpdateTriggerProps,
   ProfileUpdateTriggerRenderProps,
-} from "../headless/members/components";
+} from '../headless/members/components';
 ```
 
 ## Testing
@@ -464,10 +468,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render, fireEvent } from "@testing-library/react";
-import { ProfileFormField } from "../headless/members/components";
+import { render, fireEvent } from '@testing-library/react';
+import { ProfileFormField } from '../headless/members/components';
 
-test("ProfileFormField handles value changes", () => {
+test('ProfileFormField handles value changes', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<input />);
 
   render(
@@ -477,7 +481,7 @@ test("ProfileFormField handles value changes", () => {
   );
 
   expect(mockRenderProp).toHaveBeenCalledWith({
-    value: "",
+    value: '',
     onChange: expect.any(Function),
     isValid: true,
     isDirty: false,
@@ -485,7 +489,7 @@ test("ProfileFormField handles value changes", () => {
   });
 });
 
-test("ProfileUpdateTrigger enables when form is valid", () => {
+test('ProfileUpdateTrigger enables when form is valid', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<button />);
 
   render(

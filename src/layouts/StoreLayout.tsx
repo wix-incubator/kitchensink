@@ -1,14 +1,14 @@
-import { useState, type ReactNode } from "react";
-import { WixServices } from "@wix/services-manager-react";
+import { useState, type ReactNode } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/ecom/services/current-cart-service";
-import { MiniCartContent, MiniCartIcon } from "../components/ecom/MiniCart";
+} from '../headless/ecom/services/current-cart-service';
+import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 
 interface StoreLayoutProps {
   children: ReactNode;
@@ -23,12 +23,24 @@ export function StoreLayout({
   showSuccessMessage = false,
   onSuccessMessageChange,
 }: StoreLayoutProps) {
-  const [internalShowSuccess, setInternalShowSuccess] = useState(false);
+  const [internalShowSuccess] = useState(false);
+
+  // Use external services manager if provided, otherwise create one with just cart service
+  const [internalServicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap().addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartServiceConfig
+      )
+    )
+  );
+
+  const servicesManager = externalServicesManager || internalServicesManager;
 
   const actualShowSuccess = onSuccessMessageChange
     ? showSuccessMessage
     : internalShowSuccess;
-  const setShowSuccess = onSuccessMessageChange || setInternalShowSuccess;
 
   return (
     <WixServices

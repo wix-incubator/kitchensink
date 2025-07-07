@@ -21,8 +21,8 @@ These services work together through a single `ServicesManagerProvider`, allowin
 ```astro
 ---
 // src/pages/members/index.astro
-import { loadCurrentMemberServiceConfig } from "../../headless/members/current-member-service";
-import { loadProfileUpdateServiceConfig } from "../../headless/members/profile-update-service";
+import { loadCurrentMemberServiceConfig } from '../../headless/members/current-member-service';
+import { loadProfileUpdateServiceConfig } from '../../headless/members/profile-update-service';
 
 // Load service configurations on the server
 const currentMemberServiceConfig = await loadCurrentMemberServiceConfig();
@@ -49,31 +49,33 @@ The main React component sets up the services manager and composes the UI:
 
 ```tsx
 // src/react-pages/members/index.tsx
-import { useState } from "react";
+import { useState } from 'react';
 
 export function MembersPage({
   currentMemberServiceConfig,
   profileUpdateServiceConfig,
 }) {
   // Create services manager with all three interdependent services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        CurrentMemberServiceDefinition,
-        CurrentMemberService,
-        currentMemberServiceConfig
-      )
-      .addService(
-        ProfileUpdateServiceDefinition,
-        ProfileUpdateService,
-        profileUpdateServiceConfig
-      )
-      .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
-        maxFileSize: 10 * 1024 * 1024,
-        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
-        photoUploadAstroActions: actions.photoUploadAstroActions,
-      })
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          CurrentMemberServiceDefinition,
+          CurrentMemberService,
+          currentMemberServiceConfig
+        )
+        .addService(
+          ProfileUpdateServiceDefinition,
+          ProfileUpdateService,
+          profileUpdateServiceConfig
+        )
+        .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
+          maxFileSize: 10 * 1024 * 1024,
+          allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
+          photoUploadAstroActions: actions.photoUploadAstroActions,
+        })
+    )
+  );
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
@@ -230,7 +232,7 @@ export const photoUploadAstroActions = {
       // Use auth.elevate for Wix API access
       const { uploadUrl } = await auth.elevate(files.generateFileUploadUrl)(
         photo.type,
-        { fileName: photo.name, parentFolderId: "visitor-uploads" }
+        { fileName: photo.name, parentFolderId: 'visitor-uploads' }
       );
 
       // Upload to Wix Media and update member profile
@@ -246,7 +248,7 @@ Actions are injected into services through configuration:
 // In React component
 const photoUploadConfig = {
   maxFileSize: 10 * 1024 * 1024,
-  allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+  allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
   photoUploadAstroActions: actions.photoUploadAstroActions,
 };
 ```
@@ -258,8 +260,8 @@ The page implements comprehensive error handling:
 ```tsx
 // URL parameter handling for feedback
 const url = new URL(Astro.request.url);
-const updated = url.searchParams.get("updated");
-const error = url.searchParams.get("error");
+const updated = url.searchParams.get('updated');
+const error = url.searchParams.get('error');
 
 // React state for success/error messages
 const [showSuccessMessage, setShowSuccessMessage] = useState(!!updated);
@@ -336,7 +338,7 @@ test("CurrentMemberProfile.Nickname renders correctly", () => {
 ### Integration Tests - Service Coordination
 
 ```typescript
-test("photo upload updates profile photo display", async () => {
+test('photo upload updates profile photo display', async () => {
   // Mock services and test service coordination
 });
 ```
@@ -344,7 +346,7 @@ test("photo upload updates profile photo display", async () => {
 ### E2E Tests - Complete Flows
 
 ```typescript
-test("user can upload profile photo", async () => {
+test('user can upload profile photo', async () => {
   // Test complete upload flow with Playwright
 });
 ```

@@ -1,15 +1,17 @@
-import { useState } from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { ProductModifiersServiceDefinition } from "../services/product-modifiers-service";
-import { productsV3 } from "@wix/stores";
+import { useState } from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
+import { productsV3 } from '@wix/stores';
 
 /**
  * Custom hook to safely get the modifiers service
  */
 function useModifiersService() {
   try {
-    return useService(ProductModifiersServiceDefinition) as ServiceAPI<typeof ProductModifiersServiceDefinition>;
+    return useService(ProductModifiersServiceDefinition) as ServiceAPI<
+      typeof ProductModifiersServiceDefinition
+    >;
   } catch {
     return null;
   }
@@ -55,7 +57,8 @@ export const Modifiers = (props: ModifiersProps) => {
   const modifiers = modifiersService.modifiers.get();
   const hasModifiers = modifiersService.hasModifiers.get();
   const selectedModifiers = modifiersService.selectedModifiers.get();
-  const areAllRequiredModifiersFilled = modifiersService.areAllRequiredModifiersFilled();
+  const areAllRequiredModifiersFilled =
+    modifiersService.areAllRequiredModifiersFilled();
 
   return props.children({
     modifiers,
@@ -105,13 +108,13 @@ export interface ModifierRenderProps {
 export const Modifier = (props: ModifierProps) => {
   const modifiersService = useModifiersService();
   const { modifier } = props;
-  
-  const name = modifier.name || "";
+
+  const name = modifier.name || '';
   const type = modifier.modifierRenderType;
   const mandatory = modifier.mandatory || false;
   const choices = modifier.choicesSettings?.choices || [];
   const hasChoices = choices.length > 0;
-  const isFreeText = type === "FREE_TEXT";
+  const isFreeText = type === 'FREE_TEXT';
   const freeTextSettings = modifier.freeTextSettings;
   const maxChars = (freeTextSettings as any)?.maxLength;
   const placeholder = (freeTextSettings as any)?.placeholder;
@@ -170,18 +173,19 @@ export const Choice = (props: ChoiceProps) => {
   const modifiersService = useModifiersService();
   const { modifier, choice } = props;
 
-  const modifierName = modifier.name || "";
+  const modifierName = modifier.name || '';
   const renderType = modifier.modifierRenderType;
-  
+
   // For TEXT_CHOICES, use choice.key; for SWATCH_CHOICES, use choice.name
-  const choiceValue = renderType === "TEXT_CHOICES" 
-    ? ((choice as any).key || choice.name || "")
-    : (choice.name || "");
-    
-  const value = choice.name || ""; // Display name is always choice.name
+  const choiceValue =
+    renderType === 'TEXT_CHOICES'
+      ? (choice as any).key || choice.name || ''
+      : choice.name || '';
+
+  const value = choice.name || ''; // Display name is always choice.name
   const description = (choice as any).description;
   const colorCode = (choice as any).colorCode;
-  
+
   const selectedValue = modifiersService?.getModifierValue(modifierName);
   const isSelected = selectedValue?.choiceValue === choiceValue;
 
@@ -238,15 +242,15 @@ export interface FreeTextRenderProps {
 export const FreeText = (props: FreeTextProps) => {
   const modifiersService = useModifiersService();
   const { modifier } = props;
-  
-  const modifierName = modifier.name || "";
+
+  const modifierName = modifier.name || '';
   const mandatory = modifier.mandatory || false;
   const freeTextSettings = modifier.freeTextSettings;
   const maxChars = (freeTextSettings as any)?.maxLength;
   const placeholder = (freeTextSettings as any)?.placeholder;
 
   const selectedValue = modifiersService?.getModifierValue(modifierName);
-  const value = selectedValue?.freeTextValue || "";
+  const value = selectedValue?.freeTextValue || '';
   const charCount = value.length;
   const isOverLimit = maxChars ? charCount > maxChars : false;
 
@@ -268,7 +272,7 @@ export const FreeText = (props: FreeTextProps) => {
 };
 
 /**
- * Props for ModifierToggleFreeText headless component  
+ * Props for ModifierToggleFreeText headless component
  */
 export interface ToggleFreeTextProps {
   /** Product modifier data */
@@ -298,15 +302,15 @@ export interface ToggleFreeTextRenderProps {
 export const ToggleFreeText = (props: ToggleFreeTextProps) => {
   const modifiersService = useModifiersService();
   const { modifier } = props;
-  
-  const modifierName = modifier.name || "";
+
+  const modifierName = modifier.name || '';
   const mandatory = modifier.mandatory || false;
   const [isTextInputShown, setIsTextInputShown] = useState(mandatory);
 
   const onToggle = () => {
     const newState = !isTextInputShown;
     setIsTextInputShown(newState);
-    
+
     if (!newState) {
       modifiersService?.clearModifier(modifierName);
     }

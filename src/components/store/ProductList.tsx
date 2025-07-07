@@ -16,7 +16,7 @@ import {
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../headless/store/services/product-service";
+} from '../../headless/store/services/product-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
@@ -51,7 +51,7 @@ export const ProductGridContent = ({
   };
 
   const handleShowSuccessMessage = (productId: string, show: boolean) => {
-    setShowSuccessMessage((prev) => ({ ...prev, [productId]: show }));
+    setShowSuccessMessage(prev => ({ ...prev, [productId]: show }));
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
@@ -67,7 +67,7 @@ export const ProductGridContent = ({
     return (
       <WixServices servicesMap={servicesMap}>
         <FilteredCollection.Item key={product._id} product={product}>
-          {({ title, image, imageAltText, available, slug, description }) => (
+          {({ title, image, imageAltText, available, slug }) => (
             <div
               data-testid="product-item"
               data-product-available={available}
@@ -87,7 +87,7 @@ export const ProductGridContent = ({
                   <WixMediaImage
                     media={{ image: image }}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    alt={imageAltText || ""}
+                    alt={imageAltText || ''}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -110,7 +110,7 @@ export const ProductGridContent = ({
                 {/* Quick View Button - appears on hover */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
                       openQuickView(product);
@@ -192,7 +192,7 @@ export const ProductGridContent = ({
                                         // Check if this is a color option and if choice has color data
                                         const isColorOption = String(name)
                                           .toLowerCase()
-                                          .includes("color");
+                                          .includes('color');
                                         const hasColorCode =
                                           choice.colorCode ||
                                           choice.media?.image;
@@ -209,18 +209,18 @@ export const ProductGridContent = ({
                                               <div
                                                 className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
                                                   isSelected
-                                                    ? "border-brand-primary shadow-md ring-1 ring-brand-primary/30"
-                                                    : "border-color-swatch hover:border-color-swatch-hover"
+                                                    ? 'border-brand-primary shadow-md ring-1 ring-brand-primary/30'
+                                                    : 'border-color-swatch hover:border-color-swatch-hover'
                                                 } ${
                                                   !isInStock &&
                                                   !isPreOrderEnabled
-                                                    ? "grayscale opacity-50"
-                                                    : ""
+                                                    ? 'grayscale opacity-50'
+                                                    : ''
                                                 }`}
                                                 style={{
                                                   backgroundColor:
                                                     choice.colorCode ||
-                                                    "var(--theme-fallback-color)",
+                                                    'var(--theme-fallback-color)',
                                                 }}
                                                 onClick={onSelect}
                                               />
@@ -248,7 +248,7 @@ export const ProductGridContent = ({
                                                 {String(value)}
                                                 {!isInStock &&
                                                   !isPreOrderEnabled &&
-                                                  " (Out of Stock)"}
+                                                  ' (Out of Stock)'}
                                               </div>
                                             </div>
                                           );
@@ -257,12 +257,12 @@ export const ProductGridContent = ({
                                             <span
                                               className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
                                                 isSelected
-                                                  ? "bg-brand-primary text-content-primary border-brand-primary"
-                                                  : "bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary"
+                                                  ? 'bg-brand-primary text-content-primary border-brand-primary'
+                                                  : 'bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary'
                                               } ${
                                                 !isInStock && !isPreOrderEnabled
-                                                  ? "opacity-50 line-through"
-                                                  : ""
+                                                  ? 'opacity-50 line-through'
+                                                  : ''
                                               }`}
                                               onClick={onSelect}
                                             >
@@ -309,7 +309,7 @@ export const ProductGridContent = ({
                   <SelectedVariant.Price>
                     {({ price, compareAtPrice }) => {
                       return compareAtPrice &&
-                        parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) >
+                        parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) >
                           0 ? (
                         <>
                           <div className="text-xl font-bold text-content-primary">
@@ -443,12 +443,12 @@ export const ProductGridContent = ({
               availableOptions,
               isFiltered,
             }: {
-              currentFilters: import("../../headless/store/services/filter-service").Filter;
+              currentFilters: import('../../headless/store/services/filter-service').Filter;
               applyFilters: (
-                filters: import("../../headless/store/services/filter-service").Filter
+                filters: import('../../headless/store/services/filter-service').Filter
               ) => void;
               clearFilters: () => void;
-              availableOptions: import("../../headless/store/services/filter-service").AvailableOptions;
+              availableOptions: import('../../headless/store/services/filter-service').AvailableOptions;
               isFiltered: boolean;
               allProducts: productsV3.V3Product[];
             }) => {
@@ -525,7 +525,7 @@ export const ProductGridContent = ({
                               />
                             </svg>
                             <span className="text-brand-light">
-                              Showing {String(products.length)} of{" "}
+                              Showing {String(products.length)} of{' '}
                               {totalProducts} products
                             </span>
                           </div>
@@ -570,12 +570,12 @@ export const ProductGridContent = ({
                           </div>
                           <h2 className="text-2xl font-bold text-content-primary mb-4">
                             {isFiltered
-                              ? "No Products Match Your Filters"
-                              : "No Products Found"}
+                              ? 'No Products Match Your Filters'
+                              : 'No Products Found'}
                           </h2>
                           <p className="text-content-light">
                             {isFiltered
-                              ? "Try adjusting your filters to see more products."
+                              ? 'Try adjusting your filters to see more products.'
                               : "We couldn't find any products to display."}
                           </p>
                         </div>
@@ -636,7 +636,7 @@ export const LoadMoreSection = () => {
                       onClick={loadMore}
                       disabled={isLoading}
                       className={`text-content-primary font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 ${
-                        isLoading ? "bg-surface-loading" : "btn-primary"
+                        isLoading ? 'bg-surface-loading' : 'btn-primary'
                       }`}
                     >
                       {isLoading ? (
@@ -663,7 +663,7 @@ export const LoadMoreSection = () => {
                           Loading...
                         </span>
                       ) : (
-                        "Load More Products"
+                        'Load More Products'
                       )}
                     </button>
 

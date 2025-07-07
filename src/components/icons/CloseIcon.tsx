@@ -1,5 +1,3 @@
-import React from "react";
-
 export const CloseIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

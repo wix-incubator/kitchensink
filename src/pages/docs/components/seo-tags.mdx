@@ -9,9 +9,9 @@ The `SEO` namespace provides headless components for rendering and updating SEO-
 ## Overview
 
 ```tsx
-import { SEO } from "../../headless/seo/components";
-import { loadSEOTagsServiceConfig } from "../../headless/seo/services/seo-tags-service";
-import { seoTags } from "@wix/seo";
+import { SEO } from '../../headless/seo/components';
+import { loadSEOTagsServiceConfig } from '../../headless/seo/services/seo-tags-service';
+import { seoTags } from '@wix/seo';
 ```
 
 ## Components
@@ -21,34 +21,37 @@ import { seoTags } from "@wix/seo";
 Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
 
 #### Props
+
 - `seoTagsServiceConfig: SEOTagsServiceConfig` – Configuration for the SEO tags service (see [Service Dependencies](#service-dependencies)).
 
 #### Example (Astro)
 
 ```astro
 ---
-import { SEO } from "../../headless/seo/components";
-import { loadSEOTagsServiceConfig } from "../../headless/seo/services/seo-tags-service";
+import { SEO } from '../../headless/seo/components';
+import { loadSEOTagsServiceConfig } from '../../headless/seo/services/seo-tags-service';
 
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
   itemData: {
-    pageName: "Wix Stores",
+    pageName: 'Wix Stores',
     seoData: {
       tags: [
-        { type: "title", children: "Wix Stores - E-commerce Solutions" },
+        { type: 'title', children: 'Wix Stores - E-commerce Solutions' },
         {
-          type: "meta",
+          type: 'meta',
           props: {
-            name: "description",
-            content: "Explore Wix Stores functionality with multiple implementation examples."
-          }
-        }
-      ]
-    }
-  }
+            name: 'description',
+            content:
+              'Explore Wix Stores functionality with multiple implementation examples.',
+          },
+        },
+      ],
+    },
+  },
 });
 ---
+
 <BaseLayout>
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <StoreIntroPage client:load slot="body" />
@@ -59,9 +62,9 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
 
 ```astro
 ---
-import { SEO } from "../../../headless/seo/components";
-import { loadSEOTagsServiceConfig } from "../../../headless/seo/services/seo-tags-service";
-import { seoTags } from "@wix/seo";
+import { SEO } from '../../../headless/seo/components';
+import { loadSEOTagsServiceConfig } from '../../../headless/seo/services/seo-tags-service';
+import { seoTags } from '@wix/seo';
 const { slug } = Astro.params;
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
@@ -69,6 +72,7 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   itemData: { slug },
 });
 ---
+
 <BaseLayout>
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <ProductDetailPage client:load ... slot="body" />
@@ -80,26 +84,29 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
 Handles updating SEO tags dynamically on the client side, without a full page reload. Wraps content with the ability to trigger SEO tag updates.
 
 #### Props
+
 - `seoTagsServiceConfig: SEOTagsServiceConfig` – Initial configuration for the SEO tags service.
 - `children: ({ updateSeoTags }) => React.ReactNode` – Render prop function receiving an `updateSeoTags` function.
 
 #### Example
 
 ```tsx
-import { SEO } from "../../headless/seo/components";
-import { seoTags } from "@wix/seo";
+import { SEO } from '../../headless/seo/components';
+import { seoTags } from '@wix/seo';
 
 <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
   {({ updateSeoTags }) => (
     <button
       onClick={() =>
-        updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "urban-street-sneakers" })
+        updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
+          slug: 'urban-street-sneakers',
+        })
       }
     >
       Update SEO Tags
     </button>
   )}
-</SEO.UpdateTagsTrigger>
+</SEO.UpdateTagsTrigger>;
 ```
 
 ## Service Dependencies
@@ -107,23 +114,23 @@ import { seoTags } from "@wix/seo";
 These components depend on a `SEOTagsServiceConfig` object, which can be loaded using `loadSEOTagsServiceConfig`:
 
 ```ts
-import { loadSEOTagsServiceConfig } from "../../headless/seo/services/seo-tags-service";
-import { seoTags } from "@wix/seo";
+import { loadSEOTagsServiceConfig } from '../../headless/seo/services/seo-tags-service';
+import { seoTags } from '@wix/seo';
 
 // For static pages
 const config = await loadSEOTagsServiceConfig({
-  pageUrl: "https://mysite.com/store",
+  pageUrl: 'https://mysite.com/store',
   itemData: {
-    pageName: "Store Home",
+    pageName: 'Store Home',
     seoData: { tags: [] },
   },
 });
 
 // For item pages
 const config = await loadSEOTagsServiceConfig({
-  pageUrl: "https://mysite.com/store/product-123",
+  pageUrl: 'https://mysite.com/store/product-123',
   itemType: seoTags.ItemType.STORES_PRODUCT,
-  itemData: { slug: "product-123" },
+  itemData: { slug: 'product-123' },
 });
 ```
 
@@ -132,8 +139,8 @@ const config = await loadSEOTagsServiceConfig({
 All components export comprehensive TypeScript interfaces:
 
 ```ts
-import type { SEOTagsServiceConfig } from "../../headless/seo/services/seo-tags-service";
-import type { seoTags } from "@wix/seo";
+import type { SEOTagsServiceConfig } from '../../headless/seo/services/seo-tags-service';
+import type { seoTags } from '@wix/seo';
 ```
 
 - `SEOTagsServiceConfig` – Configuration object for SEO tags service
@@ -149,16 +156,22 @@ SEO tags are injected into the document head and do not affect visible UI. Ensur
 You can test SEO tag updates by triggering `updateSeoTags` and asserting changes in the document head:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { SEO } from "../../headless/seo/components";
-import { seoTags } from "@wix/seo";
+import { render } from '@testing-library/react';
+import { SEO } from '../../headless/seo/components';
+import { seoTags } from '@wix/seo';
 
-test("updates SEO tags on trigger", async () => {
-  const config = { /* ... */ };
+test('updates SEO tags on trigger', async () => {
+  const config = {
+    /* ... */
+  };
   render(
     <SEO.UpdateTagsTrigger seoTagsServiceConfig={config}>
       {({ updateSeoTags }) => (
-        <button onClick={() => updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "test" })}>
+        <button
+          onClick={() =>
+            updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: 'test' })
+          }
+        >
           Update
         </button>
       )}

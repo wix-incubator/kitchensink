@@ -1,10 +1,10 @@
-import React from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
+import React from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
 import {
   ProfileUpdateServiceDefinition,
   type ProfileFormData,
-} from "../services/profile-update-service";
+} from '../services/profile-update-service';
 
 export const ProfileFormField = (props: {
   field: keyof ProfileFormData;
@@ -44,7 +44,7 @@ export const ProfileUpdateTrigger = (props: {
   >;
 
   const updateState = service.updateState.get();
-  const isUpdating = updateState.type === "loading";
+  const isUpdating = updateState.type === 'loading';
 
   return props.children({
     updateProfile: service.updateProfile,
@@ -56,7 +56,7 @@ export const ProfileUpdateTrigger = (props: {
 export const ProfileUpdateProgress = (props: {
   children: (props: {
     updateState: {
-      type: "idle" | "loading" | "success" | "error";
+      type: 'idle' | 'loading' | 'success' | 'error';
       message: string;
     };
     isLoading: boolean;
@@ -73,10 +73,10 @@ export const ProfileUpdateProgress = (props: {
 
   return props.children({
     updateState,
-    isLoading: updateState.type === "loading",
-    isSuccess: updateState.type === "success",
-    isError: updateState.type === "error",
-    hasMessage: updateState.message !== "",
+    isLoading: updateState.type === 'loading',
+    isSuccess: updateState.type === 'success',
+    isError: updateState.type === 'error',
+    hasMessage: updateState.message !== '',
   });
 };
 

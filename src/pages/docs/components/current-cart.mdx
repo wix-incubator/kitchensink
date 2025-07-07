@@ -9,7 +9,7 @@ The `CurrentCart` namespace contains headless components for managing shopping c
 ## Overview
 
 ```tsx
-import { CurrentCart } from "headless/store/components";
+import { CurrentCart } from 'headless/store/components';
 
 // All available components
 const {
@@ -121,7 +121,7 @@ Provides access to all line items in the cart.
       {hasItems ? (
         <div>
           <p>{totalItems} items in cart</p>
-          {lineItems.map((item) => (
+          {lineItems.map(item => (
             <div key={item._id}>{/* Line item content */}</div>
           ))}
         </div>
@@ -187,9 +187,9 @@ Manages individual cart line item functionality including quantity changes and r
             <div className="flex flex-wrap gap-2">
               {selectedOptions.map((option, index) => {
                 const isColorOption =
-                  typeof option.value === "object" &&
+                  typeof option.value === 'object' &&
                   option.value !== null &&
-                  "code" in option.value;
+                  'code' in option.value;
                 const displayText = isColorOption
                   ? (option.value as { name: string; code: string }).name
                   : (option.value as string);
@@ -202,7 +202,7 @@ Manages individual cart line item functionality including quantity changes and r
                     key={index}
                     className="px-2 py-1 bg-gray-100 rounded-md text-sm"
                   >
-                    <span className="font-medium">{option.name}:</span>{" "}
+                    <span className="font-medium">{option.name}:</span>{' '}
                     <span className="flex items-center gap-1">
                       {colorCode && (
                         <div
@@ -302,7 +302,7 @@ Provides functionality to clear all items from the cart.
       disabled={!hasItems || isLoading}
       className="text-red-500 hover:text-red-700 disabled:opacity-50"
     >
-      {isLoading ? "Clearing..." : "Clear Cart"}
+      {isLoading ? 'Clearing...' : 'Clear Cart'}
     </button>
   )}
 </CurrentCart.ClearCart>
@@ -334,7 +334,7 @@ Handles the checkout process initiation with proper state management.
         disabled={!canCheckout || isLoading}
         className="w-full bg-blue-500 text-white py-3 rounded disabled:opacity-50"
       >
-        {isLoading ? "Processing..." : "Proceed to Checkout"}
+        {isLoading ? 'Processing...' : 'Proceed to Checkout'}
       </button>
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
@@ -365,7 +365,7 @@ Handles the checkout process initiation with proper state management.
                   <>
                     {hasItems ? (
                       <div className="space-y-4 mb-6">
-                        {lineItems.map((item) => (
+                        {lineItems.map(item => (
                           <CurrentCart.CartLineItem
                             key={item._id}
                             lineItemId={item._id}
@@ -450,24 +450,28 @@ Handles the checkout process initiation with proper state management.
 These components depend on the `CurrentCartService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `CurrentCartService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/store/current-cart-service";
+} from '../headless/store/current-cart-service';
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      currentCartConfig
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          CurrentCartServiceDefinition,
+          CurrentCartService,
+          currentCartConfig
+        )
+      )
+    )[0]
+  }
 >
   {/* Your CurrentCart components here */}
 </ServicesManagerProvider>;
@@ -484,7 +488,7 @@ import type {
   CartModalProps,
   CartModalRenderProps,
   // ... other interfaces
-} from "../headless/store/components";
+} from '../headless/store/components';
 ```
 
 ## Testing
@@ -492,10 +496,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { CurrentCart } from "../headless/store/components";
+import { render } from '@testing-library/react';
+import { CurrentCart } from '../headless/store/components';
 
-test("CartIcon renders correctly", () => {
+test('CartIcon renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(

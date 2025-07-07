@@ -1,11 +1,10 @@
-import React from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
+import React from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
 import {
   SocialSharingServiceDefinition,
   type SharingPlatform,
-} from "../services/social-sharing-service";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
+} from '../services/social-sharing-service';
 
 /**
  * Props for Root headless component
@@ -53,9 +52,19 @@ export const Root = (props: RootProps) => {
     typeof SocialSharingServiceDefinition
   >;
 
-  const platforms = service.availablePlatforms.get();
-  const shareCount = service.shareCount.get();
-  const lastShared = service.lastSharedPlatform.get();
+  const [platforms, setPlatforms] = React.useState<SharingPlatform[]>([]);
+  const [shareCount, setShareCount] = React.useState(0);
+  const [lastShared, setLastShared] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const unsubscribes = [
+      service.availablePlatforms.subscribe(setPlatforms),
+      service.shareCount.subscribe(setShareCount),
+      service.lastSharedPlatform.subscribe(setLastShared),
+    ];
+
+    return () => unsubscribes.forEach(fn => fn());
+  }, [service]);
 
   return props.children({
     platforms,
@@ -147,7 +156,7 @@ export interface PlatformsRenderProps {
  * Headless component for social sharing platforms with logic
  */
 export const Platforms = (props: PlatformsProps) => {
-  const { url, title, description = "", hashtags = [] } = props;
+  const { url, title, description = '', hashtags = [] } = props;
 
   const service = useService(SocialSharingServiceDefinition) as ServiceAPI<
     typeof SocialSharingServiceDefinition

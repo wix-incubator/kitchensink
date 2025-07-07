@@ -1,7 +1,7 @@
-import { z } from "astro:schema";
-import { files } from "@wix/media";
-import { auth } from "@wix/essentials";
-import { type IOAuthStrategy } from "@wix/sdk";
+import { z } from 'astro:schema';
+import { files } from '@wix/media';
+import { auth } from '@wix/essentials';
+import { type IOAuthStrategy } from '@wix/sdk';
 
 // Configuration interface for file upload action factory
 export interface FileUploadActionConfig {
@@ -36,15 +36,15 @@ export function createFileUploadAction(config: FileUploadActionConfig = {}) {
     allowedMimeTypes = [],
     allowedExtensions = [],
     customValidation,
-    parentFolderId = "visitor-uploads",
+    parentFolderId = 'visitor-uploads',
   } = config;
 
   return async ({ file }: FileUploadInput) => {
     try {
-      console.log("createFileUploadAction", file);
+      console.log('createFileUploadAction', file);
       // Authentication check
       if (!auth.getContextualAuth<IOAuthStrategy>().loggedIn()) {
-        throw new Error("Authentication required");
+        throw new Error('Authentication required');
       }
 
       // File size validation
@@ -62,17 +62,17 @@ export function createFileUploadAction(config: FileUploadActionConfig = {}) {
         throw new Error(
           `File type ${
             file.type
-          } is not allowed. Allowed types: ${allowedMimeTypes.join(", ")}`
+          } is not allowed. Allowed types: ${allowedMimeTypes.join(', ')}`
         );
       }
 
       // Extension validation
       if (allowedExtensions.length > 0) {
-        const extension = file.name.split(".").pop()?.toLowerCase();
+        const extension = file.name.split('.').pop()?.toLowerCase();
         if (!extension || !allowedExtensions.includes(extension)) {
           throw new Error(
             `File extension is not allowed. Allowed extensions: ${allowedExtensions.join(
-              ", "
+              ', '
             )}`
           );
         }
@@ -96,21 +96,21 @@ export function createFileUploadAction(config: FileUploadActionConfig = {}) {
       );
 
       if (!uploadUrl) {
-        throw new Error("Failed to generate upload URL");
+        throw new Error('Failed to generate upload URL');
       }
 
       // Upload file to Wix Media
-      const uploadResponse = await fetch(uploadUrl + "?filename=" + file.name, {
-        method: "PUT",
+      const uploadResponse = await fetch(uploadUrl + '?filename=' + file.name, {
+        method: 'PUT',
         headers: {
-          "Content-Type": file.type,
+          'Content-Type': file.type,
         },
         body: file,
       });
 
       if (!uploadResponse.ok) {
-        console.error("Upload failed:", await uploadResponse.text());
-        throw new Error("Failed to upload file");
+        console.error('Upload failed:', await uploadResponse.text());
+        throw new Error('Failed to upload file');
       }
 
       // Get the uploaded file info
@@ -118,8 +118,8 @@ export function createFileUploadAction(config: FileUploadActionConfig = {}) {
       const fileId = uploadResult.file?.id;
 
       if (!fileId) {
-        console.error("No file ID returned from upload:", uploadResult);
-        throw new Error("Upload completed but no file ID received");
+        console.error('No file ID returned from upload:', uploadResult);
+        throw new Error('Upload completed but no file ID received');
       }
 
       return {
@@ -131,10 +131,10 @@ export function createFileUploadAction(config: FileUploadActionConfig = {}) {
         mimeType: file.type,
       };
     } catch (error) {
-      console.error("File upload error:", error);
+      console.error('File upload error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Upload failed",
+        error: error instanceof Error ? error.message : 'Upload failed',
       };
     }
   };

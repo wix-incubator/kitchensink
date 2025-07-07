@@ -13,7 +13,10 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:install": "playwright install chromium"
+    "test:install": "playwright install chromium",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "lint": "npm run format:check && astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -36,7 +39,7 @@
     "@wix/seo": "^1.0.4",
     "@wix/services-definitions": "^0.1.1",
     "@wix/services-manager": "https://cdn.dev.wixpress.com/@wix/services-manager/6dd944d16960888941093176ab82e4f4505e82011b74b4294ebf31c8.tar.gz",
-    "@wix/services-manager-react": "https://cdn.dev.wixpress.com/@wix/services-manager-react/29f48227f64c720cd598093c6a52cc17d8b7c91aeaadee17aa94c268.tar.gz;",
+    "@wix/services-manager-react": "https://cdn.dev.wixpress.com/@wix/services-manager-react/29f48227f64c720cd598093c6a52cc17d8b7c91aeaadee17aa94c268.tar.gz",
     "@wix/stores": "^1.0.471",
     "astro": "^5.9.0",
     "clsx": "^2.1.1",
@@ -57,6 +60,8 @@
     "@types/lodash.kebabcase": "^4.1.9",
     "@wix/cli": "^1.1.95",
     "lodash.kebabcase": "^4.1.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.7"
   }
 }

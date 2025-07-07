@@ -9,7 +9,7 @@ The `ProductModifiers` namespace contains headless components for managing produ
 ## Overview
 
 ```tsx
-import { ProductModifiers } from "headless/store/components";
+import { ProductModifiers } from 'headless/store/components';
 
 // All available components
 const { Modifiers, Modifier, Choice, FreeText, ToggleFreeText } =
@@ -40,7 +40,7 @@ Provides access to all product modifiers with availability checking.
       {hasModifiers ? (
         <div className="space-y-6">
           <h3 className="text-lg font-semibold">Customize Your Product</h3>
-          {modifiers.map((modifier) => (
+          {modifiers.map(modifier => (
             <div key={modifier.name}>
               {/* Render individual modifiers here */}
             </div>
@@ -81,9 +81,9 @@ Handles individual modifier display and interaction.
         {name} {mandatory && <span className="text-red-500">*</span>}
       </h4>
 
-      {type === "SWATCH_CHOICES" && hasChoices && (
+      {type === 'SWATCH_CHOICES' && hasChoices && (
         <div className="flex flex-wrap gap-2">
-          {choices.map((choice) => (
+          {choices.map(choice => (
             <ProductModifiers.Choice
               key={choice.value}
               modifier={modifier}
@@ -93,7 +93,7 @@ Handles individual modifier display and interaction.
                 <button
                   onClick={onSelect}
                   className={`w-10 h-10 rounded-full border-4 ${
-                    isSelected ? "border-blue-500" : "border-gray-300"
+                    isSelected ? 'border-blue-500' : 'border-gray-300'
                   }`}
                   style={{ backgroundColor: colorCode }}
                   title={value}
@@ -104,9 +104,9 @@ Handles individual modifier display and interaction.
         </div>
       )}
 
-      {type === "TEXT_CHOICES" && hasChoices && (
+      {type === 'TEXT_CHOICES' && hasChoices && (
         <div className="flex flex-wrap gap-2">
-          {choices.map((choice) => (
+          {choices.map(choice => (
             <ProductModifiers.Choice
               key={choice.value}
               modifier={modifier}
@@ -117,8 +117,8 @@ Handles individual modifier display and interaction.
                   onClick={onSelect}
                   className={`px-4 py-2 border rounded-lg ${
                     isSelected
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300"
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-300'
                   }`}
                 >
                   {value}
@@ -129,7 +129,7 @@ Handles individual modifier display and interaction.
         </div>
       )}
 
-      {type === "FREE_TEXT" && (
+      {type === 'FREE_TEXT' && (
         <ProductModifiers.FreeText modifier={modifier}>
           {({
             value,
@@ -142,7 +142,7 @@ Handles individual modifier display and interaction.
             <div className="space-y-2">
               <textarea
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
                 maxLength={maxChars}
                 className="w-full px-3 py-2 border rounded-lg"
@@ -151,7 +151,7 @@ Handles individual modifier display and interaction.
               {maxChars && (
                 <div
                   className={`text-xs text-right ${
-                    isOverLimit ? "text-red-600" : "text-gray-500"
+                    isOverLimit ? 'text-red-600' : 'text-gray-500'
                   }`}
                 >
                   {charCount}/{maxChars} characters
@@ -192,8 +192,8 @@ Handles individual modifier choice selection for swatch and text choices.
       onClick={onSelect}
       className={`px-4 py-2 border rounded-lg transition-all ${
         isSelected
-          ? "border-blue-500 bg-blue-50 shadow-md"
-          : "border-gray-300 hover:border-gray-400"
+          ? 'border-blue-500 bg-blue-50 shadow-md'
+          : 'border-gray-300 hover:border-gray-400'
       }`}
       style={colorCode ? { backgroundColor: colorCode } : undefined}
     >
@@ -229,11 +229,11 @@ Manages free text input for custom modifiers.
     <div className="space-y-2">
       <textarea
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxChars}
         className={`w-full px-3 py-2 border rounded-lg resize-none ${
-          isOverLimit ? "border-red-500" : "border-gray-300"
+          isOverLimit ? 'border-red-500' : 'border-gray-300'
         }`}
         rows={3}
       />
@@ -241,7 +241,7 @@ Manages free text input for custom modifiers.
       <div className="flex justify-between items-center text-sm">
         <span className="text-gray-600">Custom text for {modifier.name}</span>
         {maxChars && (
-          <span className={`${isOverLimit ? "text-red-600" : "text-gray-500"}`}>
+          <span className={`${isOverLimit ? 'text-red-600' : 'text-gray-500'}`}>
             {charCount}/{maxChars}
           </span>
         )}
@@ -291,7 +291,7 @@ Provides toggle functionality for optional free text modifiers.
 
       {isTextInputShown && (
         <ProductModifiers.FreeText modifier={modifier}>
-          {(freeTextProps) => (
+          {freeTextProps => (
             <div className="ml-6">
               {/* Render free text input */}
               <FreeTextInput {...freeTextProps} />
@@ -316,7 +316,7 @@ Provides toggle functionality for optional free text modifiers.
         <div className="space-y-6">
           <h3 className="text-xl font-semibold">Customize Your Product</h3>
 
-          {modifiers.map((modifier) => (
+          {modifiers.map(modifier => (
             <ProductModifiers.Modifier key={modifier.name} modifier={modifier}>
               {({ name, type, choices, hasChoices, mandatory }) => (
                 <div className="space-y-3">
@@ -326,19 +326,19 @@ Provides toggle functionality for optional free text modifiers.
                   </h4>
 
                   {/* Handle different modifier types */}
-                  {type === "SWATCH_CHOICES" && hasChoices && (
+                  {type === 'SWATCH_CHOICES' && hasChoices && (
                     <SwatchChoices modifier={modifier} choices={choices} />
                   )}
 
-                  {type === "TEXT_CHOICES" && hasChoices && (
+                  {type === 'TEXT_CHOICES' && hasChoices && (
                     <TextChoices modifier={modifier} choices={choices} />
                   )}
 
-                  {type === "FREE_TEXT" && (
+                  {type === 'FREE_TEXT' && (
                     <>
                       {mandatory ? (
                         <ProductModifiers.FreeText modifier={modifier}>
-                          {(props) => <CustomTextInput {...props} />}
+                          {props => <CustomTextInput {...props} />}
                         </ProductModifiers.FreeText>
                       ) : (
                         <ProductModifiers.ToggleFreeText modifier={modifier}>
@@ -369,9 +369,9 @@ Provides toggle functionality for optional free text modifiers.
 ```tsx
 <ProductModifiers.Modifiers>
   {({ modifiers, hasModifiers }) => {
-    const colorModifiers = modifiers.filter((m) => m.type === "SWATCH_CHOICES");
-    const textModifiers = modifiers.filter((m) => m.type === "TEXT_CHOICES");
-    const customModifiers = modifiers.filter((m) => m.type === "FREE_TEXT");
+    const colorModifiers = modifiers.filter(m => m.type === 'SWATCH_CHOICES');
+    const textModifiers = modifiers.filter(m => m.type === 'TEXT_CHOICES');
+    const customModifiers = modifiers.filter(m => m.type === 'FREE_TEXT');
 
     return (
       <div className="space-y-8">
@@ -409,15 +409,15 @@ Provides toggle functionality for optional free text modifiers.
 These components depend on the `ProductModifiersService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `ProductModifiersService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   ProductModifiersServiceDefinition,
   ProductModifiersService,
-} from "../headless/store/services/product-modifiers-service";
+} from '../headless/store/services/product-modifiers-service';
 
 <ServicesManagerProvider
   servicesManager={
@@ -452,7 +452,7 @@ import type {
   FreeTextRenderProps,
   ToggleFreeTextProps,
   ToggleFreeTextRenderProps,
-} from "../headless/store/components/ProductModifiers";
+} from '../headless/store/components/ProductModifiers';
 ```
 
 ## Testing
@@ -460,10 +460,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { ProductModifiers } from "../headless/store/components";
+import { render } from '@testing-library/react';
+import { ProductModifiers } from '../headless/store/components';
 
-test("ProductModifiers.Modifiers renders correctly", () => {
+test('ProductModifiers.Modifiers renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(

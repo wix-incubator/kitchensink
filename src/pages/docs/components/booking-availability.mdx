@@ -9,7 +9,7 @@ The `BookingAvailability` namespace contains headless components for managing bo
 ## Overview
 
 ```tsx
-import { BookingAvailability } from "headless/bookings/components";
+import { BookingAvailability } from 'headless/bookings/components';
 
 // All available components
 const { Calendar, TimeSlots, TimeSlot, AvailabilityHeader } =
@@ -74,7 +74,7 @@ Displays available dates for booking with interactive calendar functionality.
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-7 gap-1">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
             <div
               key={day}
               className="p-2 text-center text-sm font-medium text-gray-500"
@@ -98,11 +98,11 @@ Displays available dates for booking with interactive calendar functionality.
                 disabled={isPast || !hasSlots}
                 className={`p-2 text-sm rounded-lg transition-colors ${
                   isSelected
-                    ? "bg-blue-500 text-white"
+                    ? 'bg-blue-500 text-white'
                     : hasSlots && !isPast
-                    ? "hover:bg-blue-100 text-gray-900"
-                    : "text-gray-400 cursor-not-allowed"
-                } ${isToday ? "font-bold" : ""}`}
+                      ? 'hover:bg-blue-100 text-gray-900'
+                      : 'text-gray-400 cursor-not-allowed'
+                } ${isToday ? 'font-bold' : ''}`}
               >
                 {date.getDate()}
                 {hasSlots && !isSelected && (
@@ -181,8 +181,8 @@ Displays available time slots for the selected date.
                 disabled={!isBookable}
                 className={`w-full p-3 rounded-lg border text-left transition-colors ${
                   isBookable
-                    ? "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
-                    : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    ? 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                    : 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -242,8 +242,8 @@ Renders data for a single time slot with booking information.
     <div
       className={`p-4 border rounded-lg ${
         isBookable
-          ? "border-green-200 bg-green-50"
-          : "border-gray-200 bg-gray-50"
+          ? 'border-green-200 bg-green-50'
+          : 'border-gray-200 bg-gray-50'
       }`}
     >
       <div className="flex items-center justify-between mb-2">
@@ -254,7 +254,7 @@ Renders data for a single time slot with booking information.
       <div className="flex items-center justify-between mb-3">
         <span
           className={`text-sm ${
-            isBookable ? "text-green-600" : "text-gray-500"
+            isBookable ? 'text-green-600' : 'text-gray-500'
           }`}
         >
           {availabilityText}
@@ -273,11 +273,11 @@ Renders data for a single time slot with booking information.
         disabled={!isBookable}
         className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
           isBookable
-            ? "bg-blue-500 hover:bg-blue-600 text-white"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            ? 'bg-blue-500 hover:bg-blue-600 text-white'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
         }`}
       >
-        {isBookable ? "Select Time" : "Unavailable"}
+        {isBookable ? 'Select Time' : 'Unavailable'}
       </button>
     </div>
   )}
@@ -316,7 +316,7 @@ Displays header information for availability including selected date and slot co
       <p className="text-lg text-gray-700">{selectedDateFormatted}</p>
       {!isLoading && (
         <p className="text-sm text-blue-600 mt-1">
-          {hasSlots ? summaryText : "No available slots for this date"}
+          {hasSlots ? summaryText : 'No available slots for this date'}
         </p>
       )}
       {isLoading && (
@@ -379,7 +379,7 @@ function BookingCalendar() {
 The BookingAvailability components work with a service that needs to be configured:
 
 ```tsx
-import { BookingAvailabilityService } from "headless/bookings/booking-availability-service";
+import { BookingAvailabilityService } from 'headless/bookings/booking-availability-service';
 
 // Configure the service with initial data
 const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(

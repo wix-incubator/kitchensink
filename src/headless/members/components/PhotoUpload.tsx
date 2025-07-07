@@ -1,7 +1,7 @@
-import React from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { PhotoUploadServiceDefinition } from "../services/photo-upload-service";
+import React from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { PhotoUploadServiceDefinition } from '../services/photo-upload-service';
 
 export const FileSelector = (props: {
   children: (props: {
@@ -66,7 +66,7 @@ export const FileSelector = (props: {
 export const UploadProgress = (props: {
   children: (props: {
     uploadState: {
-      type: "idle" | "loading" | "success" | "error";
+      type: 'idle' | 'loading' | 'success' | 'error';
       message: string;
       progress?: number;
     };
@@ -85,11 +85,11 @@ export const UploadProgress = (props: {
 
   return props.children({
     uploadState,
-    isLoading: uploadState.type === "loading",
-    isSuccess: uploadState.type === "success",
-    isError: uploadState.type === "error",
-    hasError: uploadState.type === "error",
-    hasMessage: uploadState.message !== "",
+    isLoading: uploadState.type === 'loading',
+    isSuccess: uploadState.type === 'success',
+    isError: uploadState.type === 'error',
+    hasError: uploadState.type === 'error',
+    hasMessage: uploadState.message !== '',
   });
 };
 
@@ -107,8 +107,8 @@ export const UploadTrigger = (props: {
   const selectedFile = service.selectedFile.get();
   const uploadState = service.uploadState.get();
 
-  const canUpload = selectedFile !== null && uploadState.type !== "loading";
-  const isUploading = uploadState.type === "loading";
+  const canUpload = selectedFile !== null && uploadState.type !== 'loading';
+  const isUploading = uploadState.type === 'loading';
 
   return props.children({
     uploadPhoto: service.uploadPhoto,

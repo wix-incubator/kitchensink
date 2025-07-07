@@ -12,7 +12,7 @@ import {
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from "../../../headless/store/services/catalog-price-range-service";
+} from '../../../headless/store/services/catalog-price-range-service';
 import {
   CategoryService,
   CategoryServiceDefinition,
@@ -126,7 +126,7 @@ const ProductGridContent = () => {
                               />
                             </svg>
                             <span className="text-[var(--theme-text-primary-300)]">
-                              Showing {String(products.length)} of{" "}
+                              Showing {String(products.length)} of{' '}
                               {totalProducts} products
                             </span>
                           </div>
@@ -171,18 +171,18 @@ const ProductGridContent = () => {
                           </div>
                           <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
                             {isFiltered
-                              ? "No Products Match Your Filters"
-                              : "No Products Found"}
+                              ? 'No Products Match Your Filters'
+                              : 'No Products Found'}
                           </h2>
                           <p className="text-[var(--theme-text-content-70)]">
                             {isFiltered
-                              ? "Try adjusting your filters to see more products."
+                              ? 'Try adjusting your filters to see more products.'
                               : "We couldn't find any products to display."}
                           </p>
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {products.map((product) => (
+                          {products.map(product => (
                             <FilteredCollection.Item
                               key={product._id}
                               product={product}
@@ -254,7 +254,7 @@ const ProductGridContent = () => {
                                                     option.name
                                                   )
                                                     .toLowerCase()
-                                                    .includes("color");
+                                                    .includes('color');
                                                   const hasColorCode =
                                                     choice.colorCode ||
                                                     choice.media?.image;
@@ -274,7 +274,7 @@ const ProductGridContent = () => {
                                                           style={{
                                                             backgroundColor:
                                                               choice.colorCode ||
-                                                              "#000000",
+                                                              '#000000',
                                                           }}
                                                         />
                                                         {/* Tooltip */}
@@ -299,7 +299,7 @@ const ProductGridContent = () => {
                                                 <span className="text-[var(--theme-text-content-60)] text-xs">
                                                   +
                                                   {option.choicesSettings
-                                                    .choices.length - 3}{" "}
+                                                    .choices.length - 3}{' '}
                                                   more
                                                 </span>
                                               )}
@@ -322,36 +322,36 @@ const ProductGridContent = () => {
                                           product?.inventory
                                             ?.availabilityStatus;
                                         const stockInfo =
-                                          status === "IN_STOCK"
+                                          status === 'IN_STOCK'
                                             ? {
-                                                status: "In Stock",
+                                                status: 'In Stock',
                                                 color:
-                                                  "text-[var(--theme-text-success)]",
+                                                  'text-[var(--theme-text-success)]',
                                                 dotColor:
-                                                  "bg-[var(--theme-text-success)]",
+                                                  'bg-[var(--theme-text-success)]',
                                               }
                                             : status ===
-                                              "PARTIALLY_OUT_OF_STOCK"
-                                            ? {
-                                                status:
-                                                  "Partially out of stock",
-                                                color:
-                                                  "text-[var(--theme-text-warning)]",
-                                                dotColor:
-                                                  "bg-[var(--theme-text-warning)]",
-                                              }
-                                            : {
-                                                status: "Out of Stock",
-                                                color:
-                                                  "text-[var(--theme-text-error)]",
-                                                dotColor:
-                                                  "bg-[var(--theme-text-error)]",
-                                              };
+                                                'PARTIALLY_OUT_OF_STOCK'
+                                              ? {
+                                                  status:
+                                                    'Partially out of stock',
+                                                  color:
+                                                    'text-[var(--theme-text-warning)]',
+                                                  dotColor:
+                                                    'bg-[var(--theme-text-warning)]',
+                                                }
+                                              : {
+                                                  status: 'Out of Stock',
+                                                  color:
+                                                    'text-[var(--theme-text-error)]',
+                                                  dotColor:
+                                                    'bg-[var(--theme-text-error)]',
+                                                };
                                         return compareAtPrice &&
                                           parseFloat(
                                             compareAtPrice.replace(
                                               /[^\d.]/g,
-                                              ""
+                                              ''
                                             )
                                           ) > 0 ? (
                                           <>
@@ -400,15 +400,15 @@ const ProductGridContent = () => {
                                       href={`/store/example-2/${slug}`}
                                       className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                                       style={{
-                                        background: "var(--theme-btn-primary)",
+                                        background: 'var(--theme-btn-primary)',
                                       }}
-                                      onMouseEnter={(e) => {
+                                      onMouseEnter={e => {
                                         e.currentTarget.style.background =
-                                          "var(--theme-btn-primary-hover)";
+                                          'var(--theme-btn-primary-hover)';
                                       }}
-                                      onMouseLeave={(e) => {
+                                      onMouseLeave={e => {
                                         e.currentTarget.style.background =
-                                          "var(--theme-btn-primary)";
+                                          'var(--theme-btn-primary)';
                                       }}
                                     >
                                       View Product
@@ -468,19 +468,19 @@ const LoadMoreSection = () => {
                       className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                       style={{
                         background: isLoading
-                          ? "linear-gradient(to right, #6b7280, #374151)"
-                          : "var(--theme-btn-primary)",
+                          ? 'linear-gradient(to right, #6b7280, #374151)'
+                          : 'var(--theme-btn-primary)',
                       }}
-                      onMouseEnter={(e) => {
+                      onMouseEnter={e => {
                         if (!isLoading) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-primary-hover)";
+                            'var(--theme-btn-primary-hover)';
                         }
                       }}
-                      onMouseLeave={(e) => {
+                      onMouseLeave={e => {
                         if (!isLoading) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-primary)";
+                            'var(--theme-btn-primary)';
                         }
                       }}
                     >
@@ -508,7 +508,7 @@ const LoadMoreSection = () => {
                           Loading...
                         </span>
                       ) : (
-                        "Load More Products"
+                        'Load More Products'
                       )}
                     </button>
 
@@ -517,18 +517,18 @@ const LoadMoreSection = () => {
                       disabled={isLoading}
                       className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
-                        background: "var(--theme-btn-secondary)",
+                        background: 'var(--theme-btn-secondary)',
                       }}
-                      onMouseEnter={(e) => {
+                      onMouseEnter={e => {
                         if (!isLoading) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-secondary-hover)";
+                            'var(--theme-btn-secondary-hover)';
                         }
                       }}
-                      onMouseLeave={(e) => {
+                      onMouseLeave={e => {
                         if (!isLoading) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-secondary)";
+                            'var(--theme-btn-secondary)';
                         }
                       }}
                     >
@@ -555,8 +555,8 @@ export default function StoreExample2Page({
 }: StoreExample2PageProps) {
   // Create navigation handler for example-2 specific URLs
   const handleCategoryChange = (categoryId: string | null, category: any) => {
-    if (typeof window !== "undefined") {
-      const basePath = "/store/example-2";
+    if (typeof window !== 'undefined') {
+      const basePath = '/store/example-2';
       let newPath;
 
       if (categoryId === null) {

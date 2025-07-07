@@ -1,9 +1,11 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { BookingServiceServiceDefinition } from "../services/booking-service-service";
-import { services } from "@wix/bookings";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { BookingServiceServiceDefinition } from '../services/booking-service-service';
+import { services } from '@wix/bookings';
 
-export type ServicePropsChildren = (props: ServiceRenderProps) => React.ReactNode;
+export type ServicePropsChildren = (
+  props: ServiceRenderProps
+) => React.ReactNode;
 /**
  * Props for Service headless component
  */
@@ -56,7 +58,9 @@ export const Service = (props: ServiceProps): React.ReactNode => {
   });
 };
 
-export type ServiceHeaderChildren = (props: ServiceHeaderRenderProps) => React.ReactNode;
+export type ServiceHeaderChildren = (
+  props: ServiceHeaderRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceHeader headless component
  */
@@ -97,15 +101,17 @@ export const ServiceHeader = (props: ServiceHeaderProps): React.ReactNode => {
   }
 
   return props.children({
-    serviceId: serviceData._id || "",
-    name: serviceData.name || "Untitled Service",
+    serviceId: serviceData._id || '',
+    name: serviceData.name || 'Untitled Service',
     tagLine: serviceData.tagLine || undefined,
-    type: serviceData.type || "APPOINTMENT",
+    type: serviceData.type || 'APPOINTMENT',
     category: serviceData.category?.name || undefined,
   });
 };
 
-export type ServiceDescriptionChildren = (props: ServiceDescriptionRenderProps) => React.ReactNode;
+export type ServiceDescriptionChildren = (
+  props: ServiceDescriptionRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceDescription headless component
  */
@@ -128,7 +134,9 @@ export interface ServiceDescriptionRenderProps {
  * ServiceDescription - Renders description information for the service
  * @component
  */
-export const ServiceDescription = (props: ServiceDescriptionProps): React.ReactNode => {
+export const ServiceDescription = (
+  props: ServiceDescriptionProps
+): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -148,7 +156,9 @@ export const ServiceDescription = (props: ServiceDescriptionProps): React.ReactN
   });
 };
 
-export type ServiceMediaChildren = (props: ServiceMediaRenderProps) => React.ReactNode;
+export type ServiceMediaChildren = (
+  props: ServiceMediaRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceMedia headless component
  */
@@ -197,7 +207,9 @@ export const ServiceMedia = (props: ServiceMediaProps): React.ReactNode => {
   });
 };
 
-export type ServiceDetailsChildren = (props: ServiceDetailsRenderProps) => React.ReactNode;
+export type ServiceDetailsChildren = (
+  props: ServiceDetailsRenderProps
+) => React.ReactNode;
 
 /**
  * Props for ServiceDetails headless component
@@ -222,7 +234,7 @@ export interface ServiceDetailsRenderProps {
   /** Whether service is hidden */
   isHidden: boolean;
   /** Raw payment information */
-  payment?: services.Service["payment"];
+  payment?: services.Service['payment'];
 }
 
 /**
@@ -241,9 +253,9 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
   }
 
   // Format price
-  let price = "Contact for pricing";
+  let price = 'Contact for pricing';
   if (
-    serviceData.payment?.rateType === "FIXED" &&
+    serviceData.payment?.rateType === 'FIXED' &&
     serviceData.payment.fixed?.price
   ) {
     const fixedPrice = serviceData.payment.fixed.price;
@@ -251,17 +263,17 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
       fixedPrice.formattedValue || fixedPrice.value
     }`;
   } else if (
-    serviceData.payment?.rateType === "VARIED" &&
+    serviceData.payment?.rateType === 'VARIED' &&
     serviceData.payment.varied?.defaultPrice
   ) {
     const variedPrice = serviceData.payment.varied.defaultPrice;
     price = `${variedPrice.currency} ${
       variedPrice.formattedValue || variedPrice.value
     }`;
-  } else if (serviceData.payment?.rateType === "NO_FEE") {
-    price = "Free";
+  } else if (serviceData.payment?.rateType === 'NO_FEE') {
+    price = 'Free';
   } else if (
-    serviceData.payment?.rateType === "CUSTOM" &&
+    serviceData.payment?.rateType === 'CUSTOM' &&
     serviceData.payment.custom?.description
   ) {
     price = serviceData.payment.custom.description;
@@ -281,7 +293,9 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
   });
 };
 
-export type ServiceLocationsChildren = (props: ServiceLocationsRenderProps) => React.ReactNode;
+export type ServiceLocationsChildren = (
+  props: ServiceLocationsRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceLocations headless component
  */
@@ -299,14 +313,16 @@ export interface ServiceLocationsRenderProps {
   /** Whether service has locations */
   hasLocations: boolean;
   /** Raw location data */
-  rawLocations?: services.Service["locations"];
+  rawLocations?: services.Service['locations'];
 }
 
 /**
  * ServiceLocations - Renders location information for the service
  * @component
  */
-export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode => {
+export const ServiceLocations = (
+  props: ServiceLocationsProps
+): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -320,11 +336,11 @@ export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode 
   // Get locations
   const locations =
     serviceData.locations?.map(
-      (loc) =>
+      loc =>
         loc.business?.name ||
         loc.custom?.address?.formatted ||
         loc.calculatedAddress?.formatted ||
-        "Location TBD"
+        'Location TBD'
     ) || [];
 
   return props.children({
@@ -334,7 +350,9 @@ export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode 
   });
 };
 
-export type ServiceActionsChildren = (props: ServiceActionsRenderProps) => React.ReactNode;
+export type ServiceActionsChildren = (
+  props: ServiceActionsRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceActions headless component
  */
@@ -372,7 +390,7 @@ export const ServiceActions = (props: ServiceActionsProps): React.ReactNode => {
     return null;
   }
 
-  const serviceId = serviceData._id || "";
+  const serviceId = serviceData._id || '';
   const canBookOnline = serviceData.onlineBooking?.enabled === true;
   const isAvailable = canBookOnline && !serviceData.hidden;
 
@@ -386,7 +404,9 @@ export const ServiceActions = (props: ServiceActionsProps): React.ReactNode => {
   });
 };
 
-export type ServiceDetailChildren = (props: ServiceDetailRenderProps) => React.ReactNode;
+export type ServiceDetailChildren = (
+  props: ServiceDetailRenderProps
+) => React.ReactNode;
 
 /**
  * Props for ServiceDetail headless component
@@ -442,9 +462,9 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   }
 
   // Format price
-  let price = "Contact for pricing";
+  let price = 'Contact for pricing';
   if (
-    serviceData.payment?.rateType === "FIXED" &&
+    serviceData.payment?.rateType === 'FIXED' &&
     serviceData.payment.fixed?.price
   ) {
     const fixedPrice = serviceData.payment.fixed.price;
@@ -452,17 +472,17 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
       fixedPrice.formattedValue || fixedPrice.value
     }`;
   } else if (
-    serviceData.payment?.rateType === "VARIED" &&
+    serviceData.payment?.rateType === 'VARIED' &&
     serviceData.payment.varied?.defaultPrice
   ) {
     const variedPrice = serviceData.payment.varied.defaultPrice;
     price = `${variedPrice.currency} ${
       variedPrice.formattedValue || variedPrice.value
     }`;
-  } else if (serviceData.payment?.rateType === "NO_FEE") {
-    price = "Free";
+  } else if (serviceData.payment?.rateType === 'NO_FEE') {
+    price = 'Free';
   } else if (
-    serviceData.payment?.rateType === "CUSTOM" &&
+    serviceData.payment?.rateType === 'CUSTOM' &&
     serviceData.payment.custom?.description
   ) {
     price = serviceData.payment.custom.description;
@@ -478,19 +498,19 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   // Get locations
   const locations =
     serviceData.locations?.map(
-      (loc) =>
+      loc =>
         loc.business?.name ||
         loc.custom?.address?.formatted ||
         loc.calculatedAddress?.formatted ||
-        "Location TBD"
+        'Location TBD'
     ) || [];
 
   return props.children({
-    serviceId: serviceData._id || "",
-    name: serviceData.name || "Untitled Service",
+    serviceId: serviceData._id || '',
+    name: serviceData.name || 'Untitled Service',
     description: serviceData.description || undefined,
     tagLine: serviceData.tagLine || undefined,
-    type: serviceData.type || "APPOINTMENT",
+    type: serviceData.type || 'APPOINTMENT',
     canBookOnline: serviceData.onlineBooking?.enabled === true,
     duration,
     price,
@@ -501,7 +521,9 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   });
 };
 
-export type ServiceStatusChildren = (props: ServiceStatusRenderProps) => React.ReactNode
+export type ServiceStatusChildren = (
+  props: ServiceStatusRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceStatus headless component
  */

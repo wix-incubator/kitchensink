@@ -37,7 +37,7 @@ const ServiceNotFound = () => (
 const ServiceDetailSection = () => {
   return (
     <BookingService.ServiceStatus>
-      {({ isLoading, hasService, error, notFound }) => {
+      {({ isLoading, hasService: _hasService, error, notFound }) => {
         if (isLoading) {
           return (
             <div className="max-w-7xl mx-auto px-6 py-12">
@@ -205,8 +205,8 @@ const ServiceDetailSection = () => {
                       </div>
                       <p className="text-white/80">
                         {canBookOnline
-                          ? "Online Available"
-                          : "Contact Required"}
+                          ? 'Online Available'
+                          : 'Contact Required'}
                       </p>
                     </div>
                   </div>
@@ -235,7 +235,7 @@ const ServiceDetailSection = () => {
                         Available Locations
                       </h3>
                       <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-                        <p className="text-white/80">{locations.join(", ")}</p>
+                        <p className="text-white/80">{locations.join(', ')}</p>
                       </div>
                     </div>
                   );
@@ -244,7 +244,7 @@ const ServiceDetailSection = () => {
 
               {/* Book Now Button */}
               <BookingService.ServiceActions>
-                {({ canBookOnline, isAvailable, bookingUrl }) => (
+                {({ canBookOnline, isAvailable: _isAvailable, bookingUrl }) => (
                   <div className="text-center">
                     {canBookOnline ? (
                       <a

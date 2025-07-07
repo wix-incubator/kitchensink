@@ -3,14 +3,13 @@ import React, {
   useContext,
   type ReactNode,
   useState,
-} from "react";
-import { useService } from "@wix/services-manager-react";
+} from 'react';
+import { useService } from '@wix/services-manager-react';
 import {
   CategoryServiceDefinition,
   type CategoryServiceAPI,
-} from "../services/category-service";
-import { categories } from "@wix/categories";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
+} from '../services/category-service';
+import { categories } from '@wix/categories';
 
 const CategoryContext = createContext<CategoryServiceAPI | null>(null);
 
@@ -31,7 +30,7 @@ export const Provider: React.FC<CategoryProviderProps> = ({ children }) => {
 export const useCategory = () => {
   const context = useContext(CategoryContext);
   if (!context) {
-    throw new Error("useCategory must be used within a CategoryProvider");
+    throw new Error('useCategory must be used within a CategoryProvider');
   }
   return context;
 };
@@ -52,8 +51,7 @@ export const List: React.FC<CategoryListProps> = ({ children }) => {
   );
   const signalsService = useService(SignalsServiceDefinition);
   const categories = service.categories.get();
-  signalsService.effect(() => {
-    const categoryId = service.selectedCategory.get();
+  service.selectedCategory.subscribe(categoryId => {
     if (categoryId !== selectedCategory) {
       setSelectedCategory(categoryId);
     }

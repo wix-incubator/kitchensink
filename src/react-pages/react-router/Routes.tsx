@@ -54,7 +54,9 @@ function StoreRoute() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span className="text-content-primary text-lg">Loading store...</span>
+            <span className="text-content-primary text-lg">
+              Loading store...
+            </span>
           </div>
         </div>
       </div>
@@ -114,7 +116,7 @@ function ProductDetailsRoute() {
   const [error, setError] = useState<string | null>(null);
   const productService = useService(ProductServiceDefinition);
   const mediaGalleryService = useService(MediaGalleryServiceDefinition);
-  
+
   // Handle the success message timer
   useEffect(() => {
     if (showSuccessMessage) {
@@ -133,7 +135,9 @@ function ProductDetailsRoute() {
         setError(error);
       });
       await productService.loadProduct(slug);
-      await mediaGalleryService.setMediaToDisplay(productService.product.get().media?.itemsInfo?.items ?? []);
+      await mediaGalleryService.setMediaToDisplay(
+        productService.product.get().media?.itemsInfo?.items ?? []
+      );
       setIsLoading(false);
     }
 
@@ -164,7 +168,9 @@ function ProductDetailsRoute() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span className="text-content-primary text-lg">Loading product...</span>
+            <span className="text-content-primary text-lg">
+              Loading product...
+            </span>
           </div>
         </div>
       </div>
@@ -217,14 +223,10 @@ function ProductDetailsRoute() {
     );
   }
 
-
   return (
     <>
       {/* Product Details */}
-      <ProductDetails 
-        setShowSuccessMessage={setShowSuccessMessage} 
-        cartUrl="/cart"
-      />
+      <ProductDetails setShowSuccessMessage={setShowSuccessMessage} />
 
       {/* Success Message */}
       {showSuccessMessage && (

@@ -1,7 +1,7 @@
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { CurrentMemberServiceDefinition } from "./current-member-service";
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { CurrentMemberServiceDefinition } from './current-member-service';
 
 export interface ProfileFormData {
   // Personal Information
@@ -30,7 +30,7 @@ export interface ProfileFormData {
 }
 
 export interface UpdateState {
-  type: "idle" | "loading" | "success" | "error";
+  type: 'idle' | 'loading' | 'success' | 'error';
   message: string;
 }
 
@@ -44,7 +44,7 @@ export interface ProfileUpdateServiceAPI {
 }
 
 export const ProfileUpdateServiceDefinition =
-  defineService<ProfileUpdateServiceAPI>("profileUpdate");
+  defineService<ProfileUpdateServiceAPI>('profileUpdate');
 
 export type ProfileUpdateServiceConfig = {};
 
@@ -75,9 +75,9 @@ export const ProfileUpdateService =
           if (currentMember.contact.jobTitle)
             initialData.jobTitle = currentMember.contact.jobTitle;
           if (currentMember.contact.emails?.length)
-            initialData.emails = currentMember.contact.emails.join(", ");
+            initialData.emails = currentMember.contact.emails.join(', ');
           if (currentMember.contact.phones?.length)
-            initialData.phones = currentMember.contact.phones.join(", ");
+            initialData.phones = currentMember.contact.phones.join(', ');
 
           if (currentMember.contact.addresses?.[0]) {
             const address = currentMember.contact.addresses[0];
@@ -105,22 +105,22 @@ export const ProfileUpdateService =
       }
 
       const defaultFormData: ProfileFormData = {
-        firstName: "",
-        lastName: "",
-        nickname: "",
-        profileTitle: "",
-        birthdate: "",
-        privacyStatus: "PUBLIC",
-        company: "",
-        jobTitle: "",
-        emails: "",
-        phones: "",
-        addressLine: "",
-        addressLine2: "",
-        city: "",
-        subdivision: "",
-        postalCode: "",
-        country: "",
+        firstName: '',
+        lastName: '',
+        nickname: '',
+        profileTitle: '',
+        birthdate: '',
+        privacyStatus: 'PUBLIC',
+        company: '',
+        jobTitle: '',
+        emails: '',
+        phones: '',
+        addressLine: '',
+        addressLine2: '',
+        city: '',
+        subdivision: '',
+        postalCode: '',
+        country: '',
         ...initialData,
       };
 
@@ -128,8 +128,8 @@ export const ProfileUpdateService =
         defaultFormData as any
       );
       const updateState: Signal<UpdateState> = signalsService.signal({
-        type: "idle" as const,
-        message: "",
+        type: 'idle' as const,
+        message: '',
       } as any);
 
       const updateField = (field: keyof ProfileFormData, value: string) => {
@@ -150,12 +150,12 @@ export const ProfileUpdateService =
 
       const resetForm = () => {
         formData.set(defaultFormData);
-        updateState.set({ type: "idle", message: "" });
+        updateState.set({ type: 'idle', message: '' });
       };
 
       const updateProfile = async (): Promise<void> => {
         try {
-          updateState.set({ type: "loading", message: "Updating profile..." });
+          updateState.set({ type: 'loading', message: 'Updating profile...' });
 
           const data = formData.get();
 
@@ -177,13 +177,13 @@ export const ProfileUpdateService =
           // Map contact information
           if (data.emails) {
             memberUpdate.contact.emails = data.emails
-              .split(",")
+              .split(',')
               .map((email: string) => email.trim())
               .filter(Boolean);
           }
           if (data.phones) {
             memberUpdate.contact.phones = data.phones
-              .split(",")
+              .split(',')
               .map((phone: string) => phone.trim())
               .filter(Boolean);
           }
@@ -229,13 +229,13 @@ export const ProfileUpdateService =
           await currentMemberService.updateMember(memberUpdate);
 
           updateState.set({
-            type: "success",
-            message: "Profile updated successfully!",
+            type: 'success',
+            message: 'Profile updated successfully!',
           });
         } catch (error) {
           updateState.set({
-            type: "error",
-            message: "Update failed. Please try again.",
+            type: 'error',
+            message: 'Update failed. Please try again.',
           });
         }
       };
