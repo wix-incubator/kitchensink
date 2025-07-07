@@ -639,14 +639,14 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       });
 
       const isAvailable = matchingVariants.length > 0;
-
+      // Check if ANY of the matching variants are in stock
       const isInStock = matchingVariants.some(
         variant => variant.inventoryStatus?.inStock === true
       );
-
-      const firstMatchingVariant = matchingVariants[0];
-      const isPreOrderEnabled =
-        firstMatchingVariant?.inventoryStatus?.preorderEnabled === true;
+      // Check if ANY of the matching variants have pre-order enabled
+      const isPreOrderEnabled = matchingVariants.some(
+        variant => variant.inventoryStatus?.preorderEnabled === true
+      );
 
       return { isAvailable, isInStock, isPreOrderEnabled };
     };
