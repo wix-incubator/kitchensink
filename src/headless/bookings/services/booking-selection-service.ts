@@ -190,7 +190,7 @@ export const BookingSelectionService = implementService.withConfig<{
         preferences: { useGenericWixPages: false },
         callbacks: {
           postFlowUrl: returnUrl,
-          cartPageUrl: window.location.origin + '/cart',
+          cartPageUrl: window.location.origin + "/cart",
         },
       });
 

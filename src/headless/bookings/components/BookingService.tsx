@@ -3,7 +3,9 @@ import { useService } from "@wix/services-manager-react";
 import { BookingServiceServiceDefinition } from "../services/booking-service-service";
 import { services } from "@wix/bookings";
 
-export type ServicePropsChildren = (props: ServiceRenderProps) => React.ReactNode;
+export type ServicePropsChildren = (
+  props: ServiceRenderProps
+) => React.ReactNode;
 /**
  * Props for Service headless component
  */
@@ -56,7 +58,9 @@ export const Service = (props: ServiceProps): React.ReactNode => {
   });
 };
 
-export type ServiceHeaderChildren = (props: ServiceHeaderRenderProps) => React.ReactNode;
+export type ServiceHeaderChildren = (
+  props: ServiceHeaderRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceHeader headless component
  */
@@ -105,7 +109,9 @@ export const ServiceHeader = (props: ServiceHeaderProps): React.ReactNode => {
   });
 };
 
-export type ServiceDescriptionChildren = (props: ServiceDescriptionRenderProps) => React.ReactNode;
+export type ServiceDescriptionChildren = (
+  props: ServiceDescriptionRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceDescription headless component
  */
@@ -128,7 +134,9 @@ export interface ServiceDescriptionRenderProps {
  * ServiceDescription - Renders description information for the service
  * @component
  */
-export const ServiceDescription = (props: ServiceDescriptionProps): React.ReactNode => {
+export const ServiceDescription = (
+  props: ServiceDescriptionProps
+): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -148,7 +156,9 @@ export const ServiceDescription = (props: ServiceDescriptionProps): React.ReactN
   });
 };
 
-export type ServiceMediaChildren = (props: ServiceMediaRenderProps) => React.ReactNode;
+export type ServiceMediaChildren = (
+  props: ServiceMediaRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceMedia headless component
  */
@@ -197,7 +207,9 @@ export const ServiceMedia = (props: ServiceMediaProps): React.ReactNode => {
   });
 };
 
-export type ServiceDetailsChildren = (props: ServiceDetailsRenderProps) => React.ReactNode;
+export type ServiceDetailsChildren = (
+  props: ServiceDetailsRenderProps
+) => React.ReactNode;
 
 /**
  * Props for ServiceDetails headless component
@@ -281,7 +293,9 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
   });
 };
 
-export type ServiceLocationsChildren = (props: ServiceLocationsRenderProps) => React.ReactNode;
+export type ServiceLocationsChildren = (
+  props: ServiceLocationsRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceLocations headless component
  */
@@ -306,7 +320,9 @@ export interface ServiceLocationsRenderProps {
  * ServiceLocations - Renders location information for the service
  * @component
  */
-export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode => {
+export const ServiceLocations = (
+  props: ServiceLocationsProps
+): React.ReactNode => {
   const service = useService(BookingServiceServiceDefinition) as ServiceAPI<
     typeof BookingServiceServiceDefinition
   >;
@@ -334,7 +350,9 @@ export const ServiceLocations = (props: ServiceLocationsProps): React.ReactNode 
   });
 };
 
-export type ServiceActionsChildren = (props: ServiceActionsRenderProps) => React.ReactNode;
+export type ServiceActionsChildren = (
+  props: ServiceActionsRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceActions headless component
  */
@@ -386,7 +404,9 @@ export const ServiceActions = (props: ServiceActionsProps): React.ReactNode => {
   });
 };
 
-export type ServiceDetailChildren = (props: ServiceDetailRenderProps) => React.ReactNode;
+export type ServiceDetailChildren = (
+  props: ServiceDetailRenderProps
+) => React.ReactNode;
 
 /**
  * Props for ServiceDetail headless component
@@ -501,7 +521,9 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   });
 };
 
-export type ServiceStatusChildren = (props: ServiceStatusRenderProps) => React.ReactNode
+export type ServiceStatusChildren = (
+  props: ServiceStatusRenderProps
+) => React.ReactNode;
 /**
  * Props for ServiceStatus headless component
  */

@@ -346,7 +346,7 @@ export const Summary = (props: SummaryProps) => {
       ?.coupon?.code || null;
 
   // Calculate discount from totals if available
-  const discount = totals.discount?.amount 
+  const discount = totals.discount?.amount
     ? formatCurrency(parseFloat(totals.discount.amount), currency)
     : null;
 
@@ -526,4 +526,3 @@ export const Coupon = (props: CouponProps) => {
     error,
   });
 };
-

@@ -31,19 +31,21 @@ export default function BookingsPage({
   bookingSelectionConfig,
 }: BookingsPageProps) {
   // Create services manager with both booking services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        bookingServicesConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          BookingServicesServiceDefinition,
+          BookingServicesService,
+          bookingServicesConfig
+        )
+        .addService(
+          BookingSelectionServiceDefinition,
+          BookingSelectionService,
+          bookingSelectionConfig
+        )
+    )
+  );
 
   return (
     <KitchensinkLayout>

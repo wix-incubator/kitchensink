@@ -21,6 +21,7 @@ import { seoTags } from "@wix/seo";
 Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
 
 #### Props
+
 - `seoTagsServiceConfig: SEOTagsServiceConfig` – Configuration for the SEO tags service (see [Service Dependencies](#service-dependencies)).
 
 #### Example (Astro)
@@ -80,6 +81,7 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
 Handles updating SEO tags dynamically on the client side, without a full page reload. Wraps content with the ability to trigger SEO tag updates.
 
 #### Props
+
 - `seoTagsServiceConfig: SEOTagsServiceConfig` – Initial configuration for the SEO tags service.
 - `children: ({ updateSeoTags }) => React.ReactNode` – Render prop function receiving an `updateSeoTags` function.
 
@@ -93,13 +95,15 @@ import { seoTags } from "@wix/seo";
   {({ updateSeoTags }) => (
     <button
       onClick={() =>
-        updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "urban-street-sneakers" })
+        updateSeoTags(seoTags.ItemType.STORES_PRODUCT, {
+          slug: "urban-street-sneakers",
+        })
       }
     >
       Update SEO Tags
     </button>
   )}
-</SEO.UpdateTagsTrigger>
+</SEO.UpdateTagsTrigger>;
 ```
 
 ## Service Dependencies
@@ -154,11 +158,17 @@ import { SEO } from "../../headless/seo/components";
 import { seoTags } from "@wix/seo";
 
 test("updates SEO tags on trigger", async () => {
-  const config = { /* ... */ };
+  const config = {
+    /* ... */
+  };
   render(
     <SEO.UpdateTagsTrigger seoTagsServiceConfig={config}>
       {({ updateSeoTags }) => (
-        <button onClick={() => updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "test" })}>
+        <button
+          onClick={() =>
+            updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug: "test" })
+          }
+        >
           Update
         </button>
       )}

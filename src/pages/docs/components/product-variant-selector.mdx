@@ -445,13 +445,17 @@ import {
 } from "../headless/store/selected-variant-service";
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      variantConfig
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          SelectedVariantServiceDefinition,
+          SelectedVariantService,
+          variantConfig
+        )
+      )
+    )[0]
+  }
 >
   {/* Your ProductVariantSelector components here */}
 </ServicesManagerProvider>;

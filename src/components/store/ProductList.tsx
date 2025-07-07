@@ -312,10 +312,10 @@ export const ProductGridContent = ({
                   <>
                     {plainDescription && (
                       <p
-                      className="text-content-muted text-sm mb-3 line-clamp-2"
-                      dangerouslySetInnerHTML={{
-                        __html: plainDescription,
-                      }}
+                        className="text-content-muted text-sm mb-3 line-clamp-2"
+                        dangerouslySetInnerHTML={{
+                          __html: plainDescription,
+                        }}
                       />
                     )}
                   </>

@@ -267,9 +267,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           options.set(optionsMap);
         }
 
-        if (
-          currentProduct.variantSummary!.variantCount! > 1
-        ) {
+        if (currentProduct.variantSummary!.variantCount! > 1) {
           variants.set(currentProduct.variantsInfo?.variants || []);
 
           if (currentProduct.variantsInfo?.variants?.length) {
@@ -457,12 +455,14 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         const catalogReference: any = {
           catalogItemId: prod._id,
           appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          options: variant?._id && variant._id !== "default"
-            ? {
-                variantId: variant._id,
-                preOrderRequested: !!variant?.inventoryStatus?.preorderEnabled,
-              }
-            : undefined,
+          options:
+            variant?._id && variant._id !== "default"
+              ? {
+                  variantId: variant._id,
+                  preOrderRequested:
+                    !!variant?.inventoryStatus?.preorderEnabled,
+                }
+              : undefined,
         };
 
         // Transform and add modifiers to catalog reference if they exist

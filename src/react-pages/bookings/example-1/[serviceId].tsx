@@ -17,7 +17,11 @@ import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
 } from "../../../headless/bookings/services/booking-selection-service";
-import { BookingService, BookingAvailability,  BookingSelection} from "../../../headless/bookings/components";
+import {
+  BookingService,
+  BookingAvailability,
+  BookingSelection,
+} from "../../../headless/bookings/components";
 import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../components/DocsMode";
 
@@ -488,24 +492,26 @@ export default function ServiceBookingPage({
   bookingSelectionConfig,
 }: ServiceBookingPageProps) {
   // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServiceServiceDefinition,
-        BookingServiceService,
-        bookingServiceConfig
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        bookingAvailabilityConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          BookingServiceServiceDefinition,
+          BookingServiceService,
+          bookingServiceConfig
+        )
+        .addService(
+          BookingAvailabilityServiceDefinition,
+          BookingAvailabilityService,
+          bookingAvailabilityConfig
+        )
+        .addService(
+          BookingSelectionServiceDefinition,
+          BookingSelectionService,
+          bookingSelectionConfig
+        )
+    )
+  );
 
   return (
     <KitchensinkLayout>

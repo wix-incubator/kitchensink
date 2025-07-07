@@ -18,13 +18,15 @@ interface CartPageProps {
 
 export default function CartPage({ data }: CartPageProps) {
   // Create services manager with cart service
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      data || { initialCart: null }
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap().addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        data || { initialCart: null }
+      )
     )
-  ));
+  );
 
   return (
     <KitchensinkLayout>

@@ -24,7 +24,7 @@ const searchProducts = async (searchOptions: any) => {
   };
 
   const result = await productsV3.searchProducts(searchParams, options);
-  
+
   // Fetch missing variants for all products in one batch request
   if (result.products) {
     result.products = await fetchMissingVariants(result.products);

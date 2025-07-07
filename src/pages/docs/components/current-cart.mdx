@@ -461,13 +461,17 @@ import {
 } from "../headless/store/current-cart-service";
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      currentCartConfig
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          CurrentCartServiceDefinition,
+          CurrentCartService,
+          currentCartConfig
+        )
+      )
+    )[0]
+  }
 >
   {/* Your CurrentCart components here */}
 </ServicesManagerProvider>;

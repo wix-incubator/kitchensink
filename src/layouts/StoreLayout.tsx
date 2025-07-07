@@ -10,7 +10,6 @@ import {
 } from "../headless/ecom/services/current-cart-service";
 import { MiniCartContent, MiniCartIcon } from "../components/ecom/MiniCart";
 
-
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
@@ -29,7 +28,7 @@ export function StoreLayout({
   const [internalShowSuccess, setInternalShowSuccess] = useState(false);
 
   // Use external services manager if provided, otherwise create one with just cart service
-  const [internalServicesManager] = useState(() => 
+  const [internalServicesManager] = useState(() =>
     createServicesManager(
       createServicesMap().addService(
         CurrentCartServiceDefinition,
@@ -38,7 +37,7 @@ export function StoreLayout({
       )
     )
   );
-  
+
   const servicesManager = externalServicesManager || internalServicesManager;
 
   const actualShowSuccess = onSuccessMessageChange

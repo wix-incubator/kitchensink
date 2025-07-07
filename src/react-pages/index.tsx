@@ -457,10 +457,13 @@ export default function HomePage(props: HomePageProps) {
                   </span>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">React Router Store</h3>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                React Router Store
+              </h3>
               <p className="text-white/70 text-base leading-relaxed mb-4">
-                Single-page application implementation with client-side routing using React Router. 
-                Navigate between products, details, and cart without page reloads.
+                Single-page application implementation with client-side routing
+                using React Router. Navigate between products, details, and cart
+                without page reloads.
               </p>
               <div className="flex items-center text-cyan-300 font-semibold group-hover:text-cyan-200 transition-colors duration-300">
                 <span>Try SPA Store</span>

@@ -62,7 +62,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   useEffect(() => {
     setTempPriceRange(priceRange);
-  }, [priceRange]); 
+  }, [priceRange]);
 
   useEffect(() => {
     setTempPriceRange(currentFilters.priceRange);

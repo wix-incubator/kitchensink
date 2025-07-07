@@ -579,41 +579,47 @@ export default function StoreExample2Page({
         const categorySlug = category?.slug || categoryId;
         newPath = `${basePath}/category/${categorySlug}`;
       }
-      window.history.pushState(null, 'Showing Category ' + category?.name, newPath);
+      window.history.pushState(
+        null,
+        "Showing Category " + category?.name,
+        newPath
+      );
     }
   };
 
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        CollectionServiceDefinition,
-        CollectionService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        FilterServiceDefinition,
-        FilterService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartServiceConfig
-      )
-      .addService(CategoryServiceDefinition, CategoryService, {
-        ...categoriesConfig,
-        onCategoryChange: handleCategoryChange,
-      })
-      .addService(SortServiceDefinition, SortService, {
-        initialSort: filteredCollectionServiceConfig.initialSort,
-      })
-      .addService(
-        CatalogPriceRangeServiceDefinition,
-        CatalogPriceRangeService,
-        {}
-      )
-      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          CollectionServiceDefinition,
+          CollectionService,
+          filteredCollectionServiceConfig
+        )
+        .addService(
+          FilterServiceDefinition,
+          FilterService,
+          filteredCollectionServiceConfig
+        )
+        .addService(
+          CurrentCartServiceDefinition,
+          CurrentCartService,
+          currentCartServiceConfig
+        )
+        .addService(CategoryServiceDefinition, CategoryService, {
+          ...categoriesConfig,
+          onCategoryChange: handleCategoryChange,
+        })
+        .addService(SortServiceDefinition, SortService, {
+          initialSort: filteredCollectionServiceConfig.initialSort,
+        })
+        .addService(
+          CatalogPriceRangeServiceDefinition,
+          CatalogPriceRangeService,
+          {}
+        )
+        .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+    )
+  );
 
   return (
     <KitchensinkLayout>

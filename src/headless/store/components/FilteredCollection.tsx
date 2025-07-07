@@ -21,7 +21,9 @@ interface FilteredCollectionProviderProps {
   children: ReactNode;
 }
 
-export const Provider: React.FC<FilteredCollectionProviderProps> = ({ children }) => {
+export const Provider: React.FC<FilteredCollectionProviderProps> = ({
+  children,
+}) => {
   const filter = useService(FilterServiceDefinition);
   const collection = useService(CollectionServiceDefinition);
 
@@ -44,21 +46,15 @@ export const useFilteredCollection = () => {
 
 // Filters Loading component with pulse animation
 interface FiltersLoadingProps {
-  children: (data: {
-    isFullyLoaded: boolean;
-  }) => ReactNode;
+  children: (data: { isFullyLoaded: boolean }) => ReactNode;
 }
 
 export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
   const { filter } = useFilteredCollection();
-  
+
   const isFullyLoaded = filter!.isFullyLoaded.get();
-  
-  return (
-    <>
-      {children({ isFullyLoaded })}
-    </>
-  );
+
+  return <>{children({ isFullyLoaded })}</>;
 };
 
 // Grid component for displaying filtered products
@@ -112,10 +108,7 @@ interface FilteredItemProps {
   }) => ReactNode;
 }
 
-export const Item: React.FC<FilteredItemProps> = ({
-  product,
-  children,
-}) => {
+export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
   // Safe conversion of product data with type safety guards
   const title = String(product.name || "");
   const image = product.media?.main?.image || null;
@@ -171,9 +164,7 @@ interface FilteredLoadMoreProps {
   }) => ReactNode;
 }
 
-export const LoadMore: React.FC<FilteredLoadMoreProps> = ({
-  children,
-}) => {
+export const LoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
   const { collection } = useFilteredCollection();
 
   const loadMore = collection!.loadMore;
@@ -209,9 +200,7 @@ interface FilteredFiltersProps {
   }) => ReactNode;
 }
 
-export const Filters: React.FC<FilteredFiltersProps> = ({
-  children,
-}) => {
+export const Filters: React.FC<FilteredFiltersProps> = ({ children }) => {
   const { collection, filter } = useFilteredCollection();
 
   const applyFilters = filter!.applyFilters;

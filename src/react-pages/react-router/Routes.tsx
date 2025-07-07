@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useService } from '@wix/services-manager-react';
-import ProductList from '../../components/store/ProductList';
-import ProductDetails from '../../components/store/ProductDetails';
-import { ProductServiceDefinition } from '../../headless/store/services/product-service';
-import { CategoryServiceDefinition } from '../../headless/store/services/category-service';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
-import '../../styles/theme-wix-vibe.css';
-import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useService } from "@wix/services-manager-react";
+import ProductList from "../../components/store/ProductList";
+import ProductDetails from "../../components/store/ProductDetails";
+import { ProductServiceDefinition } from "../../headless/store/services/product-service";
+import { CategoryServiceDefinition } from "../../headless/store/services/category-service";
+import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
+import "../../styles/theme-wix-vibe.css";
+import { MediaGalleryServiceDefinition } from "../../headless/media/services/media-gallery-service";
 
 // Store Route Component with Categories Loading
 function StoreRoute() {
@@ -20,8 +20,8 @@ function StoreRoute() {
       try {
         await categoryService.loadCategories();
       } catch (err: any) {
-        console.warn('Failed to load categories:', err);
-        setError('Failed to load categories');
+        console.warn("Failed to load categories:", err);
+        setError("Failed to load categories");
       } finally {
         setIsLoading(false);
       }
@@ -54,7 +54,9 @@ function StoreRoute() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span className="text-content-primary text-lg">Loading store...</span>
+            <span className="text-content-primary text-lg">
+              Loading store...
+            </span>
           </div>
         </div>
       </div>
@@ -99,7 +101,7 @@ function GlobalCartLoader({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Load cart in background without blocking the UI
     cartService.reloadCart().catch((err: any) => {
-      console.warn('Failed to reload cart:', err);
+      console.warn("Failed to reload cart:", err);
     });
   }, []);
 
@@ -114,7 +116,7 @@ function ProductDetailsRoute() {
   const [error, setError] = useState<string | null>(null);
   const productService = useService(ProductServiceDefinition);
   const mediaGalleryService = useService(MediaGalleryServiceDefinition);
-  
+
   // Handle the success message timer
   useEffect(() => {
     if (showSuccessMessage) {
@@ -133,7 +135,9 @@ function ProductDetailsRoute() {
         setError(error);
       });
       await productService.loadProduct(slug);
-      await mediaGalleryService.setMediaToDisplay(productService.product.get().media?.itemsInfo?.items ?? []);
+      await mediaGalleryService.setMediaToDisplay(
+        productService.product.get().media?.itemsInfo?.items ?? []
+      );
       setIsLoading(false);
     }
 
@@ -164,7 +168,9 @@ function ProductDetailsRoute() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span className="text-content-primary text-lg">Loading product...</span>
+            <span className="text-content-primary text-lg">
+              Loading product...
+            </span>
           </div>
         </div>
       </div>
@@ -217,12 +223,11 @@ function ProductDetailsRoute() {
     );
   }
 
-
   return (
     <>
       {/* Product Details */}
-      <ProductDetails 
-        setShowSuccessMessage={setShowSuccessMessage} 
+      <ProductDetails
+        setShowSuccessMessage={setShowSuccessMessage}
         cartUrl="/cart"
       />
 

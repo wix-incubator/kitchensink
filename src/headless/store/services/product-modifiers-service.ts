@@ -34,114 +34,125 @@ export interface ProductModifiersServiceAPI {
 export const ProductModifiersServiceDefinition =
   defineService<ProductModifiersServiceAPI>("productModifiers");
 
-export const ProductModifiersService = implementService.withConfig()(ProductModifiersServiceDefinition, ({ getService }) => {
-  const signalsService = getService(SignalsServiceDefinition);
-  const productService = getService(ProductServiceDefinition);
+export const ProductModifiersService = implementService.withConfig()(
+  ProductModifiersServiceDefinition,
+  ({ getService }) => {
+    const signalsService = getService(SignalsServiceDefinition);
+    const productService = getService(ProductServiceDefinition);
 
-  const selectedModifiers: Signal<Record<string, ModifierValue>> = 
-    signalsService.signal({} as any);
-  const isLoading: Signal<boolean> = signalsService.signal(false as any);
-  const error: Signal<string | null> = signalsService.signal(null as any);
+    const selectedModifiers: Signal<Record<string, ModifierValue>> =
+      signalsService.signal({} as any);
+    const isLoading: Signal<boolean> = signalsService.signal(false as any);
+    const error: Signal<string | null> = signalsService.signal(null as any);
 
-  // Extract modifiers from product
-  const modifiers = signalsService.computed(() => {
-    const configProduct = productService.product.get();
-    return (configProduct?.modifiers || []) as any;
-  }) as unknown as ReadOnlySignal<productsV3.ConnectedModifier[]>;
+    // Extract modifiers from product
+    const modifiers = signalsService.computed(() => {
+      const configProduct = productService.product.get();
+      return (configProduct?.modifiers || []) as any;
+    }) as unknown as ReadOnlySignal<productsV3.ConnectedModifier[]>;
 
-  const hasModifiers: ReadOnlySignal<boolean> = signalsService.computed(() => {
-    const mods = modifiers.get();
-    return mods.length > 0;
-  });
-
-  const setModifierChoice = (modifierName: string, choiceValue: string) => {
-    const current = selectedModifiers.get();
-    selectedModifiers.set({
-      ...current,
-      [modifierName]: {
-        modifierName,
-        choiceValue,
-      },
-    });
-  };
-
-  const setModifierFreeText = (modifierName: string, freeTextValue: string) => {
-    const current = selectedModifiers.get();
-    selectedModifiers.set({
-      ...current,
-      [modifierName]: {
-        modifierName,
-        freeTextValue,
-      },
-    });
-  };
-
-  const clearModifier = (modifierName: string) => {
-    const current = selectedModifiers.get();
-    const updated = { ...current };
-    delete updated[modifierName];
-    selectedModifiers.set(updated);
-  };
-
-  const clearAllModifiers = () => {
-    selectedModifiers.set({});
-  };
-
-  const getModifierValue = (modifierName: string): ModifierValue | null => {
-    const current = selectedModifiers.get();
-    return current[modifierName] || null;
-  };
-
-  const isModifierRequired = (modifierName: string): boolean => {
-    const mods = modifiers.get();
-    const modifier = mods.find(m => m.name === modifierName);
-    return modifier?.mandatory || false;
-  };
-
-  const hasRequiredModifiers = (): boolean => {
-    const mods = modifiers.get();
-    return mods.some(m => m.mandatory);
-  };
-
-  const areAllRequiredModifiersFilled = (): boolean => {
-    const mods = modifiers.get();
-    const current = selectedModifiers.get();
-    
-    return mods.every(modifier => {
-      if (!modifier.mandatory) return true;
-      
-      const selectedValue = current[modifier.name || ""];
-      if (!selectedValue) return false;
-      
-      // Check based on modifier type
-      const renderType = modifier.modifierRenderType;
-      if (renderType === "SWATCH_CHOICES" || renderType === "TEXT_CHOICES") {
-        return !!selectedValue.choiceValue;
-      } else if (renderType === "FREE_TEXT") {
-        return !!selectedValue.freeTextValue && selectedValue.freeTextValue.trim() !== "";
+    const hasModifiers: ReadOnlySignal<boolean> = signalsService.computed(
+      () => {
+        const mods = modifiers.get();
+        return mods.length > 0;
       }
-      
-      return false;
-    });
-  };
+    );
 
-  return {
-    modifiers,
-    selectedModifiers,
-    hasModifiers,
-    isLoading,
-    error,
+    const setModifierChoice = (modifierName: string, choiceValue: string) => {
+      const current = selectedModifiers.get();
+      selectedModifiers.set({
+        ...current,
+        [modifierName]: {
+          modifierName,
+          choiceValue,
+        },
+      });
+    };
 
-    setModifierChoice,
-    setModifierFreeText,
-    clearModifier,
-    clearAllModifiers,
-    getModifierValue,
-    isModifierRequired,
-    hasRequiredModifiers,
-    areAllRequiredModifiersFilled,
-  };
-});
+    const setModifierFreeText = (
+      modifierName: string,
+      freeTextValue: string
+    ) => {
+      const current = selectedModifiers.get();
+      selectedModifiers.set({
+        ...current,
+        [modifierName]: {
+          modifierName,
+          freeTextValue,
+        },
+      });
+    };
+
+    const clearModifier = (modifierName: string) => {
+      const current = selectedModifiers.get();
+      const updated = { ...current };
+      delete updated[modifierName];
+      selectedModifiers.set(updated);
+    };
+
+    const clearAllModifiers = () => {
+      selectedModifiers.set({});
+    };
+
+    const getModifierValue = (modifierName: string): ModifierValue | null => {
+      const current = selectedModifiers.get();
+      return current[modifierName] || null;
+    };
+
+    const isModifierRequired = (modifierName: string): boolean => {
+      const mods = modifiers.get();
+      const modifier = mods.find((m) => m.name === modifierName);
+      return modifier?.mandatory || false;
+    };
+
+    const hasRequiredModifiers = (): boolean => {
+      const mods = modifiers.get();
+      return mods.some((m) => m.mandatory);
+    };
+
+    const areAllRequiredModifiersFilled = (): boolean => {
+      const mods = modifiers.get();
+      const current = selectedModifiers.get();
+
+      return mods.every((modifier) => {
+        if (!modifier.mandatory) return true;
+
+        const selectedValue = current[modifier.name || ""];
+        if (!selectedValue) return false;
+
+        // Check based on modifier type
+        const renderType = modifier.modifierRenderType;
+        if (renderType === "SWATCH_CHOICES" || renderType === "TEXT_CHOICES") {
+          return !!selectedValue.choiceValue;
+        } else if (renderType === "FREE_TEXT") {
+          return (
+            !!selectedValue.freeTextValue &&
+            selectedValue.freeTextValue.trim() !== ""
+          );
+        }
+
+        return false;
+      });
+    };
+
+    return {
+      modifiers,
+      selectedModifiers,
+      hasModifiers,
+      isLoading,
+      error,
+
+      setModifierChoice,
+      setModifierFreeText,
+      clearModifier,
+      clearAllModifiers,
+      getModifierValue,
+      isModifierRequired,
+      hasRequiredModifiers,
+      areAllRequiredModifiersFilled,
+    };
+  }
+);
 
 export function createProductModifiersServiceConfig(
   product: productsV3.V3Product
@@ -149,4 +160,4 @@ export function createProductModifiersServiceConfig(
   return {
     product,
   };
-} 
+}

@@ -130,25 +130,27 @@ The page demonstrates how headless components manage state independently:
 The page requires multiple services to function:
 
 ```tsx
-const [servicesManager] = useState(() => createServicesManager(
-  createServicesMap()
-    .addService(
-      SelectedVariantServiceDefinition,
-      SelectedVariantService,
-      productConfig
-    )
-    .addService(
-      ProductMediaGalleryServiceDefinition,
-      ProductMediaGalleryService,
-      productConfig
-    )
-    .addService(ProductServiceDefinition, ProductService, productConfig)
-    .addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      currentCartConfig
-    )
-));
+const [servicesManager] = useState(() =>
+  createServicesManager(
+    createServicesMap()
+      .addService(
+        SelectedVariantServiceDefinition,
+        SelectedVariantService,
+        productConfig
+      )
+      .addService(
+        ProductMediaGalleryServiceDefinition,
+        ProductMediaGalleryService,
+        productConfig
+      )
+      .addService(ProductServiceDefinition, ProductService, productConfig)
+      .addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartConfig
+      )
+  )
+);
 ```
 
 ## User Experience Features

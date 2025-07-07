@@ -55,7 +55,6 @@ export default function CartContent() {
                 </div>
               )}
 
-
               {/* Empty Cart */}
               <CurrentCart.Items>
                 {({ hasItems, items }) => (
@@ -87,12 +86,14 @@ export default function CartContent() {
                           route="/store"
                           className="inline-flex items-center gap-2 text-content-primary font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 btn-primary"
                           onMouseEnter={(e: any) => {
-                            e.currentTarget.classList.remove('btn-primary');
-                            e.currentTarget.classList.add('btn-primary:hover');
+                            e.currentTarget.classList.remove("btn-primary");
+                            e.currentTarget.classList.add("btn-primary:hover");
                           }}
                           onMouseLeave={(e: any) => {
-                            e.currentTarget.classList.remove('btn-primary:hover');
-                            e.currentTarget.classList.add('btn-primary');
+                            e.currentTarget.classList.remove(
+                              "btn-primary:hover"
+                            );
+                            e.currentTarget.classList.add("btn-primary");
                           }}
                         >
                           Continue Shopping
@@ -373,32 +374,38 @@ export default function CartContent() {
                                         </button>
                                       </div>
                                     ) : (
-                                                                             <form
-                                         onSubmit={(e) => {
-                                           e.preventDefault();
-                                           const formData = new FormData(e.currentTarget);
-                                           const code = formData.get('couponCode') as string;
-                                           if (code?.trim()) {
-                                             onApply(code.trim());
-                                           }
-                                         }}
-                                         className="space-y-3"
-                                       >
-                                         <input
-                                           type="text"
-                                           name="couponCode"
-                                           placeholder="Enter promo code"
-                                           className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200"
-                                           disabled={isLoading}
-                                         />
-                                         <button
-                                           type="submit"
-                                           disabled={isLoading}
-                                           className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
-                                         >
-                                           {isLoading ? "Applying..." : "Apply Coupon"}
-                                         </button>
-                                       </form>
+                                      <form
+                                        onSubmit={(e) => {
+                                          e.preventDefault();
+                                          const formData = new FormData(
+                                            e.currentTarget
+                                          );
+                                          const code = formData.get(
+                                            "couponCode"
+                                          ) as string;
+                                          if (code?.trim()) {
+                                            onApply(code.trim());
+                                          }
+                                        }}
+                                        className="space-y-3"
+                                      >
+                                        <input
+                                          type="text"
+                                          name="couponCode"
+                                          placeholder="Enter promo code"
+                                          className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors duration-200"
+                                          disabled={isLoading}
+                                        />
+                                        <button
+                                          type="submit"
+                                          disabled={isLoading}
+                                          className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
+                                        >
+                                          {isLoading
+                                            ? "Applying..."
+                                            : "Apply Coupon"}
+                                        </button>
+                                      </form>
                                     )}
                                   </div>
                                 )}
@@ -448,7 +455,8 @@ export default function CartContent() {
                                         <div className="flex justify-between text-lg text-status-success">
                                           <span>Discount</span>
                                           <span className="font-semibold">
-                                            -<LoadingOrValue>
+                                            -
+                                            <LoadingOrValue>
                                               {discount}
                                             </LoadingOrValue>
                                           </span>
@@ -504,7 +512,9 @@ export default function CartContent() {
                                               !canProceed || checkoutLoading
                                             }
                                             className={`w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                              canProceed ? "btn-primary" : "bg-surface-primary"
+                                              canProceed
+                                                ? "btn-primary"
+                                                : "bg-surface-primary"
                                             }`}
                                             style={{
                                               cursor: !canProceed
@@ -581,4 +591,4 @@ export default function CartContent() {
       </div>
     </div>
   );
-};
+}

@@ -103,7 +103,9 @@ export interface UpdateTagsTrigger {
  * </SEO.UpdateTagsTrigger>
  * ```
  */
-export const UpdateTagsTrigger = (props: UpdateTagsTrigger): React.ReactNode => {
+export const UpdateTagsTrigger = (
+  props: UpdateTagsTrigger
+): React.ReactNode => {
   const service = useService(SEOTagsServiceDefinition) as ServiceAPI<
     typeof SEOTagsServiceDefinition
   >;

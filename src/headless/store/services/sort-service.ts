@@ -3,7 +3,13 @@ import { SignalsServiceDefinition } from "@wix/services-definitions/core-service
 import type { Signal } from "../../Signal";
 import { URLParamsUtils } from "../utils/url-params";
 
-export type SortBy = "" | "name-asc" | "name-desc" | "price-asc" | "price-desc" | "recommended";
+export type SortBy =
+  | ""
+  | "name-asc"
+  | "name-desc"
+  | "price-asc"
+  | "price-desc"
+  | "recommended";
 
 export interface SortServiceAPI {
   currentSort: Signal<SortBy>;
@@ -33,7 +39,7 @@ export const SortService = implementService.withConfig<{
       "name-desc": "name_desc",
       "price-asc": "price_asc",
       "price-desc": "price_desc",
-      "recommended": "recommended",
+      recommended: "recommended",
       "": "newest",
     };
 

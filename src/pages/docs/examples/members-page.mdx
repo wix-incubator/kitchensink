@@ -56,24 +56,26 @@ export function MembersPage({
   profileUpdateServiceConfig,
 }) {
   // Create services manager with all three interdependent services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        CurrentMemberServiceDefinition,
-        CurrentMemberService,
-        currentMemberServiceConfig
-      )
-      .addService(
-        ProfileUpdateServiceDefinition,
-        ProfileUpdateService,
-        profileUpdateServiceConfig
-      )
-      .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
-        maxFileSize: 10 * 1024 * 1024,
-        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
-        photoUploadAstroActions: actions.photoUploadAstroActions,
-      })
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          CurrentMemberServiceDefinition,
+          CurrentMemberService,
+          currentMemberServiceConfig
+        )
+        .addService(
+          ProfileUpdateServiceDefinition,
+          ProfileUpdateService,
+          profileUpdateServiceConfig
+        )
+        .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
+          maxFileSize: 10 * 1024 * 1024,
+          allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+          photoUploadAstroActions: actions.photoUploadAstroActions,
+        })
+    )
+  );
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

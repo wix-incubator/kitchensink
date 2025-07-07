@@ -269,4 +269,3 @@ export const BookingError = (props: BookingErrorProps) => {
     clearError,
   });
 };
-

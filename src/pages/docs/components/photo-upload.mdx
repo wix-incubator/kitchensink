@@ -369,17 +369,21 @@ import {
 import { actions } from "astro:actions";
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      PhotoUploadServiceDefinition,
-      PhotoUploadService,
-      {
-        maxFileSize: 10 * 1024 * 1024,
-        allowedTypes: ["image/jpeg", "image/png", "image/gif"],
-        photoUploadAstroActions: actions.photoUploadAstroActions,
-      }
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          PhotoUploadServiceDefinition,
+          PhotoUploadService,
+          {
+            maxFileSize: 10 * 1024 * 1024,
+            allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+            photoUploadAstroActions: actions.photoUploadAstroActions,
+          }
+        )
+      )
+    )[0]
+  }
 >
   {/* Your PhotoUpload components here */}
 </ServicesManagerProvider>;

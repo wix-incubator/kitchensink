@@ -69,8 +69,7 @@ const loadProductBySlug = async (slug: string) => {
   });
 
   return productResponse;
-}
-
+};
 
 export async function loadProductServiceConfig(
   productSlug: string

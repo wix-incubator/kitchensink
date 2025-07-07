@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import { productsV3 } from "@wix/stores";
-import { ServicesManagerProvider, useService } from "@wix/services-manager-react";
-import { createServicesManager, createServicesMap } from "@wix/services-manager";
+import {
+  ServicesManagerProvider,
+  useService,
+} from "@wix/services-manager-react";
+import {
+  createServicesManager,
+  createServicesMap,
+} from "@wix/services-manager";
 import ProductDetails from "./ProductDetails";
 import { useNavigation } from "../NavigationContext";
 import {
   ProductService,
   ProductServiceDefinition,
 } from "../../headless/store/services/product-service";
-import {
-  CurrentCartServiceDefinition,
-} from "../../headless/ecom/services/current-cart-service";
+import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
@@ -31,29 +35,36 @@ interface QuickViewModalProps {
   productPageRoute: string;
 }
 
-export default function QuickViewModal({ product, isOpen, onClose, productPageRoute }: QuickViewModalProps) {
+export default function QuickViewModal({
+  product,
+  isOpen,
+  onClose,
+  productPageRoute,
+}: QuickViewModalProps) {
   const Navigation = useNavigation();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(null);
-  
+  const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(
+    null
+  );
+
   // Get the existing cart service from the parent context
   const parentCartService = useService(CurrentCartServiceDefinition);
 
   // Handle escape key to close modal
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    
+
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
-    
+
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
@@ -62,20 +73,22 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
     if (isOpen && product.slug) {
       setIsLoading(true);
       // Import and use the loadProductServiceConfig function to get full product data
-      import("../../headless/store/services/product-service").then(async ({ loadProductServiceConfig }) => {
-        try {
-          const result = await loadProductServiceConfig(product.slug!);
-          if (result.type === "success") {
-            setFullProduct(result.config.product);
+      import("../../headless/store/services/product-service").then(
+        async ({ loadProductServiceConfig }) => {
+          try {
+            const result = await loadProductServiceConfig(product.slug!);
+            if (result.type === "success") {
+              setFullProduct(result.config.product);
+            }
+          } catch (error) {
+            console.error("Failed to load full product data:", error);
+            // Fallback to original product data
+            setFullProduct(product);
+          } finally {
+            setIsLoading(false);
           }
-        } catch (error) {
-          console.error("Failed to load full product data:", error);
-          // Fallback to original product data
-          setFullProduct(product);
-        } finally {
-          setIsLoading(false);
         }
-      });
+      );
     }
   }, [isOpen, product.slug]);
 
@@ -91,7 +104,7 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
 
   // Create services manager with all required services EXCEPT cart service - recreate when fullProduct changes
   const [servicesManager, setServicesManager] = useState<any>(null);
-  
+
   useEffect(() => {
     if (fullProduct) {
       const servicesMap = createServicesMap()
@@ -113,7 +126,7 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={onClose}
     >
@@ -141,9 +154,9 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
 
       {/* Backdrop */}
       <div className="absolute inset-0 bg-surface-overlay backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]" />
-      
+
       {/* Modal Container */}
-      <div 
+      <div
         className="relative w-full max-w-6xl mx-4 max-h-[90vh] bg-surface-card rounded-2xl border border-brand-subtle shadow-2xl animate-[slideUp_0.3s_ease-out] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -174,19 +187,21 @@ export default function QuickViewModal({ product, isOpen, onClose, productPageRo
             <div className="flex items-center justify-center py-16">
               <div className="text-center">
                 <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-content-secondary">Loading product details...</p>
+                <p className="text-content-secondary">
+                  Loading product details...
+                </p>
               </div>
             </div>
           ) : (
             <>
               <ServicesManagerProvider servicesManager={servicesManager}>
-                <ProductDetails 
+                <ProductDetails
                   setShowSuccessMessage={setShowSuccessMessage}
                   cartUrl="/cart"
                   isQuickView={true}
                 />
               </ServicesManagerProvider>
-              
+
               {/* View Full Product Page Link */}
               <div className="mt-6 pt-6 border-t border-brand-subtle">
                 <Navigation

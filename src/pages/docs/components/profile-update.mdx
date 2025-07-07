@@ -410,17 +410,21 @@ import {
 } from "../headless/members/profile-update-service";
 
 <ServicesManagerProvider
-  servicesManager={useState(() => createServicesManager(
-    createServicesMap().addService(
-      ProfileUpdateServiceDefinition,
-      ProfileUpdateService,
-      {
-        // Service configuration options
-        validateOnChange: true,
-        autoSave: false,
-      }
-    )
-  ))[0]}
+  servicesManager={
+    useState(() =>
+      createServicesManager(
+        createServicesMap().addService(
+          ProfileUpdateServiceDefinition,
+          ProfileUpdateService,
+          {
+            // Service configuration options
+            validateOnChange: true,
+            autoSave: false,
+          }
+        )
+      )
+    )[0]
+  }
 >
   {/* Your ProfileUpdate components here */}
 </ServicesManagerProvider>;

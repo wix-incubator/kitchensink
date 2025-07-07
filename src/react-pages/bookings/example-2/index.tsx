@@ -233,13 +233,15 @@ export default function BookingsHomePage({
   bookingServicesConfig,
 }: BookingsHomePageProps) {
   // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      BookingServicesServiceDefinition,
-      BookingServicesService,
-      bookingServicesConfig
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap().addService(
+        BookingServicesServiceDefinition,
+        BookingServicesService,
+        bookingServicesConfig
+      )
     )
-  ));
+  );
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

@@ -10,7 +10,11 @@ import {
 } from "../../../../headless/bookings/services/booking-services-service";
 import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
 import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
-import { BookingServices, BookingAvailability, BookingSelection } from "../../../../headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "../../../../headless/bookings/components";
 import { WixMediaImage } from "../../../../headless/media/components";
 import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
 import { PageDocsRegistration } from "../../../../components/DocsMode";
@@ -621,24 +625,26 @@ export default function BookNowPage({
   bookingSelectionConfig,
 }: BookNowPageProps) {
   // Create services manager with all required services
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        bookingServicesConfig
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        bookingAvailabilityConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          BookingServicesServiceDefinition,
+          BookingServicesService,
+          bookingServicesConfig
+        )
+        .addService(
+          BookingAvailabilityServiceDefinition,
+          BookingAvailabilityService,
+          bookingAvailabilityConfig
+        )
+        .addService(
+          BookingSelectionServiceDefinition,
+          BookingSelectionService,
+          bookingSelectionConfig
+        )
+    )
+  );
 
   return (
     <KitchensinkLayout>

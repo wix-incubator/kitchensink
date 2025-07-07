@@ -253,13 +253,15 @@ export default function BookingsServicesPage({
   bookingServicesConfig,
 }: BookingsServicesPageProps) {
   // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap().addService(
-      BookingServicesServiceDefinition,
-      BookingServicesService,
-      bookingServicesConfig
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap().addService(
+        BookingServicesServiceDefinition,
+        BookingServicesService,
+        bookingServicesConfig
+      )
     )
-  ));
+  );
 
   return (
     <KitchensinkLayout>

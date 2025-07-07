@@ -92,7 +92,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   className = "",
 }) => {
   const cartService = useService(CurrentCartServiceDefinition);
-  
+
   const handleBuyNow = async () => {
     try {
       await cartService.clearCart();

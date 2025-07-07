@@ -46,7 +46,10 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from "../headless/media/services/media-gallery-service";
-import { ProductModifiersService, ProductModifiersServiceDefinition } from "../headless/store/services/product-modifiers-service";
+import {
+  ProductModifiersService,
+  ProductModifiersServiceDefinition,
+} from "../headless/store/services/product-modifiers-service";
 
 export interface WixServicesProviderProps {
   children: ReactNode;

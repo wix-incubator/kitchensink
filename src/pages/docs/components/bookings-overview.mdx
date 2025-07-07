@@ -9,7 +9,11 @@ Wix Bookings is a comprehensive appointment scheduling and service management pl
 ## Quick Start
 
 ```tsx
-import { BookingServices, BookingAvailability, BookingSelection } from "headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "headless/bookings/components";
 
 // Basic booking flow
 function BookingFlow() {
@@ -178,7 +182,11 @@ function ServiceDetailPattern({ serviceId }) {
 Complete booking experience on a single page:
 
 ```tsx
-import { BookingServices, BookingAvailability, BookingSelection } from "headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "headless/bookings/components";
 
 function IntegratedBookingFlow({ serviceId }) {
   return (
@@ -223,7 +231,11 @@ function IntegratedBookingFlow({ serviceId }) {
 Guided booking process with clear progression:
 
 ```tsx
-import { BookingServices, BookingAvailability, BookingSelection } from "headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "headless/bookings/components";
 
 function StepByStepBooking() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -303,7 +315,11 @@ export async function getStaticProps() {
 Use the Services Manager to provide consistent state across components:
 
 ```tsx
-import { BookingServices, BookingAvailability, BookingSelection } from "headless/bookings/components";
+import {
+  BookingServices,
+  BookingAvailability,
+  BookingSelection,
+} from "headless/bookings/components";
 
 import {
   createServicesManager,
@@ -313,24 +329,26 @@ import { ServicesManagerProvider } from "@wix/services-manager-react";
 import { useState } from "react";
 
 function BookingApp({ configs }) {
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingServicesServiceDefinition,
-        BookingServicesService,
-        configs.services
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        configs.availability
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        configs.selection
-      )
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          BookingServicesServiceDefinition,
+          BookingServicesService,
+          configs.services
+        )
+        .addService(
+          BookingAvailabilityServiceDefinition,
+          BookingAvailabilityService,
+          configs.availability
+        )
+        .addService(
+          BookingSelectionServiceDefinition,
+          BookingSelectionService,
+          configs.selection
+        )
+    )
+  );
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>
@@ -433,7 +451,7 @@ import { BookingServices } from "headless/bookings/components";
       theme="dark"
     />
   )}
-</BookingServices.ServiceListItem>
+</BookingServices.ServiceListItem>;
 ```
 
 ### Behavior
@@ -472,7 +490,7 @@ import { BookingSelection } from "headless/bookings/components";
       Complete Booking
     </button>
   )}
-</BookingSelection.BookingSummary>
+</BookingSelection.BookingSummary>;
 ```
 
 ## Business Use Cases

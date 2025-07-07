@@ -45,12 +45,14 @@ The **ProfileUpdateService** enables:
 All three services work together through a single `ServicesManagerProvider`:
 
 ```tsx
-const [servicesManager] = useState(() => createServicesManager(
-  createServicesMap()
-    .addService(CurrentMemberServiceDefinition, CurrentMemberService, config)
-    .addService(ProfileUpdateServiceDefinition, ProfileUpdateService, config)
-    .addService(PhotoUploadServiceDefinition, PhotoUploadService, config)
-));
+const [servicesManager] = useState(() =>
+  createServicesManager(
+    createServicesMap()
+      .addService(CurrentMemberServiceDefinition, CurrentMemberService, config)
+      .addService(ProfileUpdateServiceDefinition, ProfileUpdateService, config)
+      .addService(PhotoUploadServiceDefinition, PhotoUploadService, config)
+  )
+);
 ```
 
 ### Reactive State Management

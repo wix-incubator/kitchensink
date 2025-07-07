@@ -17,9 +17,7 @@ interface CategoryProviderProps {
   children: ReactNode;
 }
 
-export const Provider: React.FC<CategoryProviderProps> = ({
-  children,
-}) => {
+export const Provider: React.FC<CategoryProviderProps> = ({ children }) => {
   const service = useService(CategoryServiceDefinition);
 
   return (

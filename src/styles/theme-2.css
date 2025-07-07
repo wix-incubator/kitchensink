@@ -11,83 +11,213 @@
   --theme-warning-600: #d97706; /* Darker warning color for hover states */
   --theme-warning-400: #fbbf24; /* Lighter warning color for text */
   --theme-warning-300: #fcd34d; /* Light warning color for text */
-  
+
   --theme-info-500: #06b6d4; /* Info/cyan color matching theme-2 palette */
   --theme-info-600: #0891b2; /* Darker info color for hover states */
   --theme-info-400: #22d3ee; /* Lighter info color for text */
-  
+
   --theme-danger-500: #ef4444; /* Danger/red color for error states */
   --theme-danger-600: #dc2626; /* Darker danger color for hover states */
   --theme-danger-400: #f87171; /* Lighter danger color for text */
   --theme-danger-300: #fca5a5; /* Light danger color for text */
-  
+
   --theme-success-500: #10b981; /* Success/green color for positive states */
   --theme-success-600: #059669; /* Darker success color for hover states */
   --theme-success-400: #34d399; /* Lighter success color for text */
-  
+
   --theme-accent-500: #14b8a6; /* Teal accent color matching theme-2 primary */
   --theme-accent-600: #0d9488; /* Darker teal accent color */
   --theme-accent-400: #2dd4bf; /* Lighter teal accent color */
-  
+
   --theme-amber-500: #f59e0b; /* Amber color for special highlights */
   --theme-amber-600: #d97706; /* Darker amber color */
 
   /* Background Colors with Opacity */
-  --theme-bg-primary-10: rgba(20, 184, 166, 0.1); /* Semi-transparent primary color used for filter status bar backgrounds */
-  --theme-bg-primary-20: rgba(20, 184, 166, 0.2); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
-  --theme-bg-options: rgba(20, 184, 166, 0.15); /* Background color for product option tags and choice buttons on dark backgrounds */
-  --theme-bg-modal: rgba(0, 0, 0, 0.6); /* Dark modal content background for dark theme */
-  --theme-bg-loading: rgba(255, 255, 255, 0.15); /* Background color for loading skeleton elements */
-  --theme-bg-card: rgba(255, 255, 255, 0.05); /* Very light background for cards and product items */
-  --theme-bg-error: rgba(248, 113, 113, 0.1); /* Light red background for error messages */
-  --theme-bg-tooltip: rgba(0, 0, 0, 0.75); /* Dark background for tooltips and overlays */
-  
+  --theme-bg-primary-10: rgba(
+    20,
+    184,
+    166,
+    0.1
+  ); /* Semi-transparent primary color used for filter status bar backgrounds */
+  --theme-bg-primary-20: rgba(
+    20,
+    184,
+    166,
+    0.2
+  ); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
+  --theme-bg-options: rgba(
+    20,
+    184,
+    166,
+    0.15
+  ); /* Background color for product option tags and choice buttons on dark backgrounds */
+  --theme-bg-modal: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Dark modal content background for dark theme */
+  --theme-bg-loading: rgba(
+    255,
+    255,
+    255,
+    0.15
+  ); /* Background color for loading skeleton elements */
+  --theme-bg-card: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Very light background for cards and product items */
+  --theme-bg-error: rgba(
+    248,
+    113,
+    113,
+    0.1
+  ); /* Light red background for error messages */
+  --theme-bg-tooltip: rgba(
+    0,
+    0,
+    0,
+    0.75
+  ); /* Dark background for tooltips and overlays */
+
   /* Status Background Colors */
   --theme-bg-warning-10: rgba(245, 158, 11, 0.1); /* Light warning background */
-  --theme-bg-warning-20: rgba(245, 158, 11, 0.2); /* Medium warning background */
+  --theme-bg-warning-20: rgba(
+    245,
+    158,
+    11,
+    0.2
+  ); /* Medium warning background */
   --theme-bg-info-10: rgba(6, 182, 212, 0.1); /* Light info background */
   --theme-bg-info-20: rgba(6, 182, 212, 0.2); /* Medium info background */
   --theme-bg-success-10: rgba(16, 185, 129, 0.1); /* Light success background */
-  --theme-bg-success-20: rgba(16, 185, 129, 0.2); /* Medium success background */
+  --theme-bg-success-20: rgba(
+    16,
+    185,
+    129,
+    0.2
+  ); /* Medium success background */
   --theme-bg-danger-10: rgba(239, 68, 68, 0.1); /* Light danger background */
   --theme-bg-danger-20: rgba(239, 68, 68, 0.2); /* Medium danger background */
   --theme-bg-accent-10: rgba(20, 184, 166, 0.1); /* Light accent background */
   --theme-bg-accent-20: rgba(20, 184, 166, 0.2); /* Medium accent background */
 
   /* Border Colors */
-  --theme-border-primary-10: rgba(20, 184, 166, 0.1); /* Very subtle primary-colored border for filter status bars */
-  --theme-border-primary-20: rgba(20, 184, 166, 0.2); /* More visible primary-colored border for emphasized elements */
-  --theme-border-primary-30: rgba(20, 184, 166, 0.3); /* Strong primary-colored border used for product option tags */
-  --theme-border-card: rgba(255, 255, 255, 0.1); /* Light border for cards and product items */
-  --theme-border-card-hover: rgba(255, 255, 255, 0.2); /* Medium border for card hover states */
-  --theme-border-error: rgba(248, 113, 113, 0.2); /* Red border for error messages */
-  
+  --theme-border-primary-10: rgba(
+    20,
+    184,
+    166,
+    0.1
+  ); /* Very subtle primary-colored border for filter status bars */
+  --theme-border-primary-20: rgba(
+    20,
+    184,
+    166,
+    0.2
+  ); /* More visible primary-colored border for emphasized elements */
+  --theme-border-primary-30: rgba(
+    20,
+    184,
+    166,
+    0.3
+  ); /* Strong primary-colored border used for product option tags */
+  --theme-border-card: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Light border for cards and product items */
+  --theme-border-card-hover: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Medium border for card hover states */
+  --theme-border-error: rgba(
+    248,
+    113,
+    113,
+    0.2
+  ); /* Red border for error messages */
+
   /* Status Border Colors */
   --theme-border-warning-20: rgba(245, 158, 11, 0.2); /* Warning border */
-  --theme-border-warning-30: rgba(245, 158, 11, 0.3); /* Stronger warning border */
+  --theme-border-warning-30: rgba(
+    245,
+    158,
+    11,
+    0.3
+  ); /* Stronger warning border */
   --theme-border-info-20: rgba(6, 182, 212, 0.2); /* Info border */
   --theme-border-info-30: rgba(6, 182, 212, 0.3); /* Stronger info border */
   --theme-border-success-20: rgba(16, 185, 129, 0.2); /* Success border */
-  --theme-border-success-30: rgba(16, 185, 129, 0.3); /* Stronger success border */
+  --theme-border-success-30: rgba(
+    16,
+    185,
+    129,
+    0.3
+  ); /* Stronger success border */
   --theme-border-danger-20: rgba(239, 68, 68, 0.2); /* Danger border */
   --theme-border-danger-30: rgba(239, 68, 68, 0.3); /* Stronger danger border */
   --theme-border-accent-20: rgba(20, 184, 166, 0.2); /* Accent border */
-  --theme-border-accent-30: rgba(20, 184, 166, 0.3); /* Stronger accent border */
+  --theme-border-accent-30: rgba(
+    20,
+    184,
+    166,
+    0.3
+  ); /* Stronger accent border */
 
   /* Text Colors */
   --theme-text-primary-300: #5eead4; /* Light primary color used for filter status text and active filter labels */
   --theme-text-primary-400: #2dd4bf; /* Medium primary color used for filter icons and interactive text elements */
   --theme-text-content: #ffffff; /* Main content text color used for headings, product titles, and button labels */
-  --theme-text-content-30: rgba(255, 255, 255, 0.3); /* Very faded content text used for disabled text elements */
-  --theme-text-content-40: rgba(255, 255, 255, 0.4); /* Very dim content text used for placeholder icons and subtle elements */
-  --theme-text-content-50: rgba(255, 255, 255, 0.5); /* Dim content text used for strikethrough sale prices */
-  --theme-text-content-60: rgba(255, 255, 255, 0.6); /* Muted content text used for descriptions, counts, and secondary information */
-  --theme-text-content-70: rgba(255, 255, 255, 0.7); /* Semi-muted content text used for subtitles and intro paragraphs */
-  --theme-text-content-80: rgba(255, 255, 255, 0.8); /* Clear content text used for option labels and form text */
-  --theme-text-content-90: rgba(255, 255, 255, 0.9); /* Almost full opacity content text used for emphasized secondary text */
+  --theme-text-content-30: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); /* Very faded content text used for disabled text elements */
+  --theme-text-content-40: rgba(
+    255,
+    255,
+    255,
+    0.4
+  ); /* Very dim content text used for placeholder icons and subtle elements */
+  --theme-text-content-50: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* Dim content text used for strikethrough sale prices */
+  --theme-text-content-60: rgba(
+    255,
+    255,
+    255,
+    0.6
+  ); /* Muted content text used for descriptions, counts, and secondary information */
+  --theme-text-content-70: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Semi-muted content text used for subtitles and intro paragraphs */
+  --theme-text-content-80: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Clear content text used for option labels and form text */
+  --theme-text-content-90: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Almost full opacity content text used for emphasized secondary text */
   --theme-text-success: #34d399; /* Green color used for "In Stock" status indicators */
   --theme-text-error: #f87171; /* Red color used for "Out of Stock" status and error messages */
-  
+
   /* Status Text Colors */
   --theme-text-warning: #fbbf24; /* Warning text color */
   --theme-text-info: #22d3ee; /* Info text color matching theme-2 palette */
@@ -95,44 +225,138 @@
   --theme-text-accent: #2dd4bf; /* Accent text color */
 
   /* Color Picker Border Colors */
-  --theme-color-border-40: rgba(94, 234, 212, 0.4); /* Default border color for product color option circles */
-  --theme-color-border-80: rgba(94, 234, 212, 0.8); /* Hover border color for product color option circles */
-  
+  --theme-color-border-40: rgba(
+    94,
+    234,
+    212,
+    0.4
+  ); /* Default border color for product color option circles */
+  --theme-color-border-80: rgba(
+    94,
+    234,
+    212,
+    0.8
+  ); /* Hover border color for product color option circles */
+
   /* Fallback Colors */
   --theme-fallback-color: #374151; /* Fallback color for elements that need a default color */
   --theme-dropdown-arrow-color: #6b7280; /* Color for dropdown arrow icons */
 
   /* Gradient Colors */
-  --theme-gradient-primary: linear-gradient(to right, #14b8a6, #06b6d4); /* Main brand gradient used for primary buttons and CTAs */
-  --theme-gradient-primary-hover: linear-gradient(to right, #0d9488, #0e7490); /* Darker gradient used for button hover states */
-  --theme-gradient-ribbon: linear-gradient(to right, #14b8a6, #06b6d4); /* Gradient used for product ribbon/badge backgrounds */
-  --theme-gradient-warning: linear-gradient(to right, #f59e0b, #ef4444); /* Warning gradient */
-  --theme-gradient-warning-hover: linear-gradient(to right, #d97706, #dc2626); /* Warning gradient hover */
-  --theme-gradient-success: linear-gradient(to right, #10b981, #059669); /* Success gradient */
-  --theme-gradient-info: linear-gradient(to right, #06b6d4, #0891b2); /* Info gradient matching theme-2 */
-  --theme-gradient-accent: linear-gradient(to right, #14b8a6, #0d9488); /* Accent gradient */
+  --theme-gradient-primary: linear-gradient(
+    to right,
+    #14b8a6,
+    #06b6d4
+  ); /* Main brand gradient used for primary buttons and CTAs */
+  --theme-gradient-primary-hover: linear-gradient(
+    to right,
+    #0d9488,
+    #0e7490
+  ); /* Darker gradient used for button hover states */
+  --theme-gradient-ribbon: linear-gradient(
+    to right,
+    #14b8a6,
+    #06b6d4
+  ); /* Gradient used for product ribbon/badge backgrounds */
+  --theme-gradient-warning: linear-gradient(
+    to right,
+    #f59e0b,
+    #ef4444
+  ); /* Warning gradient */
+  --theme-gradient-warning-hover: linear-gradient(
+    to right,
+    #d97706,
+    #dc2626
+  ); /* Warning gradient hover */
+  --theme-gradient-success: linear-gradient(
+    to right,
+    #10b981,
+    #059669
+  ); /* Success gradient */
+  --theme-gradient-info: linear-gradient(
+    to right,
+    #06b6d4,
+    #0891b2
+  ); /* Info gradient matching theme-2 */
+  --theme-gradient-accent: linear-gradient(
+    to right,
+    #14b8a6,
+    #0d9488
+  ); /* Accent gradient */
 
   /* Button Gradients */
-  --theme-btn-primary: linear-gradient(to right, #14b8a6, #06b6d4); /* Primary button background gradient for main actions */
-  --theme-btn-primary-hover: linear-gradient(to right, #0d9488, #0e7490); /* Primary button hover state gradient */
-  --theme-btn-secondary: linear-gradient(to right, #06b6d4, #2563eb); /* Secondary button background gradient */
-  --theme-btn-secondary-hover: linear-gradient(to right, #0891b2, #1d4ed8); /* Secondary button hover state gradient */
-  --theme-btn-warning: linear-gradient(to right, #f59e0b, #ef4444); /* Warning button gradient */
-  --theme-btn-warning-hover: linear-gradient(to right, #d97706, #dc2626); /* Warning button hover gradient */
-  --theme-btn-success: linear-gradient(to right, #10b981, #059669); /* Success button gradient */
-  --theme-btn-info: linear-gradient(to right, #06b6d4, #0891b2); /* Info button gradient */
-  --theme-btn-danger: linear-gradient(to right, #ef4444, #dc2626); /* Danger button gradient */
-  --theme-btn-accent: linear-gradient(to right, #14b8a6, #0d9488); /* Accent button gradient */
+  --theme-btn-primary: linear-gradient(
+    to right,
+    #14b8a6,
+    #06b6d4
+  ); /* Primary button background gradient for main actions */
+  --theme-btn-primary-hover: linear-gradient(
+    to right,
+    #0d9488,
+    #0e7490
+  ); /* Primary button hover state gradient */
+  --theme-btn-secondary: linear-gradient(
+    to right,
+    #06b6d4,
+    #2563eb
+  ); /* Secondary button background gradient */
+  --theme-btn-secondary-hover: linear-gradient(
+    to right,
+    #0891b2,
+    #1d4ed8
+  ); /* Secondary button hover state gradient */
+  --theme-btn-warning: linear-gradient(
+    to right,
+    #f59e0b,
+    #ef4444
+  ); /* Warning button gradient */
+  --theme-btn-warning-hover: linear-gradient(
+    to right,
+    #d97706,
+    #dc2626
+  ); /* Warning button hover gradient */
+  --theme-btn-success: linear-gradient(
+    to right,
+    #10b981,
+    #059669
+  ); /* Success button gradient */
+  --theme-btn-info: linear-gradient(
+    to right,
+    #06b6d4,
+    #0891b2
+  ); /* Info button gradient */
+  --theme-btn-danger: linear-gradient(
+    to right,
+    #ef4444,
+    #dc2626
+  ); /* Danger button gradient */
+  --theme-btn-accent: linear-gradient(
+    to right,
+    #14b8a6,
+    #0d9488
+  ); /* Accent button gradient */
 
   /* Hero Section Gradients */
-  --theme-hero-text-gradient: linear-gradient(to right, #5eead4, #67e8f9); /* Text gradient used for hero section main headlines */
-  --theme-hero-card-gradient: linear-gradient(to right, rgba(20, 184, 166, 0.1), rgba(6, 182, 212, 0.1)); /* Background gradient for hero feature cards */
-  --theme-hero-feature-gradient: linear-gradient(to bottom right, #14b8a6, #06b6d4); /* Background gradient for hero feature icons */
-  
+  --theme-hero-text-gradient: linear-gradient(
+    to right,
+    #5eead4,
+    #67e8f9
+  ); /* Text gradient used for hero section main headlines */
+  --theme-hero-card-gradient: linear-gradient(
+    to right,
+    rgba(20, 184, 166, 0.1),
+    rgba(6, 182, 212, 0.1)
+  ); /* Background gradient for hero feature cards */
+  --theme-hero-feature-gradient: linear-gradient(
+    to bottom right,
+    #14b8a6,
+    #06b6d4
+  ); /* Background gradient for hero feature icons */
+
   /* Typography */
   --theme-font-family: inherit; /* Font family for all themed text elements */
   --theme-font-weight-normal: 400; /* Normal font weight for body text */
   --theme-font-weight-medium: 500; /* Medium font weight for emphasized text */
   --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings and labels */
   --theme-font-weight-bold: 700; /* Bold font weight for titles and strong emphasis */
-} 
+}

@@ -1,5 +1,8 @@
 import { useRef } from "react";
-import { PhotoUpload, CurrentMemberProfile } from "../headless/members/components";
+import {
+  PhotoUpload,
+  CurrentMemberProfile,
+} from "../headless/members/components";
 import { FileUpload } from "../headless/media/components";
 
 interface PhotoUploadDialogProps {

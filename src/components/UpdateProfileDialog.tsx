@@ -416,17 +416,21 @@ export default function UpdateProfileDialog({
                       disabled={!canUpdate}
                       className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
                       style={{
-                        background: canUpdate ? 'var(--theme-btn-primary)' : 'var(--theme-bg-options)',
-                        cursor: !canUpdate ? 'not-allowed' : 'pointer'
+                        background: canUpdate
+                          ? "var(--theme-btn-primary)"
+                          : "var(--theme-bg-options)",
+                        cursor: !canUpdate ? "not-allowed" : "pointer",
                       }}
                       onMouseEnter={(e) => {
                         if (canUpdate) {
-                          e.currentTarget.style.background = 'var(--theme-btn-primary-hover)';
+                          e.currentTarget.style.background =
+                            "var(--theme-btn-primary-hover)";
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (canUpdate) {
-                          e.currentTarget.style.background = 'var(--theme-btn-primary)';
+                          e.currentTarget.style.background =
+                            "var(--theme-btn-primary)";
                         }
                       }}
                     >
