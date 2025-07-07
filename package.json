@@ -27,6 +27,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@wix/astro": "^1.0.22",
     "@wix/bookings": "^1.0.897",
+    "@wix/business-tools": "^1.0.185",
     "@wix/categories": "^1.0.133",
     "@wix/dashboard": "^1.3.39",
     "@wix/ecom": "^1.0.1197",
