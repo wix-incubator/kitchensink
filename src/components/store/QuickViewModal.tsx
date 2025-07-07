@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
-import { productsV3 } from "@wix/stores";
+import { useEffect, useState } from 'react';
+import { productsV3 } from '@wix/stores';
 import {
   ServicesManagerProvider,
   useService,
-} from "@wix/services-manager-react";
+} from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import ProductDetails from "./ProductDetails";
-import { useNavigation } from "../NavigationContext";
+} from '@wix/services-manager';
+import ProductDetails from './ProductDetails';
+import { useNavigation } from '../NavigationContext';
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../headless/store/services/product-service";
-import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
+} from '../../headless/store/services/product-service';
+import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from "../../headless/store/services/selected-variant-service";
+} from '../../headless/store/services/selected-variant-service';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from "../../headless/media/services/media-gallery-service";
+} from '../../headless/media/services/media-gallery-service';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from "../../headless/store/services/product-modifiers-service";
+} from '../../headless/store/services/product-modifiers-service';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -54,17 +54,17 @@ export default function QuickViewModal({
   // Handle escape key to close modal
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
 
@@ -73,15 +73,15 @@ export default function QuickViewModal({
     if (isOpen && product.slug) {
       setIsLoading(true);
       // Import and use the loadProductServiceConfig function to get full product data
-      import("../../headless/store/services/product-service").then(
+      import('../../headless/store/services/product-service').then(
         async ({ loadProductServiceConfig }) => {
           try {
             const result = await loadProductServiceConfig(product.slug!);
-            if (result.type === "success") {
+            if (result.type === 'success') {
               setFullProduct(result.config.product);
             }
           } catch (error) {
-            console.error("Failed to load full product data:", error);
+            console.error('Failed to load full product data:', error);
             // Fallback to original product data
             setFullProduct(product);
           } finally {
@@ -158,7 +158,7 @@ export default function QuickViewModal({
       {/* Modal Container */}
       <div
         className="relative w-full max-w-6xl mx-4 max-h-[90vh] bg-surface-card rounded-2xl border border-brand-subtle shadow-2xl animate-[slideUp_0.3s_ease-out] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
         <button

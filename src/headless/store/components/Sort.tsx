@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { SortServiceDefinition, type SortBy } from "../services/sort-service";
-import { useService } from "@wix/services-manager-react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { SortServiceDefinition, type SortBy } from '../services/sort-service';
+import { useService } from '@wix/services-manager-react';
 
 interface SortContextValue {
   currentSort: SortBy;
@@ -12,7 +12,7 @@ const SortContext = createContext<SortContextValue | null>(null);
 export function useSortContext() {
   const context = useContext(SortContext);
   if (!context) {
-    throw new Error("useSortContext must be used within a Sort.SortProvider");
+    throw new Error('useSortContext must be used within a Sort.SortProvider');
   }
   return context;
 }
@@ -23,7 +23,7 @@ interface ProviderProps {
 
 export function Provider({ children }: ProviderProps) {
   const sortService = useService(SortServiceDefinition);
-  const [currentSort, setCurrentSort] = useState<SortBy>("");
+  const [currentSort, setCurrentSort] = useState<SortBy>('');
 
   useEffect(() => {
     const unsubscribe = sortService.currentSort.subscribe((sort: SortBy) => {

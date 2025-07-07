@@ -1,60 +1,60 @@
 import type {
   ServiceAPI,
   ServiceFactoryConfig,
-} from "@wix/services-definitions";
+} from '@wix/services-definitions';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useService } from "@wix/services-manager-react";
-import { useState } from "react";
-import { PageDocsRegistration } from "../../../../components/DocsMode";
+} from '@wix/services-manager';
+import { useService } from '@wix/services-manager-react';
+import { useState } from 'react';
+import { PageDocsRegistration } from '../../../../components/DocsMode';
 import {
   MediaGallery,
   WixMediaImage,
-} from "../../../../headless/media/components";
-import { CurrentCart } from "../../../../headless/ecom/components";
+} from '../../../../headless/media/components';
+import { CurrentCart } from '../../../../headless/ecom/components';
 import {
   Product,
   SelectedVariant,
-} from "../../../../headless/store/components";
+} from '../../../../headless/store/components';
 import {
   ProductModifiers,
   ProductVariantSelector,
   RelatedProducts,
   SocialSharing,
-} from "../../../../headless/store/components";
+} from '../../../../headless/store/components';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/ecom/services/current-cart-service";
+} from '../../../../headless/ecom/services/current-cart-service';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from "../../../../headless/store/services/product-modifiers-service";
+} from '../../../../headless/store/services/product-modifiers-service';
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../../../headless/store/services/product-service";
+} from '../../../../headless/store/services/product-service';
 import {
   RelatedProductsService,
   RelatedProductsServiceDefinition,
-} from "../../../../headless/store/services/related-products-service";
+} from '../../../../headless/store/services/related-products-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from "../../../../headless/store/services/selected-variant-service";
+} from '../../../../headless/store/services/selected-variant-service';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from "../../../../headless/store/services/social-sharing-service";
-import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
-import { StoreLayout } from "../../../../layouts/StoreLayout";
-import "../../../../styles/theme-2.css";
+} from '../../../../headless/store/services/social-sharing-service';
+import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
+import { StoreLayout } from '../../../../layouts/StoreLayout';
+import '../../../../styles/theme-2.css';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from "../../../../headless/media/services/media-gallery-service";
+} from '../../../../headless/media/services/media-gallery-service';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
@@ -179,8 +179,8 @@ const ProductImageGallery = () => {
                     onClick={onSelect}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                       isActive
-                        ? "border-teal-500 ring-2 ring-teal-500/30"
-                        : "border-white/20 hover:border-white/40"
+                        ? 'border-teal-500 ring-2 ring-teal-500/30'
+                        : 'border-white/20 hover:border-white/40'
                     }`}
                   >
                     {src && (
@@ -214,7 +214,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
       <div className="space-y-1">
         <textarea
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           placeholder={
             freeTextPlaceholder || `Enter your ${name.toLowerCase()}...`
           }
@@ -225,7 +225,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
         {textMaxChars && (
           <p
             className={`text-xs text-right ${
-              isOverLimit ? "text-red-400" : "text-white/60"
+              isOverLimit ? 'text-red-400' : 'text-white/60'
             }`}
           >
             {charCount}/{textMaxChars}
@@ -278,7 +278,7 @@ const ProductInfo = ({
           <div className="space-y-1">
             <div className="text-3xl font-bold text-white">{price}</div>
             {compareAtPrice &&
-              parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 && (
+              parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 && (
                 <div className="text-lg font-medium text-white/50 line-through">
                   {compareAtPrice}
                 </div>
@@ -312,23 +312,23 @@ const ProductInfo = ({
                 <div
                   className={`w-2 h-2 rounded-full ${
                     isNotInStockButPreOrderEnabled
-                      ? "bg-orange-500"
+                      ? 'bg-orange-500'
                       : inStock
-                      ? isLowStock
-                        ? "bg-yellow-500"
-                        : "bg-green-500"
-                      : "bg-red-500"
+                        ? isLowStock
+                          ? 'bg-yellow-500'
+                          : 'bg-green-500'
+                        : 'bg-red-500'
                   }`}
                 ></div>
                 <span
                   className={`text-sm ${
                     isNotInStockButPreOrderEnabled
-                      ? "text-orange-400"
+                      ? 'text-orange-400'
                       : inStock
-                      ? isLowStock
-                        ? "text-yellow-400"
-                        : "text-green-400"
-                      : "text-red-400"
+                        ? isLowStock
+                          ? 'text-yellow-400'
+                          : 'text-green-400'
+                        : 'text-red-400'
                   }`}
                 >
                   {status}
@@ -386,7 +386,7 @@ const ProductInfo = ({
                           {choices.map((choice: any, choiceIndex: number) => {
                             const isColorOption = String(name)
                               .toLowerCase()
-                              .includes("color");
+                              .includes('color');
                             const hasColorCode = choice.colorCode;
                             return (
                               <ProductVariantSelector.Choice
@@ -412,18 +412,18 @@ const ProductInfo = ({
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
-                                              ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
+                                              ? 'border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30'
                                               : isInStock || isPreOrderEnabled
-                                              ? "border-white/30 hover:border-white/60 hover:scale-105"
-                                              : "border-white/10 opacity-50 cursor-not-allowed"
+                                                ? 'border-white/30 hover:border-white/60 hover:scale-105'
+                                                : 'border-white/10 opacity-50 cursor-not-allowed'
                                           } ${
                                             !isInStock && !isPreOrderEnabled
-                                              ? "grayscale"
-                                              : ""
+                                              ? 'grayscale'
+                                              : ''
                                           }`}
                                           style={{
                                             backgroundColor:
-                                              choice.colorCode || "#000000",
+                                              choice.colorCode || '#000000',
                                           }}
                                         />
                                         {!isInStock && !isPreOrderEnabled && (
@@ -453,10 +453,10 @@ const ProductInfo = ({
                                           }
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
-                                              ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
+                                              ? 'bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30'
                                               : isInStock || isPreOrderEnabled
-                                              ? "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
-                                              : "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
+                                                ? 'bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10'
+                                                : 'bg-white/5 border-white/10 text-white/30 cursor-not-allowed'
                                           }`}
                                         >
                                           {value}
@@ -581,7 +581,7 @@ const ProductInfo = ({
                         ) : hasChoices ? (
                           <div className="flex flex-wrap gap-3">
                             {choices.map((choice: any, choiceIndex: number) => {
-                              const isColorModifier = type === "SWATCH_CHOICES";
+                              const isColorModifier = type === 'SWATCH_CHOICES';
                               const hasColorCode = choice.colorCode;
                               return (
                                 <ProductModifiers.Choice
@@ -602,12 +602,12 @@ const ProductInfo = ({
                                           title={value}
                                           className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                             isSelected
-                                              ? "border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30"
-                                              : "border-white/30 hover:border-white/60 hover:scale-105"
+                                              ? 'border-teal-400 shadow-lg scale-110 ring-2 ring-teal-500/30'
+                                              : 'border-white/30 hover:border-white/60 hover:scale-105'
                                           }`}
                                           style={{
                                             backgroundColor:
-                                              colorCode || "#000000",
+                                              colorCode || '#000000',
                                           }}
                                         />
                                       ) : (
@@ -615,8 +615,8 @@ const ProductInfo = ({
                                           onClick={onSelect}
                                           className={`px-4 py-2 rounded-lg border transition-all ${
                                             isSelected
-                                              ? "bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30"
-                                              : "bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+                                              ? 'bg-teal-500 border-teal-500 text-white ring-2 ring-teal-500/30'
+                                              : 'bg-white/5 border-white/20 text-white hover:border-white/40 hover:bg-white/10'
                                           }`}
                                         >
                                           {value}
@@ -711,9 +711,9 @@ const ProductInfo = ({
                       Adding...
                     </span>
                   ) : !inStock ? (
-                    "Out of Stock"
+                    'Out of Stock'
                   ) : (
-                    "Add to Cart"
+                    'Add to Cart'
                   )}
                 </button>
                 <button
@@ -726,8 +726,8 @@ const ProductInfo = ({
                       await onAddToCart();
                       await cartService.proceedToCheckout();
                     } catch (error) {
-                      console.error("Buy now failed:", error);
-                      window.location.href = "/cart";
+                      console.error('Buy now failed:', error);
+                      window.location.href = '/cart';
                     }
                   }}
                   disabled={!canAddToCart || isLoading}
@@ -757,17 +757,17 @@ const ProductInfo = ({
                       Processing...
                     </span>
                   ) : !inStock ? (
-                    "Out of Stock"
+                    'Out of Stock'
                   ) : (
-                    "Buy Now"
+                    'Buy Now'
                   )}
                 </button>
               </div>
               <SocialSharing.Platforms
-                url={typeof window !== "undefined" ? window.location.href : ""}
+                url={typeof window !== 'undefined' ? window.location.href : ''}
                 title="Check out this amazing product"
                 description="An amazing product you'll love"
-                hashtags={["product", "shop", "amazing"]}
+                hashtags={['product', 'shop', 'amazing']}
               >
                 {({ shareTwitter, shareFacebook, shareLinkedIn, copyLink }) => {
                   const [copySuccess, setCopySuccess] = useState(false);
@@ -899,7 +899,7 @@ const ProductInfo = ({
             </h3>
             {isLoading && (
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map((item) => (
+                {[1, 2, 3, 4].map(item => (
                   <div
                     key={item}
                     className="bg-white/5 rounded-lg p-4 border border-white/10 animate-pulse"
@@ -1109,7 +1109,7 @@ export default function ProductDetailPage({
                         </h3>
                         <div className="flex items-center justify-between">
                           <span className="text-white/80">
-                            {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
+                            {itemCount} item{itemCount !== 1 ? 's' : ''} in cart
                           </span>
                           <span className="text-xl font-bold text-white">
                             {subtotal}

@@ -1,7 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { BookingServicesServiceDefinition } from "../services/booking-services-service";
-import { services } from "@wix/bookings";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { BookingServicesServiceDefinition } from '../services/booking-services-service';
+import { services } from '@wix/bookings';
 
 /**
  * Props for ServicesList headless component
@@ -103,24 +103,24 @@ export const ServiceListItem = (props: ServiceListItemProps) => {
   const { service } = props;
 
   // Format price
-  let price = "Contact for pricing";
-  if (service.payment?.rateType === "FIXED" && service.payment.fixed?.price) {
+  let price = 'Contact for pricing';
+  if (service.payment?.rateType === 'FIXED' && service.payment.fixed?.price) {
     const fixedPrice = service.payment.fixed.price;
     price = `${fixedPrice.currency} ${
       fixedPrice.formattedValue || fixedPrice.value
     }`;
   } else if (
-    service.payment?.rateType === "VARIED" &&
+    service.payment?.rateType === 'VARIED' &&
     service.payment.varied?.defaultPrice
   ) {
     const variedPrice = service.payment.varied.defaultPrice;
     price = `${variedPrice.currency} ${
       variedPrice.formattedValue || variedPrice.value
     }`;
-  } else if (service.payment?.rateType === "NO_FEE") {
-    price = "Free";
+  } else if (service.payment?.rateType === 'NO_FEE') {
+    price = 'Free';
   } else if (
-    service.payment?.rateType === "CUSTOM" &&
+    service.payment?.rateType === 'CUSTOM' &&
     service.payment.custom?.description
   ) {
     price = service.payment.custom.description;
@@ -136,19 +136,19 @@ export const ServiceListItem = (props: ServiceListItemProps) => {
   // Get locations
   const locations =
     service.locations?.map(
-      (loc) =>
+      loc =>
         loc.business?.name ||
         loc.custom?.address?.formatted ||
         loc.calculatedAddress?.formatted ||
-        "Location TBD"
+        'Location TBD'
     ) || [];
 
   return props.children({
-    serviceId: service._id || "",
-    name: service.name || "Untitled Service",
+    serviceId: service._id || '',
+    name: service.name || 'Untitled Service',
     description: service.description || undefined,
     tagLine: service.tagLine || undefined,
-    type: service.type || "APPOINTMENT",
+    type: service.type || 'APPOINTMENT',
     canBookOnline: service.onlineBooking?.enabled === true,
     duration,
     price,
@@ -195,8 +195,8 @@ export const ServicesHeader = (props: ServicesHeaderProps) => {
 
   const summaryText =
     !isLoading && hasServices
-      ? `${totalServices} service${totalServices !== 1 ? "s" : ""} available`
-      : "";
+      ? `${totalServices} service${totalServices !== 1 ? 's' : ''} available`
+      : '';
 
   return props.children({
     totalServices,

@@ -13,7 +13,10 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:install": "playwright install chromium"
+    "test:install": "playwright install chromium",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "lint": "npm run format:check && astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -57,6 +60,8 @@
     "@types/lodash.kebabcase": "^4.1.9",
     "@wix/cli": "^1.1.95",
     "lodash.kebabcase": "^4.1.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.7"
   }
 }

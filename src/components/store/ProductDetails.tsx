@@ -1,15 +1,15 @@
-import { MediaGallery, WixMediaImage } from "../../headless/media/components";
+import { MediaGallery, WixMediaImage } from '../../headless/media/components';
 import {
   Product,
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
-} from "../../headless/store/components";
-import { SelectedVariantServiceDefinition } from "../../headless/store/services/selected-variant-service";
-import { ProductActionButtons } from "./ProductActionButtons";
-import { CurrentCart } from "../../headless/ecom/components";
-import { useService } from "@wix/services-manager-react";
-import { useNavigation } from "../NavigationContext";
+} from '../../headless/store/components';
+import { SelectedVariantServiceDefinition } from '../../headless/store/services/selected-variant-service';
+import { ProductActionButtons } from './ProductActionButtons';
+import { CurrentCart } from '../../headless/ecom/components';
+import { useService } from '@wix/services-manager-react';
+import { useNavigation } from '../NavigationContext';
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -26,7 +26,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
         <textarea
           data-testid="product-modifier-free-text-input"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           placeholder={
             freeTextPlaceholder || `Enter custom ${name.toLowerCase()}...`
           }
@@ -37,7 +37,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
         {maxChars && (
           <div
             className={`text-xs text-right ${
-              isOverLimit ? "text-status-error" : "text-content-muted"
+              isOverLimit ? 'text-status-error' : 'text-content-muted'
             }`}
           >
             {charCount}/{maxChars} characters
@@ -50,7 +50,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 
 export default function ProductDetails({
   setShowSuccessMessage = () => {},
-  cartUrl = "/cart",
+  cartUrl = '/cart',
   isQuickView = false,
 }: {
   setShowSuccessMessage?: (show: boolean) => void;
@@ -171,8 +171,8 @@ export default function ProductDetails({
                         onClick={onSelect}
                         className={`aspect-square bg-surface-primary rounded-lg border cursor-pointer transition-all ${
                           isActive
-                            ? "border-brand-medium ring-2 ring-brand-light"
-                            : "border-brand-subtle hover:border-brand-light"
+                            ? 'border-brand-medium ring-2 ring-brand-light'
+                            : 'border-brand-subtle hover:border-brand-light'
                         }`}
                       >
                         {src ? (
@@ -228,7 +228,7 @@ export default function ProductDetails({
                     {price}
                   </div>
                   {compareAtPrice &&
-                    parseFloat(compareAtPrice.replace(/[^\d.]/g, "")) > 0 && (
+                    parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 && (
                       <div className="text-lg font-medium text-content-faded line-through">
                         {compareAtPrice}
                       </div>
@@ -299,7 +299,7 @@ export default function ProductDetails({
                                     // Check if this is a color option
                                     const isColorOption = String(name)
                                       .toLowerCase()
-                                      .includes("color");
+                                      .includes('color');
                                     const hasColorCode = choice.colorCode;
 
                                     return (
@@ -333,19 +333,19 @@ export default function ProductDetails({
                                                   title={value}
                                                   className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                                     isSelected
-                                                      ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
-                                                      : "border-color-swatch hover:border-color-swatch-hover hover:scale-105"
+                                                      ? 'border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30'
+                                                      : 'border-color-swatch hover:border-color-swatch-hover hover:scale-105'
                                                   } ${
                                                     !isInStock &&
                                                     !isPreOrderEnabled &&
                                                     !isQuickView
-                                                      ? "grayscale"
-                                                      : ""
+                                                      ? 'grayscale'
+                                                      : ''
                                                   }`}
                                                   style={{
                                                     backgroundColor:
                                                       choice.colorCode ||
-                                                      "var(--theme-text-content-40)",
+                                                      'var(--theme-text-content-40)',
                                                   }}
                                                 />
                                                 {!isInStock &&
@@ -378,8 +378,8 @@ export default function ProductDetails({
                                                     onClick={onSelect}
                                                     className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                                       isSelected
-                                                        ? "product-option-active"
-                                                        : "product-option-inactive"
+                                                        ? 'product-option-active'
+                                                        : 'product-option-inactive'
                                                     }`}
                                                   >
                                                     {value}
@@ -460,13 +460,13 @@ export default function ProductDetails({
                             data-testid="product-modifiers"
                           >
                             <h4 className="text-md font-medium text-content-primary">
-                              {name}{" "}
+                              {name}{' '}
                               {mandatory && (
                                 <span className="text-status-error">*</span>
                               )}
                             </h4>
 
-                            {type === "SWATCH_CHOICES" && hasChoices && (
+                            {type === 'SWATCH_CHOICES' && hasChoices && (
                               <div className="flex flex-wrap gap-2">
                                 {choices.map((choice: any) => (
                                   <ProductModifiers.Choice
@@ -485,13 +485,13 @@ export default function ProductDetails({
                                         onClick={onSelect}
                                         className={`w-10 h-10 rounded-full border-4 transition-all duration-200 ${
                                           isSelected
-                                            ? "border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30"
-                                            : "border-brand-light hover:border-brand-medium hover:scale-105"
+                                            ? 'border-brand-primary shadow-lg scale-110 ring-2 ring-brand-primary/30'
+                                            : 'border-brand-light hover:border-brand-medium hover:scale-105'
                                         }`}
                                         style={{
                                           backgroundColor:
                                             colorCode ||
-                                            "var(--theme-text-content-40)",
+                                            'var(--theme-text-content-40)',
                                         }}
                                         title={value}
                                       />
@@ -501,7 +501,7 @@ export default function ProductDetails({
                               </div>
                             )}
 
-                            {type === "TEXT_CHOICES" && hasChoices && (
+                            {type === 'TEXT_CHOICES' && hasChoices && (
                               <div className="flex flex-wrap gap-2">
                                 {choices.map((choice: any) => (
                                   <ProductModifiers.Choice
@@ -515,8 +515,8 @@ export default function ProductDetails({
                                         onClick={onSelect}
                                         className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
                                           isSelected
-                                            ? "product-option-active"
-                                            : "product-option-inactive"
+                                            ? 'product-option-active'
+                                            : 'product-option-inactive'
                                         }`}
                                       >
                                         {value}
@@ -527,7 +527,7 @@ export default function ProductDetails({
                               </div>
                             )}
 
-                            {type === "FREE_TEXT" && (
+                            {type === 'FREE_TEXT' && (
                               <>
                                 {mandatory ? (
                                   <FreeTextInput
@@ -678,15 +678,15 @@ export default function ProductDetails({
                     <div
                       className={`w-3 h-3 rounded-full ${
                         inStock || isPreOrderEnabled
-                          ? "status-dot-success"
-                          : "status-dot-danger"
+                          ? 'status-dot-success'
+                          : 'status-dot-danger'
                       }`}
                     ></div>
                     <span
                       className={`text-sm ${
                         inStock || isPreOrderEnabled
-                          ? "text-status-success"
-                          : "text-status-error"
+                          ? 'text-status-success'
+                          : 'text-status-error'
                       }`}
                     >
                       {status}
@@ -713,11 +713,11 @@ export default function ProductDetails({
                   <div className="space-y-3 text-content-secondary">
                     <div className="flex justify-between">
                       <span>SKU:</span>
-                      <span>{sku ? sku : "N/A"}</span>
+                      <span>{sku ? sku : 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Weight:</span>
-                      <span>{weight ? weight : "N/A"}</span>
+                      <span>{weight ? weight : 'N/A'}</span>
                     </div>
                   </div>
                 </div>
@@ -740,7 +740,7 @@ export default function ProductDetails({
                     </h3>
                     <div className="flex items-center justify-between">
                       <span className="text-content-secondary">
-                        {itemCount} item{itemCount !== 1 ? "s" : ""} in cart
+                        {itemCount} item{itemCount !== 1 ? 's' : ''} in cart
                       </span>
                       <span className="text-xl font-bold text-content-primary">
                         {subtotal}

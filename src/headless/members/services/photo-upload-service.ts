@@ -2,13 +2,13 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { CurrentMemberServiceDefinition } from "./current-member-service";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { CurrentMemberServiceDefinition } from './current-member-service';
 
 export interface UploadState {
-  type: "idle" | "loading" | "success" | "error";
+  type: 'idle' | 'loading' | 'success' | 'error';
   message: string;
   progress?: number;
 }
@@ -26,7 +26,7 @@ export interface PhotoUploadServiceAPI {
 }
 
 export const PhotoUploadServiceDefinition =
-  defineService<PhotoUploadServiceAPI>("photoUpload");
+  defineService<PhotoUploadServiceAPI>('photoUpload');
 
 export const PhotoUploadService = implementService.withConfig<{
   maxFileSize?: number;
@@ -40,29 +40,29 @@ export const PhotoUploadService = implementService.withConfig<{
 
   const selectedFile: Signal<File | null> = signalsService.signal(null as any);
   const uploadState: Signal<UploadState> = signalsService.signal({
-    type: "idle" as const,
-    message: "",
+    type: 'idle' as const,
+    message: '',
   } as any);
   const dragOver: Signal<boolean> = signalsService.signal(false as any);
   const previewUrl: Signal<string | null> = signalsService.signal(null as any);
 
   const maxFileSize = config.maxFileSize || 10 * 1024 * 1024; // 10MB default
   const allowedTypes = config.allowedTypes || [
-    "image/jpeg",
-    "image/png",
-    "image/gif",
+    'image/jpeg',
+    'image/png',
+    'image/gif',
   ];
 
   const validateFile = (file: File): { isValid: boolean; error?: string } => {
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith('image/')) {
       return {
         isValid: false,
-        error: "Please select an image file (JPG, PNG, GIF)",
+        error: 'Please select an image file (JPG, PNG, GIF)',
       };
     }
 
     if (!allowedTypes.includes(file.type)) {
-      return { isValid: false, error: "File type not supported" };
+      return { isValid: false, error: 'File type not supported' };
     }
 
     if (file.size > maxFileSize) {
@@ -80,13 +80,13 @@ export const PhotoUploadService = implementService.withConfig<{
     const validation = validateFile(file);
 
     if (!validation.isValid) {
-      uploadState.set({ type: "error", message: validation.error! });
+      uploadState.set({ type: 'error', message: validation.error! });
       return;
     }
 
     selectedFile.set(file);
     previewUrl.set(URL.createObjectURL(file));
-    uploadState.set({ type: "idle", message: "" });
+    uploadState.set({ type: 'idle', message: '' });
   };
 
   const clearFile = () => {
@@ -97,7 +97,7 @@ export const PhotoUploadService = implementService.withConfig<{
 
     selectedFile.set(null);
     previewUrl.set(null);
-    uploadState.set({ type: "idle", message: "" });
+    uploadState.set({ type: 'idle', message: '' });
   };
 
   const uploadPhoto = async (): Promise<void> => {
@@ -105,26 +105,26 @@ export const PhotoUploadService = implementService.withConfig<{
     if (!file) return;
 
     try {
-      uploadState.set({ type: "loading", message: "Uploading photo..." });
+      uploadState.set({ type: 'loading', message: 'Uploading photo...' });
 
       const formData = new FormData();
-      formData.append("photo", file);
+      formData.append('photo', file);
 
       const result = await config.photoUploadAstroActions.uploadPhoto(formData);
 
       uploadState.set({
-        type: "success",
-        message: result.message || "Photo updated successfully!",
+        type: 'success',
+        message: result.message || 'Photo updated successfully!',
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       // Refresh current member data to update profile photo reactively
       await currentMemberService.refreshCurrentMember();
     } catch (error: any) {
       uploadState.set({
-        type: "error",
-        message: error.message || "Upload failed. Please try again.",
+        type: 'error',
+        message: error.message || 'Upload failed. Please try again.',
       });
     }
   };
@@ -149,11 +149,11 @@ export const PhotoUploadService = implementService.withConfig<{
 export async function loadPhotoUploadServiceConfig(): Promise<
   Omit<
     ServiceFactoryConfig<typeof PhotoUploadService>,
-    "photoUploadAstroActions"
+    'photoUploadAstroActions'
   >
 > {
   return {
     maxFileSize: 10 * 1024 * 1024, // 10MB
-    allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+    allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
   };
 }

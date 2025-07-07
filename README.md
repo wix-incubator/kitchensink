@@ -1,4 +1,4 @@
-# Wix Kitchensink
+npm # Wix Kitchensink
 
 A comprehensive showcase of Wix platform features with working implementations, interactive examples, and comprehensive documentation. Built with Astro, React, and TypeScript.
 
@@ -70,6 +70,7 @@ This project uses a unique **Client-Side Services & Headless Components** archit
 The `/react-router` page demonstrates how to implement a single-page application using React Router for client-side navigation. This implementation includes:
 
 ### Features
+
 - **Client-side routing** using React Router DOM
 - **Nested routes** under `/react-router` base path:
   - `/react-router/store` - Product list with filters and search
@@ -81,16 +82,18 @@ The `/react-router` page demonstrates how to implement a single-page application
 - **Error boundaries** and loading states
 
 ### Route Structure
+
 ```
 /react-router/
 ├── store/          # Product catalog and filtering
-├── products/:slug  # Individual product details  
+├── products/:slug  # Individual product details
 └── cart/           # Shopping cart and checkout
 ```
 
 ### Key Implementation Details
 
 #### **Architecture**
+
 - **Single Astro page** (`/react-router`) with `client:only="react"` directive
 - **React Router's BrowserRouter** with `basename="/react-router"`
 - **WixServicesProvider** wrapping all routes for headless component functionality
@@ -98,11 +101,13 @@ The `/react-router` page demonstrates how to implement a single-page application
 - **Conditional navigation** with React Router Link components for internal routing
 
 #### **Component Adaptations**
+
 - **CartRouter component**: React Router-compatible version of Cart with Link navigation
 - **ProductDetails enhancement**: Accepts `cartUrl` prop for flexible cart navigation
 - **ProductList integration**: Uses `productPageRoute` prop for correct product links
 
 #### **Error Handling**
+
 - **Loading fallback** while React Router initializes
 - **404 handling** with automatic redirects to store
 - **Product not found** with user-friendly error messages
@@ -111,6 +116,7 @@ The `/react-router` page demonstrates how to implement a single-page application
 ### Usage
 
 Visit `/react-router` to experience the full single-page application with:
+
 1. **Browse products** in the store section
 2. **View product details** with full variant selection
 3. **Add items to cart** and manage quantities
@@ -133,6 +139,39 @@ src/
 ├── layouts/                 # Layout components
 └── styles/                  # Global styles
 ```
+
+## Code Quality & Formatting
+
+This project uses [Prettier](https://prettier.io/) for consistent code formatting across all files.
+
+### Available Commands
+
+```bash
+# Check if files are formatted correctly
+npm run format:check
+
+# Auto-format all files in src/
+npm run format
+
+# Run all code quality checks (formatting + Astro check)
+npm run lint
+```
+
+### Configuration
+
+- **Prettier config**: `.prettierrc` - Standard formatting rules with single quotes and 2-space indentation
+- **Prettier ignore**: `.prettierignore` - Excludes build outputs, dependencies, and generated files
+- **Astro support**: Includes `prettier-plugin-astro` for proper .astro file formatting
+
+### CI/CD Integration
+
+The GitHub Actions workflow automatically checks code formatting on every push and pull request. All code must pass Prettier formatting checks before merging.
+
+### Development Workflow
+
+1. **Before committing**: Run `npm run format` to ensure consistent formatting
+2. **Pre-commit check**: Run `npm run format:check` to verify formatting
+3. **Full quality check**: Run `npm run lint` to check both formatting and Astro validation
 
 ## Contributing
 

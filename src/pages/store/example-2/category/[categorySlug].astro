@@ -1,11 +1,11 @@
 ---
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import StoreCollectionPage from "../../../../react-pages/store/example-2/index";
-import { loadCollectionServiceConfig } from "../../../../headless/store/services/collection-service";
-import { loadCurrentCartServiceConfig } from "../../../../headless/ecom/services/current-cart-service";
-import { loadCategoriesConfig } from "../../../../headless/store/services/category-service";
-import { loadSEOTagsServiceConfig } from "../../../../headless/seo/services/seo-tags-service";
-import { SEO } from "../../../../headless/seo/components";
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import StoreCollectionPage from '../../../../react-pages/store/example-2/index';
+import { loadCollectionServiceConfig } from '../../../../headless/store/services/collection-service';
+import { loadCurrentCartServiceConfig } from '../../../../headless/ecom/services/current-cart-service';
+import { loadCategoriesConfig } from '../../../../headless/store/services/category-service';
+import { loadSEOTagsServiceConfig } from '../../../../headless/seo/services/seo-tags-service';
+import { SEO } from '../../../../headless/seo/components';
 
 // Get category slug from URL params
 const { categorySlug } = Astro.params;
@@ -30,10 +30,10 @@ const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
 
 // If category not found, return 404
 if (!selectedCategory) {
-  return Astro.redirect("/404");
+  return Astro.redirect('/404');
 }
 
-const categoryName = selectedCategory?.name || "";
+const categoryName = selectedCategory?.name || '';
 
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
@@ -42,14 +42,14 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     seoData: {
       tags: [
         {
-          type: "title",
+          type: 'title',
           children: `Store Example 2 - ${categoryName}`,
         },
         {
-          type: "meta",
+          type: 'meta',
           props: {
             content: `Browse our ${categoryName} products with modern card layout`,
-            name: "description",
+            name: 'description',
           },
         },
       ],

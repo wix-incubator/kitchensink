@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { services } from "@wix/bookings";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { services } from '@wix/bookings';
 
 export interface BookingServicesServiceAPI {
   services: Signal<services.Service[]>;
@@ -18,11 +18,11 @@ export interface BookingServicesServiceAPI {
 }
 
 export const BookingServicesServiceDefinition =
-  defineService<BookingServicesServiceAPI>("bookingServicesService");
+  defineService<BookingServicesServiceAPI>('bookingServicesService');
 
 export const BookingServicesService = implementService.withConfig<{
   initialServices?: services.Service[];
-  serviceType?: "APPOINTMENT" | "CLASS" | "COURSE";
+  serviceType?: 'APPOINTMENT' | 'CLASS' | 'COURSE';
 }>()(BookingServicesServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
@@ -52,20 +52,20 @@ export const BookingServicesService = implementService.withConfig<{
 
       // Filter by service type if specified
       if (config.serviceType) {
-        query = query.eq("type", config.serviceType);
+        query = query.eq('type', config.serviceType);
       }
 
       // Only show services with online booking enabled
-      query = query.eq("onlineBooking.enabled", true);
+      query = query.eq('onlineBooking.enabled', true);
 
       // Hide hidden services
-      query = query.eq("hidden", false);
+      query = query.eq('hidden', false);
 
       const result = await query.find();
       servicesSignal.set(result.items || []);
     } catch (err) {
-      console.error("Failed to load services:", err);
-      error.set("Failed to load services");
+      console.error('Failed to load services:', err);
+      error.set('Failed to load services');
     } finally {
       isLoading.set(false);
     }
@@ -87,17 +87,17 @@ export const BookingServicesService = implementService.withConfig<{
 });
 
 export async function loadBookingServicesServiceConfig(
-  serviceType?: "APPOINTMENT" | "CLASS" | "COURSE"
+  serviceType?: 'APPOINTMENT' | 'CLASS' | 'COURSE'
 ): Promise<ServiceFactoryConfig<typeof BookingServicesService>> {
   try {
     // Load initial services on the server
     let query = services.queryServices();
 
     if (serviceType) {
-      query = query.eq("type", serviceType);
+      query = query.eq('type', serviceType);
     }
 
-    query = query.eq("onlineBooking.enabled", true).eq("hidden", false);
+    query = query.eq('onlineBooking.enabled', true).eq('hidden', false);
 
     const result = await query.find();
 
@@ -106,7 +106,7 @@ export async function loadBookingServicesServiceConfig(
       serviceType,
     };
   } catch (error) {
-    console.error("Failed to load initial services:", error);
+    console.error('Failed to load initial services:', error);
     return {
       initialServices: [],
       serviceType,

@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { productsV3 } from "@wix/stores";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { productsV3 } from '@wix/stores';
 
 // Helper function to extract scalar aggregation values
 const extractScalarAggregationValue = (
@@ -28,7 +28,7 @@ const buildCategoryFilter = (categoryId?: string) => {
 
   return {
     visible: true,
-    "allCategoriesInfo.categories": {
+    'allCategoriesInfo.categories': {
       $matchItems: [{ _id: { $in: [categoryId] } }],
     },
   };
@@ -47,7 +47,7 @@ export interface CatalogPriceRangeServiceAPI {
 }
 
 export const CatalogPriceRangeServiceDefinition =
-  defineService<CatalogPriceRangeServiceAPI>("catalogPriceRange");
+  defineService<CatalogPriceRangeServiceAPI>('catalogPriceRange');
 
 export const CatalogPriceRangeService = implementService.withConfig<{}>()(
   CatalogPriceRangeServiceDefinition,
@@ -75,16 +75,16 @@ export const CatalogPriceRangeService = implementService.withConfig<{}>()(
         const aggregationRequest = {
           aggregations: [
             {
-              name: "minPrice",
-              fieldPath: "actualPriceRange.minValue.amount",
-              type: "SCALAR" as const,
-              scalar: { type: "MIN" as const },
+              name: 'minPrice',
+              fieldPath: 'actualPriceRange.minValue.amount',
+              type: 'SCALAR' as const,
+              scalar: { type: 'MIN' as const },
             },
             {
-              name: "maxPrice",
-              fieldPath: "actualPriceRange.maxValue.amount",
-              type: "SCALAR" as const,
-              scalar: { type: "MAX" as const },
+              name: 'maxPrice',
+              fieldPath: 'actualPriceRange.maxValue.amount',
+              type: 'SCALAR' as const,
+              scalar: { type: 'MAX' as const },
             },
           ],
           filter: buildCategoryFilter(categoryId),
@@ -98,11 +98,11 @@ export const CatalogPriceRangeService = implementService.withConfig<{}>()(
 
         const minPrice = extractScalarAggregationValue(
           aggregationResponse,
-          "minPrice"
+          'minPrice'
         );
         const maxPrice = extractScalarAggregationValue(
           aggregationResponse,
-          "maxPrice"
+          'maxPrice'
         );
 
         // Only set price range if we found valid prices
@@ -120,9 +120,9 @@ export const CatalogPriceRangeService = implementService.withConfig<{}>()(
           catalogPriceRange.set(null);
         }
       } catch (err) {
-        console.error("Failed to load catalog price range:", err);
+        console.error('Failed to load catalog price range:', err);
         error.set(
-          err instanceof Error ? err.message : "Failed to load price range"
+          err instanceof Error ? err.message : 'Failed to load price range'
         );
 
         // Don't set fallback values - let the component handle the error state

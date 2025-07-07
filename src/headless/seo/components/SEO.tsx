@@ -1,10 +1,10 @@
-import type { ServiceAPI } from "@wix/services-manager/types";
+import type { ServiceAPI } from '@wix/services-manager/types';
 import {
   SEOTagsServiceDefinition,
   type SEOTagsServiceConfig,
-} from "../services/seo-tags-service";
-import type { seoTags } from "@wix/seo";
-import { useService } from "@wix/services-manager-react";
+} from '../services/seo-tags-service';
+import type { seoTags } from '@wix/seo';
+import { useService } from '@wix/services-manager-react';
 
 /**
  * Renders SEO tags (title, meta, link, script) in the document head using a provided SEO service configuration.
@@ -34,33 +34,33 @@ export interface TagsProps {
 }
 
 export function Tags({ seoTagsServiceConfig }: TagsProps): React.ReactNode {
-  const dataAttr = { "wix-seo-tags": "true" };
+  const dataAttr = { 'wix-seo-tags': 'true' };
   return seoTagsServiceConfig.tags
-    .filter((tag) => !tag.disabled)
+    .filter(tag => !tag.disabled)
     .map((tag, index) => {
-      if (tag.type === "title") {
+      if (tag.type === 'title') {
         return (
           <title key={`title-${index}`} {...dataAttr}>
             {tag.children}
           </title>
         );
       }
-      if (tag.type === "meta") {
+      if (tag.type === 'meta') {
         return <meta key={`meta-${index}`} {...tag.props} {...dataAttr} />;
       }
 
-      if (tag.type === "link") {
+      if (tag.type === 'link') {
         return <link key={`link-${index}`} {...tag.props} {...dataAttr} />;
       }
 
-      if (tag.type === "script") {
+      if (tag.type === 'script') {
         return (
           <script
             key={`script-${index}`}
             {...tag.props}
             {...tag.meta}
             {...dataAttr}
-            dangerouslySetInnerHTML={{ __html: tag.children || "" }}
+            dangerouslySetInnerHTML={{ __html: tag.children || '' }}
           />
         );
       }

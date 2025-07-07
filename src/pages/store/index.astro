@@ -1,25 +1,25 @@
 ---
-import { SEO } from "../../headless/seo/components";
-import { loadSEOTagsServiceConfig } from "../../headless/seo/services/seo-tags-service";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import StoreIntroPage from "../../react-pages/store/index";
+import { SEO } from '../../headless/seo/components';
+import { loadSEOTagsServiceConfig } from '../../headless/seo/services/seo-tags-service';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StoreIntroPage from '../../react-pages/store/index';
 
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
   itemData: {
-    pageName: "Wix Stores",
+    pageName: 'Wix Stores',
     seoData: {
       tags: [
         {
-          type: "title",
-          children: "Wix Stores - E-commerce Solutions",
+          type: 'title',
+          children: 'Wix Stores - E-commerce Solutions',
         },
         {
-          type: "meta",
+          type: 'meta',
           props: {
-            name: "description",
+            name: 'description',
             content:
-              "Explore Wix Stores functionality with multiple implementation examples. Browse products, manage cart, and handle e-commerce workflows with our comprehensive store system.",
+              'Explore Wix Stores functionality with multiple implementation examples. Browse products, manage cart, and handle e-commerce workflows with our comprehensive store system.',
           },
         },
       ],

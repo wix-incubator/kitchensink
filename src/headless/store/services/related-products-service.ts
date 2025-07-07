@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { productsV3 } from "@wix/stores";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { productsV3 } from '@wix/stores';
 
 export interface RelatedProductsServiceAPI {
   relatedProducts: Signal<productsV3.V3Product[]>;
@@ -18,7 +18,7 @@ export interface RelatedProductsServiceAPI {
 }
 
 export const RelatedProductsServiceDefinition =
-  defineService<RelatedProductsServiceAPI>("relatedProducts");
+  defineService<RelatedProductsServiceAPI>('relatedProducts');
 
 export const RelatedProductsService = implementService.withConfig<{
   productId: string;
@@ -40,7 +40,7 @@ export const RelatedProductsService = implementService.withConfig<{
     error.set(null);
 
     try {
-      let relatedQuery = productsV3.queryProducts().ne("_id", productId);
+      let relatedQuery = productsV3.queryProducts().ne('_id', productId);
 
       const relatedResult = await relatedQuery.limit(limit).find();
 
@@ -48,7 +48,7 @@ export const RelatedProductsService = implementService.withConfig<{
       hasRelatedProducts.set((relatedResult.items || []).length > 0);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to load related products";
+        err instanceof Error ? err.message : 'Failed to load related products';
       error.set(errorMessage);
       relatedProducts.set([]);
       hasRelatedProducts.set(false);

@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../headless/bookings/services/booking-services-service";
-import { BookingServices } from "../../../headless/bookings/components";
-import { WixMediaImage } from "../../../headless/media/components/Image";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+} from '../../../headless/bookings/services/booking-services-service';
+import { BookingServices } from '../../../headless/bookings/components';
+import { WixMediaImage } from '../../../headless/media/components/Image';
+import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../../components/DocsMode';
 
 interface BookingsServicesPageProps {
   bookingServicesConfig: any;
@@ -88,7 +88,7 @@ const ServicesListSection = () => {
                     No Services Available
                   </h3>
                   <p className="text-white/70 mb-4">
-                    No services found. Click{" "}
+                    No services found. Click{' '}
                     <a
                       href="https://manage.wix.com/account/site-selector?actionUrl=https%3A%2F%2Fmanage.wix.com%2Fdashboard%2F%7BmetaSiteId%7D%2Fbookings%2Fservices%2Ftemplates-catalog%3Forigin%3DHeadless"
                       target="_blank"
@@ -96,7 +96,7 @@ const ServicesListSection = () => {
                       className="text-blue-400 hover:text-blue-300 underline"
                     >
                       here
-                    </a>{" "}
+                    </a>{' '}
                     to go to the business dashboard to add services.
                   </p>
                   <button

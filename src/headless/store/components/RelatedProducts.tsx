@@ -1,8 +1,8 @@
-import React from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { RelatedProductsServiceDefinition } from "../services/related-products-service";
-import { productsV3 } from "@wix/stores";
+import React from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { RelatedProductsServiceDefinition } from '../services/related-products-service';
+import { productsV3 } from '@wix/stores';
 
 /**
  * Props for List headless component
@@ -49,7 +49,7 @@ export const List = (props: ListProps) => {
       service.hasRelatedProducts.subscribe(setHasProducts),
     ];
 
-    return () => unsubscribes.forEach((fn) => fn());
+    return () => unsubscribes.forEach(fn => fn());
   }, [service]);
 
   return props.children({
@@ -97,24 +97,24 @@ export interface ItemRenderProps {
 export const Item = (props: ItemProps) => {
   const { product } = props;
 
-  const title = product.name || "Unknown Product";
+  const title = product.name || 'Unknown Product';
   // Use actual v3 media structure - image is directly a string URL
   const image = product.media?.main?.image || null;
   // Create formatted price from raw amount since formattedAmount may not be available
   const rawPrice = product.actualPriceRange?.minValue?.amount;
-  const price = rawPrice ? `$${rawPrice}` : "Price unavailable";
+  const price = rawPrice ? `$${rawPrice}` : 'Price unavailable';
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === "IN_STOCK" ||
-    availabilityStatus === "PARTIALLY_OUT_OF_STOCK";
+    availabilityStatus === 'IN_STOCK' ||
+    availabilityStatus === 'PARTIALLY_OUT_OF_STOCK';
   const href = `/store/example-2/${product.slug}`;
   const description =
-    typeof product.description === "string" ? product.description : "";
+    typeof product.description === 'string' ? product.description : '';
 
   const handleQuickAdd = () => {
     // This would typically add the product to cart
     // For now, we'll just log it
-    console.log("Quick add:", product.name);
+    console.log('Quick add:', product.name);
   };
 
   return props.children({

@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode } from 'react';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../../headless/ecom/services/current-cart-service";
-import { CurrentCart } from "../../headless/ecom/components";
-import { WixMediaImage } from "../../headless/media/components";
+} from '../../headless/ecom/services/current-cart-service';
+import { CurrentCart } from '../../headless/ecom/components';
+import { WixMediaImage } from '../../headless/media/components';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
@@ -14,14 +14,14 @@ const CouponFormMini = ({
   onApply: (code: string) => void;
   isLoading: boolean;
 }) => {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
       onApply(code.trim());
-      setCode("");
+      setCode('');
     }
   };
 
@@ -42,7 +42,7 @@ const CouponFormMini = ({
         <input
           type="text"
           value={code}
-          onChange={(e) => setCode(e.target.value)}
+          onChange={e => setCode(e.target.value)}
           placeholder="Promo code"
           className="flex-1 px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none"
           disabled={isLoading}
@@ -52,7 +52,7 @@ const CouponFormMini = ({
           disabled={!code.trim() || isLoading}
           className="btn-accent px-2 py-1 disabled:opacity-50 text-content-primary text-xs font-medium rounded"
         >
-          {isLoading ? "..." : "Apply"}
+          {isLoading ? '...' : 'Apply'}
         </button>
       </div>
       <button
@@ -147,7 +147,7 @@ export function MiniCartContent() {
                         <>
                           {hasItems ? (
                             <div className="space-y-4">
-                              {items.map((item) => (
+                              {items.map(item => (
                                 <CurrentCart.Item key={item._id} item={item}>
                                   {({
                                     title,
@@ -181,7 +181,7 @@ export function MiniCartContent() {
                                                 (option, index) => {
                                                   const isColor =
                                                     typeof option.value ===
-                                                    "object";
+                                                    'object';
                                                   const text = isColor
                                                     ? (option.value as any).name
                                                     : option.value;
@@ -298,7 +298,7 @@ export function MiniCartContent() {
                           </label>
                           <textarea
                             value={notes}
-                            onChange={(e) => onNotesChange(e.target.value)}
+                            onChange={e => onNotesChange(e.target.value)}
                             placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
                             rows={2}
                             className="w-full px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none transition-colors duration-200 resize-vertical mb-4"
@@ -327,7 +327,7 @@ export function MiniCartContent() {
                                 disabled={isLoading}
                                 className="text-status-danger hover:text-status-error text-xs disabled:opacity-50"
                               >
-                                {isLoading ? "Removing..." : "Remove"}
+                                {isLoading ? 'Removing...' : 'Remove'}
                               </button>
                             </div>
                           ) : (
@@ -336,7 +336,7 @@ export function MiniCartContent() {
                               isLoading={isLoading}
                             />
                           )}
-                          {error && error.includes("coupon") && (
+                          {error && error.includes('coupon') && (
                             <div className="bg-status-danger-light border border-status-danger rounded p-2 mt-2">
                               <p className="text-status-danger text-xs">
                                 {error}
@@ -375,8 +375,8 @@ export function MiniCartContent() {
                             <div className="space-y-2">
                               <div className="flex justify-between">
                                 <span className="text-content-secondary">
-                                  Subtotal ({itemCount}{" "}
-                                  {itemCount === 1 ? "item" : "items"})
+                                  Subtotal ({itemCount}{' '}
+                                  {itemCount === 1 ? 'item' : 'items'})
                                 </span>
                                 <span className="text-content-primary font-semibold">
                                   <LoadingOrValue>{subtotal}</LoadingOrValue>

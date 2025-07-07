@@ -4,14 +4,14 @@ import {
   Route,
   Navigate,
   Link,
-} from "react-router-dom";
-import WixServicesProvider from "../../providers/WixServicesProvider";
-import Cart from "../../components/ecom/Cart";
+} from 'react-router-dom';
+import WixServicesProvider from '../../providers/WixServicesProvider';
+import Cart from '../../components/ecom/Cart';
 import {
   type NavigationComponent,
   NavigationProvider,
-} from "../../components/NavigationContext";
-import { StoreRoute, ProductDetailsRoute, GlobalCartLoader } from "./Routes";
+} from '../../components/NavigationContext';
+import { StoreRoute, ProductDetailsRoute, GlobalCartLoader } from './Routes';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
   route,

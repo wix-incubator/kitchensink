@@ -1,10 +1,10 @@
-import React from "react";
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
+import React from 'react';
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
 import {
   SocialSharingServiceDefinition,
   type SharingPlatform,
-} from "../services/social-sharing-service";
+} from '../services/social-sharing-service';
 
 /**
  * Props for Root headless component
@@ -63,7 +63,7 @@ export const Root = (props: RootProps) => {
       service.lastSharedPlatform.subscribe(setLastShared),
     ];
 
-    return () => unsubscribes.forEach((fn) => fn());
+    return () => unsubscribes.forEach(fn => fn());
   }, [service]);
 
   return props.children({
@@ -156,7 +156,7 @@ export interface PlatformsRenderProps {
  * Headless component for social sharing platforms with logic
  */
 export const Platforms = (props: PlatformsProps) => {
-  const { url, title, description = "", hashtags = [] } = props;
+  const { url, title, description = '', hashtags = [] } = props;
 
   const service = useService(SocialSharingServiceDefinition) as ServiceAPI<
     typeof SocialSharingServiceDefinition

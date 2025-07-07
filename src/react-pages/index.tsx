@@ -1,4 +1,4 @@
-import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
+import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
 
 interface HomePageProps {
   // Future server-side data can be added here
@@ -89,7 +89,7 @@ export default function HomePage(props: HomePageProps) {
               This kitchensink showcases modern headless component architecture
               with
               <span className="text-blue-300 font-semibold">
-                {" "}
+                {' '}
                 interactive documentation
               </span>
               . Activate docs mode on any page to discover components,
@@ -233,7 +233,7 @@ export default function HomePage(props: HomePageProps) {
               </div>
 
               <p className="text-xl text-white/80 mb-6 leading-relaxed">
-                Discover our innovative{" "}
+                Discover our innovative{' '}
                 <span className="text-blue-300 font-semibold">docs mode</span> -
                 click any page to highlight headless components and explore
                 their documentation in real-time.

@@ -154,7 +154,7 @@ For server-only operations, services use Astro Actions:
 // actions.ts
 export const myActions = {
   serverAction: defineAction({
-    handler: async (input) => {
+    handler: async input => {
       // Server-only logic using auth.elevate etc.
       return await processOnServer(input);
     },
@@ -178,11 +178,11 @@ export const MyService = implementService.withConfig<{
 All services must be registered with a `ServicesManager`:
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 
 <ServicesManagerProvider
   servicesManager={

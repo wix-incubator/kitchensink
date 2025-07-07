@@ -1,16 +1,16 @@
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { useState } from "react";
-import "../styles/theme-1.css";
+} from '@wix/services-manager';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
+import { useState } from 'react';
+import '../styles/theme-1.css';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/ecom/services/current-cart-service";
-import { KitchensinkLayout } from "../layouts/KitchensinkLayout";
-import CartContent from "../components/ecom/Cart";
+} from '../headless/ecom/services/current-cart-service';
+import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
+import CartContent from '../components/ecom/Cart';
 
 interface CartPageProps {
   data?: any;

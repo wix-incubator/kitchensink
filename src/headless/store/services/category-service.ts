@@ -1,7 +1,7 @@
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { categories } from "@wix/categories";
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { categories } from '@wix/categories';
 
 export interface CategoryServiceAPI {
   selectedCategory: Signal<string | null>;
@@ -11,7 +11,7 @@ export interface CategoryServiceAPI {
 }
 
 export const CategoryServiceDefinition =
-  defineService<CategoryServiceAPI>("category-service");
+  defineService<CategoryServiceAPI>('category-service');
 
 export interface CategoryServiceConfig {
   categories: categories.Category[];
@@ -48,7 +48,7 @@ export const CategoryService =
       };
 
       // Subscribe to category changes and handle navigation as a side effect
-      selectedCategory.subscribe((categoryId) => {
+      selectedCategory.subscribe(categoryId => {
         // Skip navigation on initial load (when service is first created)
         if (isInitialLoad) {
           isInitialLoad = false;
@@ -58,7 +58,7 @@ export const CategoryService =
         // If a navigation handler is provided, use it
         if (config.onCategoryChange) {
           const category = categoryId
-            ? config.categories.find((cat) => cat._id === categoryId) || null
+            ? config.categories.find(cat => cat._id === categoryId) || null
             : null;
 
           config.onCategoryChange(categoryId, category);
@@ -79,21 +79,21 @@ export async function loadCategoriesConfig() {
     const categoriesResponse = await categories
       .queryCategories({
         treeReference: {
-          appNamespace: "@wix/stores",
+          appNamespace: '@wix/stores',
           treeKey: null,
         },
       })
-      .eq("visible", true)
+      .eq('visible', true)
       .find();
 
     const fetchedCategories = categoriesResponse.items || [];
 
     // Sort categories to put "all-products" first, keep the rest in original order
     const allProductsCategory = fetchedCategories.find(
-      (cat) => cat.slug === "all-products"
+      cat => cat.slug === 'all-products'
     );
     const otherCategories = fetchedCategories.filter(
-      (cat) => cat.slug !== "all-products"
+      cat => cat.slug !== 'all-products'
     );
 
     const allCategories = allProductsCategory
@@ -104,7 +104,7 @@ export async function loadCategoriesConfig() {
       categories: allCategories,
     };
   } catch (error) {
-    console.warn("Failed to load categories:", error);
+    console.warn('Failed to load categories:', error);
     return {
       categories: [],
     };

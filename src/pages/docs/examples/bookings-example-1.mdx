@@ -93,7 +93,7 @@ const [servicesManager] = useState(() =>
     // Service grid rendering
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => (
+        {services.map(service => (
           <ServiceCard key={service._id} service={service} />
         ))}
       </div>
@@ -192,7 +192,7 @@ Rich service cards with comprehensive information:
               disabled={!canBookOnline}
               className="book-button"
             >
-              {canBookOnline ? "Book Now" : "Booking Unavailable"}
+              {canBookOnline ? 'Book Now' : 'Booking Unavailable'}
             </button>
           )}
         </BookingSelection.ServiceSelector>
@@ -290,7 +290,7 @@ const ServiceAutoSelector = ({ serviceId }) => {
   return (
     <BookingServices.ServicesList>
       {({ services }) => {
-        const currentService = services.find((s) => s._id === serviceId);
+        const currentService = services.find(s => s._id === serviceId);
 
         return (
           <BookingSelection.ServiceSelector services={services}>

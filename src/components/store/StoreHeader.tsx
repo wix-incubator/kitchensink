@@ -1,5 +1,5 @@
-import CategoryFilter from "./CategoryPicker";
-import SortDropdown from "./SortDropdown";
+import CategoryFilter from './CategoryPicker';
+import SortDropdown from './SortDropdown';
 
 export default function StoreHeader({ className }: { className?: string }) {
   return (

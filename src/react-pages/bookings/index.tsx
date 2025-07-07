@@ -1,6 +1,6 @@
-import React from "react";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../components/DocsMode";
+import React from 'react';
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../components/DocsMode';
 
 interface BookingsIntroPageProps {
   bookingServicesConfig: any;

@@ -1,15 +1,15 @@
 ---
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import BookNowPage from "../../../../react-pages/bookings/example-2/book/[serviceId]";
-import { loadBookingServiceServiceConfig } from "../../../../headless/bookings/services/booking-service-service";
-import { loadBookingServicesServiceConfig } from "../../../../headless/bookings/services/booking-services-service";
-import { loadBookingAvailabilityServiceConfig } from "../../../../headless/bookings/services/booking-availability-service";
-import { loadBookingSelectionServiceConfig } from "../../../../headless/bookings/services/booking-selection-service";
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BookNowPage from '../../../../react-pages/bookings/example-2/book/[serviceId]';
+import { loadBookingServiceServiceConfig } from '../../../../headless/bookings/services/booking-service-service';
+import { loadBookingServicesServiceConfig } from '../../../../headless/bookings/services/booking-services-service';
+import { loadBookingAvailabilityServiceConfig } from '../../../../headless/bookings/services/booking-availability-service';
+import { loadBookingSelectionServiceConfig } from '../../../../headless/bookings/services/booking-selection-service';
 
 const { serviceId } = Astro.params;
 
 if (!serviceId) {
-  return Astro.redirect("/bookings/example-2/services");
+  return Astro.redirect('/bookings/example-2/services');
 }
 
 // First validate that the specific service exists
@@ -17,20 +17,20 @@ const bookingServiceConfigResult =
   await loadBookingServiceServiceConfig(serviceId);
 
 // Handle 404 case
-if (bookingServiceConfigResult.type === "notFound") {
-  return Astro.rewrite("/404");
+if (bookingServiceConfigResult.type === 'notFound') {
+  return Astro.rewrite('/404');
 }
 
 // Load service configurations on the server
 const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingServicesConfig =
-  await loadBookingServicesServiceConfig("APPOINTMENT");
+  await loadBookingServicesServiceConfig('APPOINTMENT');
 const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(
   serviceId,
-  "UTC"
+  'UTC'
 );
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig(
-  "UTC",
+  'UTC',
   `/bookings/example-2/book/${serviceId}/success`
 );
 ---

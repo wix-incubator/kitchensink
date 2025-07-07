@@ -1,4 +1,4 @@
-import React, { createContext, useContext, type ReactNode } from "react";
+import React, { createContext, useContext, type ReactNode } from 'react';
 
 export interface NavigationProps {
   route: string;

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   DocsProvider,
   DocsToggleButton,
   DocsDrawer,
   DocsFloatingMenu,
-} from "../components/DocsMode";
-import { NavigationProvider } from "../components/NavigationContext";
+} from '../components/DocsMode';
+import { NavigationProvider } from '../components/NavigationContext';
 
 interface KitchensinkLayoutProps {
   children: React.ReactNode;
@@ -32,8 +32,8 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
             <div
               className={`absolute left-full top-0 ml-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl transform transition-all duration-300 ease-out ${
                 isMenuOpen
-                  ? "translate-x-0 opacity-100 pointer-events-auto"
-                  : "-translate-x-full opacity-0 pointer-events-none"
+                  ? 'translate-x-0 opacity-100 pointer-events-auto'
+                  : '-translate-x-full opacity-0 pointer-events-none'
               }`}
             >
               <div className="py-4 px-6 min-w-48">
@@ -140,7 +140,7 @@ export const KitchensinkLayout = ({ children }: KitchensinkLayoutProps) => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`w-12 h-12 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 hover:bg-white/20 ${
-                isMenuOpen ? "opacity-60 scale-95" : "opacity-100 scale-100"
+                isMenuOpen ? 'opacity-60 scale-95' : 'opacity-100 scale-100'
               }`}
             >
               <svg

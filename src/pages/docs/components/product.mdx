@@ -9,7 +9,7 @@ The `Product` namespace contains headless components for displaying basic produc
 ## Overview
 
 ```tsx
-import { Product } from "headless/store/components";
+import { Product } from 'headless/store/components';
 
 // All available components
 const { Name, Description, Details } = Product;
@@ -35,7 +35,7 @@ Displays the product name with availability checking.
 ```tsx
 <Product.Name>
   {({ name, hasName }) => (
-    <h1 className="text-3xl font-bold">{hasName ? name : "Product Name"}</h1>
+    <h1 className="text-3xl font-bold">{hasName ? name : 'Product Name'}</h1>
   )}
 </Product.Name>
 ```
@@ -105,15 +105,15 @@ Displays product technical details like SKU, weight, and dimensions.
       <dl className="space-y-2">
         <div className="flex justify-between">
           <dt className="text-gray-600">SKU:</dt>
-          <dd className="font-medium">{hasSku ? sku : "N/A"}</dd>
+          <dd className="font-medium">{hasSku ? sku : 'N/A'}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-gray-600">Weight:</dt>
-          <dd className="font-medium">{hasWeight ? weight : "N/A"}</dd>
+          <dd className="font-medium">{hasWeight ? weight : 'N/A'}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-gray-600">Dimensions:</dt>
-          <dd className="font-medium">{hasDimensions ? dimensions : "N/A"}</dd>
+          <dd className="font-medium">{hasDimensions ? dimensions : 'N/A'}</dd>
         </div>
       </dl>
     </div>
@@ -130,7 +130,7 @@ Displays product technical details like SKU, weight, and dimensions.
   <Product.Name>
     {({ name, hasName }) => (
       <h1 className="text-4xl font-bold text-gray-900 mb-4">
-        {hasName ? name : "Loading..."}
+        {hasName ? name : 'Loading...'}
       </h1>
     )}
   </Product.Name>
@@ -243,15 +243,15 @@ Displays product technical details like SKU, weight, and dimensions.
 These components depend on the `ProductService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `ProductService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   ProductServiceDefinition,
   ProductService,
-} from "../headless/store/product-service";
+} from '../headless/store/product-service';
 
 <ServicesManagerProvider
   servicesManager={
@@ -282,7 +282,7 @@ import type {
   ProductDescriptionRenderProps,
   ProductDetailsProps,
   ProductDetailsRenderProps,
-} from "../headless/store/Product";
+} from '../headless/store/Product';
 ```
 
 ## Testing
@@ -290,10 +290,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { Product } from "../headless/store/components";
+import { render } from '@testing-library/react';
+import { Product } from '../headless/store/components';
 
-test("Product.Name renders correctly", () => {
+test('Product.Name renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(
@@ -303,7 +303,7 @@ test("Product.Name renders correctly", () => {
   );
 
   expect(mockRenderProp).toHaveBeenCalledWith({
-    name: "Test Product",
+    name: 'Test Product',
     hasName: true,
   });
 });

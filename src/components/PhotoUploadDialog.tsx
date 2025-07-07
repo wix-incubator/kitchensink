@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { useRef } from 'react';
 import {
   PhotoUpload,
   CurrentMemberProfile,
-} from "../headless/members/components";
-import { FileUpload } from "../headless/media/components";
+} from '../headless/members/components';
+import { FileUpload } from '../headless/media/components';
 
 interface PhotoUploadDialogProps {
   isOpen: boolean;
@@ -21,7 +21,7 @@ export default function PhotoUploadDialog({
   return (
     <div
       className="fixed inset-0 z-50 bg-[var(--theme-bg-tooltip)] backdrop-blur-sm"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onClick={e => e.target === e.currentTarget && onClose()}
     >
       {/* Dialog Container */}
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -83,7 +83,7 @@ export default function PhotoUploadDialog({
                     ) : (
                       <div
                         className="w-32 h-32 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-xl flex items-center justify-center"
-                        style={{ background: "var(--theme-gradient-primary)" }}
+                        style={{ background: 'var(--theme-gradient-primary)' }}
                       >
                         <svg
                           className="w-16 h-16 text-[var(--theme-text-content)]"
@@ -118,8 +118,8 @@ export default function PhotoUploadDialog({
                   <div
                     className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-200 cursor-pointer group ${
                       dragOver
-                        ? "border-[var(--theme-primary-500)] bg-[var(--theme-bg-primary-10)]"
-                        : "border-[var(--theme-border-primary-30)] bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)]"
+                        ? 'border-[var(--theme-primary-500)] bg-[var(--theme-bg-primary-10)]'
+                        : 'border-[var(--theme-border-primary-30)] bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)]'
                     }`}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -197,10 +197,10 @@ export default function PhotoUploadDialog({
                       <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
                         <div className="flex items-center gap-3">
                           <div>
-                            {uploadState.type === "loading" && (
+                            {uploadState.type === 'loading' && (
                               <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
                             )}
-                            {uploadState.type === "success" && (
+                            {uploadState.type === 'success' && (
                               <svg
                                 className="w-6 h-6 text-[var(--theme-text-success)]"
                                 fill="none"
@@ -215,7 +215,7 @@ export default function PhotoUploadDialog({
                                 />
                               </svg>
                             )}
-                            {uploadState.type === "error" && (
+                            {uploadState.type === 'error' && (
                               <svg
                                 className="w-6 h-6 text-[var(--theme-text-error)]"
                                 fill="none"
@@ -258,20 +258,20 @@ export default function PhotoUploadDialog({
                       className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
                       style={{
                         background: canUpload
-                          ? "var(--theme-btn-primary)"
-                          : "var(--theme-bg-options)",
-                        cursor: !canUpload ? "not-allowed" : "pointer",
+                          ? 'var(--theme-btn-primary)'
+                          : 'var(--theme-bg-options)',
+                        cursor: !canUpload ? 'not-allowed' : 'pointer',
                       }}
-                      onMouseEnter={(e) => {
+                      onMouseEnter={e => {
                         if (canUpload) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-primary-hover)";
+                            'var(--theme-btn-primary-hover)';
                         }
                       }}
-                      onMouseLeave={(e) => {
+                      onMouseLeave={e => {
                         if (canUpload) {
                           e.currentTarget.style.background =
-                            "var(--theme-btn-primary)";
+                            'var(--theme-btn-primary)';
                         }
                       }}
                     >
@@ -289,7 +289,7 @@ export default function PhotoUploadDialog({
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                           />
                         </svg>
-                        {isUploading ? "Uploading..." : "Update Photo"}
+                        {isUploading ? 'Uploading...' : 'Update Photo'}
                       </span>
                     </button>
                     <button

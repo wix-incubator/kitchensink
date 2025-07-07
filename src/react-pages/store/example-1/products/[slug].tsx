@@ -1,35 +1,35 @@
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { PageDocsRegistration } from "../../../../components/DocsMode";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { PageDocsRegistration } from '../../../../components/DocsMode';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../../headless/ecom/services/current-cart-service";
+} from '../../../../headless/ecom/services/current-cart-service';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from "../../../../headless/store/services/product-modifiers-service";
+} from '../../../../headless/store/services/product-modifiers-service';
 import {
   ProductService,
   ProductServiceDefinition,
-} from "../../../../headless/store/services/product-service";
+} from '../../../../headless/store/services/product-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from "../../../../headless/store/services/selected-variant-service";
-import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
-import { StoreLayout } from "../../../../layouts/StoreLayout";
-import "../../../../styles/theme-1.css";
-import ProductDetails from "../../../../components/store/ProductDetails";
+} from '../../../../headless/store/services/selected-variant-service';
+import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
+import { StoreLayout } from '../../../../layouts/StoreLayout';
+import '../../../../styles/theme-1.css';
+import ProductDetails from '../../../../components/store/ProductDetails';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from "../../../../headless/media/services/media-gallery-service";
-import type { ServiceFactoryConfig } from "@wix/services-definitions";
-import { SEOTagsService } from "../../../../headless/seo/services/seo-tags-service";
+} from '../../../../headless/media/services/media-gallery-service';
+import type { ServiceFactoryConfig } from '@wix/services-definitions';
+import { SEOTagsService } from '../../../../headless/seo/services/seo-tags-service';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;

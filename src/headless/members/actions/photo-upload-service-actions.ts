@@ -1,36 +1,36 @@
-import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { members } from "@wix/members";
-import { files } from "@wix/media";
-import { auth } from "@wix/essentials";
-import { type IOAuthStrategy } from "@wix/sdk";
+import { defineAction } from 'astro:actions';
+import { z } from 'astro:schema';
+import { members } from '@wix/members';
+import { files } from '@wix/media';
+import { auth } from '@wix/essentials';
+import { type IOAuthStrategy } from '@wix/sdk';
 
 export const photoUploadAstroActions = {
   uploadPhoto: defineAction({
-    accept: "form",
+    accept: 'form',
     input: z.object({
       photo: z.instanceof(File),
     }),
     handler: async ({ photo }) => {
       // Check if user is logged in
       if (!auth.getContextualAuth<IOAuthStrategy>().loggedIn()) {
-        throw new Error("Unauthorized");
+        throw new Error('Unauthorized');
       }
 
       // Get current member
       const { member } = await members.getCurrentMember();
       if (!member?._id) {
-        throw new Error("Member not found");
+        throw new Error('Member not found');
       }
 
       // Validate file type
-      if (!photo.type.startsWith("image/")) {
-        throw new Error("File must be an image");
+      if (!photo.type.startsWith('image/')) {
+        throw new Error('File must be an image');
       }
 
       // Validate file size (10MB)
       if (photo.size > 10 * 1024 * 1024) {
-        throw new Error("File size must be less than 10MB");
+        throw new Error('File size must be less than 10MB');
       }
 
       // Generate upload URL
@@ -38,29 +38,29 @@ export const photoUploadAstroActions = {
         photo.type,
         {
           fileName: photo.name,
-          parentFolderId: "visitor-uploads",
+          parentFolderId: 'visitor-uploads',
         }
       );
 
       if (!uploadUrl) {
-        throw new Error("Failed to generate upload URL");
+        throw new Error('Failed to generate upload URL');
       }
 
       // Upload file to Wix Media
       const uploadResponse = await fetch(
-        uploadUrl + "?filename=" + photo.name,
+        uploadUrl + '?filename=' + photo.name,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": photo.type,
+            'Content-Type': photo.type,
           },
           body: photo,
         }
       );
 
       if (!uploadResponse.ok) {
-        console.error("Upload failed:", await uploadResponse.text());
-        throw new Error("Failed to upload photo");
+        console.error('Upload failed:', await uploadResponse.text());
+        throw new Error('Failed to upload photo');
       }
 
       // Get the uploaded file info
@@ -68,8 +68,8 @@ export const photoUploadAstroActions = {
       const fileId = uploadResult.file?.id;
 
       if (!fileId) {
-        console.error("No file ID returned from upload:", uploadResult);
-        throw new Error("Upload completed but no file ID received");
+        console.error('No file ID returned from upload:', uploadResult);
+        throw new Error('Upload completed but no file ID received');
       }
 
       // Update member's profile photo
@@ -84,7 +84,7 @@ export const photoUploadAstroActions = {
       return {
         success: true,
         fileId,
-        message: "Photo updated successfully",
+        message: 'Photo updated successfully',
       };
     },
   }),

@@ -1,7 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { BookingAvailabilityServiceDefinition } from "../services/booking-availability-service";
-import { availabilityCalendar } from "@wix/bookings";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { BookingAvailabilityServiceDefinition } from '../services/booking-availability-service';
+import { availabilityCalendar } from '@wix/bookings';
 
 /**
  * Props for Calendar headless component
@@ -45,10 +45,9 @@ export const Calendar = (props: CalendarProps) => {
   const error = service.error.get();
 
   const hasAvailableSlots = (date: Date): boolean => {
-    const dateString = date.toISOString().split("T")[0];
+    const dateString = date.toISOString().split('T')[0];
     return availableDates.some(
-      (availableDate) =>
-        availableDate.toISOString().split("T")[0] === dateString
+      availableDate => availableDate.toISOString().split('T')[0] === dateString
     );
   };
 
@@ -110,7 +109,7 @@ export const TimeSlots = (props: TimeSlotsProps) => {
   // For now, we'll just return the slots - slot selection will be handled by BookingSelection service
   const selectSlot = (slot: availabilityCalendar.SlotAvailability) => {
     // This will be handled by the BookingSelection service
-    console.log("Slot selected:", slot);
+    console.log('Slot selected:', slot);
   };
 
   return props.children({
@@ -169,14 +168,14 @@ export interface TimeSlotRenderProps {
 export const TimeSlot = (props: TimeSlotProps) => {
   const { slot } = props;
 
-  const startTime = new Date(slot.slot?.startDate || "");
-  const endTime = new Date(slot.slot?.endDate || "");
+  const startTime = new Date(slot.slot?.startDate || '');
+  const endTime = new Date(slot.slot?.endDate || '');
   const duration = Math.round(
     (endTime.getTime() - startTime.getTime()) / (1000 * 60)
   );
 
   const formatTime = (date: Date) =>
-    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const startTimeFormatted = formatTime(startTime);
   const endTimeFormatted = formatTime(endTime);
@@ -185,13 +184,13 @@ export const TimeSlot = (props: TimeSlotProps) => {
   const openSpots = slot.openSpots || 0;
   const totalSpots = slot.totalSpots || 0;
 
-  let availabilityText = "";
+  let availabilityText = '';
   if (totalSpots > 1) {
     availabilityText = `${openSpots} of ${totalSpots} spots available`;
   } else if (slot.bookable) {
-    availabilityText = "Available";
+    availabilityText = 'Available';
   } else {
-    availabilityText = "Unavailable";
+    availabilityText = 'Unavailable';
   }
 
   const location =
@@ -201,7 +200,7 @@ export const TimeSlot = (props: TimeSlotProps) => {
 
   const selectSlot = () => {
     // This will be connected to the BookingSelection service
-    console.log("Selecting slot:", slot);
+    console.log('Selecting slot:', slot);
   };
 
   return props.children({
@@ -257,23 +256,23 @@ export const AvailabilityHeader = (props: AvailabilityHeaderProps) => {
   const hasSlots = slotsForSelectedDate.length > 0;
 
   const selectedDateFormatted = selectedDate.toLocaleDateString([], {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   const availableSlotsCount = slotsForSelectedDate.filter(
-    (slot) => slot.bookable
+    slot => slot.bookable
   ).length;
 
   const summaryText = !isLoading
     ? hasSlots
       ? `${availableSlotsCount} available slot${
-          availableSlotsCount !== 1 ? "s" : ""
+          availableSlotsCount !== 1 ? 's' : ''
         }`
-      : "No available slots"
-    : "";
+      : 'No available slots'
+    : '';
 
   return props.children({
     selectedDateFormatted,

@@ -1,6 +1,6 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { CurrentMemberServiceDefinition } from "../services/current-member-service";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { CurrentMemberServiceDefinition } from '../services/current-member-service';
 
 /**
  * Props for FullName headless component
@@ -41,8 +41,8 @@ const FullName = (props: FullNameProps) => {
   ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
 
   const member = currentMember.get();
-  const firstName = member.contact?.firstName || "";
-  const lastName = member.contact?.lastName || "";
+  const firstName = member.contact?.firstName || '';
+  const lastName = member.contact?.lastName || '';
   const fullName = `${firstName} ${lastName}`.trim();
   const hasFullName = Boolean(firstName && lastName);
 
@@ -91,9 +91,9 @@ const Nickname = (props: NicknameProps) => {
   ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
 
   const member = currentMember.get();
-  const nickname = member.profile?.nickname || "";
+  const nickname = member.profile?.nickname || '';
   const hasNickname = Boolean(nickname);
-  const displayName = nickname || member.contact?.firstName || "Member";
+  const displayName = nickname || member.contact?.firstName || 'Member';
 
   return props.children({
     nickname,
@@ -141,7 +141,7 @@ const Email = (props: EmailProps) => {
   ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
 
   const member = currentMember.get();
-  const email = member.loginEmail || "";
+  const email = member.loginEmail || '';
   const isVerified = Boolean(member.loginEmailVerified);
   const hasEmail = Boolean(email);
 
@@ -200,7 +200,7 @@ const LastLoginDate = (props: LastLoginDateProps) => {
     : null;
   const hasLastLogin = Boolean(lastLoginDate);
 
-  const formattedDate = lastLoginDate ? lastLoginDate.toLocaleDateString() : "";
+  const formattedDate = lastLoginDate ? lastLoginDate.toLocaleDateString() : '';
 
   const relativeTime = lastLoginDate
     ? (() => {
@@ -208,13 +208,13 @@ const LastLoginDate = (props: LastLoginDateProps) => {
         const diffMs = now.getTime() - lastLoginDate.getTime();
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 0) return "today";
-        if (diffDays === 1) return "yesterday";
+        if (diffDays === 0) return 'today';
+        if (diffDays === 1) return 'yesterday';
         if (diffDays < 7) return `${diffDays} days ago`;
         if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
         return `${Math.floor(diffDays / 30)} months ago`;
       })()
-    : "";
+    : '';
 
   return props.children({
     lastLoginDate,
@@ -243,7 +243,7 @@ export interface ActivityStatusRenderProps {
   /** Formatted status display text */
   displayStatus: string;
   /** Status color (for styling) */
-  statusColor: "green" | "yellow" | "red" | "gray";
+  statusColor: 'green' | 'yellow' | 'red' | 'gray';
 }
 
 /**
@@ -265,24 +265,24 @@ const ActivityStatus = (props: ActivityStatusProps) => {
   ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
 
   const member = currentMember.get();
-  const status = member.activityStatus || "UNKNOWN";
-  const isActive = status === "ACTIVE";
+  const status = member.activityStatus || 'UNKNOWN';
+  const isActive = status === 'ACTIVE';
 
   const displayStatus = (() => {
     switch (status) {
-      case "ACTIVE":
-        return "Active";
+      case 'ACTIVE':
+        return 'Active';
       default:
-        return status || "Unknown";
+        return status || 'Unknown';
     }
   })();
 
-  const statusColor: "green" | "yellow" | "red" | "gray" = (() => {
+  const statusColor: 'green' | 'yellow' | 'red' | 'gray' = (() => {
     switch (status) {
-      case "ACTIVE":
-        return "green";
+      case 'ACTIVE':
+        return 'green';
       default:
-        return "gray";
+        return 'gray';
     }
   })();
 
@@ -349,21 +349,21 @@ const DaysMember = (props: DaysMemberProps) => {
 
   const formattedCreatedDate = createdDate
     ? createdDate.toLocaleDateString()
-    : "";
+    : '';
 
   const membershipDuration = (() => {
-    if (daysMember === 0) return "New member";
-    if (daysMember < 7) return "Less than a week";
+    if (daysMember === 0) return 'New member';
+    if (daysMember < 7) return 'Less than a week';
     if (daysMember < 30)
       return `${Math.floor(daysMember / 7)} week${
-        Math.floor(daysMember / 7) > 1 ? "s" : ""
+        Math.floor(daysMember / 7) > 1 ? 's' : ''
       } member`;
     if (daysMember < 365)
       return `${Math.floor(daysMember / 30)} month${
-        Math.floor(daysMember / 30) > 1 ? "s" : ""
+        Math.floor(daysMember / 30) > 1 ? 's' : ''
       } member`;
     return `${Math.floor(daysMember / 365)} year${
-      Math.floor(daysMember / 365) > 1 ? "s" : ""
+      Math.floor(daysMember / 365) > 1 ? 's' : ''
     } member`;
   })();
 
@@ -419,11 +419,11 @@ const ProfilePhoto = (props: ProfilePhotoProps) => {
   ) as ServiceAPI<typeof CurrentMemberServiceDefinition>;
 
   const member = currentMember.get();
-  const photoUrl = member.profile?.photo?.url || "";
+  const photoUrl = member.profile?.photo?.url || '';
   const hasPhoto = Boolean(photoUrl);
 
   const displayName =
-    member.profile?.nickname || member.contact?.firstName || "User";
+    member.profile?.nickname || member.contact?.firstName || 'User';
   const altText = `${displayName}'s profile photo`;
 
   return props.children({

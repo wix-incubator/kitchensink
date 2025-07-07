@@ -4,47 +4,77 @@
   /* =========================== */
 
   /* Primary Brand Colors - Main brand identity colors used throughout the interface */
-  --color-primary: 66, 165, 245; /* Primary brand color - main blue used for key UI elements, buttons, and interactive components */
-  --color-primary-dark: 21, 101, 192; /* Darker variant of primary color - used for hover states and emphasis */
-  --color-secondary: 3, 218, 198; /* Secondary brand color - complementary teal used for accents and secondary actions */
-  --color-secondary-dark: 0, 188, 212; /* Darker variant of secondary color - used for hover states on secondary elements */
-  --color-secondary-darker: 9, 151, 167; /* Darkest variant of secondary color - used for pressed states and high emphasis */
+  --color-primary:
+    66, 165, 245; /* Primary brand color - main blue used for key UI elements, buttons, and interactive components */
+  --color-primary-dark:
+    21, 101, 192; /* Darker variant of primary color - used for hover states and emphasis */
+  --color-secondary:
+    3, 218, 198; /* Secondary brand color - complementary teal used for accents and secondary actions */
+  --color-secondary-dark:
+    0, 188, 212; /* Darker variant of secondary color - used for hover states on secondary elements */
+  --color-secondary-darker:
+    9, 151, 167; /* Darkest variant of secondary color - used for pressed states and high emphasis */
 
   /* Status Colors - Semantic colors for communicating system states and user feedback */
-  --color-warning: 255, 152, 0; /* Warning color - orange used for caution messages and non-critical alerts */
-  --color-warning-dark: 245, 124, 0; /* Darker warning color - used for hover states on warning elements */
-  --color-warning-light: 255, 183, 77; /* Lighter warning color - used for warning text and subtle warning indicators */
-  --color-warning-lighter: 255, 204, 128; /* Lightest warning color - used for very subtle warning backgrounds */
+  --color-warning:
+    255, 152, 0; /* Warning color - orange used for caution messages and non-critical alerts */
+  --color-warning-dark:
+    245, 124, 0; /* Darker warning color - used for hover states on warning elements */
+  --color-warning-light:
+    255, 183, 77; /* Lighter warning color - used for warning text and subtle warning indicators */
+  --color-warning-lighter:
+    255, 204, 128; /* Lightest warning color - used for very subtle warning backgrounds */
 
-  --color-info: 25, 118, 210; /* Information color - blue used for informational messages and neutral notifications */
-  --color-info-dark: 21, 101, 192; /* Darker info color - used for hover states on informational elements */
-  --color-info-light: 66, 165, 245; /* Lighter info color - used for info text and subtle informational indicators */
+  --color-info:
+    25, 118, 210; /* Information color - blue used for informational messages and neutral notifications */
+  --color-info-dark:
+    21, 101, 192; /* Darker info color - used for hover states on informational elements */
+  --color-info-light:
+    66, 165, 245; /* Lighter info color - used for info text and subtle informational indicators */
 
-  --color-danger: 244, 67, 54; /* Danger/error color - red used for error messages, destructive actions, and critical alerts */
-  --color-danger-dark: 211, 47, 47; /* Darker danger color - used for hover states on destructive elements */
-  --color-danger-light: 239, 83, 80; /* Lighter danger color - used for error text and danger indicators */
-  --color-danger-lighter: 229, 115, 115; /* Lightest danger color - used for subtle error backgrounds */
+  --color-danger:
+    244, 67, 54; /* Danger/error color - red used for error messages, destructive actions, and critical alerts */
+  --color-danger-dark:
+    211, 47, 47; /* Darker danger color - used for hover states on destructive elements */
+  --color-danger-light:
+    239, 83, 80; /* Lighter danger color - used for error text and danger indicators */
+  --color-danger-lighter:
+    229, 115, 115; /* Lightest danger color - used for subtle error backgrounds */
 
-  --color-success: 76, 175, 80; /* Success color - green used for success messages, positive feedback, and completion states */
-  --color-success-dark: 56, 142, 60; /* Darker success color - used for hover states on success elements */
-  --color-success-light: 102, 187, 106; /* Lighter success color - used for success text and positive indicators */
+  --color-success:
+    76, 175, 80; /* Success color - green used for success messages, positive feedback, and completion states */
+  --color-success-dark:
+    56, 142, 60; /* Darker success color - used for hover states on success elements */
+  --color-success-light:
+    102, 187, 106; /* Lighter success color - used for success text and positive indicators */
 
-  --color-accent: 3, 218, 198; /* Accent color - bright teal used for highlights, special features, and call-to-action elements */
-  --color-accent-dark: 0, 188, 212; /* Darker accent color - used for hover states on accent elements */
-  --color-accent-light: 38, 198, 218; /* Lighter accent color - used for accent text and subtle accent indicators */
+  --color-accent:
+    3, 218, 198; /* Accent color - bright teal used for highlights, special features, and call-to-action elements */
+  --color-accent-dark:
+    0, 188, 212; /* Darker accent color - used for hover states on accent elements */
+  --color-accent-light:
+    38, 198, 218; /* Lighter accent color - used for accent text and subtle accent indicators */
 
-  --color-amber: 255, 193, 7; /* Amber color - golden yellow used for special highlights, premium features, and attention-grabbing elements */
-  --color-amber-dark: 255, 160, 0; /* Darker amber color - used for hover states on amber elements */
+  --color-amber:
+    255, 193, 7; /* Amber color - golden yellow used for special highlights, premium features, and attention-grabbing elements */
+  --color-amber-dark:
+    255, 160, 0; /* Darker amber color - used for hover states on amber elements */
 
   /* Content Colors - Typography and content-related colors */
-  --color-content: 33, 33, 33; /* Primary content color - dark grey used for main text, headings, and readable content */
-  --color-content-light: 255, 255, 255; /* Light content color - white used for text on dark backgrounds */
+  --color-content:
+    33, 33, 33; /* Primary content color - dark grey used for main text, headings, and readable content */
+  --color-content-light:
+    255, 255, 255; /* Light content color - white used for text on dark backgrounds */
 
   /* Neutral Colors - Basic colors for backgrounds, borders, and neutral elements */
-  --color-black: 0, 0, 0; /* Pure black - used for high contrast elements and overlays */
-  --color-white: 255, 255, 255; /* Pure white - used for clean backgrounds and high contrast text */
-  --color-grey-dark: 66, 66, 66; /* Dark grey - used for secondary text and subtle elements */
-  --color-grey-medium: 117, 117, 117; /* Medium grey - used for muted text, borders, and inactive elements */
+  --color-black:
+    0, 0, 0; /* Pure black - used for high contrast elements and overlays */
+  --color-white:
+    255, 255, 255; /* Pure white - used for clean backgrounds and high contrast text */
+  --color-grey-dark:
+    66, 66, 66; /* Dark grey - used for secondary text and subtle elements */
+  --color-grey-medium:
+    117, 117, 117; /* Medium grey - used for muted text, borders, and inactive elements */
 
   /* =========================== */
   /* THEME VARIABLES */
@@ -444,7 +474,8 @@
   ); /* Background gradient for hero feature icons and decorative elements */
 
   /* Typography Settings - Font family and weight definitions for consistent text styling */
-  --theme-font-family: "Roboto", "Helvetica", "Arial", sans-serif; /* Primary font family for all themed text elements */
+  --theme-font-family:
+    'Roboto', 'Helvetica', 'Arial', sans-serif; /* Primary font family for all themed text elements */
   --theme-font-weight-normal: 400; /* Normal font weight for body text and regular content */
   --theme-font-weight-medium: 500; /* Medium font weight for emphasized text and semi-bold content */
   --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings, labels, and important text */

@@ -1,12 +1,12 @@
 ---
-import { loadCategoriesConfig } from "../../../headless/store/services/category-service";
+import { loadCategoriesConfig } from '../../../headless/store/services/category-service';
 
 // Redirect to the first category (typically "All Products") for consistent URL structure
 const categoriesConfig = await loadCategoriesConfig();
 const firstCategory = categoriesConfig.categories[0];
 
 if (!firstCategory) {
-  throw new Error("No categories found");
+  throw new Error('No categories found');
 }
 
 // Use the real category slug from Wix API

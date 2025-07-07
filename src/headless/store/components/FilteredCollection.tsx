@@ -1,16 +1,16 @@
-import React, { createContext, useContext, type ReactNode } from "react";
+import React, { createContext, useContext, type ReactNode } from 'react';
 import {
   FilterServiceDefinition,
   type AvailableOptions,
   type FilterServiceAPI,
   type Filter,
-} from "../services/filter-service";
-import { useService } from "@wix/services-manager-react";
-import { productsV3 } from "@wix/stores";
+} from '../services/filter-service';
+import { useService } from '@wix/services-manager-react';
+import { productsV3 } from '@wix/stores';
 import {
   CollectionServiceDefinition,
   type CollectionServiceAPI,
-} from "../services/collection-service";
+} from '../services/collection-service';
 
 const FilteredCollectionContext = createContext<{
   filter: FilterServiceAPI | null;
@@ -38,7 +38,7 @@ export const useFilteredCollection = () => {
   const context = useContext(FilteredCollectionContext);
   if (!context) {
     throw new Error(
-      "useFilteredCollection must be used within a FilteredCollectionProvider"
+      'useFilteredCollection must be used within a FilteredCollectionProvider'
     );
   }
   return context;
@@ -110,15 +110,15 @@ interface FilteredItemProps {
 
 export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
   // Safe conversion of product data with type safety guards
-  const title = String(product.name || "");
+  const title = String(product.name || '');
   const image = product.media?.main?.image || null;
-  const imageAltText = product.media?.main?.altText || "";
+  const imageAltText = product.media?.main?.altText || '';
   const price =
     product.actualPriceRange?.minValue?.formattedAmount ||
     product.actualPriceRange?.maxValue?.formattedAmount ||
     (product.actualPriceRange?.minValue?.amount
       ? `$${product.actualPriceRange.minValue.amount}`
-      : "$0.00");
+      : '$0.00');
 
   // Add compare at price
   const compareAtPrice =
@@ -129,9 +129,9 @@ export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === "IN_STOCK" ||
-    availabilityStatus === "PARTIALLY_OUT_OF_STOCK";
-  const slug = String(product.slug || product._id || "");
+    availabilityStatus === 'IN_STOCK' ||
+    availabilityStatus === 'PARTIALLY_OUT_OF_STOCK';
+  const slug = String(product.slug || product._id || '');
   const description = product.plainDescription
     ? String(product.plainDescription)
     : undefined;

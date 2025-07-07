@@ -1,41 +1,41 @@
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { PageDocsRegistration } from '../../../components/DocsMode';
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
-} from "../../../headless/store/services/catalog-options-service";
+} from '../../../headless/store/services/catalog-options-service';
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from "../../../headless/store/services/catalog-price-range-service";
+} from '../../../headless/store/services/catalog-price-range-service';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from "../../../headless/store/services/category-service";
+} from '../../../headless/store/services/category-service';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from "../../../headless/store/services/collection-service";
+} from '../../../headless/store/services/collection-service';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from "../../../headless/ecom/services/current-cart-service";
+} from '../../../headless/ecom/services/current-cart-service';
 import {
   FilterService,
   FilterServiceDefinition,
-} from "../../../headless/store/services/filter-service";
+} from '../../../headless/store/services/filter-service';
 import {
   SortService,
   SortServiceDefinition,
-} from "../../../headless/store/services/sort-service";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { StoreLayout } from "../../../layouts/StoreLayout";
-import "../../../styles/theme-1.css";
-import ProductList from "../../../components/store/ProductList";
+} from '../../../headless/store/services/sort-service';
+import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
+import { StoreLayout } from '../../../layouts/StoreLayout';
+import '../../../styles/theme-1.css';
+import ProductList from '../../../components/store/ProductList';
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -50,8 +50,8 @@ export default function StoreCollectionPage({
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
   const handleCategoryChange = (categoryId: string | null, category: any) => {
-    if (typeof window !== "undefined") {
-      const basePath = "/store/example-1";
+    if (typeof window !== 'undefined') {
+      const basePath = '/store/example-1';
       let newPath;
 
       if (categoryId === null) {
@@ -70,7 +70,7 @@ export default function StoreCollectionPage({
 
       window.history.pushState(
         null,
-        "Showing Category " + category?.name,
+        'Showing Category ' + category?.name,
         newPath
       );
     }

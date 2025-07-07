@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useService } from "@wix/services-manager-react";
-import ProductList from "../../components/store/ProductList";
-import ProductDetails from "../../components/store/ProductDetails";
-import { ProductServiceDefinition } from "../../headless/store/services/product-service";
-import { CategoryServiceDefinition } from "../../headless/store/services/category-service";
-import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
-import "../../styles/theme-wix-vibe.css";
-import { MediaGalleryServiceDefinition } from "../../headless/media/services/media-gallery-service";
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useService } from '@wix/services-manager-react';
+import ProductList from '../../components/store/ProductList';
+import ProductDetails from '../../components/store/ProductDetails';
+import { ProductServiceDefinition } from '../../headless/store/services/product-service';
+import { CategoryServiceDefinition } from '../../headless/store/services/category-service';
+import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import '../../styles/theme-wix-vibe.css';
+import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
 
 // Store Route Component with Categories Loading
 function StoreRoute() {
@@ -20,8 +20,8 @@ function StoreRoute() {
       try {
         await categoryService.loadCategories();
       } catch (err: any) {
-        console.warn("Failed to load categories:", err);
-        setError("Failed to load categories");
+        console.warn('Failed to load categories:', err);
+        setError('Failed to load categories');
       } finally {
         setIsLoading(false);
       }
@@ -101,7 +101,7 @@ function GlobalCartLoader({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Load cart in background without blocking the UI
     cartService.reloadCart().catch((err: any) => {
-      console.warn("Failed to reload cart:", err);
+      console.warn('Failed to reload cart:', err);
     });
   }, []);
 

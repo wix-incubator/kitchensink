@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
+import BaseLayout from './BaseLayout.astro';
 
 interface Props {
   title?: string;
@@ -7,15 +7,15 @@ interface Props {
 }
 
 const {
-  title = "Wix Kitchensink",
-  description = "Explore all Wix features and implementations",
+  title = 'Wix Kitchensink',
+  description = 'Explore all Wix features and implementations',
 } = Astro.props;
 ---
 
 <BaseLayout
   bodyProps={{
     class:
-      "min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900",
+      'min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900',
   }}
 >
   <Fragment slot="head">

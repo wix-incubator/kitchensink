@@ -2,12 +2,12 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
 
 export interface UploadState {
-  type: "idle" | "loading" | "success" | "error";
+  type: 'idle' | 'loading' | 'success' | 'error';
   message: string;
   progress?: number;
 }
@@ -33,7 +33,7 @@ export interface FileUploadServiceAPI {
 }
 
 export const FileUploadServiceDefinition =
-  defineService<FileUploadServiceAPI>("fileUpload");
+  defineService<FileUploadServiceAPI>('fileUpload');
 
 export const FileUploadService = implementService.withConfig<{
   maxFileSize?: number;
@@ -47,8 +47,8 @@ export const FileUploadService = implementService.withConfig<{
 
   const selectedFile: Signal<File | null> = signalsService.signal(null as any);
   const uploadState: Signal<UploadState> = signalsService.signal({
-    type: "idle" as const,
-    message: "",
+    type: 'idle' as const,
+    message: '',
   } as any);
   const dragOver: Signal<boolean> = signalsService.signal(false as any);
   const previewUrl: Signal<string | null> = signalsService.signal(null as any);
@@ -69,7 +69,7 @@ export const FileUploadService = implementService.withConfig<{
         return {
           isValid: false,
           error: `File type not supported. Allowed types: ${validationRules.allowedTypes.join(
-            ", "
+            ', '
           )}`,
         };
       }
@@ -80,7 +80,7 @@ export const FileUploadService = implementService.withConfig<{
       validationRules.allowedExtensions &&
       validationRules.allowedExtensions.length > 0
     ) {
-      const fileExtension = file.name.split(".").pop()?.toLowerCase();
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
       if (
         !fileExtension ||
         !validationRules.allowedExtensions.includes(fileExtension)
@@ -88,7 +88,7 @@ export const FileUploadService = implementService.withConfig<{
         return {
           isValid: false,
           error: `File extension not supported. Allowed extensions: ${validationRules.allowedExtensions.join(
-            ", "
+            ', '
           )}`,
         };
       }
@@ -111,14 +111,14 @@ export const FileUploadService = implementService.withConfig<{
 
   const canPreview = (file: File): boolean => {
     // For now, only support image previews
-    return file.type.startsWith("image/");
+    return file.type.startsWith('image/');
   };
 
   const selectFile = (file: File) => {
     const validation = validateFile(file);
 
     if (!validation.isValid) {
-      uploadState.set({ type: "error", message: validation.error! });
+      uploadState.set({ type: 'error', message: validation.error! });
       return;
     }
 
@@ -131,7 +131,7 @@ export const FileUploadService = implementService.withConfig<{
       previewUrl.set(null);
     }
 
-    uploadState.set({ type: "idle", message: "" });
+    uploadState.set({ type: 'idle', message: '' });
   };
 
   const clearFile = () => {
@@ -142,7 +142,7 @@ export const FileUploadService = implementService.withConfig<{
 
     selectedFile.set(null);
     previewUrl.set(null);
-    uploadState.set({ type: "idle", message: "" });
+    uploadState.set({ type: 'idle', message: '' });
   };
 
   const uploadFile = async (): Promise<void> => {
@@ -150,13 +150,13 @@ export const FileUploadService = implementService.withConfig<{
     if (!file) return;
 
     try {
-      uploadState.set({ type: "loading", message: "Uploading file..." });
+      uploadState.set({ type: 'loading', message: 'Uploading file...' });
 
       const result = await config.uploadAction(file);
 
       uploadState.set({
-        type: "success",
-        message: result.message || "File uploaded successfully!",
+        type: 'success',
+        message: result.message || 'File uploaded successfully!',
       });
 
       // Call success callback if provided
@@ -164,11 +164,11 @@ export const FileUploadService = implementService.withConfig<{
         await config.onUploadSuccess(result);
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1500));
     } catch (error: any) {
       uploadState.set({
-        type: "error",
-        message: error.message || "Upload failed. Please try again.",
+        type: 'error',
+        message: error.message || 'Upload failed. Please try again.',
       });
 
       // Call error callback if provided
@@ -200,7 +200,7 @@ export const FileUploadService = implementService.withConfig<{
 export async function loadFileUploadServiceConfig(): Promise<
   Omit<
     ServiceFactoryConfig<typeof FileUploadService>,
-    "uploadAction" | "onUploadSuccess" | "onUploadError"
+    'uploadAction' | 'onUploadSuccess' | 'onUploadError'
   >
 > {
   return {

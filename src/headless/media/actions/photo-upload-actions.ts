@@ -1,8 +1,8 @@
-import { z } from "astro:schema";
-import { members } from "@wix/members";
-import { auth } from "@wix/essentials";
-import { type IOAuthStrategy } from "@wix/sdk";
-import type { FileUploadActionHandler } from "./file-upload-actions";
+import { z } from 'astro:schema';
+import { members } from '@wix/members';
+import { auth } from '@wix/essentials';
+import { type IOAuthStrategy } from '@wix/sdk';
+import type { FileUploadActionHandler } from './file-upload-actions';
 
 // Input schemas for actions
 export const MemberPhotoUploadInputSchema = z.object({
@@ -27,22 +27,22 @@ export function createMemberProfilePhotoUploadAction(
   const uploadPhotoHandler = async ({ photo }: MemberPhotoUploadInput) => {
     // Check if user is logged in
     if (!auth.getContextualAuth<IOAuthStrategy>().loggedIn()) {
-      throw new Error("Unauthorized");
+      throw new Error('Unauthorized');
     }
 
     // Get current member
     const { member } = await members.getCurrentMember();
     if (!member?._id) {
-      throw new Error("Member not found");
+      throw new Error('Member not found');
     }
 
     // Use the injected file upload action to upload the image
-    console.log("calling fileUploadActionHandler", photo);
+    console.log('calling fileUploadActionHandler', photo);
     const uploadResult = await fileUploadActionHandler({ file: photo });
 
     // Check if upload was successful
     if (!uploadResult.success) {
-      throw new Error(uploadResult.error || "File upload failed");
+      throw new Error(uploadResult.error || 'File upload failed');
     }
 
     try {
@@ -58,11 +58,11 @@ export function createMemberProfilePhotoUploadAction(
       return {
         success: true,
         fileId: uploadResult.fileId,
-        message: "Photo updated successfully",
+        message: 'Photo updated successfully',
       };
     } catch (error) {
-      console.error("Failed to update member profile photo:", error);
-      throw new Error("Upload succeeded but failed to update profile");
+      console.error('Failed to update member profile photo:', error);
+      throw new Error('Upload succeeded but failed to update profile');
     }
   };
 
@@ -92,6 +92,6 @@ export function createMemberProfilePhotoUploadAction(
  */
 export const getPhotoUploadConfig = () => ({
   maxFileSize: 10 * 1024 * 1024, // 10MB
-  allowedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
-  allowedExtensions: ["jpg", "jpeg", "png", "gif", "webp"],
+  allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+  allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
 });

@@ -1,10 +1,10 @@
-import { defineService, implementService } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { URLParamsUtils } from "../utils/url-params";
-import { CatalogPriceRangeServiceDefinition } from "./catalog-price-range-service";
-import { CatalogOptionsServiceDefinition } from "./catalog-options-service";
-import { productsV3 } from "@wix/stores";
+import { defineService, implementService } from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { URLParamsUtils } from '../utils/url-params';
+import { CatalogPriceRangeServiceDefinition } from './catalog-price-range-service';
+import { CatalogOptionsServiceDefinition } from './catalog-options-service';
+import { productsV3 } from '@wix/stores';
 
 export interface ProductOption {
   id: string;
@@ -42,7 +42,7 @@ export interface FilterServiceAPI {
 }
 
 export const FilterServiceDefinition = defineService<FilterServiceAPI>(
-  "filtered-collection"
+  'filtered-collection'
 );
 
 export const defaultFilter: Filter = {
@@ -86,7 +86,7 @@ export const FilterService = implementService.withConfig<{
   };
 
   // Subscribe to catalog price range changes and automatically update our signals
-  catalogPriceRangeService.catalogPriceRange.subscribe((catalogPriceRange) => {
+  catalogPriceRangeService.catalogPriceRange.subscribe(catalogPriceRange => {
     if (
       catalogPriceRange &&
       catalogPriceRange.minPrice < catalogPriceRange.maxPrice
@@ -125,7 +125,7 @@ export const FilterService = implementService.withConfig<{
   });
 
   // Subscribe to catalog options changes and automatically update our signals
-  catalogOptionsService.catalogOptions.subscribe((catalogOptions) => {
+  catalogOptionsService.catalogOptions.subscribe(catalogOptions => {
     if (catalogOptions && catalogOptions.length > 0) {
       // Update available options with catalog options
       const currentAvailableOptions = availableOptions.get();
@@ -162,19 +162,17 @@ export const FilterService = implementService.withConfig<{
       Object.entries(filters.selectedOptions).forEach(
         ([optionId, choiceIds]) => {
           const option = availableOpts.productOptions.find(
-            (opt) => opt.id === optionId
+            opt => opt.id === optionId
           );
           if (option && choiceIds.length > 0) {
-            const selectedChoices = option.choices.filter((choice) =>
+            const selectedChoices = option.choices.filter(choice =>
               choiceIds.includes(choice.id)
             );
             if (selectedChoices.length > 0) {
               // Use 'availability' as URL param for inventory filter
               const paramName =
-                optionId === "inventory-filter" ? "availability" : option.name;
-              urlParams[paramName] = selectedChoices.map(
-                (choice) => choice.name
-              );
+                optionId === 'inventory-filter' ? 'availability' : option.name;
+              urlParams[paramName] = selectedChoices.map(choice => choice.name);
             }
           }
         }
@@ -214,7 +212,7 @@ export const FilterService = implementService.withConfig<{
     // Options are now loaded from the catalog-wide service
     // This function is kept for backward compatibility but does nothing
     console.log(
-      "🔄 calculateAvailableOptions called but using catalog-wide options instead"
+      '🔄 calculateAvailableOptions called but using catalog-wide options instead'
     );
   };
 

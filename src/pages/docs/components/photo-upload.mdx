@@ -14,7 +14,7 @@ import {
   PreviewImage,
   UploadProgress,
   UploadTrigger,
-} from "headless/members/components";
+} from 'headless/members/components';
 ```
 
 ## Components
@@ -52,7 +52,7 @@ Handles file selection with drag & drop support and file validation.
   }) => (
     <div
       className={`border-2 border-dashed p-8 rounded-lg transition-colors ${
-        dragOver ? "border-blue-500 bg-blue-50" : "border-gray-300"
+        dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
       }`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -139,10 +139,10 @@ Shows upload status, progress, and messages.
         <div
           className={`p-3 rounded ${
             isSuccess
-              ? "bg-green-100 text-green-800"
+              ? 'bg-green-100 text-green-800'
               : isError
-              ? "bg-red-100 text-red-800"
-              : "bg-blue-100 text-blue-800"
+                ? 'bg-red-100 text-red-800'
+                : 'bg-blue-100 text-blue-800'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -192,11 +192,11 @@ Provides upload functionality with smart enable/disable logic.
       disabled={!canUpload}
       className={`px-6 py-2 rounded-lg font-medium transition-colors ${
         canUpload
-          ? "bg-blue-600 hover:bg-blue-700 text-white"
-          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
       }`}
     >
-      {isUploading ? "Uploading..." : "Upload Photo"}
+      {isUploading ? 'Uploading...' : 'Upload Photo'}
     </button>
   )}
 </UploadTrigger>
@@ -207,13 +207,13 @@ Provides upload functionality with smart enable/disable logic.
 Here's how to compose all components for a complete upload experience:
 
 ```tsx
-import { useRef } from "react";
+import { useRef } from 'react';
 import {
   FileSelector,
   PreviewImage,
   UploadProgress,
   UploadTrigger,
-} from "headless/members/components";
+} from 'headless/members/components';
 
 function PhotoUploadForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -234,8 +234,8 @@ function PhotoUploadForm() {
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
               dragOver
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400"
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-300 hover:border-gray-400'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -296,10 +296,10 @@ function PhotoUploadForm() {
               <div
                 className={`mt-4 p-3 rounded-lg ${
                   isSuccess
-                    ? "bg-green-100 text-green-800"
+                    ? 'bg-green-100 text-green-800'
                     : isError
-                    ? "bg-red-100 text-red-800"
-                    : "bg-blue-100 text-blue-800"
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-blue-100 text-blue-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -327,11 +327,11 @@ function PhotoUploadForm() {
               disabled={!canUpload}
               className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
                 canUpload
-                  ? "bg-blue-600 hover:bg-blue-700 text-white"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {isUploading ? "Uploading..." : "Upload Photo"}
+              {isUploading ? 'Uploading...' : 'Upload Photo'}
             </button>
 
             <FileSelector>
@@ -357,16 +357,16 @@ function PhotoUploadForm() {
 These components depend on the `PhotoUploadService` being available in the services context:
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   PhotoUploadServiceDefinition,
   PhotoUploadService,
-} from "../headless/members/photo-upload-service";
-import { actions } from "astro:actions";
+} from '../headless/members/photo-upload-service';
+import { actions } from 'astro:actions';
 
 <ServicesManagerProvider
   servicesManager={
@@ -377,7 +377,7 @@ import { actions } from "astro:actions";
           PhotoUploadService,
           {
             maxFileSize: 10 * 1024 * 1024,
-            allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+            allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
             photoUploadAstroActions: actions.photoUploadAstroActions,
           }
         )
@@ -420,10 +420,10 @@ The components support accessibility features:
 Test these components by mocking the service and verifying render prop calls:
 
 ```tsx
-import { render, fireEvent } from "@testing-library/react";
-import { FileSelector } from "headless/members/components";
+import { render, fireEvent } from '@testing-library/react';
+import { FileSelector } from 'headless/members/components';
 
-test("FileSelector handles file selection", () => {
+test('FileSelector handles file selection', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(

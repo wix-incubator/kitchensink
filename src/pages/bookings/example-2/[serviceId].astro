@@ -1,12 +1,12 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import ServiceDetailPage from "../../../react-pages/bookings/example-2/[serviceId]";
-import { loadBookingServiceServiceConfig } from "../../../headless/bookings/services/booking-service-service";
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceDetailPage from '../../../react-pages/bookings/example-2/[serviceId]';
+import { loadBookingServiceServiceConfig } from '../../../headless/bookings/services/booking-service-service';
 
 const { serviceId } = Astro.params;
 
 if (!serviceId) {
-  return Astro.redirect("/bookings/example-2/services");
+  return Astro.redirect('/bookings/example-2/services');
 }
 
 // Load initial data for the specific service
@@ -14,8 +14,8 @@ const bookingServiceConfigResult =
   await loadBookingServiceServiceConfig(serviceId);
 
 // Handle 404 case
-if (bookingServiceConfigResult.type === "notFound") {
-  return Astro.rewrite("/404");
+if (bookingServiceConfigResult.type === 'notFound') {
+  return Astro.rewrite('/404');
 }
 
 const bookingServiceConfig = bookingServiceConfigResult.config;

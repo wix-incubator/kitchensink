@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { BookOpenIcon } from "./icons/StackedBooksIcon";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { BookOpenIcon } from './icons/StackedBooksIcon';
 
 // Context for managing docs mode state
 interface DocsContextType {
@@ -22,7 +22,7 @@ const DocsContext = createContext<DocsContextType | null>(null);
 export const useDocsMode = () => {
   const context = useContext(DocsContext);
   if (!context) {
-    throw new Error("useDocsMode must be used within a DocsProvider");
+    throw new Error('useDocsMode must be used within a DocsProvider');
   }
   return context;
 };
@@ -33,9 +33,9 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isDocsMode, setIsDocsMode] = useState(() => {
     // Check for docsMode query parameter on initialization
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get("docsMode") === "true";
+      return urlParams.get('docsMode') === 'true';
     }
     return false;
   });
@@ -65,11 +65,11 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const registerComponent = (componentName: string, componentPath: string) => {
-    setDiscoveredComponents((prev) =>
+    setDiscoveredComponents(prev =>
       new Map(prev).set(componentName, componentPath)
     );
     return () => {
-      setDiscoveredComponents((prev) => {
+      setDiscoveredComponents(prev => {
         const newMap = new Map(prev);
         newMap.delete(componentName);
         return newMap;
@@ -90,13 +90,13 @@ export const DocsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Close docs when clicking outside in docs mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isDocsMode) {
+      if (e.key === 'Escape' && isDocsMode) {
         setSelectedComponent(null);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isDocsMode]);
 
   return (
@@ -149,7 +149,7 @@ export const withDocsWrapper = <T extends Record<string, any>>(
       return (
         <div
           className="relative group cursor-pointer"
-          onClick={(e) => {
+          onClick={e => {
             e.preventDefault();
             e.stopPropagation();
             openDocs(componentPath);
@@ -166,7 +166,7 @@ export const withDocsWrapper = <T extends Record<string, any>>(
           {/* Original content - prevent clicks from reaching underlying elements */}
           <div
             className="relative z-0 pointer-events-none"
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault();
               e.stopPropagation();
             }}
@@ -200,29 +200,29 @@ export const DocsDrawer: React.FC = () => {
   // Prevent body scroll when drawer is open on mobile
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
       // Prevent zoom on mobile when drawer opens
       const viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) {
         viewport.setAttribute(
-          "content",
-          "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          'content',
+          'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
         );
       }
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
       // Restore normal viewport behavior
       const viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) {
-        viewport.setAttribute("content", "width=device-width, initial-scale=1");
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1');
       }
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
       const viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) {
-        viewport.setAttribute("content", "width=device-width, initial-scale=1");
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1');
       }
     };
   }, [isOpen]);
@@ -230,7 +230,7 @@ export const DocsDrawer: React.FC = () => {
   const closeDrawer = () => {
     setIsOpen(false);
     // Small delay to allow animation before clearing selected component
-    setTimeout(() => openDocs(""), 300);
+    setTimeout(() => openDocs(''), 300);
   };
 
   if (!isDocsMode || !selectedComponent) {
@@ -242,7 +242,7 @@ export const DocsDrawer: React.FC = () => {
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[110] transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0"
+          isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={closeDrawer}
       />
@@ -251,16 +251,16 @@ export const DocsDrawer: React.FC = () => {
       <div
         className={`docs-drawer fixed right-0 top-0 h-full w-full ${
           isWideDocsDrawer
-            ? "sm:w-[32rem] lg:w-[48rem]"
-            : "sm:w-96 lg:w-[32rem]"
+            ? 'sm:w-[32rem] lg:w-[48rem]'
+            : 'sm:w-96 lg:w-[32rem]'
         } bg-white shadow-2xl z-[120] transform transition-transform duration-300 ease-out flex flex-col ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{
           // Prevent viewport scaling on mobile
-          maxWidth: "100vw",
+          maxWidth: '100vw',
           // Ensure proper containment on mobile
-          touchAction: "manipulation",
+          touchAction: 'manipulation',
         }}
       >
         {/* Header */}
@@ -270,7 +270,7 @@ export const DocsDrawer: React.FC = () => {
               Component Documentation
             </h2>
             <p className="text-sm text-gray-600 mt-1">
-              {selectedComponent.split("/").pop()?.replace("#", " → ")}
+              {selectedComponent.split('/').pop()?.replace('#', ' → ')}
             </p>
           </div>
           <button
@@ -332,14 +332,14 @@ export const DocsToggleButton: React.FC = () => {
         onClick={toggleDocsMode}
         className={`w-12 h-12 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 ${
           isDocsMode
-            ? "bg-blue-500/20 hover:bg-blue-500/30 border-blue-400/50"
-            : "bg-white/10 hover:bg-white/20"
+            ? 'bg-blue-500/20 hover:bg-blue-500/30 border-blue-400/50'
+            : 'bg-white/10 hover:bg-white/20'
         }`}
-        title={isDocsMode ? "Exit docs mode" : "Enter docs mode"}
+        title={isDocsMode ? 'Exit docs mode' : 'Enter docs mode'}
       >
         <svg
           className={`w-5 h-5 transition-colors ${
-            isDocsMode ? "text-blue-300" : "text-white/80"
+            isDocsMode ? 'text-blue-300' : 'text-white/80'
           }`}
           fill="none"
           viewBox="0 0 24 24"
@@ -358,7 +358,7 @@ export const DocsToggleButton: React.FC = () => {
       {discoveredComponents.size > 0 && (
         <div
           className={`absolute -bottom-1 -right-1 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium transition-all duration-300 ${
-            isDocsMode ? "bg-blue-600" : "bg-orange-500"
+            isDocsMode ? 'bg-blue-600' : 'bg-orange-500'
           }`}
         >
           {discoveredComponents.size}
@@ -385,12 +385,12 @@ export const DocsFloatingMenu: React.FC = () => {
   // List of general docs
   const generalDocs = [
     {
-      label: "Overview",
-      path: "/docs",
+      label: 'Overview',
+      path: '/docs',
     },
     {
-      label: "Architecture & Patterns",
-      path: "/docs/architecture/client-side-services",
+      label: 'Architecture & Patterns',
+      path: '/docs/architecture/client-side-services',
     },
     // Add more general docs here if needed
   ];
@@ -673,7 +673,7 @@ export const PageDocsRegistration: React.FC<PageDocsRegistrationProps> = ({
     // Clean up when component unmounts or page changes
     return () => {
       if (docsContext) {
-        docsContext.registerPage("", "", "");
+        docsContext.registerPage('', '', '');
       }
     };
   }, [title, description, docsUrl, docsContext]);

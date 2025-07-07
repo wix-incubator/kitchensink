@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { services } from "@wix/bookings";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { services } from '@wix/bookings';
 
 export interface BookingServiceServiceAPI {
   service: Signal<services.Service | null>;
@@ -17,7 +17,7 @@ export interface BookingServiceServiceAPI {
 }
 
 export const BookingServiceServiceDefinition =
-  defineService<BookingServiceServiceAPI>("bookingServiceService");
+  defineService<BookingServiceServiceAPI>('bookingServiceService');
 
 export const BookingServiceService = implementService.withConfig<{
   initialService?: services.Service;
@@ -50,8 +50,8 @@ export const BookingServiceService = implementService.withConfig<{
       const result = await services.getService(serviceId);
       serviceSignal.set(result || null);
     } catch (err) {
-      console.error("Failed to load service:", err);
-      error.set("Failed to load service");
+      console.error('Failed to load service:', err);
+      error.set('Failed to load service');
       serviceSignal.set(null);
     } finally {
       isLoading.set(false);
@@ -76,10 +76,10 @@ export const BookingServiceService = implementService.withConfig<{
 
 export type BookingServiceServiceConfigResult =
   | {
-      type: "success";
+      type: 'success';
       config: ServiceFactoryConfig<typeof BookingServiceService>;
     }
-  | { type: "notFound" };
+  | { type: 'notFound' };
 
 export async function loadBookingServiceServiceConfig(
   serviceId?: string
@@ -90,11 +90,11 @@ export async function loadBookingServiceServiceConfig(
       const result = await services.getService(serviceId);
 
       if (!result || result._id !== serviceId) {
-        return { type: "notFound" };
+        return { type: 'notFound' };
       }
 
       return {
-        type: "success",
+        type: 'success',
         config: {
           initialService: result,
           serviceId,
@@ -104,13 +104,13 @@ export async function loadBookingServiceServiceConfig(
 
     // For cases without serviceId, always return success
     return {
-      type: "success",
+      type: 'success',
       config: {
         serviceId,
       },
     };
   } catch (error) {
-    console.error("Failed to load initial service:", error);
-    return { type: "notFound" };
+    console.error('Failed to load initial service:', error);
+    return { type: 'notFound' };
   }
 }

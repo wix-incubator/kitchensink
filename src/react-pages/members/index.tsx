@@ -1,6 +1,6 @@
-import { PageDocsRegistration } from "../../components/DocsMode";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
-import "../../styles/theme-1.css";
+import { PageDocsRegistration } from '../../components/DocsMode';
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
+import '../../styles/theme-1.css';
 
 export function MembersPage() {
   return (
@@ -64,7 +64,7 @@ export function MembersPage() {
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "var(--theme-gradient-primary)" }}
+                  style={{ background: 'var(--theme-gradient-primary)' }}
                 >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
@@ -93,7 +93,7 @@ export function MembersPage() {
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "var(--theme-gradient-secondary)" }}
+                  style={{ background: 'var(--theme-gradient-secondary)' }}
                 >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
@@ -122,7 +122,7 @@ export function MembersPage() {
               <div className="bg-[var(--theme-bg-options)] rounded-2xl p-6">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "var(--theme-gradient-accent)" }}
+                  style={{ background: 'var(--theme-gradient-accent)' }}
                 >
                   <svg
                     className="w-6 h-6 text-[var(--theme-text-content)]"
@@ -170,7 +170,7 @@ export function MembersPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div
                     className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                    style={{ background: "var(--theme-gradient-primary-50)" }}
+                    style={{ background: 'var(--theme-gradient-primary-50)' }}
                   >
                     <svg
                       className="w-8 h-8 text-[var(--theme-text-content)]"
@@ -188,7 +188,7 @@ export function MembersPage() {
                   </div>
                   <div
                     className="px-3 py-1 backdrop-blur-sm rounded-full border border-[var(--theme-border-primary-30)]"
-                    style={{ background: "var(--theme-primary-500-20)" }}
+                    style={{ background: 'var(--theme-primary-500-20)' }}
                   >
                     <span className="text-[var(--theme-text-accent)] text-sm font-medium">
                       Live Example

@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../headless/bookings/services/booking-services-service";
-import { BookingServices } from "../../../headless/bookings/components";
-import { WixMediaImage } from "../../../headless/media/components";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+} from '../../../headless/bookings/services/booking-services-service';
+import { BookingServices } from '../../../headless/bookings/components';
+import { WixMediaImage } from '../../../headless/media/components';
+import { PageDocsRegistration } from '../../../components/DocsMode';
 
 interface BookingsHomePageProps {
   bookingServicesConfig: any;
@@ -150,7 +150,7 @@ const ServicesPreviewSection = () => {
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {featuredServices.map((service) => (
+                {featuredServices.map(service => (
                   <BookingServices.ServiceListItem
                     key={service._id}
                     service={service}

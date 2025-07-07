@@ -1,6 +1,6 @@
-import { CurrentCart } from "../../headless/ecom/components";
-import { WixMediaImage } from "../../headless/media/components";
-import { useNavigation } from "../NavigationContext";
+import { CurrentCart } from '../../headless/ecom/components';
+import { WixMediaImage } from '../../headless/media/components';
+import { useNavigation } from '../NavigationContext';
 
 export default function CartContent() {
   const Navigation = useNavigation();
@@ -18,7 +18,7 @@ export default function CartContent() {
                 <CurrentCart.Trigger>
                   {({ itemCount }) => (
                     <p className="text-content-secondary text-xl">
-                      {itemCount} {itemCount === 1 ? "item" : "items"} in your
+                      {itemCount} {itemCount === 1 ? 'item' : 'items'} in your
                       cart
                     </p>
                   )}
@@ -86,14 +86,14 @@ export default function CartContent() {
                           route="/store"
                           className="inline-flex items-center gap-2 text-content-primary font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 btn-primary"
                           onMouseEnter={(e: any) => {
-                            e.currentTarget.classList.remove("btn-primary");
-                            e.currentTarget.classList.add("btn-primary:hover");
+                            e.currentTarget.classList.remove('btn-primary');
+                            e.currentTarget.classList.add('btn-primary:hover');
                           }}
                           onMouseLeave={(e: any) => {
                             e.currentTarget.classList.remove(
-                              "btn-primary:hover"
+                              'btn-primary:hover'
                             );
-                            e.currentTarget.classList.add("btn-primary");
+                            e.currentTarget.classList.add('btn-primary');
                           }}
                         >
                           Continue Shopping
@@ -200,7 +200,7 @@ export default function CartContent() {
                                                 (option, index) => {
                                                   const isColor =
                                                     typeof option.value ===
-                                                    "object";
+                                                    'object';
                                                   const text = isColor
                                                     ? (option.value as any).name
                                                     : option.value;
@@ -338,7 +338,7 @@ export default function CartContent() {
                                     </label>
                                     <textarea
                                       value={notes}
-                                      onChange={(e) =>
+                                      onChange={e =>
                                         onNotesChange(e.target.value)
                                       }
                                       placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
@@ -370,18 +370,18 @@ export default function CartContent() {
                                           disabled={isLoading}
                                           className="text-status-error hover:text-status-error/80 text-sm disabled:opacity-50"
                                         >
-                                          {isLoading ? "Removing..." : "Remove"}
+                                          {isLoading ? 'Removing...' : 'Remove'}
                                         </button>
                                       </div>
                                     ) : (
                                       <form
-                                        onSubmit={(e) => {
+                                        onSubmit={e => {
                                           e.preventDefault();
                                           const formData = new FormData(
                                             e.currentTarget
                                           );
                                           const code = formData.get(
-                                            "couponCode"
+                                            'couponCode'
                                           ) as string;
                                           if (code?.trim()) {
                                             onApply(code.trim());
@@ -402,8 +402,8 @@ export default function CartContent() {
                                           className="w-full px-4 py-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary text-sm font-medium rounded-lg transition-colors duration-200"
                                         >
                                           {isLoading
-                                            ? "Applying..."
-                                            : "Apply Coupon"}
+                                            ? 'Applying...'
+                                            : 'Apply Coupon'}
                                         </button>
                                       </form>
                                     )}
@@ -442,8 +442,8 @@ export default function CartContent() {
                                     <div className="space-y-3">
                                       <div className="flex justify-between text-lg text-content-primary">
                                         <span>
-                                          Subtotal ({itemCount}{" "}
-                                          {itemCount === 1 ? "item" : "items"})
+                                          Subtotal ({itemCount}{' '}
+                                          {itemCount === 1 ? 'item' : 'items'})
                                         </span>
                                         <span className="font-semibold">
                                           <LoadingOrValue>
@@ -513,13 +513,13 @@ export default function CartContent() {
                                             }
                                             className={`w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
                                               canProceed
-                                                ? "btn-primary"
-                                                : "bg-surface-primary"
+                                                ? 'btn-primary'
+                                                : 'bg-surface-primary'
                                             }`}
                                             style={{
                                               cursor: !canProceed
-                                                ? "not-allowed"
-                                                : "pointer",
+                                                ? 'not-allowed'
+                                                : 'pointer',
                                             }}
                                           >
                                             {checkoutLoading ? (
@@ -546,7 +546,7 @@ export default function CartContent() {
                                                 Processing...
                                               </span>
                                             ) : (
-                                              "Proceed to Checkout"
+                                              'Proceed to Checkout'
                                             )}
                                           </button>
                                         </div>

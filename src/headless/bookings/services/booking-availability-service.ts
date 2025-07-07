@@ -2,10 +2,10 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { availabilityCalendar } from "@wix/bookings";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { availabilityCalendar } from '@wix/bookings';
 
 export interface BookingAvailabilityServiceAPI {
   slots: Signal<availabilityCalendar.SlotAvailability[]>;
@@ -24,7 +24,7 @@ export interface BookingAvailabilityServiceAPI {
 }
 
 export const BookingAvailabilityServiceDefinition =
-  defineService<BookingAvailabilityServiceAPI>("bookingAvailabilityService");
+  defineService<BookingAvailabilityServiceAPI>('bookingAvailabilityService');
 
 export const BookingAvailabilityService = implementService.withConfig<{
   serviceId?: string;
@@ -43,7 +43,7 @@ export const BookingAvailabilityService = implementService.withConfig<{
     config.serviceId || (null as any)
   );
   const timezone: Signal<string> = signalsService.signal(
-    config.timezone || ("UTC" as any)
+    config.timezone || ('UTC' as any)
   );
 
   // Computed functions
@@ -53,26 +53,26 @@ export const BookingAvailabilityService = implementService.withConfig<{
 
   const slotsForSelectedDate = (): availabilityCalendar.SlotAvailability[] => {
     const selected = selectedDate.get();
-    const selectedDateString = selected.toISOString().split("T")[0];
+    const selectedDateString = selected.toISOString().split('T')[0];
 
-    return slots.get().filter((slot) => {
-      const slotDate = new Date(slot.slot?.startDate || "")
+    return slots.get().filter(slot => {
+      const slotDate = new Date(slot.slot?.startDate || '')
         .toISOString()
-        .split("T")[0];
+        .split('T')[0];
       return slotDate === selectedDateString;
     });
   };
 
   const availableDates = (): Date[] => {
     const dateSet = new Set<string>();
-    slots.get().forEach((slot) => {
+    slots.get().forEach(slot => {
       if (slot.slot?.startDate) {
-        const date = new Date(slot.slot.startDate).toISOString().split("T")[0];
+        const date = new Date(slot.slot.startDate).toISOString().split('T')[0];
         dateSet.add(date);
       }
     });
     return Array.from(dateSet)
-      .map((date) => new Date(date))
+      .map(date => new Date(date))
       .sort((a, b) => a.getTime() - b.getTime());
   };
 
@@ -80,7 +80,7 @@ export const BookingAvailabilityService = implementService.withConfig<{
   const loadSlots = async (startDate: Date, endDate: Date): Promise<void> => {
     const currentServiceId = serviceId.get();
     if (!currentServiceId) {
-      error.set("No service selected");
+      error.set('No service selected');
       return;
     }
 
@@ -91,7 +91,7 @@ export const BookingAvailabilityService = implementService.withConfig<{
       const query = {
         sort: [
           {
-            fieldName: "startTime",
+            fieldName: 'startTime',
             order: availabilityCalendar.SortOrder.ASC,
           },
         ],
@@ -116,8 +116,8 @@ export const BookingAvailabilityService = implementService.withConfig<{
 
       slots.set(queryResponse.availabilityEntries || []);
     } catch (err) {
-      console.error("Failed to load availability:", err);
-      error.set("Failed to load availability");
+      console.error('Failed to load availability:', err);
+      error.set('Failed to load availability');
     } finally {
       isLoading.set(false);
     }
@@ -175,7 +175,7 @@ export async function loadBookingAvailabilityServiceConfig(
       const query = {
         sort: [
           {
-            fieldName: "startTime",
+            fieldName: 'startTime',
             order: availabilityCalendar.SortOrder.ASC,
           },
         ],
@@ -190,27 +190,27 @@ export async function loadBookingAvailabilityServiceConfig(
       const queryResponse = await availabilityCalendar.queryAvailability(
         query,
         {
-          timezone: timezone || "UTC",
+          timezone: timezone || 'UTC',
           slotsPerDay: 20,
         }
       );
 
       return {
         serviceId,
-        timezone: timezone || "UTC",
+        timezone: timezone || 'UTC',
         initialSlots: queryResponse.availabilityEntries || [],
       };
     }
 
     return {
-      timezone: timezone || "UTC",
+      timezone: timezone || 'UTC',
       initialSlots: [],
     };
   } catch (error) {
-    console.error("Failed to load initial availability:", error);
+    console.error('Failed to load initial availability:', error);
     return {
       serviceId,
-      timezone: timezone || "UTC",
+      timezone: timezone || 'UTC',
       initialSlots: [],
     };
   }

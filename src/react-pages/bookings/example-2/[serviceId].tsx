@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
-} from "../../../headless/bookings/services/booking-service-service";
-import { BookingService } from "../../../headless/bookings/components";
-import { WixMediaImage } from "../../../headless/media/components";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+} from '../../../headless/bookings/services/booking-service-service';
+import { BookingService } from '../../../headless/bookings/components';
+import { WixMediaImage } from '../../../headless/media/components';
+import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../../components/DocsMode';
 
 interface ServiceDetailPageProps {
   bookingServiceConfig: any;
@@ -210,8 +210,8 @@ const ServiceDetailSection = () => {
                       </div>
                       <p className="text-white/80">
                         {canBookOnline
-                          ? "Online Available"
-                          : "Contact Required"}
+                          ? 'Online Available'
+                          : 'Contact Required'}
                       </p>
                     </div>
                   </div>
@@ -240,7 +240,7 @@ const ServiceDetailSection = () => {
                         Available Locations
                       </h3>
                       <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-                        <p className="text-white/80">{locations.join(", ")}</p>
+                        <p className="text-white/80">{locations.join(', ')}</p>
                       </div>
                     </div>
                   );

@@ -1,10 +1,10 @@
 ---
-import { auth } from "@wix/essentials";
-import { type IOAuthStrategy } from "@wix/sdk";
-import { loadCurrentMemberServiceConfig } from "../../headless/members/services/current-member-service";
-import { loadProfileUpdateServiceConfig } from "../../headless/members/services/profile-update-service";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { ProfilePage } from "../../react-pages/members/profile";
+import { auth } from '@wix/essentials';
+import { type IOAuthStrategy } from '@wix/sdk';
+import { loadCurrentMemberServiceConfig } from '../../headless/members/services/current-member-service';
+import { loadProfileUpdateServiceConfig } from '../../headless/members/services/profile-update-service';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ProfilePage } from '../../react-pages/members/profile';
 
 const userIsLoggedIn = auth.getContextualAuth<IOAuthStrategy>().loggedIn();
 

@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../headless/bookings/services/booking-services-service";
+} from '../../../headless/bookings/services/booking-services-service';
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
-} from "../../../headless/bookings/services/booking-selection-service";
+} from '../../../headless/bookings/services/booking-selection-service';
 import {
   BookingServices,
   BookingSelection,
-} from "../../../headless/bookings/components";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { WixMediaImage } from "../../../headless/media/components";
-import { PageDocsRegistration } from "../../../components/DocsMode";
+} from '../../../headless/bookings/components';
+import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
+import { WixMediaImage } from '../../../headless/media/components';
+import { PageDocsRegistration } from '../../../components/DocsMode';
 
 interface BookingsPageProps {
   bookingServicesConfig: any;
@@ -158,7 +158,7 @@ export default function BookingsPage({
 
                 return (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {services.map((service) => (
+                    {services.map(service => (
                       <BookingServices.ServiceListItem
                         key={service._id}
                         service={service}
@@ -284,13 +284,13 @@ export default function BookingsPage({
                                     disabled={!canBookOnline}
                                     className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
                                       canBookOnline
-                                        ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
-                                        : "bg-white/10 text-white/40 cursor-not-allowed"
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105'
+                                        : 'bg-white/10 text-white/40 cursor-not-allowed'
                                     }`}
                                   >
                                     {canBookOnline
-                                      ? "Book Now"
-                                      : "Booking Unavailable"}
+                                      ? 'Book Now'
+                                      : 'Booking Unavailable'}
                                   </button>
                                 )}
                               </BookingSelection.ServiceSelector>

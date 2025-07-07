@@ -3,9 +3,9 @@ import {
   implementService,
   type ServiceFactoryConfig,
   type Signal,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import { seoTags } from "@wix/seo";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import { seoTags } from '@wix/seo';
 
 export interface SEOTagsServiceAPI {
   // @ts-ignore
@@ -17,7 +17,7 @@ export interface SEOTagsServiceAPI {
 }
 
 export const SEOTagsServiceDefinition =
-  defineService<SEOTagsServiceAPI>("seoTagsService");
+  defineService<SEOTagsServiceAPI>('seoTagsService');
 
 export type SEOTagsServiceConfig = {
   tags: seoTags.Tag[];
@@ -147,42 +147,42 @@ export async function loadSEOTagsServiceConfig({
 }
 
 function appendNewTags(tags: seoTags.Tag[]) {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   const newTagElements: HTMLElement[] = [];
   try {
-    tags.forEach((tag) => {
+    tags.forEach(tag => {
       const el = createTagElement(tag);
       if (el) newTagElements.push(el);
     });
 
     document.head
       .querySelectorAll('[wix-seo-tags="true"]')
-      .forEach((el) => el.remove());
+      .forEach(el => el.remove());
 
-    newTagElements.forEach((el) => document.head.appendChild(el));
+    newTagElements.forEach(el => document.head.appendChild(el));
   } catch (err) {
-    console.error("SEO tag update failed", err);
+    console.error('SEO tag update failed', err);
   }
 
   function createTagElement(tag: any): HTMLElement | null {
     let el: HTMLElement | null = null;
-    if (tag.type === "title") {
-      el = document.createElement("title");
-      el.textContent = tag.children || "";
-    } else if (tag.type === "meta") {
-      el = document.createElement("meta");
+    if (tag.type === 'title') {
+      el = document.createElement('title');
+      el.textContent = tag.children || '';
+    } else if (tag.type === 'meta') {
+      el = document.createElement('meta');
       setAttributes(el, tag.props);
-    } else if (tag.type === "link") {
-      el = document.createElement("link");
+    } else if (tag.type === 'link') {
+      el = document.createElement('link');
       setAttributes(el, tag.props);
-    } else if (tag.type === "script") {
-      el = document.createElement("script");
+    } else if (tag.type === 'script') {
+      el = document.createElement('script');
       setAttributes(el, tag.props);
       setAttributes(el, tag.meta);
       if (tag.children) el.textContent = tag.children;
     }
-    if (el) el.setAttribute("wix-seo-tags", "true");
+    if (el) el.setAttribute('wix-seo-tags', 'true');
     return el;
   }
 

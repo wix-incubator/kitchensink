@@ -1,7 +1,7 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { BookingServiceServiceDefinition } from "../services/booking-service-service";
-import { services } from "@wix/bookings";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { BookingServiceServiceDefinition } from '../services/booking-service-service';
+import { services } from '@wix/bookings';
 
 export type ServicePropsChildren = (
   props: ServiceRenderProps
@@ -101,10 +101,10 @@ export const ServiceHeader = (props: ServiceHeaderProps): React.ReactNode => {
   }
 
   return props.children({
-    serviceId: serviceData._id || "",
-    name: serviceData.name || "Untitled Service",
+    serviceId: serviceData._id || '',
+    name: serviceData.name || 'Untitled Service',
     tagLine: serviceData.tagLine || undefined,
-    type: serviceData.type || "APPOINTMENT",
+    type: serviceData.type || 'APPOINTMENT',
     category: serviceData.category?.name || undefined,
   });
 };
@@ -234,7 +234,7 @@ export interface ServiceDetailsRenderProps {
   /** Whether service is hidden */
   isHidden: boolean;
   /** Raw payment information */
-  payment?: services.Service["payment"];
+  payment?: services.Service['payment'];
 }
 
 /**
@@ -253,9 +253,9 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
   }
 
   // Format price
-  let price = "Contact for pricing";
+  let price = 'Contact for pricing';
   if (
-    serviceData.payment?.rateType === "FIXED" &&
+    serviceData.payment?.rateType === 'FIXED' &&
     serviceData.payment.fixed?.price
   ) {
     const fixedPrice = serviceData.payment.fixed.price;
@@ -263,17 +263,17 @@ export const ServiceDetails = (props: ServiceDetailsProps): React.ReactNode => {
       fixedPrice.formattedValue || fixedPrice.value
     }`;
   } else if (
-    serviceData.payment?.rateType === "VARIED" &&
+    serviceData.payment?.rateType === 'VARIED' &&
     serviceData.payment.varied?.defaultPrice
   ) {
     const variedPrice = serviceData.payment.varied.defaultPrice;
     price = `${variedPrice.currency} ${
       variedPrice.formattedValue || variedPrice.value
     }`;
-  } else if (serviceData.payment?.rateType === "NO_FEE") {
-    price = "Free";
+  } else if (serviceData.payment?.rateType === 'NO_FEE') {
+    price = 'Free';
   } else if (
-    serviceData.payment?.rateType === "CUSTOM" &&
+    serviceData.payment?.rateType === 'CUSTOM' &&
     serviceData.payment.custom?.description
   ) {
     price = serviceData.payment.custom.description;
@@ -313,7 +313,7 @@ export interface ServiceLocationsRenderProps {
   /** Whether service has locations */
   hasLocations: boolean;
   /** Raw location data */
-  rawLocations?: services.Service["locations"];
+  rawLocations?: services.Service['locations'];
 }
 
 /**
@@ -336,11 +336,11 @@ export const ServiceLocations = (
   // Get locations
   const locations =
     serviceData.locations?.map(
-      (loc) =>
+      loc =>
         loc.business?.name ||
         loc.custom?.address?.formatted ||
         loc.calculatedAddress?.formatted ||
-        "Location TBD"
+        'Location TBD'
     ) || [];
 
   return props.children({
@@ -390,7 +390,7 @@ export const ServiceActions = (props: ServiceActionsProps): React.ReactNode => {
     return null;
   }
 
-  const serviceId = serviceData._id || "";
+  const serviceId = serviceData._id || '';
   const canBookOnline = serviceData.onlineBooking?.enabled === true;
   const isAvailable = canBookOnline && !serviceData.hidden;
 
@@ -462,9 +462,9 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   }
 
   // Format price
-  let price = "Contact for pricing";
+  let price = 'Contact for pricing';
   if (
-    serviceData.payment?.rateType === "FIXED" &&
+    serviceData.payment?.rateType === 'FIXED' &&
     serviceData.payment.fixed?.price
   ) {
     const fixedPrice = serviceData.payment.fixed.price;
@@ -472,17 +472,17 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
       fixedPrice.formattedValue || fixedPrice.value
     }`;
   } else if (
-    serviceData.payment?.rateType === "VARIED" &&
+    serviceData.payment?.rateType === 'VARIED' &&
     serviceData.payment.varied?.defaultPrice
   ) {
     const variedPrice = serviceData.payment.varied.defaultPrice;
     price = `${variedPrice.currency} ${
       variedPrice.formattedValue || variedPrice.value
     }`;
-  } else if (serviceData.payment?.rateType === "NO_FEE") {
-    price = "Free";
+  } else if (serviceData.payment?.rateType === 'NO_FEE') {
+    price = 'Free';
   } else if (
-    serviceData.payment?.rateType === "CUSTOM" &&
+    serviceData.payment?.rateType === 'CUSTOM' &&
     serviceData.payment.custom?.description
   ) {
     price = serviceData.payment.custom.description;
@@ -498,19 +498,19 @@ export const ServiceDetail = (props: ServiceDetailProps): React.ReactNode => {
   // Get locations
   const locations =
     serviceData.locations?.map(
-      (loc) =>
+      loc =>
         loc.business?.name ||
         loc.custom?.address?.formatted ||
         loc.calculatedAddress?.formatted ||
-        "Location TBD"
+        'Location TBD'
     ) || [];
 
   return props.children({
-    serviceId: serviceData._id || "",
-    name: serviceData.name || "Untitled Service",
+    serviceId: serviceData._id || '',
+    name: serviceData.name || 'Untitled Service',
     description: serviceData.description || undefined,
     tagLine: serviceData.tagLine || undefined,
-    type: serviceData.type || "APPOINTMENT",
+    type: serviceData.type || 'APPOINTMENT',
     canBookOnline: serviceData.onlineBooking?.enabled === true,
     duration,
     price,

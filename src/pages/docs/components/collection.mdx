@@ -9,7 +9,7 @@ The `Collection` namespace contains headless components for displaying and manag
 ## Overview
 
 ```tsx
-import { Collection } from "headless/store/components";
+import { Collection } from 'headless/store/components';
 
 // All available components
 const {
@@ -70,7 +70,7 @@ Displays a grid of products with loading and error states.
 
       {!isEmpty && !isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {products.map(product => (
             <Collection.ProductCard key={product._id} product={product}>
               {/* Product card render prop content */}
             </Collection.ProductCard>
@@ -192,7 +192,7 @@ Handles pagination with a "load more" button pattern.
             disabled={isLoading}
             className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg transition-colors"
           >
-            {isLoading ? "Loading..." : "Load More Products"}
+            {isLoading ? 'Loading...' : 'Load More Products'}
           </button>
 
           <p className="text-gray-600 text-sm mt-2">
@@ -235,7 +235,7 @@ Displays collection metadata and product counts.
         <h1 className="text-3xl font-bold text-gray-900">Products</h1>
         {!isLoading && hasProducts && (
           <p className="text-gray-600 mt-1">
-            {totalProducts} {totalProducts === 1 ? "product" : "products"}{" "}
+            {totalProducts} {totalProducts === 1 ? 'product' : 'products'}{' '}
             available
           </p>
         )}
@@ -294,8 +294,8 @@ Provides traditional page-based pagination controls.
               disabled={isLoading}
               className={`px-3 py-2 rounded-lg ${
                 isActive
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
               } disabled:opacity-50`}
             >
               {page}
@@ -344,7 +344,7 @@ Provides traditional page-based pagination controls.
 
         {!isEmpty && !isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {products.map(product => (
               <Collection.ProductCard key={product._id} product={product}>
                 {/* Product card content */}
               </Collection.ProductCard>
@@ -366,7 +366,7 @@ Provides traditional page-based pagination controls.
               disabled={isLoading}
               className="btn-primary"
             >
-              {isLoading ? "Loading..." : "Load More"}
+              {isLoading ? 'Loading...' : 'Load More'}
             </button>
           </div>
         )}
@@ -391,7 +391,7 @@ Provides traditional page-based pagination controls.
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <ProductSkeleton key={i} />)
-          : products.map((product) => (
+          : products.map(product => (
               <Collection.ProductCard key={product._id} product={product}>
                 {/* Compact product card */}
               </Collection.ProductCard>
@@ -416,7 +416,7 @@ Provides traditional page-based pagination controls.
             key={i + 1}
             onClick={() => goToPage(i + 1)}
             className={`pagination-btn ${
-              currentPage === i + 1 ? "active" : ""
+              currentPage === i + 1 ? 'active' : ''
             }`}
           >
             {i + 1}
@@ -445,7 +445,7 @@ Provides traditional page-based pagination controls.
       {isLoading ? (
         <div>Loading products...</div>
       ) : (
-        products.map((product) => (
+        products.map(product => (
           <Collection.ProductCard key={product._id} product={product}>
             {({ name, price, imageUrl, productUrl, inStock }) => (
               <div className="flex gap-4 p-4 border rounded-lg">
@@ -488,15 +488,15 @@ Provides traditional page-based pagination controls.
 These components depend on the `CollectionService` being available in the services context. Make sure to wrap your components with a `ServicesManagerProvider` that includes the `CollectionService`.
 
 ```tsx
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   CollectionServiceDefinition,
   CollectionService,
-} from "../headless/store/collection-service";
+} from '../headless/store/collection-service';
 
 <ServicesManagerProvider
   servicesManager={
@@ -531,7 +531,7 @@ import type {
   CollectionHeaderRenderProps,
   CollectionPaginationProps,
   CollectionPaginationRenderProps,
-} from "../headless/store/components";
+} from '../headless/store/components';
 ```
 
 ## Testing
@@ -539,10 +539,10 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from "@testing-library/react";
-import { Collection } from "../headless/store/components";
+import { render } from '@testing-library/react';
+import { Collection } from '../headless/store/components';
 
-test("ProductGrid renders correctly", () => {
+test('ProductGrid renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(

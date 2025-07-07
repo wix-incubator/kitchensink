@@ -9,7 +9,7 @@ The `BookingSelection` namespace contains headless components for managing the b
 ## Overview
 
 ```tsx
-import { BookingSelection } from "headless/bookings/components";
+import { BookingSelection } from 'headless/bookings/components';
 
 // All available components
 const {
@@ -92,7 +92,7 @@ Displays booking summary information and provides checkout functionality.
               📅 {summary.date}
             </div>
             <div className="flex items-center text-sm text-gray-600 mb-2">
-              🕒 {summary.startTime} - {summary.endTime} ({summary.duration}{" "}
+              🕒 {summary.startTime} - {summary.endTime} ({summary.duration}{' '}
               min)
             </div>
             {summary.location && (
@@ -123,11 +123,11 @@ Displays booking summary information and provides checkout functionality.
             disabled={!canBook || isBooking}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
               canBook && !isBooking
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {isBooking ? "Processing..." : "Book Now"}
+            {isBooking ? 'Processing...' : 'Book Now'}
           </button>
 
           <button
@@ -166,13 +166,13 @@ Handles service selection for booking with state management.
 <BookingSelection.ServiceSelector services={availableServices}>
   {({ selectedService, selectService, isServiceSelected }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {services.map((service) => (
+      {services.map(service => (
         <div
           key={service._id}
           className={`border rounded-lg p-4 cursor-pointer transition-colors ${
             isServiceSelected(service._id)
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-200 hover:border-gray-300"
+              ? 'border-blue-500 bg-blue-50'
+              : 'border-gray-200 hover:border-gray-300'
           }`}
           onClick={() => selectService(service)}
         >
@@ -182,7 +182,7 @@ Handles service selection for booking with state management.
           )}
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">
-              {service.schedule?.availabilityConstraints?.sessionDurations?.[0]}{" "}
+              {service.schedule?.availabilityConstraints?.sessionDurations?.[0]}{' '}
               min
             </span>
             <span className="font-semibold text-green-600">
@@ -220,14 +220,14 @@ Handles time slot selection with availability checking.
   {({ selectedSlot, selectSlot, isSlotSelected }) => (
     <div className="space-y-2">
       {slots.map((slot, index) => {
-        const startTime = new Date(slot.slot?.startDate || "");
-        const endTime = new Date(slot.slot?.endDate || "");
+        const startTime = new Date(slot.slot?.startDate || '');
+        const endTime = new Date(slot.slot?.endDate || '');
         const timeRange = `${startTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
+          hour: '2-digit',
+          minute: '2-digit',
         })} - ${endTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
+          hour: '2-digit',
+          minute: '2-digit',
         })}`;
 
         return (
@@ -237,10 +237,10 @@ Handles time slot selection with availability checking.
             disabled={!slot.bookable}
             className={`w-full p-3 text-left rounded-lg border transition-colors ${
               isSlotSelected(slot)
-                ? "bg-blue-50 text-blue-700 border-blue-300"
+                ? 'bg-blue-50 text-blue-700 border-blue-300'
                 : slot.bookable
-                ? "hover:bg-gray-50 border-gray-200"
-                : "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed"
+                  ? 'hover:bg-gray-50 border-gray-200'
+                  : 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
             <div className="flex justify-between items-center">
@@ -249,8 +249,8 @@ Handles time slot selection with availability checking.
                 {slot.openSpots > 1
                   ? `${slot.openSpots} spots available`
                   : slot.bookable
-                  ? "Available"
-                  : "Unavailable"}
+                    ? 'Available'
+                    : 'Unavailable'}
               </span>
             </div>
           </button>
@@ -298,17 +298,17 @@ Displays booking progress and current step information.
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                 index < currentStep
-                  ? "bg-blue-500 text-white"
+                  ? 'bg-blue-500 text-white'
                   : index === currentStep
-                  ? "bg-blue-100 text-blue-600 border-2 border-blue-500"
-                  : "bg-gray-200 text-gray-500"
+                    ? 'bg-blue-100 text-blue-600 border-2 border-blue-500'
+                    : 'bg-gray-200 text-gray-500'
               }`}
             >
               {index + 1}
             </div>
             <span
               className={`ml-2 text-sm font-medium ${
-                index <= currentStep ? "text-gray-900" : "text-gray-400"
+                index <= currentStep ? 'text-gray-900' : 'text-gray-400'
               }`}
             >
               {step}
@@ -329,7 +329,7 @@ Displays booking progress and current step information.
 
       <div className="mt-2 text-sm text-gray-600">
         Step {currentStep} of {totalSteps}
-        {canProceed && " - Ready to book!"}
+        {canProceed && ' - Ready to book!'}
       </div>
     </div>
   )}
@@ -457,7 +457,7 @@ function CompleteBookingFlow({ services, timeSlots }) {
 The BookingSelection components work with a service that needs to be configured:
 
 ```tsx
-import { BookingSelectionService } from "headless/bookings/booking-selection-service";
+import { BookingSelectionService } from 'headless/bookings/booking-selection-service';
 
 // Configure the service
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig(
@@ -479,7 +479,7 @@ The `proceedToCheckout` function handles the Wix Bookings checkout flow:
 <BookingSelection.BookingSummary>
   {({ proceedToCheckout, canBook, isBooking }) => (
     <button onClick={proceedToCheckout} disabled={!canBook || isBooking}>
-      {isBooking ? "Processing..." : "Complete Booking"}
+      {isBooking ? 'Processing...' : 'Complete Booking'}
     </button>
   )}
 </BookingSelection.BookingSummary>

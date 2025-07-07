@@ -13,7 +13,7 @@ import {
   BookingServices,
   BookingAvailability,
   BookingSelection,
-} from "headless/bookings/components";
+} from 'headless/bookings/components';
 
 // Basic booking flow
 function BookingFlow() {
@@ -114,14 +114,14 @@ Handle the booking process and state management:
 Perfect for businesses with simple services and quick booking needs:
 
 ```tsx
-import { BookingServices } from "headless/bookings/components";
+import { BookingServices } from 'headless/bookings/components';
 
 function SimpleBookingFlow() {
   return (
     <BookingServices.ServicesList>
       {({ services }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => (
+          {services.map(service => (
             <BookingServices.ServiceListItem
               key={service._id}
               service={service}
@@ -147,13 +147,13 @@ function SimpleBookingFlow() {
 Ideal for complex services requiring detailed information:
 
 ```tsx
-import { BookingServices } from "headless/bookings/components";
+import { BookingServices } from 'headless/bookings/components';
 
 function ServiceDetailPattern({ serviceId }) {
   return (
     <BookingServices.ServicesList>
       {({ services }) => {
-        const service = services.find((s) => s._id === serviceId);
+        const service = services.find(s => s._id === serviceId);
         return (
           <BookingServices.ServiceListItem service={service}>
             {({ name, description, image, price, duration, locations }) => (
@@ -164,7 +164,7 @@ function ServiceDetailPattern({ serviceId }) {
                 <div className="service-info">
                   <span>Duration: {duration} min</span>
                   <span>Price: {price}</span>
-                  <span>Location: {locations.join(", ")}</span>
+                  <span>Location: {locations.join(', ')}</span>
                 </div>
                 <a href={`/book/${serviceId}`}>Book This Service</a>
               </div>
@@ -186,7 +186,7 @@ import {
   BookingServices,
   BookingAvailability,
   BookingSelection,
-} from "headless/bookings/components";
+} from 'headless/bookings/components';
 
 function IntegratedBookingFlow({ serviceId }) {
   return (
@@ -203,21 +203,21 @@ function IntegratedBookingFlow({ serviceId }) {
         {/* Calendar Section */}
         <div className="lg:col-span-1">
           <BookingAvailability.Calendar>
-            {(calendarProps) => <Calendar {...calendarProps} />}
+            {calendarProps => <Calendar {...calendarProps} />}
           </BookingAvailability.Calendar>
         </div>
 
         {/* Time Slots Section */}
         <div className="lg:col-span-1">
           <BookingAvailability.TimeSlots>
-            {(slotsProps) => <TimeSlots {...slotsProps} />}
+            {slotsProps => <TimeSlots {...slotsProps} />}
           </BookingAvailability.TimeSlots>
         </div>
 
         {/* Booking Summary */}
         <div className="lg:col-span-1">
           <BookingSelection.BookingSummary>
-            {(summaryProps) => <BookingSummary {...summaryProps} />}
+            {summaryProps => <BookingSummary {...summaryProps} />}
           </BookingSelection.BookingSummary>
         </div>
       </div>
@@ -235,7 +235,7 @@ import {
   BookingServices,
   BookingAvailability,
   BookingSelection,
-} from "headless/bookings/components";
+} from 'headless/bookings/components';
 
 function StepByStepBooking() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -261,7 +261,7 @@ function StepByStepBooking() {
 
       {currentStep === 2 && (
         <BookingAvailability.Calendar>
-          {(props) => (
+          {props => (
             <DateSelection {...props} onNext={() => setCurrentStep(3)} />
           )}
         </BookingAvailability.Calendar>
@@ -269,7 +269,7 @@ function StepByStepBooking() {
 
       {currentStep === 3 && (
         <BookingSelection.BookingSummary>
-          {(props) => <FinalConfirmation {...props} />}
+          {props => <FinalConfirmation {...props} />}
         </BookingSelection.BookingSummary>
       )}
     </div>
@@ -286,7 +286,7 @@ import {
   loadBookingServicesServiceConfig,
   loadBookingAvailabilityServiceConfig,
   loadBookingSelectionServiceConfig,
-} from "../headless/bookings/services";
+} from '../headless/bookings/services';
 
 // On the server (Astro page)
 export async function getStaticProps() {
@@ -319,14 +319,14 @@ import {
   BookingServices,
   BookingAvailability,
   BookingSelection,
-} from "headless/bookings/components";
+} from 'headless/bookings/components';
 
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { useState } from "react";
+} from '@wix/services-manager';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
+import { useState } from 'react';
 
 function BookingApp({ configs }) {
   const [servicesManager] = useState(() =>
@@ -441,10 +441,10 @@ All components provide comprehensive error handling:
 All components use render props, giving you complete control over styling:
 
 ```tsx
-import { BookingServices } from "headless/bookings/components";
+import { BookingServices } from 'headless/bookings/components';
 
 <BookingServices.ServiceListItem service={service}>
-  {(props) => (
+  {props => (
     <YourCustomServiceCard
       {...props}
       className="your-custom-styles"
@@ -461,7 +461,7 @@ Customize component behavior through configuration:
 ```tsx
 const config = await loadBookingAvailabilityServiceConfig(
   serviceId,
-  "America/New_York", // Custom timezone
+  'America/New_York', // Custom timezone
   { slotsPerDay: 10 } // Custom slot limits
 );
 ```
@@ -471,7 +471,7 @@ const config = await loadBookingAvailabilityServiceConfig(
 Components work with your existing systems:
 
 ```tsx
-import { BookingSelection } from "headless/bookings/components";
+import { BookingSelection } from 'headless/bookings/components';
 
 <BookingSelection.BookingSummary>
   {({ proceedToCheckout, summary }) => (

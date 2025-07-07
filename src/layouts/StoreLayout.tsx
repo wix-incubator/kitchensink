@@ -1,14 +1,14 @@
-import { useState, type ReactNode } from "react";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+import { useState, type ReactNode } from 'react';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
+} from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from "../headless/ecom/services/current-cart-service";
-import { MiniCartContent, MiniCartIcon } from "../components/ecom/MiniCart";
+} from '../headless/ecom/services/current-cart-service';
+import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 
 interface StoreLayoutProps {
   children: ReactNode;

@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
 import {
   BookingServicesService,
   BookingServicesServiceDefinition,
-} from "../../../../headless/bookings/services/booking-services-service";
-import { BookingAvailabilityService } from "../../../../headless/bookings/services/booking-availability-service";
-import { BookingSelectionService } from "../../../../headless/bookings/services/booking-selection-service";
+} from '../../../../headless/bookings/services/booking-services-service';
+import { BookingAvailabilityService } from '../../../../headless/bookings/services/booking-availability-service';
+import { BookingSelectionService } from '../../../../headless/bookings/services/booking-selection-service';
 import {
   BookingServices,
   BookingAvailability,
   BookingSelection,
-} from "../../../../headless/bookings/components";
-import { WixMediaImage } from "../../../../headless/media/components";
-import { KitchensinkLayout } from "../../../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../../../components/DocsMode";
-import { BookingAvailabilityServiceDefinition } from "../../../../headless/bookings/services/booking-availability-service";
-import { BookingSelectionServiceDefinition } from "../../../../headless/bookings/services/booking-selection-service";
+} from '../../../../headless/bookings/components';
+import { WixMediaImage } from '../../../../headless/media/components';
+import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../../../components/DocsMode';
+import { BookingAvailabilityServiceDefinition } from '../../../../headless/bookings/services/booking-availability-service';
+import { BookingSelectionServiceDefinition } from '../../../../headless/bookings/services/booking-selection-service';
 
 interface BookNowPageProps {
   serviceId: string;
@@ -53,19 +53,19 @@ const BookingSteps = ({ currentStep }: { currentStep: number }) => {
   const steps = [
     {
       id: 1,
-      name: "Select Date",
+      name: 'Select Date',
       completed: currentStep > 1,
       current: currentStep === 1,
     },
     {
       id: 2,
-      name: "Select Time",
+      name: 'Select Time',
       completed: currentStep > 2,
       current: currentStep === 2,
     },
     {
       id: 3,
-      name: "Confirm Booking",
+      name: 'Confirm Booking',
       completed: currentStep > 3,
       current: currentStep === 3,
     },
@@ -78,16 +78,16 @@ const BookingSteps = ({ currentStep }: { currentStep: number }) => {
           {steps.map((step, stepIdx) => (
             <li
               key={step.id}
-              className={stepIdx !== steps.length - 1 ? "pr-8 sm:pr-20" : ""}
+              className={stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : ''}
             >
               <div className="flex items-center">
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
                     step.completed
-                      ? "bg-blue-500 text-white"
+                      ? 'bg-blue-500 text-white'
                       : step.current
-                      ? "border-2 border-blue-400 bg-white/10 text-blue-300"
-                      : "border-2 border-white/30 bg-white/5 text-white/40"
+                        ? 'border-2 border-blue-400 bg-white/10 text-blue-300'
+                        : 'border-2 border-white/30 bg-white/5 text-white/40'
                   }`}
                 >
                   {step.id}
@@ -95,10 +95,10 @@ const BookingSteps = ({ currentStep }: { currentStep: number }) => {
                 <span
                   className={`ml-2 text-sm font-medium ${
                     step.current
-                      ? "text-blue-300"
+                      ? 'text-blue-300'
                       : step.completed
-                      ? "text-white"
-                      : "text-white/50"
+                        ? 'text-white'
+                        : 'text-white/50'
                   }`}
                 >
                   {step.name}
@@ -203,11 +203,11 @@ const CalendarView = ({
                 disabled={!isAvailable || isPast || !isCurrentMonth}
                 className={`h-10 w-10 text-sm font-medium rounded-full transition-colors ${
                   isSelected
-                    ? "bg-blue-500 text-white"
+                    ? 'bg-blue-500 text-white'
                     : isAvailable && !isPast && isCurrentMonth
-                    ? "hover:bg-white/10 text-white"
-                    : "text-white/40 cursor-not-allowed"
-                } ${isToday ? "ring-2 ring-blue-400" : ""}`}
+                      ? 'hover:bg-white/10 text-white'
+                      : 'text-white/40 cursor-not-allowed'
+                } ${isToday ? 'ring-2 ring-blue-400' : ''}`}
               >
                 {date.getDate()}
               </button>
@@ -226,12 +226,12 @@ const CalendarView = ({
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-white mb-2">
                 {firstDayOfMonth.toLocaleDateString([], {
-                  month: "long",
-                  year: "numeric",
+                  month: 'long',
+                  year: 'numeric',
                 })}
               </h3>
               <div className="grid grid-cols-7 gap-2 mb-2">
-                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
                   <div
                     key={day}
                     className="h-10 flex items-center justify-center text-sm font-medium text-white/70"
@@ -326,20 +326,20 @@ const TimeSlotSelector = ({
                             disabled={!isBookable}
                             className={`w-full p-3 text-left rounded-lg border transition-colors ${
                               isSelected
-                                ? "bg-blue-500/20 text-blue-300 border-blue-400"
+                                ? 'bg-blue-500/20 text-blue-300 border-blue-400'
                                 : isBookable
-                                ? "hover:bg-white/10 border-white/20 text-white"
-                                : "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
+                                  ? 'hover:bg-white/10 border-white/20 text-white'
+                                  : 'bg-white/5 border-white/10 text-white/40 cursor-not-allowed'
                             }`}
                           >
                             <div className="flex justify-between items-center">
                               <span
                                 className={`font-medium ${
                                   isSelected
-                                    ? "text-blue-300"
+                                    ? 'text-blue-300'
                                     : isBookable
-                                    ? "text-white"
-                                    : "text-white/40"
+                                      ? 'text-white'
+                                      : 'text-white/40'
                                 }`}
                               >
                                 {timeRange}
@@ -347,10 +347,10 @@ const TimeSlotSelector = ({
                               <span
                                 className={`text-sm ${
                                   isSelected
-                                    ? "text-blue-200"
+                                    ? 'text-blue-200'
                                     : isBookable
-                                    ? "text-white/70"
-                                    : "text-white/30"
+                                      ? 'text-white/70'
+                                      : 'text-white/30'
                                 }`}
                               >
                                 {availabilityText}
@@ -448,11 +448,11 @@ const BookingSummaryView = ({ serviceId }: { serviceId: string }) => {
                 disabled={!canBook || isBooking}
                 className={`flex-1 px-4 py-2 font-medium transition-all rounded-lg ${
                   canBook && !isBooking
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
-                    : "bg-white/10 text-white/40 cursor-not-allowed"
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105'
+                    : 'bg-white/10 text-white/40 cursor-not-allowed'
                 }`}
               >
-                {isBooking ? "Booking..." : "Confirm Booking"}
+                {isBooking ? 'Booking...' : 'Confirm Booking'}
               </button>
             </div>
           </div>
@@ -483,7 +483,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
         // Auto-select the service when services are loaded
         React.useEffect(() => {
           if (services.length > 0 && serviceId) {
-            const service = services.find((s) => s._id === serviceId);
+            const service = services.find(s => s._id === serviceId);
             if (service) {
               // Use BookingSelection to select the service
               // This will be handled through the BookingSelection.ServiceSelector
@@ -525,7 +525,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
           );
         }
 
-        const service = services.find((s) => s._id === serviceId);
+        const service = services.find(s => s._id === serviceId);
         if (!service) {
           return <ServiceNotFound />;
         }
@@ -564,7 +564,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
                         <div className="lg:col-span-2 space-y-6">
                           {/* Step 1: Date Selection */}
                           <div
-                            className={currentStep >= 1 ? "block" : "hidden"}
+                            className={currentStep >= 1 ? 'block' : 'hidden'}
                           >
                             <h2 className="text-xl font-semibold text-white mb-4">
                               Select a Date
@@ -575,7 +575,7 @@ const BookNowContent = ({ serviceId }: { serviceId: string }) => {
                           {/* Step 2: Time Selection */}
                           {selectedDate && (
                             <div
-                              className={currentStep >= 2 ? "block" : "hidden"}
+                              className={currentStep >= 2 ? 'block' : 'hidden'}
                             >
                               <h2 className="text-xl font-semibold text-white mb-4">
                                 Select a Time

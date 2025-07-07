@@ -1,10 +1,10 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
 import {
   BookingSelectionServiceDefinition,
   type BookingSummary as BookingSummaryData,
-} from "../services/booking-selection-service";
-import { services, availabilityCalendar } from "@wix/bookings";
+} from '../services/booking-selection-service';
+import { services, availabilityCalendar } from '@wix/bookings';
 
 /**
  * Props for BookingSummary headless component
@@ -207,7 +207,7 @@ export const BookingProgress = (props: BookingProgressProps) => {
   const hasService = selectedService !== null;
   const hasSlot = selectedSlot !== null;
 
-  const steps = ["Select Service", "Choose Time", "Confirm & Book"];
+  const steps = ['Select Service', 'Choose Time', 'Confirm & Book'];
   const totalSteps = steps.length;
 
   let currentStep = 0;

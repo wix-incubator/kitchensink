@@ -2,9 +2,9 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
 
 export interface SharingPlatform {
   name: string;
@@ -33,7 +33,7 @@ export interface SocialSharingServiceAPI {
 }
 
 export const SocialSharingServiceDefinition =
-  defineService<SocialSharingServiceAPI>("socialSharing");
+  defineService<SocialSharingServiceAPI>('socialSharing');
 
 export const SocialSharingService = implementService.withConfig<{
   productName: string;
@@ -45,34 +45,34 @@ export const SocialSharingService = implementService.withConfig<{
 
   const availablePlatforms: Signal<SharingPlatform[]> = signalsService.signal([
     {
-      name: "Facebook",
-      icon: "facebook",
-      color: "#1877F2",
-      shareUrl: "https://www.facebook.com/sharer/sharer.php",
+      name: 'Facebook',
+      icon: 'facebook',
+      color: '#1877F2',
+      shareUrl: 'https://www.facebook.com/sharer/sharer.php',
     },
     {
-      name: "Twitter",
-      icon: "twitter",
-      color: "#1DA1F2",
-      shareUrl: "https://twitter.com/intent/tweet",
+      name: 'Twitter',
+      icon: 'twitter',
+      color: '#1DA1F2',
+      shareUrl: 'https://twitter.com/intent/tweet',
     },
     {
-      name: "LinkedIn",
-      icon: "linkedin",
-      color: "#0A66C2",
-      shareUrl: "https://www.linkedin.com/sharing/share-offsite/",
+      name: 'LinkedIn',
+      icon: 'linkedin',
+      color: '#0A66C2',
+      shareUrl: 'https://www.linkedin.com/sharing/share-offsite/',
     },
     {
-      name: "WhatsApp",
-      icon: "whatsapp",
-      color: "#25D366",
-      shareUrl: "https://wa.me/",
+      name: 'WhatsApp',
+      icon: 'whatsapp',
+      color: '#25D366',
+      shareUrl: 'https://wa.me/',
     },
     {
-      name: "Email",
-      icon: "mail",
-      color: "#EA4335",
-      shareUrl: "mailto:",
+      name: 'Email',
+      icon: 'mail',
+      color: '#EA4335',
+      shareUrl: 'mailto:',
     },
   ]);
 
@@ -101,43 +101,43 @@ export const SocialSharingService = implementService.withConfig<{
     title: string,
     description?: string
   ) => {
-    const shareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
-    shareUrl.searchParams.set("u", url);
+    const shareUrl = new URL('https://www.facebook.com/sharer/sharer.php');
+    shareUrl.searchParams.set('u', url);
     shareUrl.searchParams.set(
-      "quote",
-      `${title}${description ? ` - ${description}` : ""}`
+      'quote',
+      `${title}${description ? ` - ${description}` : ''}`
     );
 
-    openShareWindow(shareUrl.toString(), "facebook");
+    openShareWindow(shareUrl.toString(), 'facebook');
   };
 
   const shareToTwitter = (url: string, text: string, hashtags?: string[]) => {
-    const shareUrl = new URL("https://twitter.com/intent/tweet");
-    shareUrl.searchParams.set("url", url);
-    shareUrl.searchParams.set("text", text);
+    const shareUrl = new URL('https://twitter.com/intent/tweet');
+    shareUrl.searchParams.set('url', url);
+    shareUrl.searchParams.set('text', text);
     if (hashtags && hashtags.length > 0) {
-      shareUrl.searchParams.set("hashtags", hashtags.join(","));
+      shareUrl.searchParams.set('hashtags', hashtags.join(','));
     }
 
-    openShareWindow(shareUrl.toString(), "twitter");
+    openShareWindow(shareUrl.toString(), 'twitter');
   };
 
   const shareToLinkedIn = (url: string, title: string, summary?: string) => {
-    const shareUrl = new URL("https://www.linkedin.com/sharing/share-offsite/");
-    shareUrl.searchParams.set("url", url);
-    shareUrl.searchParams.set("title", title);
+    const shareUrl = new URL('https://www.linkedin.com/sharing/share-offsite/');
+    shareUrl.searchParams.set('url', url);
+    shareUrl.searchParams.set('title', title);
     if (summary) {
-      shareUrl.searchParams.set("summary", summary);
+      shareUrl.searchParams.set('summary', summary);
     }
 
-    openShareWindow(shareUrl.toString(), "linkedin");
+    openShareWindow(shareUrl.toString(), 'linkedin');
   };
 
   const shareToWhatsApp = (url: string, text: string) => {
     const message = `${text} ${url}`;
     const shareUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
-    openShareWindow(shareUrl, "whatsapp");
+    openShareWindow(shareUrl, 'whatsapp');
   };
 
   const shareToEmail = (url: string, subject: string, body: string) => {
@@ -147,34 +147,34 @@ export const SocialSharingService = implementService.withConfig<{
     )}&body=${encodeURIComponent(emailBody)}`;
 
     window.location.href = mailtoUrl;
-    trackShare("email");
+    trackShare('email');
   };
 
   const copyToClipboard = async (url: string): Promise<boolean> => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(url);
-        trackShare("clipboard");
+        trackShare('clipboard');
         return true;
       } else {
-        const textArea = document.createElement("textarea");
+        const textArea = document.createElement('textarea');
         textArea.value = url;
-        textArea.style.position = "fixed";
-        textArea.style.left = "-999999px";
-        textArea.style.top = "-999999px";
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        const success = document.execCommand("copy");
+        const success = document.execCommand('copy');
         textArea.remove();
 
         if (success) {
-          trackShare("clipboard");
+          trackShare('clipboard');
         }
         return success;
       }
     } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
+      console.error('Failed to copy to clipboard:', err);
       return false;
     }
   };
@@ -187,12 +187,12 @@ export const SocialSharingService = implementService.withConfig<{
     try {
       if (navigator.share) {
         await navigator.share(data);
-        trackShare("native");
+        trackShare('native');
         return true;
       }
       return false;
     } catch (err) {
-      console.error("Failed to share natively:", err);
+      console.error('Failed to share natively:', err);
       return false;
     }
   };

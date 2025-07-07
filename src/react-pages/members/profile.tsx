@@ -1,38 +1,38 @@
-import "../../styles/theme-1.css";
+import '../../styles/theme-1.css';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { ServicesManagerProvider } from "@wix/services-manager-react";
-import { actions } from "astro:actions";
-import { useState } from "react";
-import { PageDocsRegistration } from "../../components/DocsMode";
-import { CameraIcon } from "../../components/icons/CameraIcon";
-import { CheckCircleIcon } from "../../components/icons/CheckCircleIcon";
-import { CheckIcon } from "../../components/icons/CheckIcon";
-import { MailIcon } from "../../components/icons/MailIcon";
-import { PencilIcon } from "../../components/icons/PencilIcon";
-import { SignOutIcon } from "../../components/icons/SignOutIcon";
-import { UserIcon } from "../../components/icons/UserIcon";
-import PhotoUploadDialog from "../../components/PhotoUploadDialog";
-import UpdateProfileDialog from "../../components/UpdateProfileDialog";
+} from '@wix/services-manager';
+import { ServicesManagerProvider } from '@wix/services-manager-react';
+import { actions } from 'astro:actions';
+import { useState } from 'react';
+import { PageDocsRegistration } from '../../components/DocsMode';
+import { CameraIcon } from '../../components/icons/CameraIcon';
+import { CheckCircleIcon } from '../../components/icons/CheckCircleIcon';
+import { CheckIcon } from '../../components/icons/CheckIcon';
+import { MailIcon } from '../../components/icons/MailIcon';
+import { PencilIcon } from '../../components/icons/PencilIcon';
+import { SignOutIcon } from '../../components/icons/SignOutIcon';
+import { UserIcon } from '../../components/icons/UserIcon';
+import PhotoUploadDialog from '../../components/PhotoUploadDialog';
+import UpdateProfileDialog from '../../components/UpdateProfileDialog';
 import {
   CurrentMemberService,
   CurrentMemberServiceDefinition,
   type CurrentMemberServiceConfig,
-} from "../../headless/members/services/current-member-service";
-import { CurrentMemberProfile } from "../../headless/members/components";
+} from '../../headless/members/services/current-member-service';
+import { CurrentMemberProfile } from '../../headless/members/components';
 import {
   ProfileUpdateService,
   ProfileUpdateServiceDefinition,
   type ProfileUpdateServiceConfig,
-} from "../../headless/members/services/profile-update-service";
-import { KitchensinkLayout } from "../../layouts/KitchensinkLayout";
+} from '../../headless/members/services/profile-update-service';
+import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 import {
   loadPhotoUploadServiceConfig,
   PhotoUploadService,
   PhotoUploadServiceDefinition,
-} from "../../headless/members/services/photo-upload-service";
+} from '../../headless/members/services/photo-upload-service';
 
 interface ProfilePageProps {
   currentMemberServiceConfig?: CurrentMemberServiceConfig;
@@ -62,7 +62,7 @@ export function ProfilePage({
         )
         .addService(PhotoUploadServiceDefinition, PhotoUploadService, {
           maxFileSize: 10 * 1024 * 1024,
-          allowedTypes: ["image/jpeg", "image/png", "image/gif"],
+          allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
           photoUploadAstroActions: actions.photoUploadAstroActions,
         })
     )
@@ -96,7 +96,7 @@ export function ProfilePage({
                     ) : (
                       <div
                         className="w-24 h-24 rounded-full border-4 border-[var(--theme-border-primary-30)] shadow-2xl flex items-center justify-center"
-                        style={{ background: "var(--theme-gradient-primary)" }}
+                        style={{ background: 'var(--theme-gradient-primary)' }}
                       >
                         <UserIcon className="w-12 h-12 text-[var(--theme-text-content)]" />
                       </div>
@@ -105,14 +105,14 @@ export function ProfilePage({
                     <button
                       onClick={() => setShowPhotoDialog(true)}
                       className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-3 border-[var(--theme-text-content)] flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
-                      style={{ background: "var(--theme-primary-500)" }}
-                      onMouseEnter={(e) => {
+                      style={{ background: 'var(--theme-primary-500)' }}
+                      onMouseEnter={e => {
                         e.currentTarget.style.background =
-                          "var(--theme-primary-600)";
+                          'var(--theme-primary-600)';
                       }}
-                      onMouseLeave={(e) => {
+                      onMouseLeave={e => {
                         e.currentTarget.style.background =
-                          "var(--theme-primary-500)";
+                          'var(--theme-primary-500)';
                       }}
                       title="Change profile photo"
                     >
@@ -212,13 +212,13 @@ export function ProfilePage({
               <button
                 onClick={() => setShowUpdateDialog(true)}
                 className="w-full text-[var(--theme-text-content)] font-semibold py-3 lg:py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl"
-                style={{ background: "var(--theme-btn-primary)" }}
-                onMouseEnter={(e) => {
+                style={{ background: 'var(--theme-btn-primary)' }}
+                onMouseEnter={e => {
                   e.currentTarget.style.background =
-                    "var(--theme-btn-primary-hover)";
+                    'var(--theme-btn-primary-hover)';
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "var(--theme-btn-primary)";
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'var(--theme-btn-primary)';
                 }}
               >
                 <span className="flex items-center justify-center gap-3">
@@ -238,14 +238,14 @@ export function ProfilePage({
                 <button
                   type="submit"
                   className="group relative w-full flex justify-center py-3 lg:py-4 px-6 border border-transparent text-base lg:text-lg font-semibold rounded-2xl text-[var(--theme-text-content)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--theme-text-error)] transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
-                  style={{ background: "var(--theme-btn-secondary)" }}
-                  onMouseEnter={(e) => {
+                  style={{ background: 'var(--theme-btn-secondary)' }}
+                  onMouseEnter={e => {
                     e.currentTarget.style.background =
-                      "var(--theme-btn-secondary-hover)";
+                      'var(--theme-btn-secondary-hover)';
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={e => {
                     e.currentTarget.style.background =
-                      "var(--theme-btn-secondary)";
+                      'var(--theme-btn-secondary)';
                   }}
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-6">
