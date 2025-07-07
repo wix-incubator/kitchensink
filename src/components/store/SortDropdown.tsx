@@ -1,19 +1,14 @@
-import React from 'react';
 import { Sort } from '../../headless/store/components';
 import { type SortBy } from '../../headless/store/services/sort-service';
 
-interface SortDropdownProps {
-  className?: string;
-}
+interface SortDropdownProps {}
 
 function SortDropdownContent({
   sortBy,
   setSortBy,
-  className = '',
 }: {
   sortBy: SortBy;
   setSortBy: (sortBy: SortBy) => void;
-  className?: string;
 }) {
   return (
     <div>
@@ -73,18 +68,12 @@ function SortDropdownContent({
   );
 }
 
-export const SortDropdown: React.FC<SortDropdownProps> = ({
-  className = '',
-}) => {
+export const SortDropdown: React.FC<SortDropdownProps> = () => {
   return (
     <Sort.Provider>
       <Sort.Controller>
         {({ currentSort, setSortBy }) => (
-          <SortDropdownContent
-            sortBy={currentSort}
-            setSortBy={setSortBy}
-            className={className}
-          />
+          <SortDropdownContent sortBy={currentSort} setSortBy={setSortBy} />
         )}
       </Sort.Controller>
     </Sort.Provider>

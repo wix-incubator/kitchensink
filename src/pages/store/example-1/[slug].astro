@@ -25,8 +25,6 @@ if (productServiceConfigResult.type === 'notFound') {
 
 const productServiceConfig = productServiceConfigResult.config;
 
-const productName = productServiceConfig.product.name || 'Product';
-
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
   itemData: { slug },

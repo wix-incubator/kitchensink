@@ -1,9 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import {
-  type AvailableOptions,
-  type Filter,
-  defaultFilter,
-} from '../../headless/store/services/filter-service';
+import React, { useState, useCallback, useEffect } from 'react';
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
@@ -26,14 +21,6 @@ interface ProductFiltersProps {
   };
   clearFilters: () => void;
   isFiltered: boolean;
-}
-
-interface ProductOption {
-  id: string;
-  name: string;
-  choices: { id: string; name: string; colorCode?: string }[];
-  optionRenderType?: string;
-  availableOptions: AvailableOptions;
 }
 
 export const ProductFilters: React.FC<ProductFiltersProps> = ({

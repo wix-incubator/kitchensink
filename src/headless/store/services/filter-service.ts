@@ -4,7 +4,6 @@ import type { Signal } from '../../Signal';
 import { URLParamsUtils } from '../utils/url-params';
 import { CatalogPriceRangeServiceDefinition } from './catalog-price-range-service';
 import { CatalogOptionsServiceDefinition } from './catalog-options-service';
-import { productsV3 } from '@wix/stores';
 
 export interface ProductOption {
   id: string;
@@ -205,16 +204,8 @@ export const FilterService = implementService.withConfig<{
     URLParamsUtils.updateURL(urlParams);
   };
 
-  const calculateAvailableOptions = async (
-    products: productsV3.V3Product[]
-  ) => {
-    // No longer calculating options from current page products
-    // Options are now loaded from the catalog-wide service
-    // This function is kept for backward compatibility but does nothing
-    console.log(
-      '🔄 calculateAvailableOptions called but using catalog-wide options instead'
-    );
-  };
+  // Note: calculateAvailableOptions was removed as it's no longer needed
+  // Options are now loaded from the catalog-wide service via loadCatalogOptions
 
   const loadCatalogPriceRange = async (categoryId?: string) => {
     // Just call the catalog service - subscriptions will handle signal updates

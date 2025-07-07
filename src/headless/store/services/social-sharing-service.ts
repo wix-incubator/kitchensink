@@ -40,7 +40,7 @@ export const SocialSharingService = implementService.withConfig<{
   productUrl: string;
   productDescription?: string;
   productImage?: string;
-}>()(SocialSharingServiceDefinition, ({ getService, config }) => {
+}>()(SocialSharingServiceDefinition, ({ getService }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
   const availablePlatforms: Signal<SharingPlatform[]> = signalsService.signal([
@@ -152,27 +152,9 @@ export const SocialSharingService = implementService.withConfig<{
 
   const copyToClipboard = async (url: string): Promise<boolean> => {
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(url);
-        trackShare('clipboard');
-        return true;
-      } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        const success = document.execCommand('copy');
-        textArea.remove();
-
-        if (success) {
-          trackShare('clipboard');
-        }
-        return success;
-      }
+      await navigator.clipboard.writeText(url);
+      trackShare('clipboard');
+      return true;
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
       return false;

@@ -20,10 +20,7 @@ import {
   ServicesManagerProvider,
   useService,
 } from '@wix/services-manager-react';
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-} from '../../headless/ecom/services/current-cart-service';
+import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import {
   ProductService,
   ProductServiceDefinition,
@@ -85,7 +82,7 @@ export const ProductGridContent = ({
     return (
       <ServicesManagerProvider servicesManager={servicesManager}>
         <FilteredCollection.Item key={product._id} product={product}>
-          {({ title, image, imageAltText, available, slug, description }) => (
+          {({ title, image, imageAltText, available, slug }) => (
             <div
               data-testid="product-item"
               data-product-available={available}

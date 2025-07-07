@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   createServicesManager,
   createServicesMap,
@@ -36,7 +36,7 @@ interface ServiceBookingPageProps {
 const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
   return (
     <BookingService.Service>
-      {({ service, loadService }) => {
+      {({ service, loadService: _loadService }) => {
         const currentService = service;
 
         return (
@@ -83,7 +83,7 @@ const CalendarSection = () => {
       <BookingAvailability.Calendar>
         {({
           selectedDate,
-          availableDates,
+          availableDates: _availableDates,
           isLoading,
           selectDate,
           hasAvailableSlots,

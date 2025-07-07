@@ -1,4 +1,3 @@
-import React from 'react';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 import { PageDocsRegistration } from '../../components/DocsMode';
 
@@ -7,7 +6,7 @@ interface BookingsIntroPageProps {
 }
 
 export default function BookingsIntroPage({
-  bookingServicesConfig,
+  bookingServicesConfig: _bookingServicesConfig,
 }: BookingsIntroPageProps) {
   return (
     <KitchensinkLayout>

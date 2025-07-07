@@ -1,12 +1,8 @@
-import type {
-  ServiceAPI,
-  ServiceFactoryConfig,
-} from '@wix/services-definitions';
+import type { ServiceFactoryConfig } from '@wix/services-definitions';
 import {
   createServicesManager,
   createServicesMap,
 } from '@wix/services-manager';
-import { useService } from '@wix/services-manager-react';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
 import {
@@ -237,7 +233,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 );
 
 const ProductInfo = ({
-  onAddToCart,
+  onAddToCart: _onAddToCart,
   servicesManager,
 }: {
   onAddToCart: () => void;
@@ -246,9 +242,7 @@ const ProductInfo = ({
   const [quantity, setQuantity] = useState(1);
 
   // Get access to variant service for reset functionality
-  const variantService = useService(
-    SelectedVariantServiceDefinition
-  ) as ServiceAPI<typeof SelectedVariantServiceDefinition>;
+  // const variantService = useService(SelectedVariantServiceDefinition); // Unused
 
   return (
     <div className="space-y-6">
@@ -514,8 +508,8 @@ const ProductInfo = ({
         {({
           modifiers,
           hasModifiers,
-          selectedModifiers,
-          areAllRequiredModifiersFilled,
+          selectedModifiers: _selectedModifiers,
+          areAllRequiredModifiersFilled: _areAllRequiredModifiersFilled,
         }) =>
           hasModifiers ? (
             <div className="space-y-6">
@@ -532,8 +526,8 @@ const ProductInfo = ({
                       choices,
                       hasChoices,
                       isFreeText,
-                      maxChars,
-                      placeholder,
+                      maxChars: _maxChars,
+                      placeholder: _placeholder,
                     }) => (
                       <div className="space-y-3">
                         <h4 className="text-md font-medium text-white">
@@ -551,7 +545,7 @@ const ProductInfo = ({
                                 {({
                                   isTextInputShown,
                                   onToggle,
-                                  mandatory: toggleMandatory,
+                                  mandatory: _toggleMandatory,
                                 }) => (
                                   <div className="space-y-3">
                                     <label className="flex items-center gap-2">

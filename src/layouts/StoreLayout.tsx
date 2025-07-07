@@ -25,7 +25,7 @@ export function StoreLayout({
   showSuccessMessage = false,
   onSuccessMessageChange,
 }: StoreLayoutProps) {
-  const [internalShowSuccess, setInternalShowSuccess] = useState(false);
+  const [internalShowSuccess] = useState(false);
 
   // Use external services manager if provided, otherwise create one with just cart service
   const [internalServicesManager] = useState(() =>
@@ -43,7 +43,6 @@ export function StoreLayout({
   const actualShowSuccess = onSuccessMessageChange
     ? showSuccessMessage
     : internalShowSuccess;
-  const setShowSuccess = onSuccessMessageChange || setInternalShowSuccess;
 
   return (
     <ServicesManagerProvider servicesManager={servicesManager}>

@@ -1,5 +1,4 @@
 import type { services } from '@wix/bookings';
-import { media as wixMedia } from '@wix/sdk';
 import { Image, type FittingType } from '@wix/image';
 
 type MediaItem = services.MediaItem;

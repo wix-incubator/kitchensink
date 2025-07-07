@@ -51,7 +51,7 @@ export const CatalogPriceRangeServiceDefinition =
 
 export const CatalogPriceRangeService = implementService.withConfig<{}>()(
   CatalogPriceRangeServiceDefinition,
-  ({ getService, config }) => {
+  ({ getService }) => {
     const signalsService = getService(SignalsServiceDefinition);
 
     // Signal declarations

@@ -226,10 +226,7 @@ function ProductDetailsRoute() {
   return (
     <>
       {/* Product Details */}
-      <ProductDetails
-        setShowSuccessMessage={setShowSuccessMessage}
-        cartUrl="/cart"
-      />
+      <ProductDetails setShowSuccessMessage={setShowSuccessMessage} />
 
       {/* Success Message */}
       {showSuccessMessage && (

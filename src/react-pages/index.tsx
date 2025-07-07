@@ -4,7 +4,7 @@ interface HomePageProps {
   // Future server-side data can be added here
 }
 
-export default function HomePage(props: HomePageProps) {
+export default function HomePage(_props: HomePageProps) {
   return (
     <KitchensinkLayout>
       {/* Hero Section */}

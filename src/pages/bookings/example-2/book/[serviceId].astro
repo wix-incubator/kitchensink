@@ -22,7 +22,6 @@ if (bookingServiceConfigResult.type === 'notFound') {
 }
 
 // Load service configurations on the server
-const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingServicesConfig =
   await loadBookingServicesServiceConfig('APPOINTMENT');
 const bookingAvailabilityConfig = await loadBookingAvailabilityServiceConfig(

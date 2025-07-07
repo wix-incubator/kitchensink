@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const BriefcaseIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

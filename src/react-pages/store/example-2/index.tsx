@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../layouts/StoreLayout';
 import '../../../styles/theme-2.css';

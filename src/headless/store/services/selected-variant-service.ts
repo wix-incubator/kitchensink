@@ -37,7 +37,7 @@ export interface SelectedVariantServiceAPI {
 
   selectedVariant: () => productsV3.Variant | null;
   finalPrice: () => number;
-  isLowStock: (threshold?: number) => boolean;
+  isLowStock: () => boolean;
 
   setSelectedChoices: (choices: Record<string, string>) => void;
   addToCart: (
@@ -229,7 +229,6 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const trackQuantity: Signal<boolean> = signalsService.signal(false as any);
     const selectedQuantity: Signal<number> = signalsService.signal(1 as any);
     const productId: Signal<string> = signalsService.signal('' as any);
-    const sku: Signal<string> = signalsService.signal('' as any);
     const ribbonLabel: Signal<string | null> = signalsService.signal(
       null as any
     );
@@ -425,7 +424,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       return discount !== null ? discount : base;
     };
 
-    const isLowStock = (threshold: number = 5): boolean => {
+    const isLowStock = (): boolean => {
+      // Note: Currently always returns false as inventory quantity tracking
+      // is handled separately by the inventory service
       return false;
     };
 

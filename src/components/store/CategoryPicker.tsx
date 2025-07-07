@@ -1,4 +1,3 @@
-import React from 'react';
 import { categories } from '@wix/categories';
 import { Category } from '../../headless/store/components';
 
@@ -9,14 +8,12 @@ interface CategoryPickerProps {
   onCategorySelect: (categoryId: string | null) => void;
   selectedCategory: string | null;
   categories: categories.Category[];
-  className?: string;
 }
 
 function CategoryPicker({
   onCategorySelect,
   selectedCategory,
   categories,
-  className = '',
 }: CategoryPickerProps) {
   if (!categories || categories.length === 0) {
     return null; // No categories to show
@@ -54,11 +51,7 @@ function CategoryPicker({
   );
 }
 
-export default function CategoryPickerWithContext({
-  className,
-}: {
-  className?: string;
-}) {
+export default function CategoryPickerWithContext() {
   return (
     <Category.Provider>
       <Category.List>
@@ -67,7 +60,6 @@ export default function CategoryPickerWithContext({
             categories={categories}
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
-            className={className}
           />
         )}
       </Category.List>

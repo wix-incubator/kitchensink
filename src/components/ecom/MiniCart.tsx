@@ -1,8 +1,4 @@
-import { useState, type ReactNode } from 'react';
-import {
-  CurrentCartServiceDefinition,
-  CurrentCartService,
-} from '../../headless/ecom/services/current-cart-service';
+import { useState } from 'react';
 import { CurrentCart } from '../../headless/ecom/components';
 import { WixMediaImage } from '../../headless/media/components';
 

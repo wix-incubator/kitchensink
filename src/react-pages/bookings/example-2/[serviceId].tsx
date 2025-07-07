@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   createServicesManager,
   createServicesMap,
@@ -42,7 +41,7 @@ const ServiceNotFound = () => (
 const ServiceDetailSection = () => {
   return (
     <BookingService.ServiceStatus>
-      {({ isLoading, hasService, error, notFound }) => {
+      {({ isLoading, hasService: _hasService, error, notFound }) => {
         if (isLoading) {
           return (
             <div className="max-w-7xl mx-auto px-6 py-12">
@@ -249,7 +248,7 @@ const ServiceDetailSection = () => {
 
               {/* Book Now Button */}
               <BookingService.ServiceActions>
-                {({ canBookOnline, isAvailable, bookingUrl }) => (
+                {({ canBookOnline, isAvailable: _isAvailable, bookingUrl }) => (
                   <div className="text-center">
                     {canBookOnline ? (
                       <a

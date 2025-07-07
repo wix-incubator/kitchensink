@@ -16,6 +16,5 @@ if (!firstCategory.slug) {
 
 const categorySlug = firstCategory.slug;
 const redirectUrl = `/store/example-2/category/${categorySlug}${Astro.url.search}`;
-
 return Astro.redirect(redirectUrl);
 ---

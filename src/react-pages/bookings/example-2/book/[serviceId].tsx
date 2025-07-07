@@ -121,7 +121,7 @@ const CalendarView = ({
     <BookingAvailability.Calendar>
       {({
         selectedDate,
-        availableDates,
+        availableDates: _availableDates,
         isLoading,
         error,
         selectDate,
@@ -172,7 +172,7 @@ const CalendarView = ({
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-        const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+        // const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0); // Unused
         const startDate = new Date(firstDayOfMonth);
         startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
 
@@ -256,7 +256,14 @@ const TimeSlotSelector = ({
 }) => {
   return (
     <BookingAvailability.TimeSlots>
-      {({ slots, selectedDate, isLoading, error, hasSlots, isEmpty }) => {
+      {({
+        slots,
+        selectedDate,
+        isLoading,
+        error,
+        hasSlots: _hasSlots,
+        isEmpty,
+      }) => {
         if (isLoading) {
           return (
             <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -371,7 +378,11 @@ const TimeSlotSelector = ({
   );
 };
 
-const BookingSummaryView = ({ serviceId }: { serviceId: string }) => {
+const BookingSummaryView = ({
+  serviceId: _serviceId,
+}: {
+  serviceId: string;
+}) => {
   return (
     <BookingSelection.BookingSummary>
       {({
@@ -465,7 +476,7 @@ const BookingSummaryView = ({ serviceId }: { serviceId: string }) => {
 const BookNowContent = ({ serviceId }: { serviceId: string }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedSlot, setSelectedSlot] = useState<any>(null);
+  const [_selectedSlot, setSelectedSlot] = useState<any>(null);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);

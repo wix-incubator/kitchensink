@@ -421,7 +421,6 @@ export default function CartContent() {
                                 tax,
                                 total,
                                 itemCount,
-                                canCheckout,
                                 isTotalsLoading,
                               }) => {
                                 const LoadingOrValue = ({

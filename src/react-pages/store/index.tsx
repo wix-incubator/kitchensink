@@ -1,4 +1,3 @@
-import React from 'react';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 
 export default function StoreIntroPage() {

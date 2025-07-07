@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const CheckCircleIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}

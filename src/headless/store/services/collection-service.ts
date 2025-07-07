@@ -48,8 +48,7 @@ export interface CollectionServiceAPI {
 const buildSearchOptions = (
   filters?: Filter,
   selectedCategory?: string | null,
-  sortBy?: SortBy,
-  categories?: any[]
+  sortBy?: SortBy
 ) => {
   const searchOptions: any = {
     search: {},
@@ -232,12 +231,7 @@ export const CollectionService = implementService.withConfig<{
       error.set(null);
 
       // For loadMore, use no filters or sorting to work with cursor pagination
-      const searchOptions = buildSearchOptions(
-        undefined,
-        undefined,
-        undefined,
-        undefined
-      );
+      const searchOptions = buildSearchOptions(undefined, undefined, undefined);
 
       // Add pagination
       searchOptions.paging = { limit: pageSize };
@@ -287,14 +281,12 @@ export const CollectionService = implementService.withConfig<{
       const filters = collectionFilters.currentFilters.get();
       const selectedCategory = categoryService.selectedCategory.get();
       const sortBy = sortService.currentSort.get();
-      const categories = config.categories || categoryService.categories.get();
 
       // Use regular search for all sorting options including recommended
       const searchOptions = buildSearchOptions(
         filters,
         selectedCategory,
-        sortBy,
-        categories
+        sortBy
       );
 
       // Add pagination
@@ -572,12 +564,7 @@ export async function loadCollectionServiceConfig(
     }
 
     // Build search options with category filter
-    const searchOptions = buildSearchOptions(
-      undefined,
-      categoryId,
-      undefined,
-      categories
-    );
+    const searchOptions = buildSearchOptions(undefined, categoryId, undefined);
     const pageSize = 12;
     searchOptions.paging = { limit: pageSize };
 

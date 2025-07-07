@@ -50,15 +50,12 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 
 export default function ProductDetails({
   setShowSuccessMessage = () => {},
-  cartUrl = '/cart',
   isQuickView = false,
 }: {
   setShowSuccessMessage?: (show: boolean) => void;
-  cartUrl?: string;
   isQuickView?: boolean;
 }) {
   const Navigation = useNavigation();
-  const variantService = useService(SelectedVariantServiceDefinition);
 
   return (
     <>
@@ -254,7 +251,7 @@ export default function ProductDetails({
 
           {/* Product Description */}
           <Product.Description>
-            {({ description, plainDescription }) => (
+            {({ plainDescription }) => (
               <>
                 {plainDescription && !isQuickView && (
                   <div>
@@ -277,7 +274,7 @@ export default function ProductDetails({
 
           {/* Product Options (if any) */}
           <ProductVariantSelector.Options>
-            {({ options, hasOptions, selectedChoices }) => (
+            {({ options, hasOptions }) => (
               <>
                 {hasOptions && (
                   <div className="space-y-6" data-testid="product-options">

@@ -197,7 +197,6 @@ export default function QuickViewModal({
               <ServicesManagerProvider servicesManager={servicesManager}>
                 <ProductDetails
                   setShowSuccessMessage={setShowSuccessMessage}
-                  cartUrl="/cart"
                   isQuickView={true}
                 />
               </ServicesManagerProvider>

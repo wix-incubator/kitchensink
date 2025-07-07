@@ -29,7 +29,6 @@ import {
   MediaGalleryServiceDefinition,
 } from '../../../../headless/media/services/media-gallery-service';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
-import { SEOTagsService } from '../../../../headless/seo/services/seo-tags-service';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
