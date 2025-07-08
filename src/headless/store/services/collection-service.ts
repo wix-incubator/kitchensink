@@ -628,16 +628,24 @@ const fetchMissingVariants = async (
       return products;
     }
 
-    // Fetch all variants for these products in one request
-    const { items } = await readOnlyVariantsV3
-      .queryVariants({
-        fields: [],
-      })
+    const items = [];
+
+    const res = await readOnlyVariantsV3
+      .queryVariants({})
       .in('productData.productId', productIds)
+      .limit(100)
       .find();
 
-    // Group variants by product ID
+    items.push(...res.items);
+
+    let nextRes = res;
+    while (nextRes.hasNext()) {
+      nextRes = await nextRes.next();
+      items.push(...nextRes.items);
+    }
+
     const variantsByProductId = new Map<string, productsV3.Variant[]>();
+
     items.forEach(item => {
       const productId = item.productData?.productId;
       if (productId) {
