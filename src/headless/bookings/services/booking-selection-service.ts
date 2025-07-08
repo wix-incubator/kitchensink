@@ -42,7 +42,6 @@ export const BookingSelectionServiceDefinition =
   defineService<BookingSelectionServiceAPI>('bookingSelectionService');
 
 export const BookingSelectionService = implementService.withConfig<{
-  timezone?: string;
   returnUrl?: string;
   redirectToCheckout?: (url: string) => void;
 }>()(BookingSelectionServiceDefinition, ({ getService, config }) => {
@@ -183,8 +182,6 @@ export const BookingSelectionService = implementService.withConfig<{
       isBooking.set(true);
       error.set(null);
 
-      const timezone = config.timezone || 'UTC';
-
       // Ensure we have a full URL for the callback
       let returnUrl = config.returnUrl || '/bookings';
       if (!returnUrl.startsWith('http')) {
@@ -197,7 +194,7 @@ export const BookingSelectionService = implementService.withConfig<{
       const response = await redirects.createRedirectSession({
         bookingsCheckout: {
           slotAvailability: slot,
-          timezone: timezone,
+          timezone: timezoneService.selectedTimezone.get() || 'UTC',
         },
         preferences: { useGenericWixPages: false },
         callbacks: {
@@ -240,11 +237,9 @@ export const BookingSelectionService = implementService.withConfig<{
 });
 
 export async function loadBookingSelectionServiceConfig(
-  timezone?: string,
   returnUrl?: string
 ): Promise<ServiceFactoryConfig<typeof BookingSelectionService>> {
   return {
-    timezone: timezone || 'UTC',
     returnUrl: returnUrl || '/bookings',
   };
 }

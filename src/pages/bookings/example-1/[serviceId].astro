@@ -23,7 +23,10 @@ if (bookingServiceConfigResult.type === 'notFound') {
 
 const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingAvailabilityConfig =
-  await loadBookingAvailabilityServiceConfig(serviceId);
+  await loadBookingAvailabilityServiceConfig(
+    bookingServiceConfigResult.config.initialService?._id || Astro.params.serviceId!,
+    bookingServiceConfigResult.config.initialService?.type || 'APPOINTMENT' 
+  );
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
 const bookingTimezoneConfig = await loadBookingTimezoneServiceConfig();
 ---

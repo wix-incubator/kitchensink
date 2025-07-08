@@ -41,7 +41,7 @@ export const BookingTimezoneServiceDefinition =
   defineService<BookingTimezoneServiceAPI>('bookingTimezoneService');
 
 export const BookingTimezoneService = implementService.withConfig<{
-  businessTimezone: string;
+  businessTimezone?: string;
 }>()(BookingTimezoneServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 

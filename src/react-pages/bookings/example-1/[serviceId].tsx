@@ -594,8 +594,8 @@ export default function ServiceBookingPage({
       />
       <ServicesManagerProvider servicesManager={servicesManager}>
         {/* Auto-select the service on page load */}
-        <ServiceAutoSelector serviceId={serviceId} />
         <TimezoneAutoSetter />
+        <ServiceAutoSelector serviceId={serviceId} />
 
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
           {/* Header */}
