@@ -304,6 +304,21 @@ export const ProductGridContent = ({
                 )}
               </ProductVariantSelector.Options>
 
+              <ProductVariantSelector.Reset>
+                {({ onReset, hasSelections }) =>
+                  hasSelections && (
+                    <div className="pt-4">
+                      <button
+                        onClick={onReset}
+                        className="text-sm text-brand-primary hover:text-brand-light transition-colors"
+                      >
+                        Reset Selections
+                      </button>
+                    </div>
+                  )
+                }
+              </ProductVariantSelector.Reset>
+
               <Product.Description>
                 {({ plainDescription }) => (
                   <>
