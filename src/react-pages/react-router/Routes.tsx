@@ -91,7 +91,12 @@ function StoreRoute() {
     );
   }
 
-  return <ProductList productPageRoute="/products" />;
+  return (
+    <ProductList
+      productPageRoute="/products"
+      setLayoutSuccessMessage={() => {}}
+    />
+  );
 }
 
 // Global Cart Loader Component
