@@ -36,8 +36,10 @@ import {
 
 export const ProductGridContent = ({
   productPageRoute,
+  setLayoutSuccessMessage,
 }: {
   productPageRoute: string;
+  setLayoutSuccessMessage: (show: boolean) => void;
 }) => {
   const Navigation = useNavigation();
   const [quickViewProduct, setQuickViewProduct] =
@@ -58,10 +60,18 @@ export const ProductGridContent = ({
   };
 
   const handleShowSuccessMessage = (productId: string, show: boolean) => {
+    if (showSuccessMessage[productId] !== show) {
+      setLayoutSuccessMessage(show);
+    }
+    if (!show) {
+      setLayoutSuccessMessage(false);
+    }
+
     setShowSuccessMessage(prev => ({ ...prev, [productId]: show }));
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
+    console.log('showSuccessMessage', showSuccessMessage);
     const currentCartService = useService(CurrentCartServiceDefinition);
 
     // Create services for each product - reuse the parent's CurrentCartService instance
@@ -85,8 +95,9 @@ export const ProductGridContent = ({
           {({ title, image, imageAltText, available, slug }) => (
             <div
               data-testid="product-item"
+              data-product-id={product._id}
               data-product-available={available}
-              className="bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
+              className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
             >
               {/* Success Message */}
               {showSuccessMessage[product._id!] && (
@@ -705,12 +716,17 @@ export const LoadMoreSection = () => {
 
 export default function ProductList({
   productPageRoute,
+  setLayoutSuccessMessage,
 }: {
   productPageRoute: string;
+  setLayoutSuccessMessage: (show: boolean) => void;
 }) {
   return (
     <div>
-      <ProductGridContent productPageRoute={productPageRoute} />
+      <ProductGridContent
+        productPageRoute={productPageRoute}
+        setLayoutSuccessMessage={setLayoutSuccessMessage}
+      />
       <LoadMoreSection />
     </div>
   );
