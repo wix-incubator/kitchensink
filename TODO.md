@@ -24,6 +24,7 @@ Components List:
     - ^ These 2 should support both Image and Video
       - [x] Image
       - [ ] Video
+      - [ ] Gif
   - [x] Indicator
   - [x] Next
   - [x] Previous
