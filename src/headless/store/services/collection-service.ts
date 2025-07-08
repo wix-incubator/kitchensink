@@ -293,7 +293,15 @@ export const CollectionService = implementService.withConfig<{
       searchOptions.paging = { limit: pageSize };
 
       const productResults = await searchProducts(searchOptions);
-
+      const isPriceSort = sortBy === "price-asc" || sortBy === "price-desc";
+      if(isPriceSort){
+        productResults.products = productResults.products?.sort((a, b) => {
+          const aPrice = Number(a.actualPriceRange?.minValue?.amount) || 0;
+          const bPrice = Number(b.actualPriceRange?.minValue?.amount) || 0;
+          return  sortBy === "price-asc" ? aPrice - bPrice : bPrice - aPrice;
+        });
+      }
+      
       // Reset pagination state
       nextCursor = productResults.pagingMetadata?.cursors?.next || undefined;
       const hasMore = Boolean(
