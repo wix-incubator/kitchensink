@@ -1,7 +1,7 @@
 import React from 'react';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import { useService } from '@wix/services-manager-react';
-import type { ServiceAPI } from "@wix/services-definitions";
+import type { ServiceAPI } from '@wix/services-definitions';
 
 interface BaseButtonProps {
   disabled: boolean;
