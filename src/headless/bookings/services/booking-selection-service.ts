@@ -2,12 +2,16 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { availabilityCalendar, availabilityTimeSlots, services } from "@wix/bookings";
-import { redirects } from "@wix/redirects";
-import { BookingTimezoneServiceDefinition } from "./booking-timezone-service";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import {
+  availabilityCalendar,
+  availabilityTimeSlots,
+  services,
+} from '@wix/bookings';
+import { redirects } from '@wix/redirects';
+import { BookingTimezoneServiceDefinition } from './booking-timezone-service';
 
 export interface BookingSelectionServiceAPI {
   selectedService: Signal<services.Service | null>;
@@ -35,7 +39,7 @@ export interface BookingSummary {
 }
 
 export const BookingSelectionServiceDefinition =
-  defineService<BookingSelectionServiceAPI>("bookingSelectionService");
+  defineService<BookingSelectionServiceAPI>('bookingSelectionService');
 
 export const BookingSelectionService = implementService.withConfig<{
   timezone?: string;
@@ -77,38 +81,38 @@ export const BookingSelectionService = implementService.withConfig<{
       return null;
     }
 
-    const startTime = new Date(slot.localStartDate || "");
-    const endTime = new Date(slot.localEndDate || "");
+    const startTime = new Date(slot.localStartDate || '');
+    const endTime = new Date(slot.localEndDate || '');
     const duration = Math.round(
       (endTime.getTime() - startTime.getTime()) / (1000 * 60)
     ); // duration in minutes
 
     // Format price
-    let price = "Contact for pricing";
-    if (service.payment?.rateType === "FIXED" && service.payment.fixed?.price) {
+    let price = 'Contact for pricing';
+    if (service.payment?.rateType === 'FIXED' && service.payment.fixed?.price) {
       const fixedPrice = service.payment.fixed.price;
       price = `${fixedPrice.currency} ${
         fixedPrice.formattedValue || fixedPrice.value
       }`;
     } else if (
-      service.payment?.rateType === "VARIED" &&
+      service.payment?.rateType === 'VARIED' &&
       service.payment.varied?.defaultPrice
     ) {
       const variedPrice = service.payment.varied.defaultPrice;
       price = `${variedPrice.currency} ${
         variedPrice.formattedValue || variedPrice.value
       }`;
-    } else if (service.payment?.rateType === "NO_FEE") {
-      price = "Free";
+    } else if (service.payment?.rateType === 'NO_FEE') {
+      price = 'Free';
     } else if (
-      service.payment?.rateType === "CUSTOM" &&
+      service.payment?.rateType === 'CUSTOM' &&
       service.payment.custom?.description
     ) {
       price = service.payment.custom.description;
     }
 
     // Format location
-    let location = "Location TBD";
+    let location = 'Location TBD';
     if (slot.location?.formattedAddress) {
       location = slot.location.formattedAddress;
     } else if (slot.location?.name) {
@@ -116,21 +120,21 @@ export const BookingSelectionService = implementService.withConfig<{
     }
 
     return {
-      serviceName: service.name || "Service",
+      serviceName: service.name || 'Service',
       serviceDescription: service.description || undefined,
       startTime: startTime.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       }),
       endTime: endTime.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
       }),
       date: startTime.toLocaleDateString([], {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       }),
       duration,
       price,
@@ -165,13 +169,13 @@ export const BookingSelectionService = implementService.withConfig<{
 
   const proceedToCheckout = async (): Promise<void> => {
     if (!canBook()) {
-      error.set("Cannot proceed to checkout");
+      error.set('Cannot proceed to checkout');
       return;
     }
 
     const slot = selectedSlot.get();
     if (!slot) {
-      error.set("No slot selected");
+      error.set('No slot selected');
       return;
     }
 
@@ -179,14 +183,14 @@ export const BookingSelectionService = implementService.withConfig<{
       isBooking.set(true);
       error.set(null);
 
-      const timezone = config.timezone || "UTC";
+      const timezone = config.timezone || 'UTC';
 
       // Ensure we have a full URL for the callback
-      let returnUrl = config.returnUrl || "/bookings";
-      if (!returnUrl.startsWith("http")) {
+      let returnUrl = config.returnUrl || '/bookings';
+      if (!returnUrl.startsWith('http')) {
         // If it's a relative path, make it a full URL
         returnUrl = `${window.location.origin}${
-          returnUrl.startsWith("/") ? "" : "/"
+          returnUrl.startsWith('/') ? '' : '/'
         }${returnUrl}`;
       }
 
@@ -210,11 +214,11 @@ export const BookingSelectionService = implementService.withConfig<{
           window.location.href = response.redirectSession.fullUrl;
         }
       } else {
-        throw new Error("No redirect URL received");
+        throw new Error('No redirect URL received');
       }
     } catch (err) {
-      console.error("Failed to create checkout session:", err);
-      error.set("Failed to start checkout process");
+      console.error('Failed to create checkout session:', err);
+      error.set('Failed to start checkout process');
     } finally {
       isBooking.set(false);
     }
@@ -240,7 +244,7 @@ export async function loadBookingSelectionServiceConfig(
   returnUrl?: string
 ): Promise<ServiceFactoryConfig<typeof BookingSelectionService>> {
   return {
-    timezone: timezone || "UTC",
-    returnUrl: returnUrl || "/bookings",
+    timezone: timezone || 'UTC',
+    returnUrl: returnUrl || '/bookings',
   };
 }

@@ -1,26 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   createServicesManager,
   createServicesMap,
-} from "@wix/services-manager";
-import { useState } from "react";
-import { ServicesManagerProvider, useService } from "@wix/services-manager-react";
+} from '@wix/services-manager';
+import { useState } from 'react';
+import {
+  ServicesManagerProvider,
+  useService,
+} from '@wix/services-manager-react';
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
-} from "../../../headless/bookings/services/booking-service-service";
+} from '../../../headless/bookings/services/booking-service-service';
 import {
   BookingAvailabilityService,
   BookingAvailabilityServiceDefinition,
-} from "../../../headless/bookings/services/booking-availability-service";
+} from '../../../headless/bookings/services/booking-availability-service';
 import {
   BookingSelectionService,
   BookingSelectionServiceDefinition,
-} from "../../../headless/bookings/services/booking-selection-service";
-import { BookingService, BookingAvailability,  BookingSelection} from "../../../headless/bookings/components";
-import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
-import { PageDocsRegistration } from "../../../components/DocsMode";
-import { BookingTimezoneService, BookingTimezoneServiceDefinition } from "../../../headless/bookings/services/booking-timezone-service";
+} from '../../../headless/bookings/services/booking-selection-service';
+import {
+  BookingService,
+  BookingAvailability,
+  BookingSelection,
+} from '../../../headless/bookings/components';
+import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
+import { PageDocsRegistration } from '../../../components/DocsMode';
+import {
+  BookingTimezoneService,
+  BookingTimezoneServiceDefinition,
+} from '../../../headless/bookings/services/booking-timezone-service';
 
 interface ServiceBookingPageProps {
   serviceId: string;
@@ -164,8 +174,8 @@ const CalendarSection = () => {
 
                 <h4 className="text-lg font-medium text-white">
                   {selectedDate.toLocaleDateString([], {
-                    month: "long",
-                    year: "numeric",
+                    month: 'long',
+                    year: 'numeric',
                   })}
                 </h4>
 
@@ -189,16 +199,14 @@ const CalendarSection = () => {
 
               {/* Calendar Grid */}
               <div className="grid grid-cols-7 gap-1 mb-2">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <div
-                      key={day}
-                      className="p-2 text-center text-sm font-medium text-white/70"
-                    >
-                      {day}
-                    </div>
-                  )
-                )}
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div
+                    key={day}
+                    className="p-2 text-center text-sm font-medium text-white/70"
+                  >
+                    {day}
+                  </div>
+                ))}
               </div>
 
               <div className="grid grid-cols-7 gap-1">
@@ -220,13 +228,13 @@ const CalendarSection = () => {
                       disabled={isPast || !hasSlots}
                       className={`p-2 text-sm rounded-lg transition-colors ${
                         isPast
-                          ? "text-white/30 cursor-not-allowed"
+                          ? 'text-white/30 cursor-not-allowed'
                           : isSelected
-                          ? "bg-blue-500 text-white"
-                          : hasSlots
-                          ? "hover:bg-white/10 text-white"
-                          : "text-white/40 cursor-not-allowed"
-                      } ${isToday ? "font-bold" : ""}`}
+                            ? 'bg-blue-500 text-white'
+                            : hasSlots
+                              ? 'hover:bg-white/10 text-white'
+                              : 'text-white/40 cursor-not-allowed'
+                      } ${isToday ? 'font-bold' : ''}`}
                     >
                       {date.getDate()}
                       {hasSlots && !isSelected && (
@@ -304,8 +312,8 @@ const TimeSlotsSection = () => {
                           disabled={!isBookable}
                           className={`w-full p-3 rounded-lg border text-left transition-colors ${
                             isBookable
-                              ? "border-white/20 hover:border-blue-400 hover:bg-white/10 text-white"
-                              : "border-white/10 bg-white/5 text-white/40 cursor-not-allowed"
+                              ? 'border-white/20 hover:border-blue-400 hover:bg-white/10 text-white'
+                              : 'border-white/10 bg-white/5 text-white/40 cursor-not-allowed'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -402,7 +410,7 @@ const BookingSummarySection = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    {summary.startTime} - {summary.endTime} ({summary.duration}{" "}
+                    {summary.startTime} - {summary.endTime} ({summary.duration}{' '}
                     min)
                   </div>
 
@@ -446,8 +454,8 @@ const BookingSummarySection = () => {
                   disabled={!canBook || isBooking}
                   className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
                     canBook && !isBooking
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105"
-                      : "bg-white/10 text-white/40 cursor-not-allowed"
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transform hover:scale-105'
+                      : 'bg-white/10 text-white/40 cursor-not-allowed'
                   }`}
                 >
                   {isBooking ? (
@@ -474,7 +482,7 @@ const BookingSummarySection = () => {
                       Processing...
                     </span>
                   ) : (
-                    "Book Now"
+                    'Book Now'
                   )}
                 </button>
 
@@ -494,33 +502,54 @@ const BookingSummarySection = () => {
 };
 
 const TimezonePicker = () => {
-
-  return <div className="flex justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-            <BookingAvailability.Timezone>
-              {({ timezones, selectedTimezone, setSelectedTimezone, isDropDownOpen, toggleOpenStatus }) => (
+  return (
+    <div className="flex justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <BookingAvailability.Timezone>
+        {({
+          timezones,
+          selectedTimezone,
+          setSelectedTimezone,
+          isDropDownOpen,
+          toggleOpenStatus,
+        }) => (
+          <div
+            className="relative cursor-pointer inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-sm text-blue-200 font-medium shadow-sm"
+            title={`Timezone: ${selectedTimezone}`}
+            onClick={toggleOpenStatus}
+          >
+            <svg
+              className="w-4 h-4 mr-2 text-blue-300"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {selectedTimezone}
+            {isDropDownOpen && (
+              <div className="absolute z-1 top-full mt-2 w-32 bg-white rounded-lg shadow-lg">
+                {timezones.map(tz => (
                   <div
-                    className="relative cursor-pointer inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-sm text-blue-200 font-medium shadow-sm"
-                    title={`Timezone: ${selectedTimezone}`}
-                    onClick={toggleOpenStatus}
+                    key={tz}
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
+                    onClick={() => setSelectedTimezone(tz)}
                   >
-                    <svg className="w-4 h-4 mr-2 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {selectedTimezone}
-                    {isDropDownOpen && (
-                      <div className="absolute z-1 top-full mt-2 w-32 bg-white rounded-lg shadow-lg">
-                        {timezones.map((tz) => (
-                          <div key={tz} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg" onClick={() => setSelectedTimezone(tz)}>
-                            {tz}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    {tz}
                   </div>
-                )}
-            </BookingAvailability.Timezone>
-          </div>;
-}
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </BookingAvailability.Timezone>
+    </div>
+  );
+};
 
 export default function ServiceBookingPage({
   serviceId,
@@ -530,29 +559,31 @@ export default function ServiceBookingPage({
   bookingTimezoneConfig,
 }: ServiceBookingPageProps) {
   // Create services manager
-  const [servicesManager] = useState(() => createServicesManager(
-    createServicesMap()
-      .addService(
-        BookingTimezoneServiceDefinition,
-        BookingTimezoneService,
-        bookingTimezoneConfig
-      )
-      .addService(
-        BookingServiceServiceDefinition,
-        BookingServiceService,
-        bookingServiceConfig
-      )
-      .addService(
-        BookingAvailabilityServiceDefinition,
-        BookingAvailabilityService,
-        bookingAvailabilityConfig
-      )
-      .addService(
-        BookingSelectionServiceDefinition,
-        BookingSelectionService,
-        bookingSelectionConfig
-      )
-  ));
+  const [servicesManager] = useState(() =>
+    createServicesManager(
+      createServicesMap()
+        .addService(
+          BookingTimezoneServiceDefinition,
+          BookingTimezoneService,
+          bookingTimezoneConfig
+        )
+        .addService(
+          BookingServiceServiceDefinition,
+          BookingServiceService,
+          bookingServiceConfig
+        )
+        .addService(
+          BookingAvailabilityServiceDefinition,
+          BookingAvailabilityService,
+          bookingAvailabilityConfig
+        )
+        .addService(
+          BookingSelectionServiceDefinition,
+          BookingSelectionService,
+          bookingSelectionConfig
+        )
+    )
+  );
 
   return (
     <KitchensinkLayout>
@@ -615,10 +646,10 @@ export default function ServiceBookingPage({
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                                 index < currentStep
-                                  ? "bg-blue-500 text-white"
+                                  ? 'bg-blue-500 text-white'
                                   : index === currentStep
-                                  ? "bg-blue-500/20 text-blue-300 border-2 border-blue-400"
-                                  : "bg-white/10 text-white/40"
+                                    ? 'bg-blue-500/20 text-blue-300 border-2 border-blue-400'
+                                    : 'bg-white/10 text-white/40'
                               }`}
                             >
                               {index + 1}
@@ -626,8 +657,8 @@ export default function ServiceBookingPage({
                             <span
                               className={`ml-2 text-sm font-medium ${
                                 index <= currentStep
-                                  ? "text-white"
-                                  : "text-white/40"
+                                  ? 'text-white'
+                                  : 'text-white/40'
                               }`}
                             >
                               {step}

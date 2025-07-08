@@ -1,27 +1,33 @@
-import { defineService, implementService, type ServiceFactoryConfig } from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
-import { auth } from "@wix/essentials";
-import { siteProperties } from "@wix/business-tools";
+import {
+  defineService,
+  implementService,
+  type ServiceFactoryConfig,
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
+import { auth } from '@wix/essentials';
+import { siteProperties } from '@wix/business-tools';
 
 async function getBusinessTimezone(): Promise<string> {
-    try {
-      if (!import.meta.env.SSR) {
-        throw new Error("Not supported on client");
-      }
-  
-      const elevatedGetSiteProperties = auth.elevate(siteProperties.getSiteProperties);
-  
-      const response = await elevatedGetSiteProperties({
-        fields: ["timeZone"],
-      });
-      console.log("response timezone", response.properties?.timeZone);
-      return response.properties?.timeZone || "UTC";
-    } catch (e) {
-      console.error("Failed to get business timezone, falling back to UTC", e);
-      return "UTC";
+  try {
+    if (!import.meta.env.SSR) {
+      throw new Error('Not supported on client');
     }
+
+    const elevatedGetSiteProperties = auth.elevate(
+      siteProperties.getSiteProperties
+    );
+
+    const response = await elevatedGetSiteProperties({
+      fields: ['timeZone'],
+    });
+    console.log('response timezone', response.properties?.timeZone);
+    return response.properties?.timeZone || 'UTC';
+  } catch (e) {
+    console.error('Failed to get business timezone, falling back to UTC', e);
+    return 'UTC';
   }
+}
 
 export interface BookingTimezoneServiceAPI {
   businessTimezone: Signal<string>;
@@ -32,7 +38,7 @@ export interface BookingTimezoneServiceAPI {
 }
 
 export const BookingTimezoneServiceDefinition =
-  defineService<BookingTimezoneServiceAPI>("bookingTimezoneService");
+  defineService<BookingTimezoneServiceAPI>('bookingTimezoneService');
 
 export const BookingTimezoneService = implementService.withConfig<{
   businessTimezone: string;
@@ -41,13 +47,13 @@ export const BookingTimezoneService = implementService.withConfig<{
 
   // Business timezone from config
   const businessTimezone: Signal<string> = signalsService.signal(
-    config.businessTimezone || "UTC"
+    config.businessTimezone || 'UTC'
   );
 
   // Client timezone from browser
-  let clientTz = "UTC";
-  if (typeof Intl !== "undefined" && Intl.DateTimeFormat) {
-    clientTz = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  let clientTz = 'UTC';
+  if (typeof Intl !== 'undefined' && Intl.DateTimeFormat) {
+    clientTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
   }
   const clientTimezone: Signal<string> = signalsService.signal(clientTz);
 
@@ -76,8 +82,9 @@ export const BookingTimezoneService = implementService.withConfig<{
   };
 });
 
-
-export async function loadBookingTimezoneServiceConfig(): Promise<ServiceFactoryConfig<typeof BookingTimezoneService>> {
+export async function loadBookingTimezoneServiceConfig(): Promise<
+  ServiceFactoryConfig<typeof BookingTimezoneService>
+> {
   const timezone = await getBusinessTimezone();
   return {
     businessTimezone: timezone,

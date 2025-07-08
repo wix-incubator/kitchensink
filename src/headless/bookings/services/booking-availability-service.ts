@@ -2,12 +2,12 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-} from "@wix/services-definitions";
-import { SignalsServiceDefinition } from "@wix/services-definitions/core-services/signals";
-import type { Signal } from "../../Signal";
+} from '@wix/services-definitions';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import type { Signal } from '../../Signal';
 //import { availabilityCalendar } from "@wix/bookings";
-import { availabilityTimeSlots } from "@wix/bookings";
-import { BookingTimezoneServiceDefinition } from "./booking-timezone-service";
+import { availabilityTimeSlots } from '@wix/bookings';
+import { BookingTimezoneServiceDefinition } from './booking-timezone-service';
 
 export interface BookingAvailabilityServiceAPI {
   slots: Signal<availabilityTimeSlots.TimeSlot[]>;
@@ -26,27 +26,35 @@ export interface BookingAvailabilityServiceAPI {
 }
 
 export const BookingAvailabilityServiceDefinition =
-  defineService<BookingAvailabilityServiceAPI>("bookingAvailabilityService");
+  defineService<BookingAvailabilityServiceAPI>('bookingAvailabilityService');
 
 const convertToLocalISOString = (date: Date): string => {
-  const tzoffset = (date).getTimezoneOffset() * 60000; //offset in milliseconds
-  const localISOTime = (new Date(date.getTime() - tzoffset)).toISOString().slice(0, -1);
+  const tzoffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
+  const localISOTime = new Date(date.getTime() - tzoffset)
+    .toISOString()
+    .slice(0, -1);
   return localISOTime;
 };
 
 const getDatePartFromDateString = (dateString: string): string => {
-  return dateString.split("T")[0];
+  return dateString.split('T')[0];
 };
 
-const loadSlotsForService = async (startDate: Date, endDate: Date, timezone: string, serviceId: string): Promise<availabilityTimeSlots.TimeSlot[]> => {
+const loadSlotsForService = async (
+  startDate: Date,
+  endDate: Date,
+  timezone: string,
+  serviceId: string
+): Promise<availabilityTimeSlots.TimeSlot[]> => {
   const query = {
     fromLocalDate: convertToLocalISOString(startDate),
     toLocalDate: convertToLocalISOString(endDate),
     timeZone: timezone,
     serviceId: serviceId,
-    bookable: true, 
+    bookable: true,
   };
-  const queryResponse = await availabilityTimeSlots.listAvailabilityTimeSlots(query);
+  const queryResponse =
+    await availabilityTimeSlots.listAvailabilityTimeSlots(query);
   return queryResponse.timeSlots || [];
 };
 
@@ -59,8 +67,9 @@ export const BookingAvailabilityService = implementService.withConfig<{
   const timezoneService = getService(BookingTimezoneServiceDefinition);
 
   // State signals
-  const slots: Signal<availabilityTimeSlots.TimeSlot[]> =
-    signalsService.signal(config.initialSlots || ([] as any));
+  const slots: Signal<availabilityTimeSlots.TimeSlot[]> = signalsService.signal(
+    config.initialSlots || ([] as any)
+  );
   const selectedDate: Signal<Date> = signalsService.signal(new Date() as any);
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
@@ -77,26 +86,28 @@ export const BookingAvailabilityService = implementService.withConfig<{
   const slotsForSelectedDate = (): availabilityTimeSlots.TimeSlot[] => {
     const selected = selectedDate.get();
     console.log('selected date from signal', selected);
-    const selectedDateString = getDatePartFromDateString(convertToLocalISOString(selected));
+    const selectedDateString = getDatePartFromDateString(
+      convertToLocalISOString(selected)
+    );
 
     console.log('slotsForSelectedDate', selectedDateString);
 
-    return slots.get().filter((slot) => {
-      const slotDate = getDatePartFromDateString(slot.localStartDate || "");
+    return slots.get().filter(slot => {
+      const slotDate = getDatePartFromDateString(slot.localStartDate || '');
       return slotDate === selectedDateString;
     });
   };
 
   const availableDates = (): Date[] => {
     const dateSet = new Set<string>();
-    slots.get().forEach((slot) => {
+    slots.get().forEach(slot => {
       if (slot.localStartDate) {
         const date = getDatePartFromDateString(slot.localStartDate);
         dateSet.add(date);
       }
     });
     return Array.from(dateSet)
-      .map((date) => new Date(date))
+      .map(date => new Date(date))
       .sort((a, b) => a.getTime() - b.getTime());
   };
 
@@ -104,7 +115,7 @@ export const BookingAvailabilityService = implementService.withConfig<{
   const loadSlots = async (startDate: Date, endDate: Date): Promise<void> => {
     const currentServiceId = serviceId.get();
     if (!currentServiceId) {
-      error.set("No service selected");
+      error.set('No service selected');
       return;
     }
 
@@ -113,10 +124,17 @@ export const BookingAvailabilityService = implementService.withConfig<{
       error.set(null);
 
       const currentTimezone = timezone.get();
-      slots.set(await loadSlotsForService(startDate, endDate, currentTimezone, currentServiceId));
+      slots.set(
+        await loadSlotsForService(
+          startDate,
+          endDate,
+          currentTimezone,
+          currentServiceId
+        )
+      );
     } catch (err) {
-      console.error("Failed to load availability:", err);
-      error.set("Failed to load availability");
+      console.error('Failed to load availability:', err);
+      error.set('Failed to load availability');
     } finally {
       isLoading.set(false);
     }
@@ -169,7 +187,7 @@ export async function loadBookingAvailabilityServiceConfig(
   serviceId: string,
   requestedTimezone?: string
 ): Promise<ServiceFactoryConfig<typeof BookingAvailabilityService>> {
-  const timezone = requestedTimezone || "UTC";
+  const timezone = requestedTimezone || 'UTC';
   try {
     if (serviceId) {
       // Load initial slots for the next 30 days
@@ -177,7 +195,12 @@ export async function loadBookingAvailabilityServiceConfig(
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 30);
 
-      const initialSlots = await loadSlotsForService(startDate, endDate, timezone, serviceId);
+      const initialSlots = await loadSlotsForService(
+        startDate,
+        endDate,
+        timezone,
+        serviceId
+      );
       return {
         serviceId,
         timezone,
@@ -191,7 +214,7 @@ export async function loadBookingAvailabilityServiceConfig(
       initialSlots: [],
     };
   } catch (error) {
-    console.error("Failed to load initial availability:", error);
+    console.error('Failed to load initial availability:', error);
     return {
       serviceId,
       timezone,

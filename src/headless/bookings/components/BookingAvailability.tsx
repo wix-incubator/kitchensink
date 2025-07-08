@@ -1,10 +1,13 @@
-import type { ServiceAPI } from "@wix/services-definitions";
-import { useService } from "@wix/services-manager-react";
-import { BookingAvailabilityServiceDefinition } from "../services/booking-availability-service";
-import { availabilityCalendar, availabilityTimeSlots } from "@wix/bookings";
-import { BookingTimezoneServiceDefinition } from "../services/booking-timezone-service";
-import { useState } from "react";
-import { BookingSelectionService, BookingSelectionServiceDefinition } from "../services/booking-selection-service";
+import type { ServiceAPI } from '@wix/services-definitions';
+import { useService } from '@wix/services-manager-react';
+import { BookingAvailabilityServiceDefinition } from '../services/booking-availability-service';
+import { availabilityCalendar, availabilityTimeSlots } from '@wix/bookings';
+import { BookingTimezoneServiceDefinition } from '../services/booking-timezone-service';
+import { useState } from 'react';
+import {
+  BookingSelectionService,
+  BookingSelectionServiceDefinition,
+} from '../services/booking-selection-service';
 
 export interface TimezoneProps {
   children: (props: TimezoneRenderProps) => React.ReactNode;
@@ -12,25 +15,27 @@ export interface TimezoneProps {
 
 export interface TimezoneRenderProps {
   timezones: string[];
-  selectedTimezone: string; 
+  selectedTimezone: string;
   setSelectedTimezone: (tz: string) => void;
   isDropDownOpen: boolean;
   toggleOpenStatus: () => void;
 }
 
 export const Timezone = (props: TimezoneProps) => {
-  const service = useService(
-    BookingTimezoneServiceDefinition
-  ) as ServiceAPI<typeof BookingTimezoneServiceDefinition>;
+  const service = useService(BookingTimezoneServiceDefinition) as ServiceAPI<
+    typeof BookingTimezoneServiceDefinition
+  >;
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  
+
   const timezones = service.getTimezones();
   const selectedTimezone = service.selectedTimezone.get();
   const toggleOpenStatus = () => {
-    console.log(`toggleOpenStatus current:${isDropDownOpen} new:${!isDropDownOpen}`);
+    console.log(
+      `toggleOpenStatus current:${isDropDownOpen} new:${!isDropDownOpen}`
+    );
     setIsDropDownOpen(!isDropDownOpen);
-  }
-  
+  };
+
   return props.children({
     timezones,
     selectedTimezone,
@@ -85,10 +90,9 @@ export const Calendar = (props: CalendarProps) => {
   const error = service.error.get();
 
   const hasAvailableSlots = (date: Date): boolean => {
-    const dateString = date.toISOString().split("T")[0];
+    const dateString = date.toISOString().split('T')[0];
     return availableDates.some(
-      (availableDate) =>
-        availableDate.toISOString().split("T")[0] === dateString
+      availableDate => availableDate.toISOString().split('T')[0] === dateString
     );
   };
 
@@ -150,7 +154,7 @@ export const TimeSlots = (props: TimeSlotsProps) => {
   // For now, we'll just return the slots - slot selection will be handled by BookingSelection service
   const selectSlot = (slot: availabilityCalendar.SlotAvailability) => {
     // This will be handled by the BookingSelection service
-    console.log("Slot selected:", slot);
+    console.log('Slot selected:', slot);
   };
 
   return props.children({
@@ -205,20 +209,20 @@ export interface TimeSlotRenderProps {
  * TimeSlot - Renders data for a single time slot
  */
 export const TimeSlot = (props: TimeSlotProps) => {
-  const service = useService(
-    BookingSelectionServiceDefinition
-  ) as ServiceAPI<typeof BookingSelectionServiceDefinition>;
+  const service = useService(BookingSelectionServiceDefinition) as ServiceAPI<
+    typeof BookingSelectionServiceDefinition
+  >;
 
   const { slot } = props;
 
-  const startTime = new Date(slot.localStartDate || "");
-  const endTime = new Date(slot.localEndDate || "");
+  const startTime = new Date(slot.localStartDate || '');
+  const endTime = new Date(slot.localEndDate || '');
   const duration = Math.round(
     (endTime.getTime() - startTime.getTime()) / (1000 * 60)
   );
 
   const formatTime = (date: Date) =>
-    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const startTimeFormatted = formatTime(startTime);
   const endTimeFormatted = formatTime(endTime);
@@ -227,23 +231,21 @@ export const TimeSlot = (props: TimeSlotProps) => {
   const openSpots = slot.remainingCapacity || 0;
   const totalSpots = slot.bookableCapacity || 0;
 
-  let availabilityText = "";
+  let availabilityText = '';
   if (totalSpots > 1) {
     availabilityText = `${openSpots} of ${totalSpots} spots available`;
   } else if (slot.bookable) {
-    availabilityText = "Available";
+    availabilityText = 'Available';
   } else {
-    availabilityText = "Unavailable";
+    availabilityText = 'Unavailable';
   }
 
   const location =
-    slot.location?.formattedAddress ||
-    slot.location?.name ||
-    undefined;
+    slot.location?.formattedAddress || slot.location?.name || undefined;
 
   const selectSlot = () => {
     // This will be connected to the BookingSelection service
-    console.log("Selecting slot:", slot);
+    console.log('Selecting slot:', slot);
     service.selectSlot(slot);
   };
 
@@ -299,23 +301,23 @@ export const AvailabilityHeader = (props: AvailabilityHeaderProps) => {
   const hasSlots = slotsForSelectedDate.length > 0;
 
   const selectedDateFormatted = selectedDate.toLocaleDateString([], {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   const availableSlotsCount = slotsForSelectedDate.filter(
-    (slot) => slot.bookable
+    slot => slot.bookable
   ).length;
 
   const summaryText = !isLoading
     ? hasSlots
       ? `${availableSlotsCount} available slot${
-          availableSlotsCount !== 1 ? "s" : ""
+          availableSlotsCount !== 1 ? 's' : ''
         }`
-      : "No available slots"
-    : "";
+      : 'No available slots'
+    : '';
 
   return props.children({
     selectedDateFormatted,
