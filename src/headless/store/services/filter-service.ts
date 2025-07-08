@@ -97,10 +97,10 @@ export const FilterService = implementService.withConfig<{
 
       // Update available options with catalog price range
       const currentAvailableOptions = availableOptions.get();
-      availableOptions.set({
-        ...currentAvailableOptions,
-        priceRange,
-      });
+      // availableOptions.set({
+      //   ...currentAvailableOptions,
+      //   priceRange,
+      // });
 
       // Update current filters to use catalog price range
       const currentFiltersValue = currentFilters.get();
@@ -128,10 +128,10 @@ export const FilterService = implementService.withConfig<{
     if (catalogOptions && catalogOptions.length > 0) {
       // Update available options with catalog options
       const currentAvailableOptions = availableOptions.get();
-      availableOptions.set({
-        ...currentAvailableOptions,
-        productOptions: catalogOptions,
-      });
+      // availableOptions.set({
+      //   ...currentAvailableOptions,
+      //   productOptions: catalogOptions,
+      // });
     }
 
     // Check if fully loaded after options update

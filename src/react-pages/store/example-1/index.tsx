@@ -1,9 +1,11 @@
 import {
   createServicesManager,
   createServicesMap,
-} from '@wix/services-manager';
-import { useState } from 'react';
-import { PageDocsRegistration } from '../../../components/DocsMode';
+} from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import { useState } from "react";
+import { PageDocsRegistration } from "../../../components/DocsMode";
+import ProductList from "../../../components/store/ProductList";
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
@@ -21,21 +23,16 @@ import {
   CollectionServiceDefinition,
 } from '../../../headless/store/services/collection-service';
 import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-} from '../../../headless/ecom/services/current-cart-service';
-import {
   FilterService,
   FilterServiceDefinition,
 } from '../../../headless/store/services/filter-service';
 import {
   SortService,
   SortServiceDefinition,
-} from '../../../headless/store/services/sort-service';
-import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
-import { StoreLayout } from '../../../layouts/StoreLayout';
-import '../../../styles/theme-1.css';
-import ProductList from '../../../components/store/ProductList';
+} from "../../../headless/store/services/sort-service";
+import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../layouts/StoreLayout";
+import "../../../styles/theme-1.css";
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -70,45 +67,36 @@ export default function StoreCollectionPage({
 
       window.history.pushState(
         null,
-        'Showing Category ' + category?.name,
+        "Showing Category " + category?.name,
         newPath
       );
     }
   };
 
-  const [servicesManager] = useState(() =>
-    createServicesManager(
-      createServicesMap()
-        .addService(
-          CollectionServiceDefinition,
-          CollectionService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          FilterServiceDefinition,
-          FilterService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          CurrentCartServiceDefinition,
-          CurrentCartService,
-          currentCartServiceConfig
-        )
-        .addService(CategoryServiceDefinition, CategoryService, {
-          ...categoriesConfig,
-          onCategoryChange: handleCategoryChange,
-        })
-        .addService(SortServiceDefinition, SortService, {
-          initialSort: filteredCollectionServiceConfig.initialSort,
-        })
-        .addService(
-          CatalogPriceRangeServiceDefinition,
-          CatalogPriceRangeService,
-          {}
-        )
-        .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+  const servicesMap = createServicesMap()
+    .addService(
+      CollectionServiceDefinition,
+      CollectionService,
+      filteredCollectionServiceConfig
     )
-  );
+    .addService(
+      FilterServiceDefinition,
+      FilterService,
+      filteredCollectionServiceConfig
+    )
+    .addService(CategoryServiceDefinition, CategoryService, {
+      ...categoriesConfig,
+      onCategoryChange: handleCategoryChange,
+    })
+    .addService(SortServiceDefinition, SortService, {
+      initialSort: filteredCollectionServiceConfig.initialSort,
+    })
+    .addService(
+      CatalogPriceRangeServiceDefinition,
+      CatalogPriceRangeService,
+      {}
+    )
+    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {});
 
   return (
     <KitchensinkLayout>
@@ -117,22 +105,22 @@ export default function StoreCollectionPage({
         description="Browse our collection of amazing products with advanced filtering."
         docsUrl="/docs/examples/store-collection-overview"
       />
-      <StoreLayout
-        currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-[var(--theme-text-content)] mb-4">
-              Product Collection - Example 1
-            </h1>
-            <p className="text-[var(--theme-text-content-70)] text-lg">
-              Browse our collection of amazing products with advanced filtering
-            </p>
-          </div>
+      <StoreLayout currentCartServiceConfig={currentCartServiceConfig}>
+        <WixServices servicesMap={servicesMap}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-[var(--theme-text-content)] mb-4">
+                Product Collection - Example 1
+              </h1>
+              <p className="text-[var(--theme-text-content-70)] text-lg">
+                Browse our collection of amazing products with advanced
+                filtering
+              </p>
+            </div>
 
-          <ProductList productPageRoute="/store/example-1" />
-        </div>
+            <ProductList productPageRoute="/store/example-1" />
+          </div>
+        </WixServices>
       </StoreLayout>
     </KitchensinkLayout>
   );

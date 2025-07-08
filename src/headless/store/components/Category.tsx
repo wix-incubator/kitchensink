@@ -49,6 +49,7 @@ export const List: React.FC<CategoryListProps> = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     service.selectedCategory.get()
   );
+  const signalsService = useService(SignalsServiceDefinition);
   const categories = service.categories.get();
   service.selectedCategory.subscribe(categoryId => {
     if (categoryId !== selectedCategory) {

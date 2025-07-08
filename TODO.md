@@ -19,6 +19,7 @@ Components List:
   - [x] Details (sku, weight)
   - [x] Price
 - [x] Media Gallery
+  - [ ] Adjust types to not use `any` in the types.
   - [x] Viewport
   - [x] Thumbnail (ThumbnailList and ThumbnailItem)
     - ^ These 2 should support both Image and Video

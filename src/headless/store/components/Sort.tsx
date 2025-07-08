@@ -26,14 +26,13 @@ export function Provider({ children }: ProviderProps) {
   const [currentSort, setCurrentSort] = useState<SortBy>('');
 
   useEffect(() => {
-    const unsubscribe = sortService.currentSort.subscribe((sort: SortBy) => {
+    signalsService.effect(() => {
+      const sort = sortService.currentSort.get();
       setCurrentSort(sort);
     });
 
     // Initialize with current value
     setCurrentSort(sortService.currentSort.get());
-
-    return unsubscribe;
   }, [sortService]);
 
   const setSortBy = (sortBy: SortBy) => {

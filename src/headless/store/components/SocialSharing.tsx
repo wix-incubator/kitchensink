@@ -162,12 +162,7 @@ export const Platforms = (props: PlatformsProps) => {
     typeof SocialSharingServiceDefinition
   >;
 
-  const [platforms, setPlatforms] = React.useState<SharingPlatform[]>([]);
-
-  React.useEffect(() => {
-    const unsubscribe = service.availablePlatforms.subscribe(setPlatforms);
-    return unsubscribe;
-  }, [service]);
+  const platforms = service.availablePlatforms.get();
 
   const shareFacebook = () => service.shareToFacebook(url, title, description);
   const shareTwitter = () => service.shareToTwitter(url, title, hashtags);

@@ -340,7 +340,8 @@ export const CollectionService = implementService.withConfig<{
   };
 
   // Refresh with server-side filtering when any filters change
-  collectionFilters.currentFilters.subscribe(() => {
+  signalsService.effect(() => {
+    collectionFilters.currentFilters.get();
     // Skip refresh during catalog data initialization to prevent double API calls
     if (isInitializingCatalogData) {
       return;
@@ -363,11 +364,13 @@ export const CollectionService = implementService.withConfig<{
   // Load catalog data on initialization
   void initializeCatalogData();
 
-  sortService.currentSort.subscribe(() => {
+  signalsService.effect(() => {
+    sortService.currentSort.get();
     debouncedRefresh(false);
   });
 
-  categoryService.selectedCategory.subscribe(() => {
+  signalsService.effect(() => {
+    categoryService.selectedCategory.get();
     debouncedRefresh(true).then(() => {
       initializeCatalogData();
     });

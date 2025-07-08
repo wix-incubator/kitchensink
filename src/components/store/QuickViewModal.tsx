@@ -1,24 +1,8 @@
-import { useEffect, useState } from 'react';
-import { productsV3 } from '@wix/stores';
-import {
-  ServicesManagerProvider,
-  useService,
-} from '@wix/services-manager-react';
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
-import ProductDetails from './ProductDetails';
-import { useNavigation } from '../NavigationContext';
-import {
-  ProductService,
-  ProductServiceDefinition,
-} from '../../headless/store/services/product-service';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
-import {
-  SelectedVariantService,
-  SelectedVariantServiceDefinition,
-} from '../../headless/store/services/selected-variant-service';
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices, useService } from "@wix/services-manager-react";
+import { productsV3 } from "@wix/stores";
+import { useEffect, useState } from "react";
+import { CurrentCartServiceDefinition } from "../../headless/ecom/services/current-cart-service";
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
@@ -26,7 +10,17 @@ import {
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '../../headless/store/services/product-modifiers-service';
+} from "../../headless/store/services/product-modifiers-service";
+import {
+  ProductService,
+  ProductServiceDefinition,
+} from "../../headless/store/services/product-service";
+import {
+  SelectedVariantService,
+  SelectedVariantServiceDefinition,
+} from "../../headless/store/services/selected-variant-service";
+import { useNavigation } from "../NavigationContext";
+import ProductDetails from "./ProductDetails";
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -54,17 +48,17 @@ export default function QuickViewModal({
   // Handle escape key to close modal
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
@@ -73,15 +67,15 @@ export default function QuickViewModal({
     if (isOpen && product.slug) {
       setIsLoading(true);
       // Import and use the loadProductServiceConfig function to get full product data
-      import('../../headless/store/services/product-service').then(
+      import("../../headless/store/services/product-service").then(
         async ({ loadProductServiceConfig }) => {
           try {
             const result = await loadProductServiceConfig(product.slug!);
-            if (result.type === 'success') {
+            if (result.type === "success") {
               setFullProduct(result.config.product);
             }
           } catch (error) {
-            console.error('Failed to load full product data:', error);
+            console.error("Failed to load full product data:", error);
             // Fallback to original product data
             setFullProduct(product);
           } finally {
@@ -101,27 +95,6 @@ export default function QuickViewModal({
       return () => clearTimeout(timer);
     }
   }, [showSuccessMessage]);
-
-  // Create services manager with all required services EXCEPT cart service - recreate when fullProduct changes
-  const [servicesManager, setServicesManager] = useState<any>(null);
-
-  useEffect(() => {
-    if (fullProduct) {
-      const servicesMap = createServicesMap()
-        .addService(ProductServiceDefinition, ProductService, {
-          product: fullProduct,
-        })
-        // Use the existing cart service from parent context instead of creating new one
-        .addService(CurrentCartServiceDefinition, () => parentCartService)
-        .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-        .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-        .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
-          media: fullProduct.media?.itemsInfo?.items ?? [],
-        });
-
-      setServicesManager(createServicesManager(servicesMap));
-    }
-  }, [fullProduct, parentCartService]);
 
   if (!isOpen) return null;
 
@@ -182,7 +155,7 @@ export default function QuickViewModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto max-h-[90vh] p-6">
-          {isLoading || !servicesManager ? (
+          {isLoading || !fullProduct ? (
             // Loading state while fetching full product data
             <div className="flex items-center justify-center py-16">
               <div className="text-center">
@@ -194,12 +167,37 @@ export default function QuickViewModal({
             </div>
           ) : (
             <>
-              <ServicesManagerProvider servicesManager={servicesManager}>
+              <WixServices
+                servicesMap={createServicesMap()
+                  .addService(ProductServiceDefinition, ProductService, {
+                    product: fullProduct,
+                  })
+                  // Use the existing cart service from parent context instead of creating new one
+                  .addService(
+                    CurrentCartServiceDefinition,
+                    () => parentCartService
+                  )
+                  .addService(
+                    SelectedVariantServiceDefinition,
+                    SelectedVariantService
+                  )
+                  .addService(
+                    ProductModifiersServiceDefinition,
+                    ProductModifiersService
+                  )
+                  .addService(
+                    MediaGalleryServiceDefinition,
+                    MediaGalleryService,
+                    {
+                      media: fullProduct.media?.itemsInfo?.items ?? [],
+                    }
+                  )}
+              >
                 <ProductDetails
                   setShowSuccessMessage={setShowSuccessMessage}
                   isQuickView={true}
                 />
-              </ServicesManagerProvider>
+              </WixServices>
 
               {/* View Full Product Page Link */}
               <div className="mt-6 pt-6 border-t border-brand-subtle">

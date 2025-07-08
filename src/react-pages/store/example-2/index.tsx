@@ -1,44 +1,37 @@
-import { useState } from 'react';
-import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
-import { StoreLayout } from '../../../layouts/StoreLayout';
-import '../../../styles/theme-2.css';
-import { PageDocsRegistration } from '../../../components/DocsMode';
-import { WixMediaImage } from '../../../headless/media/components';
-import ProductFilters from '../../../components/store/ProductFilters';
-import { FilteredCollection } from '../../../headless/store/components';
+import { createServicesMap } from "@wix/services-manager";
+import { WixServices } from "@wix/services-manager-react";
+import { PageDocsRegistration } from "../../../components/DocsMode";
+import ProductFilters from "../../../components/store/ProductFilters";
+import StoreHeader from "../../../components/store/StoreHeader";
+import { WixMediaImage } from "../../../headless/media/components";
+import { FilteredCollection } from "../../../headless/store/components";
 import {
-  CollectionService,
-  CollectionServiceDefinition,
-} from '../../../headless/store/services/collection-service';
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
-import {
-  FilterService,
-  FilterServiceDefinition,
-} from '../../../headless/store/services/filter-service';
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-} from '../../../headless/ecom/services/current-cart-service';
-import {
-  CategoryService,
-  CategoryServiceDefinition,
-} from '../../../headless/store/services/category-service';
-import StoreHeader from '../../../components/store/StoreHeader';
-import {
-  SortService,
-  SortServiceDefinition,
-} from '../../../headless/store/services/sort-service';
+  CatalogOptionsService,
+  CatalogOptionsServiceDefinition,
+} from "../../../headless/store/services/catalog-options-service";
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
 } from '../../../headless/store/services/catalog-price-range-service';
 import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from '../../../headless/store/services/catalog-options-service';
+  CategoryService,
+  CategoryServiceDefinition,
+} from "../../../headless/store/services/category-service";
+import {
+  CollectionService,
+  CollectionServiceDefinition,
+} from "../../../headless/store/services/collection-service";
+import {
+  FilterService,
+  FilterServiceDefinition,
+} from "../../../headless/store/services/filter-service";
+import {
+  SortService,
+  SortServiceDefinition,
+} from "../../../headless/store/services/sort-service";
+import { KitchensinkLayout } from "../../../layouts/KitchensinkLayout";
+import { StoreLayout } from "../../../layouts/StoreLayout";
+import "../../../styles/theme-2.css";
 
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
@@ -581,170 +574,166 @@ export default function StoreExample2Page({
       }
       window.history.pushState(
         null,
-        'Showing Category ' + category?.name,
+        "Showing Category " + category?.name,
         newPath
       );
     }
   };
 
-  const [servicesManager] = useState(() =>
-    createServicesManager(
-      createServicesMap()
-        .addService(
-          CollectionServiceDefinition,
-          CollectionService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          FilterServiceDefinition,
-          FilterService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          CurrentCartServiceDefinition,
-          CurrentCartService,
-          currentCartServiceConfig
-        )
-        .addService(CategoryServiceDefinition, CategoryService, {
-          ...categoriesConfig,
-          onCategoryChange: handleCategoryChange,
-        })
-        .addService(SortServiceDefinition, SortService, {
-          initialSort: filteredCollectionServiceConfig.initialSort,
-        })
-        .addService(
-          CatalogPriceRangeServiceDefinition,
-          CatalogPriceRangeService,
-          {}
-        )
-        .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+  const servicesMap = createServicesMap()
+    .addService(
+      CollectionServiceDefinition,
+      CollectionService,
+      filteredCollectionServiceConfig
     )
-  );
+    .addService(
+      FilterServiceDefinition,
+      FilterService,
+      filteredCollectionServiceConfig
+    )
+    .addService(CategoryServiceDefinition, CategoryService, {
+      ...categoriesConfig,
+      onCategoryChange: handleCategoryChange,
+    })
+    .addService(SortServiceDefinition, SortService, {
+      initialSort: filteredCollectionServiceConfig.initialSort,
+    })
+    .addService(
+      CatalogPriceRangeServiceDefinition,
+      CatalogPriceRangeService,
+      {}
+    )
+    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {});
 
   return (
     <KitchensinkLayout>
-      <StoreLayout
-        currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
-      >
-        <PageDocsRegistration
-          title="Advanced Store Collection"
-          description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
-          docsUrl="/docs/examples/advanced-store-collection"
-        />
+      <StoreLayout currentCartServiceConfig={currentCartServiceConfig}>
+        <WixServices servicesMap={servicesMap}>
+          <PageDocsRegistration
+            title="Advanced Store Collection"
+            description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
+            docsUrl="/docs/examples/advanced-store-collection"
+          />
 
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
-                <span
-                  style={{
-                    background: 'var(--theme-hero-text-gradient)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  Advanced Store
-                </span>
-              </h1>
-              <p className="text-[var(--theme-text-content-80)] text-xl max-w-2xl mx-auto">
-                Experience our next-generation e-commerce platform with enhanced
-                interactions and modern design patterns
-              </p>
-            </div>
+          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-12">
+                <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
+                  <span
+                    style={{
+                      background: "var(--theme-hero-text-gradient)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    Advanced Store
+                  </span>
+                </h1>
+                <p className="text-[var(--theme-text-content-80)] text-xl max-w-2xl mx-auto">
+                  Experience our next-generation e-commerce platform with
+                  enhanced interactions and modern design patterns
+                </p>
+              </div>
 
-            <div
-              className="backdrop-blur-lg rounded-2xl border border-[var(--theme-border-card)] p-6 mb-12"
-              style={{ background: 'var(--theme-hero-card-gradient)' }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+              <div
+                className="backdrop-blur-lg rounded-2xl border border-[var(--theme-border-card)] p-6 mb-12"
+                style={{ background: "var(--theme-hero-card-gradient)" }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: "var(--theme-hero-feature-gradient)",
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Enhanced UI
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Modern design patterns
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Enhanced UI
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Modern design patterns
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: "var(--theme-hero-feature-gradient)",
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Smart Interactions
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Advanced user flows
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Smart Interactions
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Advanced user flows
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: "var(--theme-hero-feature-gradient)",
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Headless Components
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Built with Collection & CurrentCart
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Headless Components
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Built with Collection & CurrentCart
-                  </p>
                 </div>
               </div>
+
+              <ProductGridContent />
+
+              <LoadMoreSection />
             </div>
-
-            <ProductGridContent />
-
-            <LoadMoreSection />
           </div>
-        </div>
+        </WixServices>
       </StoreLayout>
     </KitchensinkLayout>
   );
