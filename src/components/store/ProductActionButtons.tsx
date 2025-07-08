@@ -1,6 +1,7 @@
 import React from 'react';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import { useService } from '@wix/services-manager-react';
+import type { ServiceAPI } from '@wix/services-definitions';
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -145,10 +146,19 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   onShowSuccessMessage,
   isQuickView = false,
 }) => {
+  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
+    typeof CurrentCartServiceDefinition
+  >;
+
   const handleAddToCart = async () => {
     await onAddToCart();
     onShowSuccessMessage(true);
-    setTimeout(() => onShowSuccessMessage(false), 3000);
+    setTimeout(() => {
+      onShowSuccessMessage(false);
+      if (!isPreOrderEnabled) {
+        service.openCart();
+      }
+    }, 3000);
 
     if (isPreOrderEnabled) {
       window.location.href = '/cart';

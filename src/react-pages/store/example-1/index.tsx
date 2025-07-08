@@ -110,6 +110,8 @@ export default function StoreCollectionPage({
     )
   );
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -120,6 +122,8 @@ export default function StoreCollectionPage({
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
         servicesManager={servicesManager}
+        showSuccessMessage={showSuccessMessage}
+        onSuccessMessageChange={() => {}}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
@@ -131,7 +135,10 @@ export default function StoreCollectionPage({
             </p>
           </div>
 
-          <ProductList productPageRoute="/store/example-1" />
+          <ProductList
+            productPageRoute="/store/example-1"
+            setLayoutSuccessMessage={setShowSuccessMessage}
+          />
         </div>
       </StoreLayout>
     </KitchensinkLayout>
