@@ -628,7 +628,6 @@ const fetchMissingVariants = async (
       return products;
     }
 
-
     const items = [];
 
     const res = await readOnlyVariantsV3
