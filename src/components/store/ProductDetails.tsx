@@ -638,12 +638,20 @@ export default function ProductDetails({
                 isLoading,
                 error,
                 isPreOrderEnabled,
+                preOrderMessage,
                 inStock,
               }) => (
                 <div className="space-y-4">
                   {error && (
                     <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
                       <p className="text-status-error text-sm">{error}</p>
+                    </div>
+                  )}
+                  {!inStock && preOrderMessage && isPreOrderEnabled && (
+                    <div className="bg-status-info-light border border-status-info rounded-lg p-3">
+                      <p className="text-status-info text-sm">
+                        {preOrderMessage}
+                      </p>
                     </div>
                   )}
 
@@ -703,27 +711,29 @@ export default function ProductDetails({
           {!isQuickView && (
             <SelectedVariant.Details>
               {({ sku, weight }) => (
-                <div className="border-t border-brand-light pt-8">
-                  <h3 className="text-xl font-semibold text-content-primary mb-4">
-                    Product Details
-                  </h3>
+                <>
                   {(sku || weight) && (
-                    <div className="space-y-3 text-content-secondary">
-                      {sku && (
-                        <div className="flex justify-between">
-                          <span>SKU:</span>
-                          <span>{sku}</span>
-                        </div>
-                      )}
-                      {weight && (
-                        <div className="flex justify-between">
-                          <span>Weight:</span>
-                          <span>{weight}</span>
-                        </div>
-                      )}
+                    <div className="border-t border-brand-light pt-8">
+                      <h3 className="text-xl font-semibold text-content-primary mb-4">
+                        Product Details
+                      </h3>
+                      <div className="space-y-3 text-content-secondary">
+                        {sku && (
+                          <div className="flex justify-between">
+                            <span>SKU:</span>
+                            <span>{sku}</span>
+                          </div>
+                        )}
+                        {weight && (
+                          <div className="flex justify-between">
+                            <span>Weight:</span>
+                            <span>{weight}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
-                </div>
+                </>
               )}
             </SelectedVariant.Details>
           )}

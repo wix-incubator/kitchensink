@@ -205,6 +205,8 @@ export interface TriggerRenderProps {
   inStock: boolean;
   /** Whether pre-order is enabled */
   isPreOrderEnabled: boolean;
+  /** Pre-order message */
+  preOrderMessage: string | null;
   /** Error message if any */
   error: string | null;
   /** Available quantity */
@@ -235,6 +237,7 @@ export const Trigger = (props: TriggerProps) => {
   const price = variantService.currentPrice.get();
   const inStock = variantService.isInStock.get();
   const isPreOrderEnabled = variantService.isPreOrderEnabled.get();
+  const preOrderMessage = variantService.preOrderMessage.get();
   const isLoading = variantService.isLoading.get();
   const error = variantService.error.get();
   const availableQuantity = variantService.quantityAvailable.get();
@@ -270,6 +273,7 @@ export const Trigger = (props: TriggerProps) => {
     price,
     inStock,
     isPreOrderEnabled,
+    preOrderMessage,
     error,
     availableQuantity,
   });
