@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
+import { test, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 // Helper methods for product interaction - reusable across tests
 
@@ -8,17 +8,17 @@ import type { Page } from "@playwright/test";
  * @param page - Playwright page instance
  */
 async function selectFirstAvailableVariantOptions(page: Page) {
-  const productOptions = page.getByTestId("product-options");
+  const productOptions = page.getByTestId('product-options');
   if (await productOptions.isVisible()) {
     // Get all product option containers
-    const options = page.getByTestId("product-option");
+    const options = page.getByTestId('product-option');
     const optionCount = await options.count();
 
     for (let i = 0; i < optionCount; i++) {
       const option = options.nth(i);
       // Find the first available choice button in this option
       const choiceButtons = option.getByTestId(
-        "product-modifier-choice-button"
+        'product-modifier-choice-button'
       );
       const buttonCount = await choiceButtons.count();
 
@@ -38,11 +38,11 @@ async function selectFirstAvailableVariantOptions(page: Page) {
  * @param page - Playwright page instance
  */
 async function fillProductModifiers(page: Page) {
-  const productModifiers = page.getByTestId("product-modifiers");
+  const productModifiers = page.getByTestId('product-modifiers');
   if (await productModifiers.isVisible()) {
     // Handle choice buttons in modifiers
     const modifierChoiceButtons = productModifiers.getByTestId(
-      "product-modifier-choice-button"
+      'product-modifier-choice-button'
     );
     const modifierButtonCount = await modifierChoiceButtons.count();
 
@@ -57,7 +57,7 @@ async function fillProductModifiers(page: Page) {
 
     // Handle free text inputs
     const freeTextInputs = productModifiers.getByTestId(
-      "product-modifier-free-text-input"
+      'product-modifier-free-text-input'
     );
     const inputCount = await freeTextInputs.count();
 
@@ -90,24 +90,29 @@ async function configureProductOptions(page: Page) {
  * @param available - Whether to select an available (true) or unavailable (false) product
  * @returns Promise<Locator> - The product details element for further assertions
  */
-async function navigateToFirstProduct(page: Page, available: boolean = true) {
-  await page.goto("/react-router");
-  await page.waitForLoadState("networkidle");
+async function navigateToFirstAvailableProduct(
+  page: Page,
+  available: boolean = true
+) {
+  await page.goto('/react-router');
+  await page.waitForLoadState('networkidle');
 
   const selectedProductItem = page
     .locator(
       `[data-testid="product-item"][data-product-available="${available}"]`
     )
-    .first();
+    .filter({
+      has: page.locator('[data-testid="add-to-cart-button"]:not([disabled])'),
+    });
 
   const viewProductButton = selectedProductItem.getByTestId(
-    "view-product-button"
+    'view-product-button'
   );
   await expect(viewProductButton).toBeVisible();
   await viewProductButton.click();
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState('networkidle');
 
-  const productDetails = page.getByTestId("product-details");
+  const productDetails = page.getByTestId('product-details');
   await expect(productDetails).toBeVisible();
 
   return productDetails;
@@ -122,11 +127,11 @@ async function navigateToFirstProduct(page: Page, available: boolean = true) {
 //   return await navigateToFirstProduct(_page, false);
 // }
 
-test.describe("React Router e2e Flow", () => {
-  test("should load the product page properly", async ({ page }) => {
-    const productDetails = await navigateToFirstProduct(page);
+test.describe('React Router e2e Flow', () => {
+  test('should load the product page properly', async ({ page }) => {
+    const productDetails = await navigateToFirstAvailableProduct(page);
 
-    const productTitle = productDetails.getByTestId("product-name");
+    const productTitle = productDetails.getByTestId('product-name');
 
     await expect(productTitle).toBeVisible();
     await expect(page).toHaveURL(/\/react-router\/products\/([a-z0-9-]+)$/, {
@@ -134,30 +139,30 @@ test.describe("React Router e2e Flow", () => {
     });
   });
 
-  test("should run the e2e flow", async ({ page }) => {
-    await navigateToFirstProduct(page);
+  test('should run the e2e flow', async ({ page }) => {
+    await navigateToFirstAvailableProduct(page);
 
     // Configure all product options and modifiers
     await configureProductOptions(page);
 
-    const addToCartButton = page.getByTestId("add-to-cart-button");
+    const addToCartButton = page.getByTestId('add-to-cart-button');
     await expect(addToCartButton).toBeVisible();
     await addToCartButton.click();
 
-    const viewCartButton = page.getByTestId("view-cart-button");
+    const viewCartButton = page.getByTestId('view-cart-button');
     await expect(viewCartButton).toBeVisible();
     await viewCartButton.click();
 
-    const cartSummary = page.getByTestId("cart-summary");
+    const cartSummary = page.getByTestId('cart-summary');
     await expect(cartSummary).toBeVisible();
 
     const proceedToCheckoutButton = page.getByTestId(
-      "proceed-to-checkout-button"
+      'proceed-to-checkout-button'
     );
     await expect(proceedToCheckoutButton).toBeVisible();
     await proceedToCheckoutButton.click();
 
-    const checkoutButton = page.getByTestId("proceed-to-checkout-button");
+    const checkoutButton = page.getByTestId('proceed-to-checkout-button');
     await expect(checkoutButton).toBeVisible();
 
     await expect(page).toHaveURL(/\/checkout\?checkoutId=.*$/, {

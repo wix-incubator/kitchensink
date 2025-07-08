@@ -18,6 +18,7 @@ export interface SelectedVariantServiceAPI {
   currentCompareAtPrice: ReadOnlySignal<string | null>;
   isInStock: ReadOnlySignal<boolean>;
   isPreOrderEnabled: ReadOnlySignal<boolean>;
+  preOrderMessage: ReadOnlySignal<string | null>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 
@@ -78,6 +79,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
     const selectedChoices: Signal<Record<string, string>> =
       signalsService.signal({} as any);
+    const preOrderMessage: Signal<string | null> = signalsService.signal(
+      null as any
+    );
 
     const initialProduct = productService.product.get();
 
@@ -158,12 +162,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       );
     };
 
-    const updateVariantInventoryQuantities = async (
+    const updateInventoryItemData = async (
       variantId: string | null | undefined,
       inStock: boolean,
       preOrderEnabled: boolean
     ) => {
-      if (!variantId) return;
+      if (!variantId) {
+        preOrderMessage.set(null);
+        return;
+      }
 
       try {
         // Use the correct Wix inventoryItemsV3.queryInventoryItems() API
@@ -175,6 +182,8 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         const inventoryItem = queryResult.items?.[0];
         const isTrackingQuantity = inventoryItem?.trackQuantity ?? false;
         trackQuantity.set(isTrackingQuantity);
+
+        preOrderMessage.set(inventoryItem?.preorderInfo?.message || null);
 
         if (!inventoryItem || !isTrackingQuantity) {
           quantityAvailable.set(null);
@@ -196,14 +205,14 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       }
     };
 
-    const updateQuantityFromVariant = (variant: productsV3.Variant | null) => {
+    const updateDataFromVariant = (variant: productsV3.Variant | null) => {
       if (variant) {
         const inStock = variant.inventoryStatus?.inStock ?? true;
         const preOrderEnabled =
           variant.inventoryStatus?.preorderEnabled ?? false;
 
-        // update the quantity available and tracking insication from the inventory API
-        updateVariantInventoryQuantities(variant._id, inStock, preOrderEnabled);
+        // update the quantity available, tracking indication and pre-order message from the inventory API
+        updateInventoryItemData(variant._id, inStock, preOrderEnabled);
       } else {
         quantityAvailable.set(0);
         trackQuantity.set(false);
@@ -271,7 +280,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
           variants.set(currentProduct.variantsInfo?.variants || []);
 
           if (currentProduct.variantsInfo?.variants?.length) {
-            updateQuantityFromVariant(currentProduct.variantsInfo?.variants[0]);
+            updateDataFromVariant(currentProduct.variantsInfo?.variants[0]);
           }
         } else {
           const singleVariant: productsV3.Variant = {
@@ -292,7 +301,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             },
           };
           variants.set([singleVariant]);
-          updateQuantityFromVariant(singleVariant);
+          updateDataFromVariant(singleVariant);
         }
       }
     };
@@ -435,7 +444,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       selectedChoices.set(choices);
       selectedQuantity.set(1); // Reset quantity when choices change
       const matchingVariant = findVariantByChoices(variants.get(), choices);
-      updateQuantityFromVariant(matchingVariant);
+      updateDataFromVariant(matchingVariant);
     };
 
     const addToCart = async (
@@ -547,7 +556,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       if (variant) {
         const variantChoices = processVariantChoices(variant);
         selectedChoices.set(variantChoices);
-        updateQuantityFromVariant(variant);
+        updateDataFromVariant(variant);
       }
     };
 
@@ -699,6 +708,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       currentCompareAtPrice,
       isInStock,
       isPreOrderEnabled,
+      preOrderMessage,
       isLoading,
       error,
 
