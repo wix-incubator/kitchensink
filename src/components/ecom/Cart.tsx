@@ -164,8 +164,7 @@ export default function CartContent() {
                                             width={96}
                                             height={96}
                                             alt={title}
-                                            displayMode="fill"
-                                            className="h-24 w-24 rounded-lg border border-surface-interactive overflow-hidden"
+                                            className="h-24 w-24 rounded-lg border-surface-interactive overflow-hidden"
                                           />
                                         ) : (
                                           <div className="h-24 w-24 bg-surface-primary rounded-lg flex items-center justify-center border border-surface-interactive">
