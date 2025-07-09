@@ -34,7 +34,6 @@ import {
   MediaGalleryServiceDefinition,
 } from '../../headless/media/services/media-gallery-service';
 
-
 export const ProductGridContent = ({
   productPageRoute,
   setLayoutSuccessMessage,

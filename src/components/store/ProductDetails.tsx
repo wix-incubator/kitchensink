@@ -11,7 +11,6 @@ import { CurrentCart } from '../../headless/ecom/components';
 import { useService } from '@wix/services-manager-react';
 import { useNavigation } from '../NavigationContext';
 
-
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
   <ProductModifiers.FreeText modifier={modifier}>
