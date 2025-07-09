@@ -72,7 +72,6 @@ export const ProductGridContent = ({
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
-    console.log('showSuccessMessage', showSuccessMessage);
     const currentCartService = useService(CurrentCartServiceDefinition);
 
     // Create services for each product - reuse the parent's CurrentCartService instance
