@@ -2,11 +2,7 @@ import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 import { URLParamsUtils } from '../utils/url-params';
-import {
-  SortType,
-  SORT_TYPE_TO_PARAM,
-  DEFAULT_SORT_TYPE,
-} from '../enums/sort-enums';
+import { SortType, DEFAULT_SORT_TYPE } from '../enums/sort-enums';
 
 export type SortBy = SortType;
 
@@ -33,11 +29,10 @@ export const SortService = implementService.withConfig<{
 
     // Update URL with sort parameter
     const currentParams = URLParamsUtils.getURLParams();
-    const sortParam = SORT_TYPE_TO_PARAM[sortBy];
     const urlParams = { ...currentParams };
 
-    if (sortParam !== 'newest') {
-      urlParams.sort = sortParam;
+    if (sortBy !== SortType.NEWEST) {
+      urlParams.sort = sortBy;
     } else {
       delete urlParams.sort;
     }
