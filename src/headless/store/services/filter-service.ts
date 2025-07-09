@@ -1,6 +1,9 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type {
+  Signal,
+  ReadOnlySignal,
+} from '@wix/services-definitions/core-services/signals';
 import { URLParamsUtils } from '../utils/url-params';
 import { CatalogPriceRangeServiceDefinition } from './catalog-price-range-service';
 import { CatalogOptionsServiceDefinition } from './catalog-options-service';
@@ -31,13 +34,13 @@ export interface FilterServiceAPI {
   currentFilters: Signal<Filter>;
   applyFilters: (filters: Filter) => Promise<void>;
   clearFilters: () => Promise<void>;
-  availableOptions: Signal<{
+  availableOptions: ReadOnlySignal<{
     productOptions: ProductOption[];
     priceRange: { min: number; max: number };
   }>;
   loadCatalogPriceRange: (categoryId?: string) => Promise<void>;
   loadCatalogOptions: (categoryId?: string) => Promise<void>;
-  isFullyLoaded: Signal<boolean>;
+  isFullyLoaded: ReadOnlySignal<boolean>;
 }
 
 export const FilterServiceDefinition = defineService<FilterServiceAPI>(
@@ -62,18 +65,28 @@ export const FilterService = implementService.withConfig<{
     (config.initialFilters || defaultFilter) as any
   );
 
-  const availableOptions: Signal<{
-    productOptions: ProductOption[];
-    priceRange: { min: number; max: number };
-  }> = signalsService.signal({
-    productOptions: [],
-    priceRange: { min: 0, max: 0 },
-  } as any);
+  // Use computed signal for availableOptions to automatically track dependencies
+  const availableOptions = signalsService.computed(() => {
+    const catalogPriceRange = catalogPriceRangeService.catalogPriceRange.get();
+    const catalogOptions = catalogOptionsService.catalogOptions.get();
 
-  const isFullyLoaded: Signal<boolean> = signalsService.signal(false as any);
+    const priceRange =
+      catalogPriceRange &&
+      catalogPriceRange.minPrice < catalogPriceRange.maxPrice
+        ? { min: catalogPriceRange.minPrice, max: catalogPriceRange.maxPrice }
+        : { min: 0, max: 0 };
 
-  // Helper function to check if both catalog data are loaded
-  const checkIfFullyLoaded = () => {
+    const productOptions =
+      catalogOptions && catalogOptions.length > 0 ? catalogOptions : [];
+
+    return {
+      productOptions,
+      priceRange,
+    };
+  });
+
+  // Use computed signal for isFullyLoaded to automatically track dependencies
+  const isFullyLoaded = signalsService.computed(() => {
     const catalogPriceRange = catalogPriceRangeService.catalogPriceRange.get();
     const catalogOptions = catalogOptionsService.catalogOptions.get();
 
@@ -81,11 +94,12 @@ export const FilterService = implementService.withConfig<{
     const hasPriceRangeData = catalogPriceRange !== undefined; // includes null case
     const hasOptionsData = !!(catalogOptions && catalogOptions.length >= 0); // Even 0 options is valid
 
-    isFullyLoaded.set(hasPriceRangeData && hasOptionsData);
-  };
+    return hasPriceRangeData && hasOptionsData;
+  });
 
-  // Subscribe to catalog price range changes and automatically update our signals
-  catalogPriceRangeService.catalogPriceRange.subscribe(catalogPriceRange => {
+  // Effect to update currentFilters when catalog data loads (only if filters are at defaults)
+  signalsService.effect(() => {
+    const catalogPriceRange = catalogPriceRangeService.catalogPriceRange.get();
     if (
       catalogPriceRange &&
       catalogPriceRange.minPrice < catalogPriceRange.maxPrice
@@ -94,13 +108,6 @@ export const FilterService = implementService.withConfig<{
         min: catalogPriceRange.minPrice,
         max: catalogPriceRange.maxPrice,
       };
-
-      // Update available options with catalog price range
-      const currentAvailableOptions = availableOptions.get();
-      availableOptions.set({
-        ...currentAvailableOptions,
-        priceRange,
-      });
 
       // Update current filters to use catalog price range
       const currentFiltersValue = currentFilters.get();
@@ -118,24 +125,6 @@ export const FilterService = implementService.withConfig<{
         });
       }
     }
-
-    // Check if fully loaded after price range update
-    checkIfFullyLoaded();
-  });
-
-  // Subscribe to catalog options changes and automatically update our signals
-  catalogOptionsService.catalogOptions.subscribe(catalogOptions => {
-    if (catalogOptions && catalogOptions.length > 0) {
-      // Update available options with catalog options
-      const currentAvailableOptions = availableOptions.get();
-      availableOptions.set({
-        ...currentAvailableOptions,
-        productOptions: catalogOptions,
-      });
-    }
-
-    // Check if fully loaded after options update
-    checkIfFullyLoaded();
   });
 
   // Apply filters by delegating to the collection service

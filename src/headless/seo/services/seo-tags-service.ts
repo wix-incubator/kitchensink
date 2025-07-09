@@ -2,9 +2,11 @@ import {
   defineService,
   implementService,
   type ServiceFactoryConfig,
-  type Signal,
 } from '@wix/services-definitions';
-import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
+import {
+  SignalsServiceDefinition,
+  type Signal,
+} from '@wix/services-definitions/core-services/signals';
 import { seoTags } from '@wix/seo';
 
 export interface SEOTagsServiceAPI {

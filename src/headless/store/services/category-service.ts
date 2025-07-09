@@ -1,6 +1,6 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 import { categories } from '@wix/categories';
 
 export interface CategoryServiceAPI {
@@ -48,7 +48,8 @@ export const CategoryService =
       };
 
       // Subscribe to category changes and handle navigation as a side effect
-      selectedCategory.subscribe(categoryId => {
+      signalsService.effect(() => {
+        const categoryId = selectedCategory.get();
         // Skip navigation on initial load (when service is first created)
         if (isInitialLoad) {
           isInitialLoad = false;

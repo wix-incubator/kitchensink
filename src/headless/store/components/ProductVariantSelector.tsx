@@ -1,7 +1,6 @@
 import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { SelectedVariantServiceDefinition } from '../services/selected-variant-service';
-import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
 
 /**
@@ -225,8 +224,6 @@ export const Stock = (props: StockProps) => {
   const currentVariantId = variantService.selectedVariantId.get();
   const availableQuantity = variantService.quantityAvailable.get();
   const selectedQuantity = variantService.selectedQuantity.get();
-  const currentVariant = variantService.currentVariant.get();
-  const allVariantsAreOutOfStock = variantService.IsAllVariantsAreOutOfStock();
 
   // Return raw availability status - UI components will handle display conversion
   const availabilityStatus = inStock
