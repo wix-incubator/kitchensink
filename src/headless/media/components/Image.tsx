@@ -35,7 +35,6 @@ export function WixMediaImage({
   className,
   alt = '',
   showPlaceholder = true,
-  displayMode = 'fit',
 }: {
   media?: MediaItem;
   width?: number;
@@ -43,13 +42,20 @@ export function WixMediaImage({
   className?: string;
   alt?: string;
   showPlaceholder?: boolean;
-  displayMode?: FittingType;
 }) {
   const {
     uri,
     originalWidth = 640,
     originalHeight = 320,
   } = parseMediaFromUrl(media?.image!);
+
+  console.log('image props', {
+    uri,
+    originalWidth,
+    originalHeight,
+    showPlaceholder,
+    className,
+  });
 
   return (
     <Image
@@ -59,12 +65,11 @@ export function WixMediaImage({
       height={height || originalHeight}
       containerWidth={width}
       containerHeight={height}
-      displayMode={displayMode}
+      displayMode={'fill' as FittingType}
       isInFirstFold={true}
       isSEOBot={false}
       shouldUseLQIP={showPlaceholder}
       alt={alt}
-      className={className}
     />
   );
 }
