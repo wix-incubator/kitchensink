@@ -33,10 +33,10 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from '../../headless/media/services/media-gallery-service';
-import {
-  StoreActionLabels,
+import { 
+  StoreActionLabels, 
   StoreStatusMessages,
-} from '../../headless/store/enums';
+} from '../../store';
 
 export const ProductGridContent = ({
   productPageRoute,

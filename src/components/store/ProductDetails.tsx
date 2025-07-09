@@ -15,7 +15,7 @@ import {
   createCustomPlaceholder,
   createCharacterCountText,
   createLowStockMessage,
-} from '../../headless/store/enums';
+} from '../../store';
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (

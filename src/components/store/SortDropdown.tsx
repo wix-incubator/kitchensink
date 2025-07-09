@@ -1,6 +1,6 @@
 import { Sort } from '../../headless/store/components';
 import { type SortBy } from '../../headless/store/services/sort-service';
-import { StoreSortLabels } from '../../headless/store/enums';
+import { StoreSortLabels } from '../../store';
 
 interface SortDropdownProps {}
 
