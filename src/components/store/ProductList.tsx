@@ -8,6 +8,7 @@ import {
   Product,
   ProductVariantSelector,
   SelectedVariant,
+  ProductActions,
 } from '../../headless/store/components';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
@@ -71,7 +72,6 @@ export const ProductGridContent = ({
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
-    console.log('showSuccessMessage', showSuccessMessage);
     const currentCartService = useService(CurrentCartServiceDefinition);
 
     // Create services for each product - reuse the parent's CurrentCartService instance
@@ -399,15 +399,8 @@ export const ProductGridContent = ({
               {/* Action Buttons */}
               <div className="space-y-2">
                 {/* Add to Cart Button */}
-                <ProductVariantSelector.Trigger>
-                  {({
-                    onAddToCart,
-                    canAddToCart,
-                    isLoading,
-                    error,
-                    isPreOrderEnabled,
-                    inStock,
-                  }) => (
+                <ProductActions.Actions>
+                  {({ error }) => (
                     <div className="space-y-2">
                       {error && (
                         <div className="bg-status-danger-light border border-status-danger rounded-lg p-2">
@@ -416,19 +409,14 @@ export const ProductGridContent = ({
                       )}
 
                       <ProductActionButtons
-                        onAddToCart={onAddToCart}
-                        canAddToCart={canAddToCart}
-                        isLoading={isLoading}
-                        isPreOrderEnabled={isPreOrderEnabled}
-                        inStock={inStock}
+                        isQuickView={true} // This will hide the Buy Now button for list items
                         onShowSuccessMessage={(show: boolean) =>
                           handleShowSuccessMessage(product._id!, show)
                         }
-                        isQuickView={true} // This will hide the Buy Now button for list items
                       />
                     </div>
                   )}
-                </ProductVariantSelector.Trigger>
+                </ProductActions.Actions>
 
                 {/* View Product Button */}
                 <Navigation

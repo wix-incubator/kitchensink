@@ -1,7 +1,5 @@
 import React from 'react';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
-import { useService } from '@wix/services-manager-react';
-import type { ServiceAPI } from '@wix/services-definitions';
+import { ProductActions } from '../../headless/store/components';
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -15,19 +13,11 @@ interface AddToCartButtonProps extends BaseButtonProps {
   inStock: boolean;
 }
 
-interface BuyNowButtonProps {
-  disabled: boolean;
-  isLoading: boolean;
-  onAddToCart: () => Promise<void>;
-  className?: string;
+interface BuyNowButtonProps extends BaseButtonProps {
+  
 }
 
 interface ProductActionButtonsProps {
-  onAddToCart: () => Promise<void>;
-  canAddToCart: boolean;
-  isLoading: boolean;
-  isPreOrderEnabled: boolean;
-  inStock: boolean;
   onShowSuccessMessage: (show: boolean) => void;
   isQuickView?: boolean;
 }
@@ -89,24 +79,12 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   disabled,
   isLoading,
-  onAddToCart,
+  onClick,
   className = '',
 }) => {
-  const cartService = useService(CurrentCartServiceDefinition);
-
-  const handleBuyNow = async () => {
-    try {
-      await cartService.clearCart();
-      await onAddToCart();
-      await cartService.proceedToCheckout();
-    } catch (error) {
-      console.error('Buy now failed:', error);
-    }
-  };
-
   return (
     <button
-      onClick={handleBuyNow}
+      onClick={onClick}
       disabled={disabled}
       className={`flex-1 btn-warning disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
     >
@@ -138,53 +116,66 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
 
 // Main Product Action Buttons Container
 export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
-  onAddToCart,
-  canAddToCart,
-  isLoading,
-  isPreOrderEnabled,
-  inStock,
   onShowSuccessMessage,
   isQuickView = false,
 }) => {
-  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
-    typeof CurrentCartServiceDefinition
-  >;
-
-  const handleAddToCart = async () => {
-    await onAddToCart();
-    onShowSuccessMessage(true);
-    setTimeout(() => {
-      onShowSuccessMessage(false);
-      if (!isPreOrderEnabled) {
-        service.openCart();
-      }
-    }, 3000);
-
-    if (isPreOrderEnabled) {
-      window.location.href = '/cart';
-    }
-  };
-
   return (
-    <div className="flex gap-3">
-      {/* Add to Cart / Pre Order Button */}
-      <AddToCartButton
-        disabled={!canAddToCart || isLoading}
-        isLoading={isLoading}
-        onClick={handleAddToCart}
-        isPreOrderEnabled={isPreOrderEnabled}
-        inStock={inStock}
-      />
+    <ProductActions.Actions>
+      {({
+        onAddToCart,
+        onBuyNow,
+        onOpenCart,
+        canAddToCart,
+        isLoading,
+        inStock,
+        isPreOrderEnabled,
+      }) => {
+        const handleAddToCart = async () => {
+          await onAddToCart();
+          onShowSuccessMessage(true);
+          setTimeout(() => {
+            onShowSuccessMessage(false);
+            if (!isPreOrderEnabled) {
+              onOpenCart();
+            }
+          }, 3000);
 
-      {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
-      {inStock && !isQuickView && (
-        <BuyNowButton
-          disabled={!canAddToCart || isLoading}
-          isLoading={isLoading}
-          onAddToCart={onAddToCart}
-        />
-      )}
-    </div>
+          if (isPreOrderEnabled) {
+            window.location.href = '/cart';
+          }
+        };
+
+        const handleBuyNow = async () => {
+          try {
+            await onBuyNow();
+          } catch (error) {
+            console.error('Buy now failed:', error);
+          }
+        };
+
+        return (
+          <div className="flex gap-3">
+            {/* Add to Cart / Pre Order Button */}
+            <AddToCartButton
+              disabled={!canAddToCart || isLoading}
+              isLoading={isLoading}
+              onClick={handleAddToCart}
+              isPreOrderEnabled={isPreOrderEnabled}
+              inStock={inStock}
+            />
+
+            {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
+            {inStock && !isQuickView && (
+              <BuyNowButton
+                disabled={!canAddToCart || isLoading}
+                isLoading={isLoading}
+                onClick={handleBuyNow}
+              />
+            )}
+          </div>
+        );
+      }}
+    </ProductActions.Actions>
   );
 };
 
