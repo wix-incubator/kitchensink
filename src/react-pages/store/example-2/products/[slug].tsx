@@ -69,14 +69,7 @@ const ProductImageGallery = () => {
           return (
             <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden group">
               {src ? (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                </div>
-              ) : src ? (
-                <WixMediaImage
-                  media={{ image: src }}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                <WixMediaImage media={{ image: src }} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <svg
@@ -179,12 +172,7 @@ const ProductImageGallery = () => {
                         : 'border-white/20 hover:border-white/40'
                     }`}
                   >
-                    {src && (
-                      <WixMediaImage
-                        media={{ image: src }}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+                    {src && <WixMediaImage media={{ image: src }} />}
                   </button>
                 )}
               </MediaGallery.ThumbnailItem>
@@ -932,10 +920,7 @@ const ProductInfo = ({
                         >
                           <div className="aspect-square bg-white/10 rounded-lg mb-3 overflow-hidden group-hover:scale-105 transition-transform duration-200">
                             {image ? (
-                              <WixMediaImage
-                                media={{ image: image }}
-                                className="w-full h-full object-cover"
-                              />
+                              <WixMediaImage media={{ image: image }} />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <svg
