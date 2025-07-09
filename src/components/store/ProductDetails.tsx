@@ -10,12 +10,7 @@ import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
 import { useService } from '@wix/services-manager-react';
 import { useNavigation } from '../NavigationContext';
-import {
-  StoreStatusMessages,
-  createCustomPlaceholder,
-  createCharacterCountText,
-  createLowStockMessage,
-} from '../../store';
+import { createLowStockMessage } from '../../store';
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -33,7 +28,9 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
           data-testid="product-modifier-free-text-input"
           value={value}
           onChange={e => onChange(e.target.value)}
-          placeholder={freeTextPlaceholder || createCustomPlaceholder(name)}
+          placeholder={
+            freeTextPlaceholder || `Enter custom ${name.toLowerCase()}...`
+          }
           maxLength={maxChars}
           className="w-full p-3 border border-brand-light rounded-lg bg-surface-primary text-content-primary placeholder-text-content-subtle focus:border-brand-medium focus:outline-none resize-none"
           rows={3}
@@ -44,7 +41,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
               isOverLimit ? 'text-status-error' : 'text-content-muted'
             }`}
           >
-            {createCharacterCountText(charCount, maxChars)}
+            {charCount}/{maxChars} characters
           </div>
         )}
       </div>

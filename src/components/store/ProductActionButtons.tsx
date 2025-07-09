@@ -2,7 +2,7 @@ import React from 'react';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import { useService } from '@wix/services-manager-react';
 import type { ServiceAPI } from '@wix/services-definitions';
-import { StoreActionLabels, StoreStatusMessages } from '../../store';
+// No longer importing single-use strings - they are inlined below
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -43,9 +43,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   className = '',
 }) => {
   const buttonText =
-    !inStock && isPreOrderEnabled
-      ? StoreActionLabels.PRE_ORDER
-      : StoreActionLabels.ADD_TO_CART;
+    !inStock && isPreOrderEnabled ? 'Pre Order' : 'Add to Cart';
 
   return (
     <button
@@ -130,10 +128,10 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          {StoreStatusMessages.PROCESSING}
+          Processing...
         </span>
       ) : (
-        StoreActionLabels.BUY_NOW
+        'Buy Now'
       )}
     </button>
   );
