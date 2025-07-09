@@ -11,7 +11,9 @@ import { FilterServiceDefinition, type Filter } from './filter-service';
 import { CategoryServiceDefinition } from './category-service';
 import { SortServiceDefinition, type SortBy } from './sort-service';
 import { URLParamsUtils } from '../utils/url-params';
-import { SortType, SortDirection } from '../enums/sort-enums';
+import { SortType } from '../enums/sort-enums';
+
+const { SortDirection } = productsV3;
 
 const searchProducts = async (searchOptions: any) => {
   const searchParams = {

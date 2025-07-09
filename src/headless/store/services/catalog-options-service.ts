@@ -10,7 +10,8 @@ import {
   WixProductAvailabilityStatus,
   StockStatusMessage,
 } from '../enums/product-status-enums';
-import { SortDirection, SDKSortType } from '../enums/sort-enums';
+
+const { SortDirection, SortType: SDKSortType } = productsV3;
 
 export interface ProductOption {
   id: string;

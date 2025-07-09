@@ -15,18 +15,6 @@ export enum SortType {
 }
 
 /**
- * SDK SortDirection enum from @wix/stores productsV3
- * Values: ASC, DESC
- */
-export const { SortDirection } = productsV3;
-
-/**
- * SDK SortType enum from @wix/stores productsV3 for aggregations
- * Values: COUNT, VALUE
- */
-export const { SortType: SDKSortType } = productsV3;
-
-/**
  * Enum for URL sort parameters
  */
 export enum SortParam {
