@@ -4,6 +4,7 @@ import {
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
+  ProductActions,
 } from '../../headless/store/components';
 import { SelectedVariantServiceDefinition } from '../../headless/store/services/selected-variant-service';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -631,16 +632,8 @@ export default function ProductDetails({
 
           {/* Add to Cart */}
           <div className="space-y-4">
-            <ProductVariantSelector.Trigger>
-              {({
-                onAddToCart,
-                canAddToCart,
-                isLoading,
-                error,
-                isPreOrderEnabled,
-                preOrderMessage,
-                inStock,
-              }) => (
+            <ProductActions.Actions>
+              {({ error, isPreOrderEnabled, preOrderMessage, inStock }) => (
                 <div className="space-y-4">
                   {error && (
                     <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
@@ -656,17 +649,12 @@ export default function ProductDetails({
                   )}
 
                   <ProductActionButtons
-                    onAddToCart={onAddToCart}
-                    canAddToCart={canAddToCart}
-                    isLoading={isLoading}
-                    isPreOrderEnabled={isPreOrderEnabled}
-                    inStock={inStock}
                     onShowSuccessMessage={setShowSuccessMessage}
                     isQuickView={isQuickView}
                   />
                 </div>
               )}
-            </ProductVariantSelector.Trigger>
+            </ProductActions.Actions>
 
             {/* Stock Status */}
             <ProductVariantSelector.Stock>

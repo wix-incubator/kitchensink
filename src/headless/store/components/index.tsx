@@ -8,3 +8,4 @@ export * as Collection from './Collection';
 export * as Product from './Product';
 export * as ProductModifiers from './ProductModifiers';
 export * as SelectedVariant from './SelectedVariant';
+export * as ProductActions from './ProductActions';

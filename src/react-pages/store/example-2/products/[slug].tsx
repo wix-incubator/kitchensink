@@ -19,6 +19,7 @@ import {
   ProductVariantSelector,
   RelatedProducts,
   SocialSharing,
+  ProductActions,
 } from '../../../../headless/store/components';
 import {
   CurrentCartService,
@@ -652,8 +653,15 @@ const ProductInfo = ({
         </button>
       </div>
 
-      <ProductVariantSelector.Trigger quantity={quantity}>
-        {({ onAddToCart, canAddToCart, isLoading, inStock, error }) => (
+      <ProductActions.Actions>
+        {({
+          onAddToCart,
+          onBuyNow,
+          canAddToCart,
+          isLoading,
+          inStock,
+          error,
+        }) => (
           <div className="space-y-4">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
@@ -701,12 +709,7 @@ const ProductInfo = ({
                 <button
                   onClick={async () => {
                     try {
-                      const cartService = servicesManager.getService(
-                        CurrentCartServiceDefinition
-                      );
-                      await cartService.clearCart();
-                      await onAddToCart();
-                      await cartService.proceedToCheckout();
+                      await onBuyNow();
                     } catch (error) {
                       console.error('Buy now failed:', error);
                       window.location.href = '/cart';
@@ -849,7 +852,7 @@ const ProductInfo = ({
             </div>
           </div>
         )}
-      </ProductVariantSelector.Trigger>
+      </ProductActions.Actions>
 
       <SelectedVariant.Details>
         {({ sku, weight }) =>
