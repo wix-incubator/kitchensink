@@ -1,7 +1,9 @@
 import type { services } from '@wix/bookings';
-import { Image, type FittingType } from '@wix/image';
+import { Image, type FittingType, initCustomElement } from '@wix/image';
 
 type MediaItem = services.MediaItem;
+
+initCustomElement();
 
 const parseMediaFromUrl = (url: string) => {
   if (!url)
@@ -35,7 +37,7 @@ export function WixMediaImage({
   className,
   alt = '',
   showPlaceholder = true,
-  displayMode = 'fit',
+  displayMode = 'fill',
 }: {
   media?: MediaItem;
   width?: number;
@@ -60,7 +62,6 @@ export function WixMediaImage({
       containerWidth={width}
       containerHeight={height}
       displayMode={displayMode}
-      isInFirstFold={true}
       isSEOBot={false}
       shouldUseLQIP={showPlaceholder}
       alt={alt}
