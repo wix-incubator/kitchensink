@@ -11,7 +11,7 @@ import { FilterServiceDefinition, type Filter } from './filter-service';
 import { CategoryServiceDefinition } from './category-service';
 import { SortServiceDefinition, type SortBy } from './sort-service';
 import { URLParamsUtils } from '../utils/url-params';
-import { SortType } from '../enums/sort-enums';
+import { SortType, SortDirection } from '../enums/sort-enums';
 
 const searchProducts = async (searchOptions: any) => {
   const searchParams = {
@@ -145,19 +145,29 @@ const buildSearchOptions = (
   if (sortBy) {
     switch (sortBy) {
       case SortType.NAME_ASC:
-        searchOptions.search.sort = [{ fieldName: 'name', order: 'ASC' }];
+        searchOptions.search.sort = [
+          { fieldName: 'name', order: SortDirection.ASC },
+        ];
         break;
       case SortType.NAME_DESC:
-        searchOptions.search.sort = [{ fieldName: 'name', order: 'DESC' }];
+        searchOptions.search.sort = [
+          { fieldName: 'name', order: SortDirection.DESC },
+        ];
         break;
       case SortType.PRICE_ASC:
         searchOptions.search.sort = [
-          { fieldName: 'actualPriceRange.minValue.amount', order: 'ASC' },
+          {
+            fieldName: 'actualPriceRange.minValue.amount',
+            order: SortDirection.ASC,
+          },
         ];
         break;
       case SortType.PRICE_DESC:
         searchOptions.search.sort = [
-          { fieldName: 'actualPriceRange.minValue.amount', order: 'DESC' },
+          {
+            fieldName: 'actualPriceRange.minValue.amount',
+            order: SortDirection.DESC,
+          },
         ];
         break;
       case SortType.RECOMMENDED:
@@ -408,7 +418,10 @@ function parseURLParams(
   };
 
   if (!searchParams) {
-    return { initialSort: SortType.NONE as SortBy, initialFilters: defaultFilters };
+    return {
+      initialSort: SortType.NONE as SortBy,
+      initialFilters: defaultFilters,
+    };
   }
 
   const urlParams = URLParamsUtils.parseSearchParams(searchParams);

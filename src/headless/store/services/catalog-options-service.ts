@@ -10,6 +10,7 @@ import {
   WixProductAvailabilityStatus,
   StockStatusMessage,
 } from '../enums/product-status-enums';
+import { SortDirection, SDKSortType } from '../enums/sort-enums';
 
 export interface ProductOption {
   id: string;
@@ -107,31 +108,31 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             {
               name: 'optionNames',
               fieldPath: 'options.name',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 20,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
             {
               name: 'choiceNames',
               fieldPath: 'options.choicesSettings.choices.name',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 50,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
             {
               name: 'inventoryStatus',
               fieldPath: 'inventory.availabilityStatus',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 10,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
           ],

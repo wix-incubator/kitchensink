@@ -1,5 +1,9 @@
+import { productsV3 } from '@wix/stores';
+
 /**
  * Enum for sort types used in the store
+ * Note: Cannot use SDK SortType as it's for aggregations (COUNT/VALUE)
+ * while this enum represents user-facing sort options
  */
 export enum SortType {
   NONE = '',
@@ -11,12 +15,16 @@ export enum SortType {
 }
 
 /**
- * Enum for sort direction
+ * SDK SortDirection enum from @wix/stores productsV3
+ * Values: ASC, DESC
  */
-export enum SortDirection {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+export const { SortDirection } = productsV3;
+
+/**
+ * SDK SortType enum from @wix/stores productsV3 for aggregations
+ * Values: COUNT, VALUE
+ */
+export const { SortType: SDKSortType } = productsV3;
 
 /**
  * Enum for URL sort parameters
