@@ -33,7 +33,7 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from '../../headless/media/services/media-gallery-service';
-import { StoreStatusMessages } from '../../store';
+
 
 export const ProductGridContent = ({
   productPageRoute,
@@ -274,7 +274,7 @@ export const ProductGridContent = ({
                                                 {String(value)}
                                                 {!isInStock &&
                                                   !isPreOrderEnabled &&
-                                                  StoreStatusMessages.OUT_OF_STOCK_SUFFIX}
+                                                  ' (Out of Stock)'}
                                               </div>
                                             </div>
                                           );
@@ -363,11 +363,11 @@ export const ProductGridContent = ({
                             <div className="flex items-center gap-2">
                               {available ? (
                                 <span className="text-status-success text-sm">
-                                  {StoreStatusMessages.IN_STOCK}
+                                  In Stock
                                 </span>
                               ) : (
                                 <span className="text-status-error text-sm">
-                                  {StoreStatusMessages.OUT_OF_STOCK}
+                                  Out of Stock
                                 </span>
                               )}
                             </div>
@@ -381,11 +381,11 @@ export const ProductGridContent = ({
                           <div className="flex items-center gap-2">
                             {available ? (
                               <span className="text-status-success text-sm">
-                                {StoreStatusMessages.IN_STOCK}
+                                In Stock
                               </span>
                             ) : (
                               <span className="text-status-error text-sm">
-                                {StoreStatusMessages.OUT_OF_STOCK}
+                                Out of Stock
                               </span>
                             )}
                           </div>

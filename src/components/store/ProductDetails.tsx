@@ -10,7 +10,7 @@ import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
 import { useService } from '@wix/services-manager-react';
 import { useNavigation } from '../NavigationContext';
-import { createLowStockMessage } from '../../store';
+
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -621,7 +621,7 @@ export default function ProductDetails({
                     {/* Show stock message when in stock but available quantity < 10 */}
                     {inStock && availableQuantity && availableQuantity < 10 && (
                       <span className="text-content-muted text-sm">
-                        {createLowStockMessage(availableQuantity)}
+                        Only {availableQuantity} left in stock
                       </span>
                     )}
                   </div>
