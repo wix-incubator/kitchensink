@@ -3,6 +3,10 @@ import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
+import {
+  ModifierRenderType,
+  isFreeTextRenderType,
+} from '../enums/modifier-enums';
 
 /**
  * Custom hook to safely get the modifiers service
@@ -114,7 +118,7 @@ export const Modifier = (props: ModifierProps) => {
   const mandatory = modifier.mandatory || false;
   const choices = modifier.choicesSettings?.choices || [];
   const hasChoices = choices.length > 0;
-  const isFreeText = type === 'FREE_TEXT';
+  const isFreeText = isFreeTextRenderType(type as ModifierRenderType);
   const freeTextSettings = modifier.freeTextSettings;
   const maxChars = (freeTextSettings as any)?.maxLength;
   const placeholder = (freeTextSettings as any)?.placeholder;
@@ -178,7 +182,7 @@ export const Choice = (props: ChoiceProps) => {
 
   // For TEXT_CHOICES, use choice.key; for SWATCH_CHOICES, use choice.name
   const choiceValue =
-    renderType === 'TEXT_CHOICES'
+    renderType === ModifierRenderType.TEXT_CHOICES
       ? (choice as any).key || choice.name || ''
       : choice.name || '';
 

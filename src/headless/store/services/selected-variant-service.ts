@@ -5,6 +5,7 @@ import { productsV3, inventoryItemsV3 } from '@wix/stores';
 import { CurrentCartServiceDefinition } from '../../ecom/services/current-cart-service';
 import { ProductServiceDefinition } from './product-service';
 import { MediaGalleryServiceDefinition } from '../../media/services/media-gallery-service';
+import { WixProductAvailabilityStatus } from '../enums/product-status-enums';
 
 type V3Product = productsV3.V3Product;
 type Variant = productsV3.Variant;
@@ -293,9 +294,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             },
             inventoryStatus: {
               inStock:
-                currentProduct.inventory?.availabilityStatus === 'IN_STOCK' ||
+                currentProduct.inventory?.availabilityStatus === WixProductAvailabilityStatus.IN_STOCK ||
                 currentProduct.inventory?.availabilityStatus ===
-                  'PARTIALLY_OUT_OF_STOCK',
+                  WixProductAvailabilityStatus.PARTIALLY_OUT_OF_STOCK,
               preorderEnabled:
                 currentProduct.inventory?.preorderStatus === 'ENABLED',
             },

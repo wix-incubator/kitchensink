@@ -3,6 +3,7 @@ import { useService } from '@wix/services-manager-react';
 import { SelectedVariantServiceDefinition } from '../services/selected-variant-service';
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
+import { getStockStatusMessage } from '../enums/product-status-enums';
 
 /**
  * Props for Options headless component
@@ -322,14 +323,10 @@ export const Stock = (props: StockProps) => {
   const allVariantsAreOutOfStock = variantService.IsAllVariantsAreOutOfStock();
 
   // Determine status based on stock and pre-order availability
-  let status: string = '';
-  if (inStock) {
-    status = 'In Stock';
-  } else if (isPreOrderEnabled) {
-    status = 'Available for Pre-Order';
-  } else if (allVariantsAreOutOfStock || (currentVariant && !inStock)) {
-    status = 'Out of Stock';
-  }
+  const status = getStockStatusMessage(
+    inStock ? 'IN_STOCK' : 'OUT_OF_STOCK',
+    isPreOrderEnabled
+  );
 
   return props.children({
     inStock,

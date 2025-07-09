@@ -5,6 +5,10 @@ import {
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
+import {
+  SOCIAL_PLATFORM_CONFIGS,
+  SocialPlatform,
+} from '../enums/social-platform-enums';
 
 export interface SharingPlatform {
   name: string;
@@ -44,36 +48,11 @@ export const SocialSharingService = implementService.withConfig<{
   const signalsService = getService(SignalsServiceDefinition);
 
   const availablePlatforms: Signal<SharingPlatform[]> = signalsService.signal([
-    {
-      name: 'Facebook',
-      icon: 'facebook',
-      color: '#1877F2',
-      shareUrl: 'https://www.facebook.com/sharer/sharer.php',
-    },
-    {
-      name: 'Twitter',
-      icon: 'twitter',
-      color: '#1DA1F2',
-      shareUrl: 'https://twitter.com/intent/tweet',
-    },
-    {
-      name: 'LinkedIn',
-      icon: 'linkedin',
-      color: '#0A66C2',
-      shareUrl: 'https://www.linkedin.com/sharing/share-offsite/',
-    },
-    {
-      name: 'WhatsApp',
-      icon: 'whatsapp',
-      color: '#25D366',
-      shareUrl: 'https://wa.me/',
-    },
-    {
-      name: 'Email',
-      icon: 'mail',
-      color: '#EA4335',
-      shareUrl: 'mailto:',
-    },
+    SOCIAL_PLATFORM_CONFIGS[SocialPlatform.FACEBOOK],
+    SOCIAL_PLATFORM_CONFIGS[SocialPlatform.TWITTER],
+    SOCIAL_PLATFORM_CONFIGS[SocialPlatform.LINKEDIN],
+    SOCIAL_PLATFORM_CONFIGS[SocialPlatform.WHATSAPP],
+    SOCIAL_PLATFORM_CONFIGS[SocialPlatform.EMAIL],
   ]);
 
   const shareCount: Signal<number> = signalsService.signal(0 as any);
@@ -101,59 +80,65 @@ export const SocialSharingService = implementService.withConfig<{
     title: string,
     description?: string
   ) => {
-    const shareUrl = new URL('https://www.facebook.com/sharer/sharer.php');
+    const shareUrl = new URL(
+      SOCIAL_PLATFORM_CONFIGS[SocialPlatform.FACEBOOK].shareUrl!
+    );
     shareUrl.searchParams.set('u', url);
     shareUrl.searchParams.set(
       'quote',
       `${title}${description ? ` - ${description}` : ''}`
     );
 
-    openShareWindow(shareUrl.toString(), 'facebook');
+    openShareWindow(shareUrl.toString(), SocialPlatform.FACEBOOK);
   };
 
   const shareToTwitter = (url: string, text: string, hashtags?: string[]) => {
-    const shareUrl = new URL('https://twitter.com/intent/tweet');
+    const shareUrl = new URL(
+      SOCIAL_PLATFORM_CONFIGS[SocialPlatform.TWITTER].shareUrl!
+    );
     shareUrl.searchParams.set('url', url);
     shareUrl.searchParams.set('text', text);
     if (hashtags && hashtags.length > 0) {
       shareUrl.searchParams.set('hashtags', hashtags.join(','));
     }
 
-    openShareWindow(shareUrl.toString(), 'twitter');
+    openShareWindow(shareUrl.toString(), SocialPlatform.TWITTER);
   };
 
   const shareToLinkedIn = (url: string, title: string, summary?: string) => {
-    const shareUrl = new URL('https://www.linkedin.com/sharing/share-offsite/');
+    const shareUrl = new URL(
+      SOCIAL_PLATFORM_CONFIGS[SocialPlatform.LINKEDIN].shareUrl!
+    );
     shareUrl.searchParams.set('url', url);
     shareUrl.searchParams.set('title', title);
     if (summary) {
       shareUrl.searchParams.set('summary', summary);
     }
 
-    openShareWindow(shareUrl.toString(), 'linkedin');
+    openShareWindow(shareUrl.toString(), SocialPlatform.LINKEDIN);
   };
 
   const shareToWhatsApp = (url: string, text: string) => {
     const message = `${text} ${url}`;
-    const shareUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    const shareUrl = `${SOCIAL_PLATFORM_CONFIGS[SocialPlatform.WHATSAPP].shareUrl}?text=${encodeURIComponent(message)}`;
 
-    openShareWindow(shareUrl, 'whatsapp');
+    openShareWindow(shareUrl, SocialPlatform.WHATSAPP);
   };
 
   const shareToEmail = (url: string, subject: string, body: string) => {
     const emailBody = `${body}\n\n${url}`;
-    const mailtoUrl = `mailto:?subject=${encodeURIComponent(
+    const mailtoUrl = `${SOCIAL_PLATFORM_CONFIGS[SocialPlatform.EMAIL].shareUrl}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(emailBody)}`;
 
     window.location.href = mailtoUrl;
-    trackShare('email');
+    trackShare(SocialPlatform.EMAIL);
   };
 
   const copyToClipboard = async (url: string): Promise<boolean> => {
     try {
       await navigator.clipboard.writeText(url);
-      trackShare('clipboard');
+      trackShare(SocialPlatform.CLIPBOARD);
       return true;
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
@@ -169,7 +154,7 @@ export const SocialSharingService = implementService.withConfig<{
     try {
       if (navigator.share) {
         await navigator.share(data);
-        trackShare('native');
+        trackShare(SocialPlatform.NATIVE);
         return true;
       }
       return false;

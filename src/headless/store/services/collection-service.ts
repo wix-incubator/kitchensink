@@ -11,6 +11,7 @@ import { FilterServiceDefinition, type Filter } from './filter-service';
 import { CategoryServiceDefinition } from './category-service';
 import { SortServiceDefinition, type SortBy } from './sort-service';
 import { URLParamsUtils } from '../utils/url-params';
+import { SortType } from '../enums/sort-enums';
 
 const searchProducts = async (searchOptions: any) => {
   const searchParams = {
@@ -143,23 +144,23 @@ const buildSearchOptions = (
   // Add sort if provided
   if (sortBy) {
     switch (sortBy) {
-      case 'name-asc':
+      case SortType.NAME_ASC:
         searchOptions.search.sort = [{ fieldName: 'name', order: 'ASC' }];
         break;
-      case 'name-desc':
+      case SortType.NAME_DESC:
         searchOptions.search.sort = [{ fieldName: 'name', order: 'DESC' }];
         break;
-      case 'price-asc':
+      case SortType.PRICE_ASC:
         searchOptions.search.sort = [
           { fieldName: 'actualPriceRange.minValue.amount', order: 'ASC' },
         ];
         break;
-      case 'price-desc':
+      case SortType.PRICE_DESC:
         searchOptions.search.sort = [
           { fieldName: 'actualPriceRange.minValue.amount', order: 'DESC' },
         ];
         break;
-      case 'recommended':
+      case SortType.RECOMMENDED:
         searchOptions.search.sort = [
           {
             fieldName: 'allCategoriesInfo.categories.index',
@@ -293,12 +294,15 @@ export const CollectionService = implementService.withConfig<{
       searchOptions.paging = { limit: pageSize };
 
       const productResults = await searchProducts(searchOptions);
-      const isPriceSort = sortBy === 'price-asc' || sortBy === 'price-desc';
+      const isPriceSort =
+        sortBy === SortType.PRICE_ASC || sortBy === SortType.PRICE_DESC;
       if (isPriceSort) {
         productResults.products = productResults.products?.sort((a, b) => {
           const aPrice = Number(a.actualPriceRange?.minValue?.amount) || 0;
           const bPrice = Number(b.actualPriceRange?.minValue?.amount) || 0;
-          return sortBy === 'price-asc' ? aPrice - bPrice : bPrice - aPrice;
+          return sortBy === SortType.PRICE_ASC
+            ? aPrice - bPrice
+            : bPrice - aPrice;
         });
       }
 
@@ -404,20 +408,21 @@ function parseURLParams(
   };
 
   if (!searchParams) {
-    return { initialSort: '' as SortBy, initialFilters: defaultFilters };
+    return { initialSort: SortType.NONE as SortBy, initialFilters: defaultFilters };
   }
 
   const urlParams = URLParamsUtils.parseSearchParams(searchParams);
 
   // Parse sort parameter
   const sortMap: Record<string, SortBy> = {
-    name_asc: 'name-asc',
-    name_desc: 'name-desc',
-    price_asc: 'price-asc',
-    price_desc: 'price-desc',
-    recommended: 'recommended',
+    name_asc: SortType.NAME_ASC,
+    name_desc: SortType.NAME_DESC,
+    price_asc: SortType.PRICE_ASC,
+    price_desc: SortType.PRICE_DESC,
+    recommended: SortType.RECOMMENDED,
   };
-  const initialSort = sortMap[urlParams.sort as string] || ('' as SortBy);
+  const initialSort =
+    sortMap[urlParams.sort as string] || (SortType.NONE as SortBy);
 
   // Check if there are any filter parameters (excluding sort)
   const filterParams = Object.keys(urlParams).filter(key => key !== 'sort');
