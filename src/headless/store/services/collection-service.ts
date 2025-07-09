@@ -421,7 +421,7 @@ function parseURLParams(
 
   if (!searchParams) {
     return {
-      initialSort: SortType.NONE as SortBy,
+      initialSort: SortType.NEWEST as SortBy,
       initialFilters: defaultFilters,
     };
   }
@@ -437,7 +437,7 @@ function parseURLParams(
     recommended: SortType.RECOMMENDED,
   };
   const initialSort =
-    sortMap[urlParams.sort as string] || (SortType.NONE as SortBy);
+    sortMap[urlParams.sort as string] || (SortType.NEWEST as SortBy);
 
   // Check if there are any filter parameters (excluding sort)
   const filterParams = Object.keys(urlParams).filter(key => key !== 'sort');

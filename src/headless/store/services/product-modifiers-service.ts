@@ -8,10 +8,9 @@ import type { Signal, ReadOnlySignal } from '../../Signal';
 import { productsV3 } from '@wix/stores';
 import { ProductServiceDefinition } from './product-service';
 import {
-  ModifierRenderType,
   isChoiceBasedRenderType,
   isFreeTextRenderType,
-} from '../enums/modifier-enums';
+} from '../utils/modifier-utils';
 
 export interface ModifierValue {
   modifierName: string;
@@ -127,9 +126,11 @@ export const ProductModifiersService = implementService.withConfig()(
 
         // Check based on modifier type
         const renderType = modifier.modifierRenderType;
-        if (isChoiceBasedRenderType(renderType as ModifierRenderType)) {
+        if (!renderType) return false;
+
+        if (isChoiceBasedRenderType(renderType)) {
           return !!selectedValue.choiceValue;
-        } else if (isFreeTextRenderType(renderType as ModifierRenderType)) {
+        } else if (isFreeTextRenderType(renderType)) {
           return (
             !!selectedValue.freeTextValue &&
             selectedValue.freeTextValue.trim() !== ''

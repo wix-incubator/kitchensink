@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SortServiceDefinition, type SortBy } from '../services/sort-service';
 import { useService } from '@wix/services-manager-react';
+import { SortType } from '../enums/sort-enums';
 
 interface SortContextValue {
   currentSort: SortBy;
@@ -23,7 +24,7 @@ interface ProviderProps {
 
 export function Provider({ children }: ProviderProps) {
   const sortService = useService(SortServiceDefinition);
-  const [currentSort, setCurrentSort] = useState<SortBy>('');
+  const [currentSort, setCurrentSort] = useState<SortBy>(SortType.NEWEST);
 
   useEffect(() => {
     const unsubscribe = sortService.currentSort.subscribe((sort: SortBy) => {
