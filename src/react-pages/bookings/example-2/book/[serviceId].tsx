@@ -20,12 +20,17 @@ import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
 import { BookingAvailabilityServiceDefinition } from '../../../../headless/bookings/services/booking-availability-service';
 import { BookingSelectionServiceDefinition } from '../../../../headless/bookings/services/booking-selection-service';
+import {
+  BookingTimezoneService,
+  BookingTimezoneServiceDefinition,
+} from '../../../../headless/bookings/services/booking-timezone-service';
 
 interface BookNowPageProps {
   serviceId: string;
   bookingServicesConfig: any;
   bookingAvailabilityConfig: any;
   bookingSelectionConfig: any;
+  bookingTimezoneConfig: any;
 }
 
 const ServiceNotFound = () => (
@@ -121,7 +126,7 @@ const CalendarView = ({
     <BookingAvailability.Calendar>
       {({
         selectedDate,
-        availableDates: _availableDates,
+        availableDates,
         isLoading,
         error,
         selectDate,
@@ -172,7 +177,7 @@ const CalendarView = ({
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-        // const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0); // Unused
+        const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
         const startDate = new Date(firstDayOfMonth);
         startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
 
@@ -256,14 +261,7 @@ const TimeSlotSelector = ({
 }) => {
   return (
     <BookingAvailability.TimeSlots>
-      {({
-        slots,
-        selectedDate,
-        isLoading,
-        error,
-        hasSlots: _hasSlots,
-        isEmpty,
-      }) => {
+      {({ slots, selectedDate, isLoading, error, hasSlots, isEmpty }) => {
         if (isLoading) {
           return (
             <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -378,11 +376,7 @@ const TimeSlotSelector = ({
   );
 };
 
-const BookingSummaryView = ({
-  serviceId: _serviceId,
-}: {
-  serviceId: string;
-}) => {
+const BookingSummaryView = ({ serviceId }: { serviceId: string }) => {
   return (
     <BookingSelection.BookingSummary>
       {({
@@ -476,7 +470,7 @@ const BookingSummaryView = ({
 const BookNowContent = ({ serviceId }: { serviceId: string }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [_selectedSlot, setSelectedSlot] = useState<any>(null);
+  const [selectedSlot, setSelectedSlot] = useState<any>(null);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -634,11 +628,17 @@ export default function BookNowPage({
   bookingServicesConfig,
   bookingAvailabilityConfig,
   bookingSelectionConfig,
+  bookingTimezoneConfig,
 }: BookNowPageProps) {
   // Create services manager with all required services
   const [servicesManager] = useState(() =>
     createServicesManager(
       createServicesMap()
+        .addService(
+          BookingTimezoneServiceDefinition,
+          BookingTimezoneService,
+          bookingTimezoneConfig
+        )
         .addService(
           BookingServicesServiceDefinition,
           BookingServicesService,

@@ -19,15 +19,19 @@ import {
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { WixMediaImage } from '../../../headless/media/components';
 import { PageDocsRegistration } from '../../../components/DocsMode';
+import { BookingTimezoneService } from '../../../headless/bookings/services/booking-timezone-service';
+import { BookingTimezoneServiceDefinition } from '../../../headless/bookings/services/booking-timezone-service';
 
 interface BookingsPageProps {
   bookingServicesConfig: any;
   bookingSelectionConfig: any;
+  bookingsTimezoneConfig: any;
 }
 
 export default function BookingsPage({
   bookingServicesConfig,
   bookingSelectionConfig,
+  bookingsTimezoneConfig,
 }: BookingsPageProps) {
   // Create services manager with both booking services
   const [servicesManager] = useState(() =>
@@ -42,6 +46,11 @@ export default function BookingsPage({
           BookingSelectionServiceDefinition,
           BookingSelectionService,
           bookingSelectionConfig
+        )
+        .addService(
+          BookingTimezoneServiceDefinition,
+          BookingTimezoneService,
+          bookingsTimezoneConfig
         )
     )
   );

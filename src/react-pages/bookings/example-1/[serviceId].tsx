@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   createServicesManager,
   createServicesMap,
 } from '@wix/services-manager';
 import { useState } from 'react';
-import { ServicesManagerProvider } from '@wix/services-manager-react';
+import {
+  ServicesManagerProvider,
+  useService,
+} from '@wix/services-manager-react';
 import {
   BookingServiceService,
   BookingServiceServiceDefinition,
@@ -24,19 +27,24 @@ import {
 } from '../../../headless/bookings/components';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { PageDocsRegistration } from '../../../components/DocsMode';
+import {
+  BookingTimezoneService,
+  BookingTimezoneServiceDefinition,
+} from '../../../headless/bookings/services/booking-timezone-service';
 
 interface ServiceBookingPageProps {
   serviceId: string;
   bookingServiceConfig: any;
   bookingAvailabilityConfig: any;
   bookingSelectionConfig: any;
+  bookingTimezoneConfig: any;
 }
 
 // Component to automatically select the service when the page loads
 const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
   return (
     <BookingService.Service>
-      {({ service, loadService: _loadService }) => {
+      {({ service, loadService }) => {
         const currentService = service;
 
         return (
@@ -63,6 +71,16 @@ const ServiceAutoSelector = ({ serviceId }: { serviceId: string }) => {
   );
 };
 
+const TimezoneAutoSetter = () => {
+  const { setSelectedTimezone } = useService(BookingTimezoneServiceDefinition);
+  useEffect(() => {
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setSelectedTimezone(userTimezone);
+  }, [setSelectedTimezone]);
+
+  return null;
+};
+
 const CalendarSection = () => {
   return (
     <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -83,7 +101,7 @@ const CalendarSection = () => {
       <BookingAvailability.Calendar>
         {({
           selectedDate,
-          availableDates: _availableDates,
+          availableDates,
           isLoading,
           selectDate,
           hasAvailableSlots,
@@ -483,16 +501,72 @@ const BookingSummarySection = () => {
   );
 };
 
+const TimezonePicker = () => {
+  return (
+    <div className="flex justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <BookingAvailability.Timezone>
+        {({
+          timezones,
+          selectedTimezone,
+          setSelectedTimezone,
+          isDropDownOpen,
+          toggleOpenStatus,
+        }) => (
+          <div
+            className="relative cursor-pointer inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-sm text-blue-200 font-medium shadow-sm"
+            title={`Timezone: ${selectedTimezone}`}
+            onClick={toggleOpenStatus}
+          >
+            <svg
+              className="w-4 h-4 mr-2 text-blue-300"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {selectedTimezone}
+            {isDropDownOpen && (
+              <div className="absolute z-1 top-full mt-2 w-32 bg-white rounded-lg shadow-lg">
+                {timezones.map(tz => (
+                  <div
+                    key={tz}
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-lg"
+                    onClick={() => setSelectedTimezone(tz)}
+                  >
+                    {tz}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </BookingAvailability.Timezone>
+    </div>
+  );
+};
+
 export default function ServiceBookingPage({
   serviceId,
   bookingServiceConfig,
   bookingAvailabilityConfig,
   bookingSelectionConfig,
+  bookingTimezoneConfig,
 }: ServiceBookingPageProps) {
   // Create services manager
   const [servicesManager] = useState(() =>
     createServicesManager(
       createServicesMap()
+        .addService(
+          BookingTimezoneServiceDefinition,
+          BookingTimezoneService,
+          bookingTimezoneConfig
+        )
         .addService(
           BookingServiceServiceDefinition,
           BookingServiceService,
@@ -520,6 +594,7 @@ export default function ServiceBookingPage({
       />
       <ServicesManagerProvider servicesManager={servicesManager}>
         {/* Auto-select the service on page load */}
+        <TimezoneAutoSetter />
         <ServiceAutoSelector serviceId={serviceId} />
 
         <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
@@ -616,6 +691,8 @@ export default function ServiceBookingPage({
               </div>
             </div>
           </div>
+
+          <TimezonePicker />
 
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -4,6 +4,7 @@ import ServiceBookingPage from '../../../react-pages/bookings/example-1/[service
 import { loadBookingServiceServiceConfig } from '../../../headless/bookings/services/booking-service-service';
 import { loadBookingAvailabilityServiceConfig } from '../../../headless/bookings/services/booking-availability-service';
 import { loadBookingSelectionServiceConfig } from '../../../headless/bookings/services/booking-selection-service';
+import { loadBookingTimezoneServiceConfig } from '../../../headless/bookings/services/booking-timezone-service';
 
 const { serviceId } = Astro.params;
 
@@ -22,8 +23,12 @@ if (bookingServiceConfigResult.type === 'notFound') {
 
 const bookingServiceConfig = bookingServiceConfigResult.config;
 const bookingAvailabilityConfig =
-  await loadBookingAvailabilityServiceConfig(serviceId);
+  await loadBookingAvailabilityServiceConfig(
+    bookingServiceConfigResult.config.initialService?._id || Astro.params.serviceId!,
+    bookingServiceConfigResult.config.initialService?.type || 'APPOINTMENT' 
+  );
 const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
+const bookingTimezoneConfig = await loadBookingTimezoneServiceConfig();
 ---
 
 <BaseLayout>
@@ -39,6 +44,7 @@ const bookingSelectionConfig = await loadBookingSelectionServiceConfig();
     bookingServiceConfig={bookingServiceConfig}
     bookingAvailabilityConfig={bookingAvailabilityConfig}
     bookingSelectionConfig={bookingSelectionConfig}
+    bookingTimezoneConfig={bookingTimezoneConfig}
     slot="body"
   />
 </BaseLayout>
