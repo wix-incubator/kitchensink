@@ -103,10 +103,10 @@ export const Actions = (props: ActionsProps) => {
     try {
       // Clear the cart first
       await cartService.clearCart();
-      
+
       // Add the product to cart
       await onAddToCart();
-      
+
       // Proceed to checkout
       await cartService.proceedToCheckout();
     } catch (error) {
@@ -132,4 +132,4 @@ export const Actions = (props: ActionsProps) => {
     error,
     availableQuantity,
   });
-}; 
+};

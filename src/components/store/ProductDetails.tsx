@@ -633,12 +633,7 @@ export default function ProductDetails({
           {/* Add to Cart */}
           <div className="space-y-4">
             <ProductActions.Actions>
-              {({
-                error,
-                isPreOrderEnabled,
-                preOrderMessage,
-                inStock,
-              }) => (
+              {({ error, isPreOrderEnabled, preOrderMessage, inStock }) => (
                 <div className="space-y-4">
                   {error && (
                     <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">

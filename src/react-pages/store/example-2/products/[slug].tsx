@@ -666,7 +666,14 @@ const ProductInfo = ({
       </div>
 
       <ProductActions.Actions>
-        {({ onAddToCart, onBuyNow, canAddToCart, isLoading, inStock, error }) => (
+        {({
+          onAddToCart,
+          onBuyNow,
+          canAddToCart,
+          isLoading,
+          inStock,
+          error,
+        }) => (
           <div className="space-y-4">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
@@ -857,7 +864,7 @@ const ProductInfo = ({
             </div>
           </div>
         )}
-              </ProductActions.Actions>
+      </ProductActions.Actions>
 
       <SelectedVariant.Details>
         {({ sku, weight }) =>

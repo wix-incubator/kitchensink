@@ -13,9 +13,7 @@ interface AddToCartButtonProps extends BaseButtonProps {
   inStock: boolean;
 }
 
-interface BuyNowButtonProps extends BaseButtonProps {
-  
-}
+interface BuyNowButtonProps extends BaseButtonProps {}
 
 interface ProductActionButtonsProps {
   onShowSuccessMessage: (show: boolean) => void;
