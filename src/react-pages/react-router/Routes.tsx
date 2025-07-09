@@ -13,6 +13,7 @@ import { MediaGalleryServiceDefinition } from '../../headless/media/services/med
 function StoreRoute() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const categoryService = useService(CategoryServiceDefinition);
 
   useEffect(() => {
@@ -92,10 +93,33 @@ function StoreRoute() {
   }
 
   return (
-    <ProductList
-      productPageRoute="/products"
-      setLayoutSuccessMessage={() => {}}
-    />
+    <>
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
+          <div className="flex items-center gap-2">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Added to cart successfully!
+          </div>
+        </div>
+      )}
+      <ProductList
+        productPageRoute="/products"
+        setLayoutSuccessMessage={show => setShowSuccessMessage(show)}
+      />
+    </>
   );
 }
 
