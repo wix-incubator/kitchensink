@@ -33,6 +33,10 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from '../../headless/media/services/media-gallery-service';
+import {
+  StoreActionLabels,
+  StoreStatusMessages,
+} from '../../headless/store/enums';
 
 export const ProductGridContent = ({
   productPageRoute,
@@ -103,7 +107,7 @@ export const ProductGridContent = ({
               {showSuccessMessage[product._id!] && (
                 <div className="absolute top-2 right-2 z-10">
                   <div className="bg-status-success-light border border-status-success rounded-lg px-3 py-1 text-status-success text-sm font-medium">
-                    Added to Cart!
+                    {StoreStatusMessages.ADDED_TO_CART}
                   </div>
                 </div>
               )}
@@ -162,7 +166,7 @@ export const ProductGridContent = ({
                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                       />
                     </svg>
-                    Quick View
+                    {StoreActionLabels.QUICK_VIEW}
                   </button>
                 </div>
               </div>
@@ -274,7 +278,7 @@ export const ProductGridContent = ({
                                                 {String(value)}
                                                 {!isInStock &&
                                                   !isPreOrderEnabled &&
-                                                  ' (Out of Stock)'}
+                                                  StoreStatusMessages.OUT_OF_STOCK_SUFFIX}
                                               </div>
                                             </div>
                                           );
@@ -363,11 +367,11 @@ export const ProductGridContent = ({
                             <div className="flex items-center gap-2">
                               {available ? (
                                 <span className="text-status-success text-sm">
-                                  In Stock
+                                  {StoreStatusMessages.IN_STOCK}
                                 </span>
                               ) : (
                                 <span className="text-status-error text-sm">
-                                  Out of Stock
+                                  {StoreStatusMessages.OUT_OF_STOCK}
                                 </span>
                               )}
                             </div>
@@ -381,11 +385,11 @@ export const ProductGridContent = ({
                           <div className="flex items-center gap-2">
                             {available ? (
                               <span className="text-status-success text-sm">
-                                In Stock
+                                {StoreStatusMessages.IN_STOCK}
                               </span>
                             ) : (
                               <span className="text-status-error text-sm">
-                                Out of Stock
+                                {StoreStatusMessages.OUT_OF_STOCK}
                               </span>
                             )}
                           </div>
@@ -704,7 +708,7 @@ export const LoadMoreSection = () => {
                           Loading...
                         </span>
                       ) : (
-                        'Load More Products'
+                        StoreActionLabels.LOAD_MORE_PRODUCTS
                       )}
                     </button>
 

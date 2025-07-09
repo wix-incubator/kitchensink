@@ -1,5 +1,6 @@
 import { Sort } from '../../headless/store/components';
 import { type SortBy } from '../../headless/store/services/sort-service';
+import { StoreSortLabels } from '../../headless/store/enums';
 
 interface SortDropdownProps {}
 
@@ -14,7 +15,7 @@ function SortDropdownContent({
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
-          Sort by
+          {StoreSortLabels.SORT_BY}
         </h3>
       </div>
       <select
@@ -31,37 +32,37 @@ function SortDropdownContent({
         }}
       >
         <option value="" className="bg-surface-primary text-content-primary">
-          Latest Arrivals
+          {StoreSortLabels.LATEST_ARRIVALS}
         </option>
         <option
           value="recommended"
           className="bg-surface-primary text-content-primary"
         >
-          Recommended
+          {StoreSortLabels.RECOMMENDED}
         </option>
         <option
           value="name-asc"
           className="bg-surface-primary text-content-primary"
         >
-          Name (A-Z)
+          {StoreSortLabels.NAME_ASC}
         </option>
         <option
           value="name-desc"
           className="bg-surface-primary text-content-primary"
         >
-          Name (Z-A)
+          {StoreSortLabels.NAME_DESC}
         </option>
         <option
           value="price-asc"
           className="bg-surface-primary text-content-primary"
         >
-          Price (Low to High)
+          {StoreSortLabels.PRICE_ASC}
         </option>
         <option
           value="price-desc"
           className="bg-surface-primary text-content-primary"
         >
-          Price (High to Low)
+          {StoreSortLabels.PRICE_DESC}
         </option>
       </select>
     </div>
