@@ -1,12 +1,14 @@
-/**
- * Enum for Wix store product availability status (from API)
- */
-export enum WixProductAvailabilityStatus {
-  IN_STOCK = 'IN_STOCK',
-  PARTIALLY_OUT_OF_STOCK = 'PARTIALLY_OUT_OF_STOCK',
-  OUT_OF_STOCK = 'OUT_OF_STOCK',
-  PREORDER = 'PREORDER',
-}
+import { productsV3 } from '@wix/stores';
+
+// Re-export SDK enums for product availability status
+export const InventoryAvailabilityStatus =
+  productsV3.InventoryAvailabilityStatus;
+export const AvailabilityStatus = productsV3.AvailabilityStatus;
+
+// Type aliases for commonly used SDK types
+export type WixProductAvailabilityStatus =
+  productsV3.InventoryAvailabilityStatus;
+export type WixAvailabilityStatus = productsV3.AvailabilityStatus;
 
 /**
  * Enum for display stock status messages
@@ -18,27 +20,14 @@ export enum StockStatusMessage {
 }
 
 /**
- * Enum for stock tracking types
- */
-export enum InventoryTrackingType {
-  TRACK_INVENTORY = 'TRACK_INVENTORY',
-  DONT_TRACK_INVENTORY = 'DONT_TRACK_INVENTORY',
-}
-
-/**
- * Enum for product availability states
- */
-export enum ProductAvailabilityState {
-  AVAILABLE = 'AVAILABLE',
-  PREORDER = 'PREORDER',
-  UNAVAILABLE = 'UNAVAILABLE',
-}
-
-/**
  * Helper function to map Wix availability status to display message
  */
 export function getStockStatusMessage(
-  availabilityStatus: WixProductAvailabilityStatus | string | undefined,
+  availabilityStatus:
+    | WixProductAvailabilityStatus
+    | WixAvailabilityStatus
+    | string
+    | undefined,
   isPreOrderEnabled: boolean = false
 ): StockStatusMessage {
   if (isPreOrderEnabled) {
@@ -46,11 +35,15 @@ export function getStockStatusMessage(
   }
 
   switch (availabilityStatus) {
-    case WixProductAvailabilityStatus.IN_STOCK:
-    case WixProductAvailabilityStatus.PARTIALLY_OUT_OF_STOCK:
+    case InventoryAvailabilityStatus.IN_STOCK:
+    case InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK:
+    case AvailabilityStatus.IN_STOCK:
       return StockStatusMessage.IN_STOCK;
-    case WixProductAvailabilityStatus.OUT_OF_STOCK:
+    case InventoryAvailabilityStatus.OUT_OF_STOCK:
+    case AvailabilityStatus.OUT_OF_STOCK:
       return StockStatusMessage.OUT_OF_STOCK;
+    case AvailabilityStatus.PREORDER:
+      return StockStatusMessage.AVAILABLE_FOR_PREORDER;
     default:
       return StockStatusMessage.OUT_OF_STOCK;
   }
@@ -60,10 +53,15 @@ export function getStockStatusMessage(
  * Helper function to determine if product is in stock
  */
 export function isProductInStock(
-  availabilityStatus: WixProductAvailabilityStatus | string | undefined
+  availabilityStatus:
+    | WixProductAvailabilityStatus
+    | WixAvailabilityStatus
+    | string
+    | undefined
 ): boolean {
   return (
-    availabilityStatus === WixProductAvailabilityStatus.IN_STOCK ||
-    availabilityStatus === WixProductAvailabilityStatus.PARTIALLY_OUT_OF_STOCK
+    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK ||
+    availabilityStatus === AvailabilityStatus.IN_STOCK
   );
 }

@@ -11,7 +11,7 @@ import {
   CollectionServiceDefinition,
   type CollectionServiceAPI,
 } from '../services/collection-service';
-import { WixProductAvailabilityStatus } from '../enums/product-status-enums';
+import { InventoryAvailabilityStatus } from '../enums/product-status-enums';
 
 const FilteredCollectionContext = createContext<{
   filter: FilterServiceAPI | null;
@@ -130,8 +130,8 @@ export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === WixProductAvailabilityStatus.IN_STOCK ||
-    availabilityStatus === WixProductAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const slug = String(product.slug || product._id || '');
   const description = product.plainDescription
     ? String(product.plainDescription)
