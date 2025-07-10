@@ -27,7 +27,7 @@ export const MediaGalleryService = implementService.withConfig<{
   media?: MediaItem[];
 }>()(MediaGalleryServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
-  const mediaToDisplay = signalsService.signal<MediaItem[]>(config.media ?? []);
+  const mediaToDisplay = signalsService.signal<MediaItem[]>(config?.media ?? []);
 
   const selectedMediaIndex: Signal<number> = signalsService.signal(0 as any);
 
