@@ -29,10 +29,10 @@ export const CategoryService =
       const signalsService = getService(SignalsServiceDefinition);
 
       const selectedCategory: Signal<string | null> = signalsService.signal(
-        (config.initialCategoryId || null) as any
+        (config?.initialCategoryId || null) as any
       );
       const categories: Signal<categories.Category[]> = signalsService.signal(
-        config.categories as any
+        config?.categories as any
       );
 
       const loadCategories = async () => {
@@ -57,9 +57,9 @@ export const CategoryService =
         }
 
         // If a navigation handler is provided, use it
-        if (config.onCategoryChange) {
+        if (config?.onCategoryChange) {
           const category = categoryId
-            ? config.categories.find(cat => cat._id === categoryId) || null
+            ? config?.categories.find(cat => cat._id === categoryId) || null
             : null;
 
           config.onCategoryChange(categoryId, category);

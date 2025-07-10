@@ -21,7 +21,7 @@ export const SortService = implementService.withConfig<{
   const signalsService = getService(SignalsServiceDefinition);
 
   const currentSort: Signal<SortBy> = signalsService.signal(
-    (config.initialSort || defaultSort) as any
+    (config?.initialSort || defaultSort) as any
   );
 
   const setSortBy = async (sortBy: SortBy) => {

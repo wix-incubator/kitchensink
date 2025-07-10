@@ -62,7 +62,7 @@ export const FilterService = implementService.withConfig<{
   const catalogOptionsService = getService(CatalogOptionsServiceDefinition);
 
   const currentFilters: Signal<Filter> = signalsService.signal(
-    (config.initialFilters || defaultFilter) as any
+    (config?.initialFilters || defaultFilter) as any
   );
 
   // Use computed signal for availableOptions to automatically track dependencies
