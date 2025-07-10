@@ -13,15 +13,8 @@ import {
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
-import {
-  createServicesMap,
-  createServicesManager,
-} from '@wix/services-manager';
-import {
-  ServicesManagerProvider,
-  useService,
-} from '@wix/services-manager-react';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import { createServicesMap } from '@wix/services-manager';
+import { WixServices } from '@wix/services-manager-react';
 import {
   ProductService,
   ProductServiceDefinition,
@@ -72,25 +65,18 @@ export const ProductGridContent = ({
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
-    const currentCartService = useService(CurrentCartServiceDefinition);
-
     // Create services for each product - reuse the parent's CurrentCartService instance
     const servicesMap = createServicesMap()
       .addService(ProductServiceDefinition, ProductService, {
         product: product,
       })
       // Use the existing cart service from parent context instead of creating new one
-      .addService(CurrentCartServiceDefinition, () => currentCartService)
       .addService(SelectedVariantServiceDefinition, SelectedVariantService)
       .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
         media: product?.media?.itemsInfo?.items ?? [],
       });
-    const [servicesManager] = useState(() =>
-      createServicesManager(servicesMap)
-    );
-
     return (
-      <ServicesManagerProvider servicesManager={servicesManager}>
+      <WixServices servicesMap={servicesMap}>
         <FilteredCollection.Item key={product._id} product={product}>
           {({ title, image, imageAltText, available, slug }) => (
             <div
@@ -443,7 +429,7 @@ export const ProductGridContent = ({
             </div>
           )}
         </FilteredCollection.Item>
-      </ServicesManagerProvider>
+      </WixServices>
     );
   };
 

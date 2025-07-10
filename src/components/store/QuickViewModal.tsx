@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react';
 import { productsV3 } from '@wix/stores';
-import {
-  ServicesManagerProvider,
-  useService,
-} from '@wix/services-manager-react';
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { WixServices } from '@wix/services-manager-react';
+import { createServicesMap } from '@wix/services-manager';
 import ProductDetails from './ProductDetails';
 import { useNavigation } from '../NavigationContext';
 import {
   ProductService,
   ProductServiceDefinition,
 } from '../../headless/store/services/product-service';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
@@ -47,9 +40,6 @@ export default function QuickViewModal({
   const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(
     null
   );
-
-  // Get the existing cart service from the parent context
-  const parentCartService = useService(CurrentCartServiceDefinition);
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -102,26 +92,24 @@ export default function QuickViewModal({
     }
   }, [showSuccessMessage]);
 
-  // Create services manager with all required services EXCEPT cart service - recreate when fullProduct changes
-  const [servicesManager, setServicesManager] = useState<any>(null);
+  // Create services map with all required services EXCEPT cart service - recreate when fullProduct changes
+  const [servicesMap, setServicesMap] = useState<any>(null);
 
   useEffect(() => {
     if (fullProduct) {
-      const servicesMap = createServicesMap()
+      const newServicesMap = createServicesMap()
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })
-        // Use the existing cart service from parent context instead of creating new one
-        .addService(CurrentCartServiceDefinition, () => parentCartService)
         .addService(SelectedVariantServiceDefinition, SelectedVariantService)
         .addService(ProductModifiersServiceDefinition, ProductModifiersService)
         .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
           media: fullProduct.media?.itemsInfo?.items ?? [],
         });
 
-      setServicesManager(createServicesManager(servicesMap));
+      setServicesMap(newServicesMap);
     }
-  }, [fullProduct, parentCartService]);
+  }, [fullProduct]);
 
   if (!isOpen) return null;
 
@@ -182,7 +170,7 @@ export default function QuickViewModal({
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto max-h-[90vh] p-6">
-          {isLoading || !servicesManager ? (
+          {isLoading || !servicesMap ? (
             // Loading state while fetching full product data
             <div className="flex items-center justify-center py-16">
               <div className="text-center">
@@ -194,12 +182,12 @@ export default function QuickViewModal({
             </div>
           ) : (
             <>
-              <ServicesManagerProvider servicesManager={servicesManager}>
+              <WixServices servicesMap={servicesMap}>
                 <ProductDetails
                   setShowSuccessMessage={setShowSuccessMessage}
                   isQuickView={true}
                 />
-              </ServicesManagerProvider>
+              </WixServices>
 
               {/* View Full Product Page Link */}
               <div className="mt-6 pt-6 border-t border-brand-subtle">

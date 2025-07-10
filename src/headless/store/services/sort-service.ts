@@ -1,6 +1,6 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 import { URLParamsUtils } from '../utils/url-params';
 import { SortType, DEFAULT_SORT_TYPE } from '../enums/sort-enums';
 
@@ -21,7 +21,7 @@ export const SortService = implementService.withConfig<{
   const signalsService = getService(SignalsServiceDefinition);
 
   const currentSort: Signal<SortBy> = signalsService.signal(
-    (config.initialSort || defaultSort) as any
+    (config?.initialSort || defaultSort) as any
   );
 
   const setSortBy = async (sortBy: SortBy) => {

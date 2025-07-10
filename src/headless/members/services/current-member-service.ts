@@ -1,7 +1,7 @@
 import { members } from '@wix/members';
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 
 export const CurrentMemberServiceDefinition = defineService<{
   currentMember: Signal<members.Member>;

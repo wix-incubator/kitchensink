@@ -1,6 +1,6 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 import { categories } from '@wix/categories';
 
 export interface CategoryServiceAPI {
@@ -29,10 +29,10 @@ export const CategoryService =
       const signalsService = getService(SignalsServiceDefinition);
 
       const selectedCategory: Signal<string | null> = signalsService.signal(
-        (config.initialCategoryId || null) as any
+        (config?.initialCategoryId || null) as any
       );
       const categories: Signal<categories.Category[]> = signalsService.signal(
-        config.categories as any
+        config?.categories as any
       );
 
       const loadCategories = async () => {
@@ -48,7 +48,8 @@ export const CategoryService =
       };
 
       // Subscribe to category changes and handle navigation as a side effect
-      selectedCategory.subscribe(categoryId => {
+      signalsService.effect(() => {
+        const categoryId = selectedCategory.get();
         // Skip navigation on initial load (when service is first created)
         if (isInitialLoad) {
           isInitialLoad = false;
@@ -56,9 +57,9 @@ export const CategoryService =
         }
 
         // If a navigation handler is provided, use it
-        if (config.onCategoryChange) {
+        if (config?.onCategoryChange) {
           const category = categoryId
-            ? config.categories.find(cat => cat._id === categoryId) || null
+            ? config?.categories.find(cat => cat._id === categoryId) || null
             : null;
 
           config.onCategoryChange(categoryId, category);

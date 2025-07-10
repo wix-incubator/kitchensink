@@ -4,7 +4,7 @@ import {
   type ServiceFactoryConfig,
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 import { productsV3 } from '@wix/stores';
 
 // Helper function to extract scalar aggregation values

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../layouts/StoreLayout';
 import '../../../styles/theme-2.css';
@@ -10,10 +9,7 @@ import {
   CollectionService,
   CollectionServiceDefinition,
 } from '../../../headless/store/services/collection-service';
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { createServicesMap } from '@wix/services-manager';
 import {
   FilterService,
   FilterServiceDefinition,
@@ -587,45 +583,41 @@ export default function StoreExample2Page({
     }
   };
 
-  const [servicesManager] = useState(() =>
-    createServicesManager(
-      createServicesMap()
-        .addService(
-          CollectionServiceDefinition,
-          CollectionService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          FilterServiceDefinition,
-          FilterService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          CurrentCartServiceDefinition,
-          CurrentCartService,
-          currentCartServiceConfig
-        )
-        .addService(CategoryServiceDefinition, CategoryService, {
-          ...categoriesConfig,
-          onCategoryChange: handleCategoryChange,
-        })
-        .addService(SortServiceDefinition, SortService, {
-          initialSort: filteredCollectionServiceConfig.initialSort,
-        })
-        .addService(
-          CatalogPriceRangeServiceDefinition,
-          CatalogPriceRangeService,
-          {}
-        )
-        .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+  const servicesMap = createServicesMap()
+    .addService(
+      CollectionServiceDefinition,
+      CollectionService,
+      filteredCollectionServiceConfig
     )
-  );
+    .addService(
+      FilterServiceDefinition,
+      FilterService,
+      filteredCollectionServiceConfig
+    )
+    .addService(
+      CurrentCartServiceDefinition,
+      CurrentCartService,
+      currentCartServiceConfig
+    )
+    .addService(CategoryServiceDefinition, CategoryService, {
+      ...categoriesConfig,
+      onCategoryChange: handleCategoryChange,
+    })
+    .addService(SortServiceDefinition, SortService, {
+      initialSort: filteredCollectionServiceConfig.initialSort,
+    })
+    .addService(
+      CatalogPriceRangeServiceDefinition,
+      CatalogPriceRangeService,
+      {}
+    )
+    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {});
 
   return (
     <KitchensinkLayout>
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
+        servicesMap={servicesMap}
       >
         <PageDocsRegistration
           title="Advanced Store Collection"

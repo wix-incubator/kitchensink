@@ -1,6 +1,9 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { ReadOnlySignal, Signal } from '../../Signal';
+import type {
+  ReadOnlySignal,
+  Signal,
+} from '@wix/services-definitions/core-services/signals';
 
 export interface MediaGalleryServiceAPI {
   selectedMediaIndex: Signal<number>;
@@ -27,7 +30,9 @@ export const MediaGalleryService = implementService.withConfig<{
   media?: MediaItem[];
 }>()(MediaGalleryServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
-  const mediaToDisplay = signalsService.signal<MediaItem[]>(config.media ?? []);
+  const mediaToDisplay = signalsService.signal<MediaItem[]>(
+    config?.media ?? []
+  );
 
   const selectedMediaIndex: Signal<number> = signalsService.signal(0 as any);
 

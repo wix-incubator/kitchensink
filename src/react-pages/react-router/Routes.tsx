@@ -8,6 +8,7 @@ import { CategoryServiceDefinition } from '../../headless/store/services/categor
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
 import '../../styles/theme-wix-vibe.css';
 import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 
 // Store Route Component with Categories Loading
 function StoreRoute() {
@@ -145,6 +146,7 @@ function ProductDetailsRoute() {
   const [error, setError] = useState<string | null>(null);
   const productService = useService(ProductServiceDefinition);
   const mediaGalleryService = useService(MediaGalleryServiceDefinition);
+  const signalsService = useService(SignalsServiceDefinition);
 
   // Handle the success message timer
   useEffect(() => {
@@ -160,18 +162,23 @@ function ProductDetailsRoute() {
   useEffect(() => {
     async function loadProduct() {
       if (!slug) return;
-      productService.error.subscribe((error: string | null) => {
-        setError(error);
+
+      const dispose = signalsService.effect(() => {
+        const errorValue = productService.error.get();
+        setError(errorValue);
       });
+
       await productService.loadProduct(slug);
-      await mediaGalleryService.setMediaToDisplay(
+      mediaGalleryService.setMediaToDisplay(
         productService.product.get().media?.itemsInfo?.items ?? []
       );
       setIsLoading(false);
+
+      return dispose;
     }
 
     loadProduct();
-  }, [slug]);
+  }, [slug, signalsService]);
 
   if (isLoading) {
     return (

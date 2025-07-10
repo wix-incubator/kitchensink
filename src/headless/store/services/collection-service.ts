@@ -4,7 +4,7 @@ import {
   type ServiceFactoryConfig,
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import type { Signal } from '../../Signal';
+import type { Signal } from '@wix/services-definitions/core-services/signals';
 
 import { productsV3, readOnlyVariantsV3 } from '@wix/stores';
 import { FilterServiceDefinition, type Filter } from './filter-service';
@@ -364,7 +364,8 @@ export const CollectionService = implementService.withConfig<{
   };
 
   // Refresh with server-side filtering when any filters change
-  collectionFilters.currentFilters.subscribe(() => {
+  signalsService.effect(() => {
+    collectionFilters.currentFilters.get();
     // Skip refresh during catalog data initialization to prevent double API calls
     if (isInitializingCatalogData) {
       return;
@@ -375,6 +376,7 @@ export const CollectionService = implementService.withConfig<{
 
   // Initialize catalog data when the service starts
   const initializeCatalogData = async () => {
+    isInitializingCatalogData = true; // Set flag BEFORE loading
     const selectedCategory = categoryService.selectedCategory.get();
     await collectionFilters.loadCatalogPriceRange(
       selectedCategory || undefined
@@ -387,13 +389,15 @@ export const CollectionService = implementService.withConfig<{
   // Load catalog data on initialization
   void initializeCatalogData();
 
-  sortService.currentSort.subscribe(() => {
+  signalsService.effect(() => {
+    sortService.currentSort.get();
     debouncedRefresh(false);
   });
 
-  categoryService.selectedCategory.subscribe(() => {
-    debouncedRefresh(true).then(() => {
-      initializeCatalogData();
+  signalsService.effect(() => {
+    categoryService.selectedCategory.get();
+    debouncedRefresh(true).then(async () => {
+      await initializeCatalogData();
     });
   });
 
