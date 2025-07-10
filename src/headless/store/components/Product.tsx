@@ -71,3 +71,5 @@ export const Description = (props: ProductDescriptionProps) => {
     plainDescription: plainDescription,
   });
 };
+
+export { Loader } from './Product.Loader';

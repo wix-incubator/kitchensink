@@ -526,3 +526,5 @@ export const Coupon = (props: CouponProps) => {
     error,
   });
 };
+
+export { Loader } from './CurrentCart.Loader';

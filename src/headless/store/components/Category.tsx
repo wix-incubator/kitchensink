@@ -66,3 +66,5 @@ export const List: React.FC<CategoryListProps> = ({ children }) => {
     </>
   );
 };
+
+export { Loader } from './Category.Loader';
