@@ -38,21 +38,3 @@ export function getStockStatusMessage(
       return StockStatusMessage.OUT_OF_STOCK;
   }
 }
-
-/**
- * Helper function to determine if product is in stock
- */
-export function isProductInStock(
-  availabilityStatus:
-    | productsV3.InventoryAvailabilityStatus
-    | productsV3.AvailabilityStatus
-    | string
-    | undefined
-): boolean {
-  return (
-    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus ===
-      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK ||
-    availabilityStatus === productsV3.AvailabilityStatus.IN_STOCK
-  );
-}
