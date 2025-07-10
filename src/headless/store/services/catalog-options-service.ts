@@ -6,7 +6,7 @@ import {
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 import { productsV3, customizationsV3 } from '@wix/stores';
-import { StockStatusMessage } from '../enums/product-status-enums';
+import { StockStatusMessage } from '../../../components/store/enums/product-status-enums';
 
 const { SortDirection, SortType: SDKSortType } = productsV3;
 

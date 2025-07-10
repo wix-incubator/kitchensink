@@ -3,7 +3,7 @@ import { useService } from '@wix/services-manager-react';
 import { SelectedVariantServiceDefinition } from '../services/selected-variant-service';
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
-import { getStockStatusMessage } from '../enums/product-status-enums';
+import { getStockStatusMessage } from '../../../components/store/enums/product-status-enums';
 
 /**
  * Props for Options headless component
