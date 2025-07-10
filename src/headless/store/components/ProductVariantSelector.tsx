@@ -203,6 +203,12 @@ export interface StockRenderProps {
   currentVariantId: string | null;
   /** Available quantity */
   availableQuantity: number | null;
+  /** Currently selected quantity */
+  selectedQuantity: number;
+  /** Function to increment quantity */
+  incrementQuantity: () => void;
+  /** Function to decrement quantity */
+  decrementQuantity: () => void;
 }
 
 /**
@@ -218,6 +224,7 @@ export const Stock = (props: StockProps) => {
   const trackInventory = variantService.trackQuantity.get();
   const currentVariantId = variantService.selectedVariantId.get();
   const availableQuantity = variantService.quantityAvailable.get();
+  const selectedQuantity = variantService.selectedQuantity.get();
   const currentVariant = variantService.currentVariant.get();
   const allVariantsAreOutOfStock = variantService.IsAllVariantsAreOutOfStock();
 
@@ -226,6 +233,14 @@ export const Stock = (props: StockProps) => {
     ? productsV3.InventoryAvailabilityStatus.IN_STOCK
     : productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK;
 
+  const incrementQuantity = () => {
+    variantService.incrementQuantity();
+  };
+
+  const decrementQuantity = () => {
+    variantService.decrementQuantity();
+  };
+
   return props.children({
     inStock,
     availableQuantity,
@@ -233,6 +248,9 @@ export const Stock = (props: StockProps) => {
     currentVariantId,
     availabilityStatus,
     trackInventory,
+    selectedQuantity,
+    incrementQuantity,
+    decrementQuantity,
   });
 };
 
