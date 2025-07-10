@@ -4,7 +4,6 @@ import { SelectedVariantServiceDefinition } from '../services/selected-variant-s
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
 
-
 /**
  * Props for Options headless component
  */
@@ -323,8 +322,8 @@ export const Stock = (props: StockProps) => {
   const allVariantsAreOutOfStock = variantService.IsAllVariantsAreOutOfStock();
 
   // Return raw availability status - UI components will handle display conversion
-  const availabilityStatus = inStock 
-    ? productsV3.InventoryAvailabilityStatus.IN_STOCK 
+  const availabilityStatus = inStock
+    ? productsV3.InventoryAvailabilityStatus.IN_STOCK
     : productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK;
 
   return props.children({

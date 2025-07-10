@@ -8,7 +8,6 @@ import type { Signal, ReadOnlySignal } from '../../Signal';
 import { productsV3 } from '@wix/stores';
 import { ProductServiceDefinition } from './product-service';
 
-
 export interface ModifierValue {
   modifierName: string;
   choiceValue?: string; // For SWATCH_CHOICES and TEXT_CHOICES

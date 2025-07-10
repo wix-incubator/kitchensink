@@ -47,7 +47,7 @@ export const SocialSharingService = implementService.withConfig<{
 }>()(SocialSharingServiceDefinition, ({ getService }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-    // Platform metadata is handled in components layer, only business logic here
+  // Platform metadata is handled in components layer, only business logic here
   const availablePlatforms: Signal<SharingPlatform[]> = signalsService.signal([
     {
       name: 'Facebook',
@@ -57,14 +57,14 @@ export const SocialSharingService = implementService.withConfig<{
     },
     {
       name: 'Twitter',
-      icon: 'twitter', 
+      icon: 'twitter',
       color: '#1DA1F2',
       shareUrl: SocialPlatformShareUrl.TWITTER as string,
     },
     {
       name: 'LinkedIn',
       icon: 'linkedin',
-      color: '#0A66C2', 
+      color: '#0A66C2',
       shareUrl: SocialPlatformShareUrl.LINKEDIN as string,
     },
     {

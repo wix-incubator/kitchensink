@@ -679,7 +679,10 @@ export default function ProductDetails({
                 trackInventory,
                 currentVariantId,
               }) => {
-                const displayMessage = getStockStatusMessage(availabilityStatus, isPreOrderEnabled);
+                const displayMessage = getStockStatusMessage(
+                  availabilityStatus,
+                  isPreOrderEnabled
+                );
                 return (
                   (!!availabilityStatus || currentVariantId) && (
                     <div className="flex items-center gap-2">

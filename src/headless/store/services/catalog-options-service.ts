@@ -167,7 +167,8 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             customization =>
               customization.name &&
               customization._id &&
-              customization.customizationType === customizationsV3.CustomizationType.PRODUCT_OPTION &&
+              customization.customizationType ===
+                customizationsV3.CustomizationType.PRODUCT_OPTION &&
               matchesAggregationName(customization.name, optionNames)
           )
           .map(customization => {
