@@ -577,7 +577,14 @@ export default function ProductDetails({
               Quantity
             </h3>
             <ProductVariantSelector.Stock>
-              {({ inStock, isPreOrderEnabled, availableQuantity, selectedQuantity, incrementQuantity, decrementQuantity }) => {
+              {({
+                inStock,
+                isPreOrderEnabled,
+                availableQuantity,
+                selectedQuantity,
+                incrementQuantity,
+                decrementQuantity,
+              }) => {
                 return (
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border border-brand-light rounded-lg">
