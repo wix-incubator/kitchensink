@@ -47,6 +47,7 @@ import {
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-2.css';
+import { getStockStatusMessage } from '../../../../components/store/enums/product-status-enums';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
@@ -275,11 +276,15 @@ const ProductInfo = ({
       <ProductVariantSelector.Stock>
         {({
           inStock,
-          status,
+          availabilityStatus,
           availableQuantity,
           trackInventory,
           isPreOrderEnabled,
         }) => {
+          const displayMessage = getStockStatusMessage(
+            availabilityStatus,
+            isPreOrderEnabled
+          );
           const isLowStock =
             trackInventory &&
             availableQuantity !== null &&
@@ -313,7 +318,7 @@ const ProductInfo = ({
                         : 'text-red-400'
                   }`}
                 >
-                  {status}
+                  {displayMessage}
                   {trackInventory && availableQuantity !== null && (
                     <span className="ml-1">
                       ({availableQuantity} available)

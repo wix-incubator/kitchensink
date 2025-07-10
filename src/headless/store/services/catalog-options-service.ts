@@ -6,7 +6,6 @@ import {
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 import { productsV3, customizationsV3 } from '@wix/stores';
-import { StockStatusMessage } from '../../../components/store/enums/product-status-enums';
 
 const { SortDirection, SortType: SDKSortType } = productsV3;
 
@@ -201,18 +200,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
           const inventoryChoices: ProductChoice[] = inventoryStatuses.map(
             status => ({
               id: status.toUpperCase(), // Use uppercase to match actual availabilityStatus values
-              name:
-                status.toUpperCase() ===
-                productsV3.InventoryAvailabilityStatus.IN_STOCK
-                  ? StockStatusMessage.IN_STOCK
-                  : status.toUpperCase() ===
-                      productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK
-                    ? StockStatusMessage.OUT_OF_STOCK
-                    : status.toUpperCase() ===
-                        productsV3.InventoryAvailabilityStatus
-                          .PARTIALLY_OUT_OF_STOCK
-                      ? 'Partially out of stock'
-                      : status,
+              name: status.toUpperCase(), // Use raw status value - UI components will handle display conversion
             })
           );
 

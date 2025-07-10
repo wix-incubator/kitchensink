@@ -3,7 +3,7 @@ import { useService } from '@wix/services-manager-react';
 import { SelectedVariantServiceDefinition } from '../services/selected-variant-service';
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
-import { getStockStatusMessage } from '../../../components/store/enums/product-status-enums';
+
 
 /**
  * Props for Options headless component
@@ -296,8 +296,8 @@ export interface StockRenderProps {
   inStock: boolean;
   /** Whether pre-order is enabled */
   isPreOrderEnabled: boolean;
-  /** Stock status message */
-  status: string;
+  /** Raw inventory availability status */
+  availabilityStatus: productsV3.InventoryAvailabilityStatus | string;
   /** Whether stock tracking is enabled */
   trackInventory: boolean;
   /** Current variant id */
@@ -322,18 +322,17 @@ export const Stock = (props: StockProps) => {
   const currentVariant = variantService.currentVariant.get();
   const allVariantsAreOutOfStock = variantService.IsAllVariantsAreOutOfStock();
 
-  // Determine status based on stock and pre-order availability
-  const status = getStockStatusMessage(
-    inStock ? 'IN_STOCK' : 'OUT_OF_STOCK',
-    isPreOrderEnabled
-  );
+  // Return raw availability status - UI components will handle display conversion
+  const availabilityStatus = inStock 
+    ? productsV3.InventoryAvailabilityStatus.IN_STOCK 
+    : productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK;
 
   return props.children({
     inStock,
     availableQuantity,
     isPreOrderEnabled,
     currentVariantId,
-    status,
+    availabilityStatus,
     trackInventory,
   });
 };
