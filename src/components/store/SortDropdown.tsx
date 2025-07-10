@@ -74,13 +74,11 @@ function SortDropdownContent({
 
 export const SortDropdown: React.FC<SortDropdownProps> = () => {
   return (
-    <Sort.Provider>
-      <Sort.Controller>
-        {({ currentSort, setSortBy }) => (
-          <SortDropdownContent sortBy={currentSort} setSortBy={setSortBy} />
-        )}
-      </Sort.Controller>
-    </Sort.Provider>
+    <Sort.Controller>
+      {({ currentSort, setSortBy }) => (
+        <SortDropdownContent sortBy={currentSort} setSortBy={setSortBy} />
+      )}
+    </Sort.Controller>
   );
 };
 
