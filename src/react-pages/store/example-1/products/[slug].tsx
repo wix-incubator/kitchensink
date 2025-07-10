@@ -29,6 +29,10 @@ import {
   MediaGalleryServiceDefinition,
 } from '../../../../headless/media/services/media-gallery-service';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
+import {
+  SocialSharingService,
+  SocialSharingServiceDefinition,
+} from '../../../../headless/store/services/social-sharing-service';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
@@ -49,6 +53,7 @@ export default function ProductDetailPage({
       CurrentCartService,
       currentCartServiceConfig
     )
+    .addService(SocialSharingServiceDefinition, SocialSharingService)
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(ProductModifiersServiceDefinition, ProductModifiersService)
     .addService(MediaGalleryServiceDefinition, MediaGalleryService, {

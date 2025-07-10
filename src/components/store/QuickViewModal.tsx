@@ -27,6 +27,10 @@ import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from '../../headless/store/services/product-modifiers-service';
+import {
+  SocialSharingService,
+  SocialSharingServiceDefinition,
+} from '../../headless/store/services/social-sharing-service';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -108,6 +112,7 @@ export default function QuickViewModal({
   useEffect(() => {
     if (fullProduct) {
       const servicesMap = createServicesMap()
+        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })
