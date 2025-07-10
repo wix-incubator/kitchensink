@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { getStockStatusMessage } from './enums/product-status-enums';
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
@@ -38,6 +39,20 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   }>(currentFilters.selectedOptions);
 
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Helper function to format choice display names
+  const formatChoiceName = (
+    choice: { id: string; name: string },
+    optionId: string
+  ): string => {
+    // For inventory filter, convert raw status to display message
+    if (optionId === 'inventory-filter') {
+      // choice.name contains raw status like "IN_STOCK", "OUT_OF_STOCK"
+      return getStockStatusMessage(choice.name as any, false);
+    }
+    // For all other choices, use the name as-is
+    return String(choice.name);
+  };
 
   // Handle price range change
   const handlePriceRangeChange = useCallback(
@@ -311,7 +326,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <label
                     key={choice.id}
                     className="cursor-pointer group relative mb-6"
-                    title={String(choice.name)}
+                    title={formatChoiceName(choice, option.id)}
                   >
                     <input
                       type="checkbox"
@@ -339,7 +354,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       }}
                     />
                     <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-content-light opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {String(choice.name)}
+                      {formatChoiceName(choice, option.id)}
                     </span>
                   </label>
                 ))}
@@ -367,7 +382,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                       className="w-4 h-4 bg-surface-primary border border-brand-medium rounded text-brand-primary focus:ring-2 focus:ring-brand-primary focus:ring-offset-0"
                     />
                     <span className="text-content-secondary group-hover:text-content-primary transition-colors text-sm">
-                      {String(choice.name)}
+                      {formatChoiceName(choice, option.id)}
                     </span>
                   </label>
                 ))}
