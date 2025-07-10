@@ -81,7 +81,9 @@ export const ProductGridContent = ({
       })
       // Use the existing cart service from parent context instead of creating new one
       .addService(CurrentCartServiceDefinition, () => currentCartService)
-      .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+      .addService(SelectedVariantServiceDefinition, SelectedVariantService, {
+        dontFetchInventoryData: true,
+      })
       .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
         media: product?.media?.itemsInfo?.items ?? [],
       });
