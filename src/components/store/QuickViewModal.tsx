@@ -112,13 +112,13 @@ export default function QuickViewModal({
   useEffect(() => {
     if (fullProduct) {
       const servicesMap = createServicesMap()
+        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })
         // Use the existing cart service from parent context instead of creating new one
         .addService(CurrentCartServiceDefinition, () => parentCartService)
         .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductModifiersServiceDefinition, ProductModifiersService)
         .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
           media: fullProduct.media?.itemsInfo?.items ?? [],

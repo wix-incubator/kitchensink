@@ -66,6 +66,7 @@ export default function WixServicesProvider({
   showCartIcon = false,
 }: WixServicesProviderProps) {
   let servicesMap = createServicesMap()
+    .addService(SocialSharingServiceDefinition, SocialSharingService)
     .addService(ProductServiceDefinition, ProductService)
     .addService(CurrentCartServiceDefinition, CurrentCartService)
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
@@ -76,8 +77,7 @@ export default function WixServicesProvider({
     .addService(SortServiceDefinition, SortService)
     .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
     .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService)
-    .addService(SocialSharingServiceDefinition, SocialSharingService);
+    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
 
   const [servicesManager] = useState(() => createServicesManager(servicesMap));
 

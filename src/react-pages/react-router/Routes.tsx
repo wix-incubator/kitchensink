@@ -144,9 +144,9 @@ function ProductDetailsRoute() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const socialSharingService = useService(SocialSharingServiceDefinition);
   const productService = useService(ProductServiceDefinition);
   const mediaGalleryService = useService(MediaGalleryServiceDefinition);
-  const socialSharingService = useService(SocialSharingServiceDefinition);
 
   // Handle the success message timer
   useEffect(() => {
