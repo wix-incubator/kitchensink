@@ -167,7 +167,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             customization =>
               customization.name &&
               customization._id &&
-              customization.customizationType === 'PRODUCT_OPTION' &&
+              customization.customizationType === customizationsV3.CustomizationType.PRODUCT_OPTION &&
               matchesAggregationName(customization.name, optionNames)
           )
           .map(customization => {
@@ -208,7 +208,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             id: 'inventory-filter',
             name: 'Availability',
             choices: inventoryChoices,
-            optionRenderType: 'TEXT_CHOICES',
+            optionRenderType: productsV3.ModifierRenderType.TEXT_CHOICES,
           });
         }
 

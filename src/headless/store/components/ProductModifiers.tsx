@@ -3,7 +3,6 @@ import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { ProductModifiersServiceDefinition } from '../services/product-modifiers-service';
 import { productsV3 } from '@wix/stores';
-import { isFreeTextRenderType } from '../utils/modifier-utils';
 
 /**
  * Custom hook to safely get the modifiers service
@@ -115,7 +114,7 @@ export const Modifier = (props: ModifierProps) => {
   const mandatory = modifier.mandatory || false;
   const choices = modifier.choicesSettings?.choices || [];
   const hasChoices = choices.length > 0;
-  const isFreeText = isFreeTextRenderType(type as string);
+  const isFreeText = type === productsV3.ModifierRenderType.FREE_TEXT;
   const freeTextSettings = modifier.freeTextSettings;
   const maxChars = (freeTextSettings as any)?.maxLength;
   const placeholder = (freeTextSettings as any)?.placeholder;
