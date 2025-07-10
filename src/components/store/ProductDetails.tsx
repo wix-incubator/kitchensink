@@ -6,10 +6,8 @@ import {
   SelectedVariant,
   ProductActions,
 } from '../../headless/store/components';
-import { SelectedVariantServiceDefinition } from '../../headless/store/services/selected-variant-service';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
-import { useService } from '@wix/services-manager-react';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 
@@ -579,17 +577,12 @@ export default function ProductDetails({
               Quantity
             </h3>
             <ProductVariantSelector.Stock>
-              {({ inStock, isPreOrderEnabled, availableQuantity }) => {
-                const variantService = useService(
-                  SelectedVariantServiceDefinition
-                );
-                const selectedQuantity = variantService.selectedQuantity.get();
-
+              {({ inStock, isPreOrderEnabled, availableQuantity, selectedQuantity, incrementQuantity, decrementQuantity }) => {
                 return (
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border border-brand-light rounded-lg">
                       <button
-                        onClick={() => variantService.decrementQuantity()}
+                        onClick={decrementQuantity}
                         disabled={
                           selectedQuantity <= 1 ||
                           (!inStock && !isPreOrderEnabled)
@@ -602,7 +595,7 @@ export default function ProductDetails({
                         {selectedQuantity}
                       </span>
                       <button
-                        onClick={() => variantService.incrementQuantity()}
+                        onClick={incrementQuantity}
                         disabled={
                           (!!availableQuantity &&
                             selectedQuantity >= availableQuantity) ||
