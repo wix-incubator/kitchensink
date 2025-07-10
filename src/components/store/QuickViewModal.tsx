@@ -27,6 +27,10 @@ import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from '../../headless/store/services/product-modifiers-service';
+import {
+  SocialSharingService,
+  SocialSharingServiceDefinition,
+} from '../../headless/store/services/social-sharing-service';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -114,6 +118,7 @@ export default function QuickViewModal({
         // Use the existing cart service from parent context instead of creating new one
         .addService(CurrentCartServiceDefinition, () => parentCartService)
         .addService(SelectedVariantServiceDefinition, SelectedVariantService)
+        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductModifiersServiceDefinition, ProductModifiersService)
         .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
           media: fullProduct.media?.itemsInfo?.items ?? [],

@@ -6,6 +6,7 @@ import ProductDetails from '../../components/store/ProductDetails';
 import { ProductServiceDefinition } from '../../headless/store/services/product-service';
 import { CategoryServiceDefinition } from '../../headless/store/services/category-service';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import { SocialSharingServiceDefinition } from '../../headless/store/services/social-sharing-service';
 import '../../styles/theme-wix-vibe.css';
 import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
 
@@ -145,6 +146,7 @@ function ProductDetailsRoute() {
   const [error, setError] = useState<string | null>(null);
   const productService = useService(ProductServiceDefinition);
   const mediaGalleryService = useService(MediaGalleryServiceDefinition);
+  const socialSharingService = useService(SocialSharingServiceDefinition);
 
   // Handle the success message timer
   useEffect(() => {
@@ -171,7 +173,7 @@ function ProductDetailsRoute() {
     }
 
     loadProduct();
-  }, [slug]);
+  }, [slug, productService, mediaGalleryService, socialSharingService]);
 
   if (isLoading) {
     return (
