@@ -101,12 +101,12 @@ export default function QuickViewModal({
 
   useEffect(() => {
     if (fullProduct) {
-      const newServicesMap = createServicesMap()
+      const servicesMap = createServicesMap()
+        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })
         .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductModifiersServiceDefinition, ProductModifiersService)
         .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
           media: fullProduct.media?.itemsInfo?.items ?? [],
