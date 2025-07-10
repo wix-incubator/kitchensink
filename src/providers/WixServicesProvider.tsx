@@ -46,6 +46,10 @@ import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from '../headless/store/services/product-modifiers-service';
+import {
+  SocialSharingService,
+  SocialSharingServiceDefinition,
+} from '../headless/store/services/social-sharing-service';
 
 export interface WixServicesProviderProps {
   children: ReactNode;
@@ -68,7 +72,8 @@ export default function WixServicesProvider({
     .addService(SortServiceDefinition, SortService)
     .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
     .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
+    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService)
+    .addService(SocialSharingServiceDefinition, SocialSharingService);
 
   return (
     <>

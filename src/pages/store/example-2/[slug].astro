@@ -3,7 +3,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ProductDetailPage from '../../../react-pages/store/example-2/products/[slug]';
 import { loadProductServiceConfig } from '../../../headless/store/services/product-service';
 import { loadCurrentCartServiceConfig } from '../../../headless/ecom/services/current-cart-service';
-import { loadSocialSharingServiceConfig } from '../../../headless/store/services/social-sharing-service';
 import { loadRelatedProductsServiceConfig } from '../../../headless/store/services/related-products-service';
 import { loadSEOTagsServiceConfig } from '../../../headless/seo/services/seo-tags-service';
 import { SEO } from '../../../headless/seo/components';
@@ -27,18 +26,6 @@ if (productServiceConfigResult.type === 'notFound') {
 
 const productServiceConfig = productServiceConfigResult.config;
 
-const productName = productServiceConfig!.product!.name || 'Product';
-const productDescription =
-  productServiceConfig!.product!.plainDescription || 'An amazing product';
-const productUrl = `${Astro.url.origin}/store/example-2/${slug}`;
-
-// Load social sharing service configuration
-const socialSharingServiceConfig = await loadSocialSharingServiceConfig(
-  productName,
-  productUrl,
-  productDescription
-);
-
 // Load related products service configuration
 const relatedProductsServiceConfig = await loadRelatedProductsServiceConfig(
   productServiceConfig!.product!._id || '',
@@ -58,7 +45,6 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     client:load
     productServiceConfig={productServiceConfig}
     currentCartServiceConfig={currentCartServiceConfig}
-    socialSharingServiceConfig={socialSharingServiceConfig}
     relatedProductsServiceConfig={relatedProductsServiceConfig}
     slot="body"
   />
