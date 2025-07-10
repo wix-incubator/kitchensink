@@ -293,9 +293,10 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             },
             inventoryStatus: {
               inStock:
-                currentProduct.inventory?.availabilityStatus === 'IN_STOCK' ||
                 currentProduct.inventory?.availabilityStatus ===
-                  'PARTIALLY_OUT_OF_STOCK',
+                  productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+                currentProduct.inventory?.availabilityStatus ===
+                  productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK,
               preorderEnabled:
                 currentProduct.inventory?.preorderStatus === 'ENABLED',
             },
@@ -495,15 +496,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             const renderType = productModifier.modifierRenderType;
 
             if (
-              renderType === 'TEXT_CHOICES' ||
-              renderType === 'SWATCH_CHOICES'
+              renderType === productsV3.ModifierRenderType.TEXT_CHOICES ||
+              renderType === productsV3.ModifierRenderType.SWATCH_CHOICES
             ) {
               // For choice modifiers, use the modifier key and choice value
               const modifierKey = (productModifier as any).key || modifierName;
               if (modifierValue.choiceValue) {
                 options[modifierKey] = modifierValue.choiceValue;
               }
-            } else if (renderType === 'FREE_TEXT') {
+            } else if (renderType === productsV3.ModifierRenderType.FREE_TEXT) {
               // For free text modifiers, use the freeTextSettings key
               const freeTextKey =
                 (productModifier.freeTextSettings as any)?.key || modifierName;

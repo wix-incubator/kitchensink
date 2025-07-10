@@ -1,5 +1,6 @@
 import { Sort } from '../../headless/store/components';
 import { type SortBy } from '../../headless/store/services/sort-service';
+import { SortType } from '../../headless/store/enums/sort-enums';
 
 interface SortDropdownProps {}
 
@@ -30,35 +31,38 @@ function SortDropdownContent({
           backgroundSize: '16px',
         }}
       >
-        <option value="" className="bg-surface-primary text-content-primary">
+        <option
+          value={SortType.NEWEST}
+          className="bg-surface-primary text-content-primary"
+        >
           Latest Arrivals
         </option>
         <option
-          value="recommended"
+          value={SortType.RECOMMENDED}
           className="bg-surface-primary text-content-primary"
         >
           Recommended
         </option>
         <option
-          value="name-asc"
+          value={SortType.NAME_ASC}
           className="bg-surface-primary text-content-primary"
         >
           Name (A-Z)
         </option>
         <option
-          value="name-desc"
+          value={SortType.NAME_DESC}
           className="bg-surface-primary text-content-primary"
         >
           Name (Z-A)
         </option>
         <option
-          value="price-asc"
+          value={SortType.PRICE_ASC}
           className="bg-surface-primary text-content-primary"
         >
           Price (Low to High)
         </option>
         <option
-          value="price-desc"
+          value={SortType.PRICE_DESC}
           className="bg-surface-primary text-content-primary"
         >
           Price (High to Low)

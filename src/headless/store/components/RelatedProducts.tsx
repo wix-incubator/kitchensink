@@ -105,8 +105,9 @@ export const Item = (props: ItemProps) => {
   const price = rawPrice ? `$${rawPrice}` : 'Price unavailable';
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === 'IN_STOCK' ||
-    availabilityStatus === 'PARTIALLY_OUT_OF_STOCK';
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const href = `/store/example-2/${product.slug}`;
   const description =
     typeof product.description === 'string' ? product.description : '';

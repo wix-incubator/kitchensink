@@ -114,7 +114,7 @@ export const Modifier = (props: ModifierProps) => {
   const mandatory = modifier.mandatory || false;
   const choices = modifier.choicesSettings?.choices || [];
   const hasChoices = choices.length > 0;
-  const isFreeText = type === 'FREE_TEXT';
+  const isFreeText = type === productsV3.ModifierRenderType.FREE_TEXT;
   const freeTextSettings = modifier.freeTextSettings;
   const maxChars = (freeTextSettings as any)?.maxLength;
   const placeholder = (freeTextSettings as any)?.placeholder;
@@ -178,7 +178,7 @@ export const Choice = (props: ChoiceProps) => {
 
   // For TEXT_CHOICES, use choice.key; for SWATCH_CHOICES, use choice.name
   const choiceValue =
-    renderType === 'TEXT_CHOICES'
+    renderType === productsV3.ModifierRenderType.TEXT_CHOICES
       ? (choice as any).key || choice.name || ''
       : choice.name || '';
 

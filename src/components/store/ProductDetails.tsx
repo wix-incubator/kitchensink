@@ -11,6 +11,7 @@ import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
 import { useService } from '@wix/services-manager-react';
 import { useNavigation } from '../NavigationContext';
+import { getStockStatusMessage } from './enums/product-status-enums';
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -661,37 +662,43 @@ export default function ProductDetails({
               {({
                 inStock,
                 isPreOrderEnabled,
-                status,
+                availabilityStatus,
                 availableQuantity,
                 trackInventory,
                 currentVariantId,
-              }) =>
-                (!!status || currentVariantId) && (
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-3 h-3 rounded-full ${
-                        inStock || isPreOrderEnabled
-                          ? 'status-dot-success'
-                          : 'status-dot-danger'
-                      }`}
-                    ></div>
-                    <span
-                      className={`text-sm ${
-                        inStock || isPreOrderEnabled
-                          ? 'text-status-success'
-                          : 'text-status-error'
-                      }`}
-                    >
-                      {status}
-                      {trackInventory && availableQuantity !== null && (
-                        <span className="text-content-muted ml-1">
-                          ({availableQuantity} available)
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                )
-              }
+              }) => {
+                const displayMessage = getStockStatusMessage(
+                  availabilityStatus,
+                  isPreOrderEnabled
+                );
+                return (
+                  (!!availabilityStatus || currentVariantId) && (
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-3 h-3 rounded-full ${
+                          inStock || isPreOrderEnabled
+                            ? 'status-dot-success'
+                            : 'status-dot-danger'
+                        }`}
+                      ></div>
+                      <span
+                        className={`text-sm ${
+                          inStock || isPreOrderEnabled
+                            ? 'text-status-success'
+                            : 'text-status-error'
+                        }`}
+                      >
+                        {displayMessage}
+                        {trackInventory && availableQuantity !== null && (
+                          <span className="text-content-muted ml-1">
+                            ({availableQuantity} available)
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  )
+                );
+              }}
             </ProductVariantSelector.Stock>
           </div>
 

@@ -133,8 +133,9 @@ export const Item = (props: ItemProps) => {
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === 'IN_STOCK' ||
-    availabilityStatus === 'PARTIALLY_OUT_OF_STOCK';
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const description =
     typeof product.description === 'string' ? product.description : '';
 

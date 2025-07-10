@@ -7,6 +7,8 @@ import { SignalsServiceDefinition } from '@wix/services-definitions/core-service
 import type { Signal } from '../../Signal';
 import { productsV3, customizationsV3 } from '@wix/stores';
 
+const { SortDirection, SortType: SDKSortType } = productsV3;
+
 export interface ProductOption {
   id: string;
   name: string;
@@ -103,31 +105,31 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             {
               name: 'optionNames',
               fieldPath: 'options.name',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 20,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
             {
               name: 'choiceNames',
               fieldPath: 'options.choicesSettings.choices.name',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 50,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
             {
               name: 'inventoryStatus',
               fieldPath: 'inventory.availabilityStatus',
-              type: 'VALUE' as const,
+              type: SDKSortType.VALUE,
               value: {
                 limit: 10,
-                sortType: 'VALUE' as const,
-                sortDirection: 'ASC' as const,
+                sortType: SDKSortType.VALUE,
+                sortDirection: SortDirection.ASC,
               },
             },
           ],
@@ -165,7 +167,8 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             customization =>
               customization.name &&
               customization._id &&
-              customization.customizationType === 'PRODUCT_OPTION' &&
+              customization.customizationType ===
+                customizationsV3.CustomizationType.PRODUCT_OPTION &&
               matchesAggregationName(customization.name, optionNames)
           )
           .map(customization => {
@@ -198,14 +201,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
           const inventoryChoices: ProductChoice[] = inventoryStatuses.map(
             status => ({
               id: status.toUpperCase(), // Use uppercase to match actual availabilityStatus values
-              name:
-                status.toUpperCase() === 'IN_STOCK'
-                  ? 'In Stock'
-                  : status.toUpperCase() === 'OUT_OF_STOCK'
-                    ? 'Out of Stock'
-                    : status.toUpperCase() === 'PARTIALLY_OUT_OF_STOCK'
-                      ? 'Partially out of stock'
-                      : status,
+              name: status.toUpperCase(), // Use raw status value - UI components will handle display conversion
             })
           );
 
@@ -213,7 +209,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             id: 'inventory-filter',
             name: 'Availability',
             choices: inventoryChoices,
-            optionRenderType: 'TEXT_CHOICES',
+            optionRenderType: productsV3.ModifierRenderType.TEXT_CHOICES,
           });
         }
 

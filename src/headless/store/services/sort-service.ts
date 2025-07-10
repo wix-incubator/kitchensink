@@ -2,14 +2,9 @@ import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 import { URLParamsUtils } from '../utils/url-params';
+import { SortType, DEFAULT_SORT_TYPE } from '../enums/sort-enums';
 
-export type SortBy =
-  | ''
-  | 'name-asc'
-  | 'name-desc'
-  | 'price-asc'
-  | 'price-desc'
-  | 'recommended';
+export type SortBy = SortType;
 
 export interface SortServiceAPI {
   currentSort: Signal<SortBy>;
@@ -18,7 +13,7 @@ export interface SortServiceAPI {
 
 export const SortServiceDefinition = defineService<SortServiceAPI>('sort');
 
-export const defaultSort: SortBy = '';
+export const defaultSort: SortBy = DEFAULT_SORT_TYPE;
 
 export const SortService = implementService.withConfig<{
   initialSort?: SortBy;
@@ -34,20 +29,10 @@ export const SortService = implementService.withConfig<{
 
     // Update URL with sort parameter
     const currentParams = URLParamsUtils.getURLParams();
-    const sortMap: Record<SortBy, string> = {
-      'name-asc': 'name_asc',
-      'name-desc': 'name_desc',
-      'price-asc': 'price_asc',
-      'price-desc': 'price_desc',
-      recommended: 'recommended',
-      '': 'newest',
-    };
-
-    const sortParam = sortMap[sortBy] || 'newest';
     const urlParams = { ...currentParams };
 
-    if (sortParam !== 'newest') {
-      urlParams.sort = sortParam;
+    if (sortBy !== SortType.NEWEST) {
+      urlParams.sort = sortBy;
     } else {
       delete urlParams.sort;
     }

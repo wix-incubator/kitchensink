@@ -122,9 +122,14 @@ export const ProductModifiersService = implementService.withConfig()(
 
         // Check based on modifier type
         const renderType = modifier.modifierRenderType;
-        if (renderType === 'SWATCH_CHOICES' || renderType === 'TEXT_CHOICES') {
+        if (!renderType) return false;
+
+        if (
+          renderType === productsV3.ModifierRenderType.SWATCH_CHOICES ||
+          renderType === productsV3.ModifierRenderType.TEXT_CHOICES
+        ) {
           return !!selectedValue.choiceValue;
-        } else if (renderType === 'FREE_TEXT') {
+        } else if (renderType === productsV3.ModifierRenderType.FREE_TEXT) {
           return (
             !!selectedValue.freeTextValue &&
             selectedValue.freeTextValue.trim() !== ''
