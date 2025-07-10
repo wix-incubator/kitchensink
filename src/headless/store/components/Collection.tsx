@@ -2,7 +2,6 @@ import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { CollectionServiceDefinition } from '../services/collection-service';
 import { productsV3 } from '@wix/stores';
-import { InventoryAvailabilityStatus } from '../enums/product-status-enums';
 
 /**
  * Props for Grid headless component
@@ -134,8 +133,9 @@ export const Item = (props: ItemProps) => {
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const description =
     typeof product.description === 'string' ? product.description : '';
 

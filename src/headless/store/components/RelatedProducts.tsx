@@ -3,7 +3,6 @@ import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { RelatedProductsServiceDefinition } from '../services/related-products-service';
 import { productsV3 } from '@wix/stores';
-import { InventoryAvailabilityStatus } from '../enums/product-status-enums';
 
 /**
  * Props for List headless component
@@ -106,8 +105,9 @@ export const Item = (props: ItemProps) => {
   const price = rawPrice ? `$${rawPrice}` : 'Price unavailable';
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const href = `/store/example-2/${product.slug}`;
   const description =
     typeof product.description === 'string' ? product.description : '';

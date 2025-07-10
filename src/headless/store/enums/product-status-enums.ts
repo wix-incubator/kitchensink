@@ -1,15 +1,5 @@
 import { productsV3 } from '@wix/stores';
 
-// Re-export SDK enums for product availability status
-export const InventoryAvailabilityStatus =
-  productsV3.InventoryAvailabilityStatus;
-export const AvailabilityStatus = productsV3.AvailabilityStatus;
-
-// Type aliases for commonly used SDK types
-export type WixProductAvailabilityStatus =
-  productsV3.InventoryAvailabilityStatus;
-export type WixAvailabilityStatus = productsV3.AvailabilityStatus;
-
 /**
  * Enum for display stock status messages
  */
@@ -24,8 +14,8 @@ export enum StockStatusMessage {
  */
 export function getStockStatusMessage(
   availabilityStatus:
-    | WixProductAvailabilityStatus
-    | WixAvailabilityStatus
+    | productsV3.InventoryAvailabilityStatus
+    | productsV3.AvailabilityStatus
     | string
     | undefined,
   isPreOrderEnabled: boolean = false
@@ -35,14 +25,14 @@ export function getStockStatusMessage(
   }
 
   switch (availabilityStatus) {
-    case InventoryAvailabilityStatus.IN_STOCK:
-    case InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK:
-    case AvailabilityStatus.IN_STOCK:
+    case productsV3.InventoryAvailabilityStatus.IN_STOCK:
+    case productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK:
+    case productsV3.AvailabilityStatus.IN_STOCK:
       return StockStatusMessage.IN_STOCK;
-    case InventoryAvailabilityStatus.OUT_OF_STOCK:
-    case AvailabilityStatus.OUT_OF_STOCK:
+    case productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK:
+    case productsV3.AvailabilityStatus.OUT_OF_STOCK:
       return StockStatusMessage.OUT_OF_STOCK;
-    case AvailabilityStatus.PREORDER:
+    case productsV3.AvailabilityStatus.PREORDER:
       return StockStatusMessage.AVAILABLE_FOR_PREORDER;
     default:
       return StockStatusMessage.OUT_OF_STOCK;
@@ -54,14 +44,15 @@ export function getStockStatusMessage(
  */
 export function isProductInStock(
   availabilityStatus:
-    | WixProductAvailabilityStatus
-    | WixAvailabilityStatus
+    | productsV3.InventoryAvailabilityStatus
+    | productsV3.AvailabilityStatus
     | string
     | undefined
 ): boolean {
   return (
-    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK ||
-    availabilityStatus === AvailabilityStatus.IN_STOCK
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK ||
+    availabilityStatus === productsV3.AvailabilityStatus.IN_STOCK
   );
 }

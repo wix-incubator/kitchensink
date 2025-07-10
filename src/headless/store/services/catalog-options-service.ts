@@ -6,10 +6,7 @@ import {
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 import { productsV3, customizationsV3 } from '@wix/stores';
-import {
-  InventoryAvailabilityStatus,
-  StockStatusMessage,
-} from '../enums/product-status-enums';
+import { StockStatusMessage } from '../enums/product-status-enums';
 
 const { SortDirection, SortType: SDKSortType } = productsV3;
 
@@ -205,13 +202,15 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             status => ({
               id: status.toUpperCase(), // Use uppercase to match actual availabilityStatus values
               name:
-                status.toUpperCase() === InventoryAvailabilityStatus.IN_STOCK
+                status.toUpperCase() ===
+                productsV3.InventoryAvailabilityStatus.IN_STOCK
                   ? StockStatusMessage.IN_STOCK
                   : status.toUpperCase() ===
-                      InventoryAvailabilityStatus.OUT_OF_STOCK
+                      productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK
                     ? StockStatusMessage.OUT_OF_STOCK
                     : status.toUpperCase() ===
-                        InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK
+                        productsV3.InventoryAvailabilityStatus
+                          .PARTIALLY_OUT_OF_STOCK
                       ? 'Partially out of stock'
                       : status,
             })
