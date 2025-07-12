@@ -46,6 +46,8 @@ export interface RootRenderProps {
 
 /**
  * Headless component for social sharing root
+ * 
+ * @component
  */
 export const Root = (props: RootProps) => {
   const service = useService(SocialSharingServiceDefinition) as ServiceAPI<
@@ -104,6 +106,8 @@ export interface PlatformRenderProps {
 
 /**
  * Headless component for individual social platform
+ * 
+ * @component
  */
 export const Platform = (props: PlatformProps) => {
   const { platform, onClick } = props;
@@ -154,6 +158,8 @@ export interface PlatformsRenderProps {
 
 /**
  * Headless component for social sharing platforms with logic
+ * 
+ * @component
  */
 export const Platforms = (props: PlatformsProps) => {
   const { url, title, description = '', hashtags = [] } = props;

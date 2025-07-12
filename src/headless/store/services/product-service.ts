@@ -5,10 +5,13 @@ import {
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
-import { productsV3 } from '@wix/stores';
+import {
+  type V3Product,
+  getProductBySlug,
+} from '@wix/auto_sdk_stores_products-v-3';
 
 export interface ProductServiceAPI {
-  product: Signal<productsV3.V3Product>;
+  product: Signal<V3Product>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   loadProduct: (slug: string) => Promise<void>;
@@ -18,11 +21,11 @@ export const ProductServiceDefinition =
   defineService<ProductServiceAPI>('product');
 
 export const ProductService = implementService.withConfig<{
-  product: productsV3.V3Product;
+  product: V3Product;
 }>()(ProductServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  const product: Signal<productsV3.V3Product> = signalsService.signal(
+  const product: Signal<V3Product> = signalsService.signal(
     config.product as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
@@ -53,7 +56,7 @@ export type ProductServiceConfigResult =
   | { type: 'notFound' };
 
 const loadProductBySlug = async (slug: string) => {
-  const productResponse = await productsV3.getProductBySlug(slug, {
+  const productResponse = await getProductBySlug(slug, {
     fields: [
       'DESCRIPTION' as any,
       'DIRECT_CATEGORIES_INFO' as any,

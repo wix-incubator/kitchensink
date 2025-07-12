@@ -6,14 +6,18 @@ import {
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
 
-import { productsV3, readOnlyVariantsV3 } from '@wix/stores';
+import {
+  searchProducts as searchProductsSDK,
+  type V3Product,
+  type Variant,
+  SortDirection,
+} from '@wix/auto_sdk_stores_products-v-3';
+import { queryVariants } from '@wix/auto_sdk_stores_read-only-variants-v-3';
 import { FilterServiceDefinition, type Filter } from './filter-service';
 import { CategoryServiceDefinition } from './category-service';
 import { SortServiceDefinition, type SortBy } from './sort-service';
 import { URLParamsUtils } from '../utils/url-params';
 import { SortType } from '../enums/sort-enums';
-
-const { SortDirection } = productsV3;
 
 const searchProducts = async (searchOptions: any) => {
   const searchParams = {
@@ -26,7 +30,7 @@ const searchProducts = async (searchOptions: any) => {
     fields: searchOptions.fields || [],
   };
 
-  const result = await productsV3.searchProducts(searchParams, options);
+  const result = await searchProductsSDK(searchParams, options);
 
   // Fetch missing variants for all products in one batch request
   if (result.products) {
@@ -37,7 +41,7 @@ const searchProducts = async (searchOptions: any) => {
 };
 
 export interface CollectionServiceAPI {
-  products: Signal<productsV3.V3Product[]>;
+  products: Signal<V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   totalProducts: Signal<number>;
@@ -194,7 +198,7 @@ export const CollectionServiceDefinition =
   defineService<CollectionServiceAPI>('collection');
 
 export const CollectionService = implementService.withConfig<{
-  initialProducts?: productsV3.V3Product[];
+  initialProducts?: V3Product[];
   pageSize?: number;
   initialCursor?: string;
   initialHasMore?: boolean;
@@ -213,7 +217,7 @@ export const CollectionService = implementService.withConfig<{
   const initialProducts = config.initialProducts || [];
 
   // Signal declarations
-  const productsList: Signal<productsV3.V3Product[]> = signalsService.signal(
+  const productsList: Signal<V3Product[]> = signalsService.signal(
     initialProducts as any
   );
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
@@ -226,7 +230,7 @@ export const CollectionService = implementService.withConfig<{
   );
 
   const pageSize = config.pageSize || 12;
-  let allProducts: productsV3.V3Product[] = initialProducts;
+  let allProducts: V3Product[] = initialProducts;
 
   // Debouncing mechanism to prevent multiple simultaneous refreshes
   let refreshTimeout: NodeJS.Timeout | null = null;
@@ -412,7 +416,7 @@ export const CollectionService = implementService.withConfig<{
 // Helper function to parse URL parameters
 function parseURLParams(
   searchParams?: URLSearchParams,
-  products: productsV3.V3Product[] = []
+  products: V3Product[] = []
 ) {
   const defaultFilters: Filter = {
     priceRange: { min: 0, max: 0 },
@@ -484,7 +488,7 @@ function parseURLParams(
 }
 
 // Helper function to calculate price range from products
-function calculatePriceRange(products: productsV3.V3Product[]): {
+function calculatePriceRange(products: V3Product[]): {
   min: number;
   max: number;
 } {
@@ -512,7 +516,7 @@ function calculatePriceRange(products: productsV3.V3Product[]): {
 }
 
 // Helper function to build options map from products
-function buildOptionsMap(products: productsV3.V3Product[]) {
+function buildOptionsMap(products: V3Product[]) {
   const optionsMap = new Map<
     string,
     { id: string; choices: { id: string; name: string }[] }
@@ -633,8 +637,8 @@ export async function loadCollectionServiceConfig(
 
 // Add function to fetch missing variants for all products in one request
 const fetchMissingVariants = async (
-  products: productsV3.V3Product[]
-): Promise<productsV3.V3Product[]> => {
+  products: V3Product[]
+): Promise<V3Product[]> => {
   // Find products that need variants (both single and multi-variant products)
   const productsNeedingVariants = products.filter(
     product =>
@@ -658,8 +662,7 @@ const fetchMissingVariants = async (
 
     const items = [];
 
-    const res = await readOnlyVariantsV3
-      .queryVariants({})
+    const res = await queryVariants({})
       .in('productData.productId', productIds)
       .limit(100)
       .find();
@@ -672,7 +675,7 @@ const fetchMissingVariants = async (
       items.push(...nextRes.items);
     }
 
-    const variantsByProductId = new Map<string, productsV3.Variant[]>();
+    const variantsByProductId = new Map<string, Variant[]>();
 
     items.forEach(item => {
       const productId = item.productData?.productId;
@@ -682,7 +685,7 @@ const fetchMissingVariants = async (
         }
         variantsByProductId.get(productId)!.push({
           ...item,
-          choices: item.optionChoices as productsV3.Variant['choices'],
+          choices: item.optionChoices as Variant['choices'],
         });
       }
     });

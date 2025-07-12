@@ -5,9 +5,16 @@ import {
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
-import { productsV3, customizationsV3 } from '@wix/stores';
-
-const { SortDirection, SortType: SDKSortType } = productsV3;
+import {
+  ModifierRenderType,
+  searchProducts,
+  SortDirection,
+  SortType as SDKSortType,
+} from '@wix/auto_sdk_stores_products-v-3';
+import {
+  CustomizationType,
+  queryCustomizations,
+} from '@wix/auto_sdk_stores_customizations-v-3';
 
 export interface ProductOption {
   id: string;
@@ -138,7 +145,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
           cursorPaging: { limit: 0 },
         };
 
-        const aggregationResponse = await productsV3.searchProducts(
+        const aggregationResponse = await searchProducts(
           aggregationRequest as any
         );
 
@@ -156,9 +163,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
         );
 
         // Step 2: Get option structure from customizations API
-        const customizationsResponse = await customizationsV3
-          .queryCustomizations()
-          .find();
+        const customizationsResponse = await queryCustomizations().find();
         const customizations = customizationsResponse.items || [];
 
         // Step 3: Build options by matching customizations with aggregation data
@@ -168,7 +173,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
               customization.name &&
               customization._id &&
               customization.customizationType ===
-                customizationsV3.CustomizationType.PRODUCT_OPTION &&
+                CustomizationType.PRODUCT_OPTION &&
               matchesAggregationName(customization.name, optionNames)
           )
           .map(customization => {
@@ -209,7 +214,7 @@ export const CatalogOptionsService = implementService.withConfig<{}>()(
             id: 'inventory-filter',
             name: 'Availability',
             choices: inventoryChoices,
-            optionRenderType: productsV3.ModifierRenderType.TEXT_CHOICES,
+            optionRenderType: ModifierRenderType.TEXT_CHOICES,
           });
         }
 

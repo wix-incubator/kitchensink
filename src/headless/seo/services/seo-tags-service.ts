@@ -5,14 +5,21 @@ import {
   type Signal,
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
-import { seoTags } from '@wix/seo';
+import {
+  ItemType,
+  type SlugData,
+  type PageNameData,
+  type Tag,
+  resolveStaticPageSeoTags as resolveStaticPageSeoTagsSDK,
+  resolveItemSeoTags as resolveItemSeoTagsSDK,
+} from '@wix/auto_sdk_seo_seo-tags';
 
 export interface SEOTagsServiceAPI {
   // @ts-ignore
-  seoTags: Signal<seoTags.Tag[]>;
+  seoTags: Signal<Tag[]>;
   updateSeoTags: (
-    itemType?: seoTags.ItemType,
-    itemData?: seoTags.SlugData | seoTags.PageNameData
+    itemType?: ItemType,
+    itemData?: SlugData | PageNameData
   ) => Promise<void>;
 }
 
@@ -20,9 +27,9 @@ export const SEOTagsServiceDefinition =
   defineService<SEOTagsServiceAPI>('seoTagsService');
 
 export type SEOTagsServiceConfig = {
-  tags: seoTags.Tag[];
-  itemType?: seoTags.ItemType;
-  itemData: seoTags.SlugData | seoTags.PageNameData;
+  tags: Tag[];
+  itemType?: ItemType;
+  itemData: SlugData | PageNameData;
 };
 
 export const SEOTagsService =
@@ -36,9 +43,8 @@ export const SEOTagsService =
       const tags: Signal<seoTags.Tag[]> = signalsService.signal(initialTags);
 
       const updateSeoTags = async (
-        itemType: seoTags.ItemType = config.itemType ??
-          seoTags.ItemType.UNKNOWN_ITEM_TYPE,
-        itemData: seoTags.SlugData | seoTags.PageNameData = config.itemData
+        itemType: ItemType = config.itemType ?? ItemType.UNKNOWN_ITEM_TYPE,
+        itemData: SlugData | PageNameData = config.itemData
       ) => {
         const pageURL = window.location.href;
 
@@ -58,10 +64,10 @@ export const SEOTagsService =
 
 async function resolveItemSeoTags(
   pageUrl: string,
-  itemType: seoTags.ItemType,
-  itemData: seoTags.SlugData
-): Promise<seoTags.Tag[]> {
-  const res = await seoTags.resolveItemSeoTags({
+  itemType: ItemType,
+  itemData: SlugData
+): Promise<Tag[]> {
+  const res = await resolveItemSeoTagsSDK({
     pageUrl,
     itemType,
     slug: itemData.slug,
@@ -72,10 +78,10 @@ async function resolveItemSeoTags(
 
 async function resolveStaticPageSeoTags(
   pageUrl: string,
-  itemData: seoTags.PageNameData
-): Promise<seoTags.Tag[]> {
+  itemData: PageNameData
+): Promise<Tag[]> {
   const { pageName, seoData } = itemData;
-  const res = await seoTags.resolveStaticPageSeoTags({
+  const res = await resolveStaticPageSeoTagsSDK({
     pageUrl,
     pageName,
     seoData,
@@ -89,8 +95,8 @@ async function resolveStaticPageSeoTags(
  *
  * @param {Object} params - The configuration parameters.
  * @param {string} params.pageUrl - The full URL of the page where SEO tags will be applied.
- * @param {seoTags.ItemType} [params.itemType] - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST) for item pages.
- * @param {seoTags.SlugData | seoTags.PageNameData} params.itemData - Item metadata (slug for item pages or pageName for static pages).
+ * @param {ItemType} [params.itemType] - Optional. The type of item (e.g., STORES_PRODUCT, BLOG_POST) for item pages.
+ * @param {SlugData | PageNameData} params.itemData - Item metadata (slug for item pages or pageName for static pages).
  * @returns {Promise<SEOTagsServiceConfig>} Promise resolving to SEO tags service configuration.
  *
  * @example
@@ -110,7 +116,7 @@ async function resolveStaticPageSeoTags(
  * // Item page configuration
  * const config = await loadSEOTagsServiceConfig({
  *   pageUrl: "https://mysite.com/store/product-123",
- *   itemType: seoTags.ItemType.STORES_PRODUCT,
+ *   itemType: ItemType.STORES_PRODUCT,
  *   itemData: { slug: "product-123" }
  * });
  * ```
@@ -120,25 +126,17 @@ export async function loadSEOTagsServiceConfig({
   pageUrl,
   itemData,
 }: {
-  itemType?: seoTags.ItemType;
+  itemType?: ItemType;
   pageUrl: string;
-  itemData: seoTags.SlugData | seoTags.PageNameData;
+  itemData: SlugData | PageNameData;
 }): Promise<ServiceFactoryConfig<typeof SEOTagsService>> {
-  const isStaticPage =
-    !itemType || itemType === seoTags.ItemType.UNKNOWN_ITEM_TYPE;
+  const isStaticPage = !itemType || itemType === ItemType.UNKNOWN_ITEM_TYPE;
 
-  let tags: seoTags.Tag[] = [];
+  let tags: Tag[] = [];
   if (isStaticPage) {
-    tags = await resolveStaticPageSeoTags(
-      pageUrl,
-      itemData as seoTags.PageNameData
-    );
+    tags = await resolveStaticPageSeoTags(pageUrl, itemData as PageNameData);
   } else {
-    tags = await resolveItemSeoTags(
-      pageUrl,
-      itemType,
-      itemData as seoTags.SlugData
-    );
+    tags = await resolveItemSeoTags(pageUrl, itemType, itemData as SlugData);
   }
   return {
     tags,
@@ -147,7 +145,7 @@ export async function loadSEOTagsServiceConfig({
   };
 }
 
-function appendNewTags(tags: seoTags.Tag[]) {
+function appendNewTags(tags: Tag[]) {
   if (typeof window === 'undefined') return;
 
   const newTagElements: HTMLElement[] = [];

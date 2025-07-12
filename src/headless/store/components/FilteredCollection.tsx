@@ -6,7 +6,10 @@ import {
   type Filter,
 } from '../services/filter-service';
 import { useService } from '@wix/services-manager-react';
-import { productsV3 } from '@wix/stores';
+import {
+  InventoryAvailabilityStatus,
+  type V3Product,
+} from '@wix/auto_sdk_stores_products-v-3';
 import {
   CollectionServiceDefinition,
   type CollectionServiceAPI,
@@ -17,10 +20,15 @@ const FilteredCollectionContext = createContext<{
   collection: CollectionServiceAPI | null;
 }>({ filter: null, collection: null });
 
-interface FilteredCollectionProviderProps {
+export interface FilteredCollectionProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Headless component for providing a filtered collection
+ * 
+ * @component
+ */
 export const Provider: React.FC<FilteredCollectionProviderProps> = ({
   children,
 }) => {
@@ -34,6 +42,7 @@ export const Provider: React.FC<FilteredCollectionProviderProps> = ({
   );
 };
 
+
 export const useFilteredCollection = () => {
   const context = useContext(FilteredCollectionContext);
   if (!context) {
@@ -45,10 +54,15 @@ export const useFilteredCollection = () => {
 };
 
 // Filters Loading component with pulse animation
-interface FiltersLoadingProps {
+export interface FiltersLoadingProps {
   children: (data: { isFullyLoaded: boolean }) => ReactNode;
 }
 
+/**
+ * Headless component for displaying a loading state for filters
+ * 
+ * @component
+ */
 export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
   const { filter } = useFilteredCollection();
 
@@ -58,9 +72,9 @@ export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
 };
 
 // Grid component for displaying filtered products
-interface FilteredGridProps {
+export interface FilteredGridProps {
   children: (data: {
-    products: productsV3.V3Product[];
+    products: V3Product[];
     totalProducts: number;
     isLoading: boolean;
     error: string | null;
@@ -69,6 +83,11 @@ interface FilteredGridProps {
   }) => ReactNode;
 }
 
+/**
+ * Headless component for displaying a grid of filtered products
+ * 
+ * @component
+ */
 export const Grid: React.FC<FilteredGridProps> = ({ children }) => {
   const { collection } = useFilteredCollection();
 
@@ -94,8 +113,8 @@ export const Grid: React.FC<FilteredGridProps> = ({ children }) => {
 };
 
 // Item component for individual product rendering
-interface FilteredItemProps {
-  product: productsV3.V3Product;
+export interface FilteredItemProps {
+  product: V3Product;
   children: (data: {
     title: string;
     image: string | null;
@@ -108,6 +127,11 @@ interface FilteredItemProps {
   }) => ReactNode;
 }
 
+/**
+ * Headless component for displaying an individual product item
+ * 
+ * @component
+ */
 export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
   // Safe conversion of product data with type safety guards
   const title = String(product.name || '');
@@ -129,9 +153,8 @@ export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
-    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus ===
-      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+    availabilityStatus === InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus === InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
   const slug = String(product.slug || product._id || '');
   const description = product.plainDescription
     ? String(product.plainDescription)
@@ -154,7 +177,7 @@ export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
 };
 
 // Load More component for pagination
-interface FilteredLoadMoreProps {
+export interface FilteredLoadMoreProps {
   children: (data: {
     loadMore: () => Promise<void>;
     refresh: () => Promise<void>;
@@ -165,6 +188,11 @@ interface FilteredLoadMoreProps {
   }) => ReactNode;
 }
 
+/**
+ * Headless component for displaying a load more button
+ * 
+ * @component
+ */
 export const LoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
   const { collection } = useFilteredCollection();
 
@@ -190,17 +218,22 @@ export const LoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
 };
 
 // Filters component for managing filters
-interface FilteredFiltersProps {
+export interface FilteredFiltersProps {
   children: (data: {
     applyFilters: (filters: Filter) => void;
     clearFilters: () => void;
     currentFilters: Filter;
-    allProducts: productsV3.V3Product[];
+    allProducts: V3Product[];
     availableOptions: AvailableOptions;
     isFiltered: boolean;
   }) => ReactNode;
 }
 
+/**
+ * Headless component for displaying a filters component
+ * 
+ * @component
+ */
 export const Filters: React.FC<FilteredFiltersProps> = ({ children }) => {
   const { collection, filter } = useFilteredCollection();
 

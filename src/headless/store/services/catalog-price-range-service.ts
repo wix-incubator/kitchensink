@@ -5,7 +5,7 @@ import {
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
-import { productsV3 } from '@wix/stores';
+import { searchProducts } from '@wix/auto_sdk_stores_products-v-3';
 
 // Helper function to extract scalar aggregation values
 const extractScalarAggregationValue = (
@@ -92,7 +92,7 @@ export const CatalogPriceRangeService = implementService.withConfig<{}>()(
           cursorPaging: { limit: 0 },
         };
 
-        const aggregationResponse = await productsV3.searchProducts(
+        const aggregationResponse = await searchProducts(
           aggregationRequest as any
         );
 
