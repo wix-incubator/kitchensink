@@ -1,7 +1,7 @@
 import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { ProductServiceDefinition } from '../services/product-service';
-import type { productsV3 } from '@wix/stores';
+import type { V3Product } from '@wix/auto_sdk_stores_products-v-3';
 
 /**
  * Props for ProductName headless component
@@ -21,6 +21,8 @@ export interface ProductNameRenderProps {
 
 /**
  * Headless component for product name display
+ * 
+ * @component
  */
 export const Name = (props: ProductNameProps) => {
   const service = useService(ProductServiceDefinition) as ServiceAPI<
@@ -48,13 +50,15 @@ export interface ProductDescriptionProps {
  */
 export interface ProductDescriptionRenderProps {
   /** Product description (may contain HTML) */
-  description: NonNullable<productsV3.V3Product['description']>;
+  description: NonNullable<V3Product['description']>;
   /** Product plain description */
-  plainDescription: NonNullable<productsV3.V3Product['plainDescription']>;
+  plainDescription: NonNullable<V3Product['plainDescription']>;
 }
 
 /**
  * Headless component for product description display
+ * 
+ * @component
  */
 export const Description = (props: ProductDescriptionProps) => {
   const service = useService(ProductServiceDefinition) as ServiceAPI<

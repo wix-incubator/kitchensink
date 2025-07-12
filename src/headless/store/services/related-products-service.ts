@@ -5,10 +5,13 @@ import {
 } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
-import { productsV3 } from '@wix/stores';
+import {
+  type V3Product,
+  queryProducts,
+} from '@wix/auto_sdk_stores_products-v-3';
 
 export interface RelatedProductsServiceAPI {
-  relatedProducts: Signal<productsV3.V3Product[]>;
+  relatedProducts: Signal<V3Product[]>;
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
   hasRelatedProducts: Signal<boolean>;
@@ -26,9 +29,7 @@ export const RelatedProductsService = implementService.withConfig<{
 }>()(RelatedProductsServiceDefinition, ({ getService, config }) => {
   const signalsService = getService(SignalsServiceDefinition);
 
-  const relatedProducts: Signal<productsV3.V3Product[]> = signalsService.signal(
-    [] as any
-  );
+  const relatedProducts: Signal<V3Product[]> = signalsService.signal([] as any);
   const isLoading: Signal<boolean> = signalsService.signal(false as any);
   const error: Signal<string | null> = signalsService.signal(null as any);
   const hasRelatedProducts: Signal<boolean> = signalsService.signal(
@@ -40,7 +41,7 @@ export const RelatedProductsService = implementService.withConfig<{
     error.set(null);
 
     try {
-      let relatedQuery = productsV3.queryProducts().ne('_id', productId);
+      let relatedQuery = queryProducts().ne('_id', productId);
 
       const relatedResult = await relatedQuery.limit(limit).find();
 

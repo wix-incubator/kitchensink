@@ -1,11 +1,14 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal } from '../../Signal';
-import { categories } from '@wix/categories';
+import {
+  queryCategories,
+  type Category,
+} from '@wix/auto_sdk_categories_categories';
 
 export interface CategoryServiceAPI {
   selectedCategory: Signal<string | null>;
-  categories: Signal<categories.Category[]>;
+  categories: Signal<Category[]>;
   setSelectedCategory: (categoryId: string | null) => void;
   loadCategories: () => Promise<void>;
 }
@@ -14,11 +17,11 @@ export const CategoryServiceDefinition =
   defineService<CategoryServiceAPI>('category-service');
 
 export interface CategoryServiceConfig {
-  categories: categories.Category[];
+  categories: Category[];
   initialCategoryId?: string | null;
   onCategoryChange?: (
     categoryId: string | null,
-    category: categories.Category | null
+    category: Category | null
   ) => void;
 }
 
@@ -31,7 +34,7 @@ export const CategoryService =
       const selectedCategory: Signal<string | null> = signalsService.signal(
         (config.initialCategoryId || null) as any
       );
-      const categories: Signal<categories.Category[]> = signalsService.signal(
+      const categories: Signal<Category[]> = signalsService.signal(
         config.categories as any
       );
 
@@ -76,13 +79,12 @@ export const CategoryService =
 
 export async function loadCategoriesConfig() {
   try {
-    const categoriesResponse = await categories
-      .queryCategories({
-        treeReference: {
-          appNamespace: '@wix/stores',
-          treeKey: null,
-        },
-      })
+    const categoriesResponse = await queryCategories({
+      treeReference: {
+        appNamespace: '@wix/stores',
+        treeKey: null,
+      },
+    })
       .eq('visible', true)
       .find();
 

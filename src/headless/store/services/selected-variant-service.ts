@@ -1,19 +1,24 @@
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import type { Signal, ReadOnlySignal } from '../../Signal';
-import { productsV3, inventoryItemsV3 } from '@wix/stores';
+import {
+  type V3Product,
+  type Variant,
+  type ProductMedia,
+  type ConnectedOption,
+  ModifierRenderType,
+  InventoryAvailabilityStatus,
+} from '@wix/auto_sdk_stores_products-v-3';
+import { queryInventoryItems } from '@wix/auto_sdk_stores_inventory-items-v-3';
 import { CurrentCartServiceDefinition } from '../../ecom/services/current-cart-service';
 import { ProductServiceDefinition } from './product-service';
 import { MediaGalleryServiceDefinition } from '../../media/services/media-gallery-service';
-
-type V3Product = productsV3.V3Product;
-type Variant = productsV3.Variant;
 
 export interface SelectedVariantServiceAPI {
   selectedQuantity: Signal<number>;
   selectedChoices: Signal<Record<string, string>>;
   selectedVariantId: ReadOnlySignal<string | null>;
-  currentVariant: ReadOnlySignal<productsV3.Variant | null>;
+  currentVariant: ReadOnlySignal<Variant | null>;
   currentPrice: ReadOnlySignal<string>;
   currentCompareAtPrice: ReadOnlySignal<string | null>;
   isInStock: ReadOnlySignal<boolean>;
@@ -22,7 +27,7 @@ export interface SelectedVariantServiceAPI {
   isLoading: Signal<boolean>;
   error: Signal<string | null>;
 
-  variants: Signal<productsV3.Variant[]>;
+  variants: Signal<Variant[]>;
   options: Signal<Record<string, string[]>>;
   basePrice: Signal<number>;
   discountPrice: Signal<number | null>;
@@ -32,11 +37,11 @@ export interface SelectedVariantServiceAPI {
   productId: Signal<string>;
   ribbonLabel: Signal<string | null>;
 
-  product: ReadOnlySignal<productsV3.V3Product | null>;
-  productOptions: ReadOnlySignal<productsV3.ConnectedOption[]>;
+  product: ReadOnlySignal<V3Product | null>;
+  productOptions: ReadOnlySignal<ConnectedOption[]>;
   currency: ReadOnlySignal<string>;
 
-  selectedVariant: () => productsV3.Variant | null;
+  selectedVariant: () => Variant | null;
   finalPrice: () => number;
   isLowStock: () => boolean;
 
@@ -88,7 +93,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     signalsService.effect(() => {
       const product = productService.product.get();
       const selectedChoicesValue = selectedChoices.get() || {};
-      let mediaToDisplay: productsV3.ProductMedia[] = [];
+      let mediaToDisplay: ProductMedia[] = [];
 
       const productItemsImages =
         product?.media?.itemsInfo?.items?.map(item => item).filter(Boolean) ??
@@ -101,7 +106,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       }
 
       // Get images based on selected choices if available
-      let selectedChoicesImages: productsV3.ProductMedia[] = [];
+      let selectedChoicesImages: ProductMedia[] = [];
 
       Object.keys(selectedChoicesValue).forEach(choiceKey => {
         const productOption = product?.options
@@ -148,9 +153,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     };
 
     const findVariantByChoices = (
-      variants: productsV3.Variant[],
+      variants: Variant[],
       selectedChoices: Record<string, string>
-    ): productsV3.Variant | null => {
+    ): Variant | null => {
       return (
         variants.find(variant => {
           const variantChoices = processVariantChoices(variant);
@@ -159,6 +164,21 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             key => variantChoices[key] === selectedChoices[key]
           );
         }) || null
+      );
+    };
+
+    const findVariantWithMinPrice = () => {
+      const variantsList = variants.get();
+      const variantPrices = variantsList.map(
+        x =>
+          Number(x.price?.actualPrice?.formattedAmount) ||
+          Number(x.price?.actualPrice?.amount)
+      );
+      const minPrice = String(Math.min(...variantPrices));
+      return variantsList.find(
+        x =>
+          x.price?.actualPrice?.formattedAmount === minPrice ||
+          x.price?.actualPrice?.amount === minPrice
       );
     };
 
@@ -174,8 +194,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
 
       try {
         // Use the correct Wix inventoryItemsV3.queryInventoryItems() API
-        const queryResult = await inventoryItemsV3
-          .queryInventoryItems()
+        const queryResult = await queryInventoryItems()
           .eq('variantId', variantId)
           .find();
 
@@ -205,7 +224,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       }
     };
 
-    const updateDataFromVariant = (variant: productsV3.Variant | null) => {
+    const updateDataFromVariant = (variant: Variant | null) => {
       if (variant) {
         const inStock = variant.inventoryStatus?.inStock ?? true;
         const preOrderEnabled =
@@ -222,9 +241,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
     const isLoading: Signal<boolean> = signalsService.signal(false as any);
     const error: Signal<string | null> = signalsService.signal(null as any);
 
-    const variants: Signal<productsV3.Variant[]> = signalsService.signal(
-      [] as any
-    );
+    const variants: Signal<Variant[]> = signalsService.signal([] as any);
     const options: Signal<Record<string, string[]>> = signalsService.signal(
       {} as any
     );
@@ -283,7 +300,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             updateDataFromVariant(currentProduct.variantsInfo?.variants[0]);
           }
         } else {
-          const singleVariant: productsV3.Variant = {
+          const singleVariant: Variant = {
             _id: 'default',
             visible: true,
             choices: [],
@@ -294,9 +311,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             inventoryStatus: {
               inStock:
                 currentProduct.inventory?.availabilityStatus ===
-                  productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+                  InventoryAvailabilityStatus.IN_STOCK ||
                 currentProduct.inventory?.availabilityStatus ===
-                  productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK,
+                  InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK,
               preorderEnabled:
                 currentProduct.inventory?.preorderStatus === 'ENABLED',
             },
@@ -312,7 +329,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       init(currentProduct);
     });
 
-    const currentVariant: ReadOnlySignal<productsV3.Variant | null> =
+    const currentVariant: ReadOnlySignal<Variant | null> =
       signalsService.computed<any>((() => {
         const choices = selectedChoices.get();
         const variantsList = variants.get();
@@ -342,8 +359,24 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
         return variant?._id || null;
       });
 
+    const variantWithMinPrice = findVariantWithMinPrice();
+
     const currentPrice: ReadOnlySignal<string> = signalsService.computed(() => {
       const variant = currentVariant.get();
+
+      if (!variant && variantWithMinPrice) {
+        const formattedAmount =
+          variantWithMinPrice?.price?.actualPrice?.formattedAmount;
+        if (formattedAmount) {
+          return formattedAmount;
+        }
+
+        const amount = variantWithMinPrice?.price?.actualPrice?.amount;
+        if (amount) {
+          return `$${amount}`;
+        }
+      }
+
       const prod = v3Product.get();
 
       // Try to get formatted amount first (if fields worked)
@@ -371,6 +404,18 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       signalsService.computed(() => {
         const variant = currentVariant.get();
         const prod = v3Product.get();
+        if (!variant && variantWithMinPrice) {
+          const formattedAmount =
+            variantWithMinPrice?.price?.compareAtPrice?.formattedAmount;
+          if (formattedAmount) {
+            return formattedAmount;
+          }
+
+          const amount = variantWithMinPrice?.price?.compareAtPrice?.amount;
+          if (amount) {
+            return `$${amount}`;
+          }
+        }
 
         // Try to get formatted compare-at price first
         if (variant?.price?.compareAtPrice?.formattedAmount) {
@@ -410,9 +455,9 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       }
     );
 
-    const product: ReadOnlySignal<productsV3.V3Product | null> = v3Product;
+    const product: ReadOnlySignal<V3Product | null> = v3Product;
 
-    const productOptions: ReadOnlySignal<productsV3.ConnectedOption[]> =
+    const productOptions: ReadOnlySignal<ConnectedOption[]> =
       signalsService.computed<any>(() => {
         const prod = v3Product.get();
         return prod?.options || [];
@@ -423,7 +468,7 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
       return prod?.currency || 'USD';
     });
 
-    const selectedVariant = (): productsV3.Variant | null => {
+    const selectedVariant = (): Variant | null => {
       const variantId = selectedVariantId.get();
       const variantsList = variants.get();
       return variantsList.find(v => v._id === variantId) || null;
@@ -496,15 +541,15 @@ export const SelectedVariantService = implementService.withConfig<{}>()(
             const renderType = productModifier.modifierRenderType;
 
             if (
-              renderType === productsV3.ModifierRenderType.TEXT_CHOICES ||
-              renderType === productsV3.ModifierRenderType.SWATCH_CHOICES
+              renderType === ModifierRenderType.TEXT_CHOICES ||
+              renderType === ModifierRenderType.SWATCH_CHOICES
             ) {
               // For choice modifiers, use the modifier key and choice value
               const modifierKey = (productModifier as any).key || modifierName;
               if (modifierValue.choiceValue) {
                 options[modifierKey] = modifierValue.choiceValue;
               }
-            } else if (renderType === productsV3.ModifierRenderType.FREE_TEXT) {
+            } else if (renderType === ModifierRenderType.FREE_TEXT) {
               // For free text modifiers, use the freeTextSettings key
               const freeTextKey =
                 (productModifier.freeTextSettings as any)?.key || modifierName;
