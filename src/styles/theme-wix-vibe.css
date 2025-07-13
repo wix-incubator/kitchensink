@@ -183,7 +183,7 @@
     0.08
   ); /* Subtle background for loading skeleton elements and placeholder content */
   --theme-bg-card: rgba(
-    var(--color-white),
+    var(--color-black),
     0.02
   ); /* Very light background for cards, product items, and content containers */
   --theme-bg-error: rgba(
