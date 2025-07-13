@@ -46,7 +46,7 @@ export interface RootRenderProps {
 
 /**
  * Headless component for social sharing root
- * 
+ *
  * @component
  */
 export const Root = (props: RootProps) => {
@@ -106,7 +106,7 @@ export interface PlatformRenderProps {
 
 /**
  * Headless component for individual social platform
- * 
+ *
  * @component
  */
 export const Platform = (props: PlatformProps) => {
@@ -158,7 +158,7 @@ export interface PlatformsRenderProps {
 
 /**
  * Headless component for social sharing platforms with logic
- * 
+ *
  * @component
  */
 export const Platforms = (props: PlatformsProps) => {

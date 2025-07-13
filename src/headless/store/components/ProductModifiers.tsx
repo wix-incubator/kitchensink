@@ -108,7 +108,7 @@ export interface ModifierRenderProps {
 
 /**
  * Headless component for a specific product modifier
- * 
+ *
  * @component
  */
 export const Modifier = (props: ModifierProps) => {
@@ -174,7 +174,7 @@ export interface ChoiceRenderProps {
 
 /**
  * Headless component for individual modifier choice selection
- * 
+ *
  * @component
  */
 export const Choice = (props: ChoiceProps) => {
@@ -246,7 +246,7 @@ export interface FreeTextRenderProps {
 
 /**
  * Headless component for free text modifier input
- * 
+ *
  * @component
  */
 export const FreeText = (props: FreeTextProps) => {
@@ -308,7 +308,7 @@ export interface ToggleFreeTextRenderProps {
 /**
  * Headless component for toggling free text modifier input
  * Used for optional free text modifiers where a checkbox shows/hides the input
- * 
+ *
  * @component
  */
 export const ToggleFreeText = (props: ToggleFreeTextProps) => {

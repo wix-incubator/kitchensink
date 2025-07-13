@@ -11,7 +11,7 @@ export interface ControllerProps {
 
 /**
  * Headless component for sorting products
- * 
+ *
  * @component
  */
 export function Controller({ children }: ControllerProps) {

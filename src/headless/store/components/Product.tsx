@@ -21,7 +21,7 @@ export interface ProductNameRenderProps {
 
 /**
  * Headless component for product name display
- * 
+ *
  * @component
  */
 export const Name = (props: ProductNameProps) => {
@@ -57,7 +57,7 @@ export interface ProductDescriptionRenderProps {
 
 /**
  * Headless component for product description display
- * 
+ *
  * @component
  */
 export const Description = (props: ProductDescriptionProps) => {

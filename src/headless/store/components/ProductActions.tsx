@@ -44,7 +44,7 @@ export interface ActionsRenderProps {
 
 /**
  * Headless component for product actions (add to cart, buy now)
- * 
+ *
  * @component
  */
 export const Actions = (props: ActionsProps) => {

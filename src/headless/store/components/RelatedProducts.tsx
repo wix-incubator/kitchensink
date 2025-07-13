@@ -33,7 +33,7 @@ export interface ListRenderProps {
 
 /**
  * Headless component for displaying related products list
- * 
+ *
  * @component
  */
 export const List = (props: ListProps) => {
@@ -98,7 +98,7 @@ export interface ItemRenderProps {
 
 /**
  * Headless component for individual related product item
- * 
+ *
  * @component
  */
 export const Item = (props: ItemProps) => {

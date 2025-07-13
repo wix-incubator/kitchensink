@@ -14,7 +14,7 @@ export interface CategoryListProps {
 
 /**
  * Headless component for displaying a list of categories
- * 
+ *
  * @component
  */
 export const List: React.FC<CategoryListProps> = ({ children }) => {

@@ -29,7 +29,7 @@ export interface OptionsRenderProps {
 
 /**
  * Headless component for all product options
- * 
+ *
  * @component
  */
 export const Options = (props: OptionsProps) => {
@@ -75,7 +75,7 @@ export interface OptionRenderProps {
 
 /**
  * Headless component for choices within a specific product option
- * 
+ *
  * @component
  */
 export const Option = (props: OptionProps) => {
@@ -137,7 +137,7 @@ export interface ChoiceRenderProps {
 
 /**
  * Headless component for individual choice selection
- * 
+ *
  * @component
  */
 export const Choice = (props: ChoiceProps) => {
@@ -222,7 +222,7 @@ export interface StockRenderProps {
 
 /**
  * Headless component for product stock status
- * 
+ *
  * @component
  */
 export const Stock = (props: StockProps) => {
@@ -285,7 +285,7 @@ export interface ResetRenderProps {
 
 /**
  * Headless component for resetting variant selections
- * 
+ *
  * @component
  */
 export const Reset = (props: ResetProps) => {

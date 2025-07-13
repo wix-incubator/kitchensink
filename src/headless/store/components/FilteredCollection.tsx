@@ -26,7 +26,7 @@ export interface FilteredCollectionProviderProps {
 
 /**
  * Headless component for providing a filtered collection
- * 
+ *
  * @component
  */
 export const Provider: React.FC<FilteredCollectionProviderProps> = ({
@@ -41,7 +41,6 @@ export const Provider: React.FC<FilteredCollectionProviderProps> = ({
     </FilteredCollectionContext.Provider>
   );
 };
-
 
 export const useFilteredCollection = () => {
   const context = useContext(FilteredCollectionContext);
@@ -60,7 +59,7 @@ export interface FiltersLoadingProps {
 
 /**
  * Headless component for displaying a loading state for filters
- * 
+ *
  * @component
  */
 export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
@@ -85,7 +84,7 @@ export interface FilteredGridProps {
 
 /**
  * Headless component for displaying a grid of filtered products
- * 
+ *
  * @component
  */
 export const Grid: React.FC<FilteredGridProps> = ({ children }) => {
@@ -129,7 +128,7 @@ export interface FilteredItemProps {
 
 /**
  * Headless component for displaying an individual product item
- * 
+ *
  * @component
  */
 export const Item: React.FC<FilteredItemProps> = ({ product, children }) => {
@@ -190,7 +189,7 @@ export interface FilteredLoadMoreProps {
 
 /**
  * Headless component for displaying a load more button
- * 
+ *
  * @component
  */
 export const LoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
@@ -231,7 +230,7 @@ export interface FilteredFiltersProps {
 
 /**
  * Headless component for displaying a filters component
- * 
+ *
  * @component
  */
 export const Filters: React.FC<FilteredFiltersProps> = ({ children }) => {
