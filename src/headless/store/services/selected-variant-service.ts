@@ -70,7 +70,7 @@ export interface SelectedVariantServiceAPI {
 }
 
 export interface SelectedVariantServiceConfig {
-  dontFetchInventoryData?: boolean;
+  fetchInventoryData?: boolean;
 }
 
 export const SelectedVariantServiceDefinition =
@@ -79,7 +79,7 @@ export const SelectedVariantServiceDefinition =
 export const SelectedVariantService =
   implementService.withConfig<SelectedVariantServiceConfig>()(
     SelectedVariantServiceDefinition,
-    ({ getService, config }) => {
+    ({ getService, config: { fetchInventoryData = true } }) => {
       const signalsService = getService(SignalsServiceDefinition);
       const cartService = getService(CurrentCartServiceDefinition);
       const productService = getService(ProductServiceDefinition);
@@ -221,7 +221,7 @@ export const SelectedVariantService =
 
           // update the quantity available, tracking indication and pre-order message from the inventory API
           // only if fetchInventoryData is enabled (defaults to true for backward compatibility)
-          if (!config.dontFetchInventoryData) {
+          if (fetchInventoryData) {
             updateInventoryItemData(variant._id, inStock, preOrderEnabled);
           } else {
             // Set default values when inventory fetching is disabled
