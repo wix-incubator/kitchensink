@@ -1,7 +1,4 @@
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { createServicesMap } from '@wix/services-manager';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 import {
@@ -76,38 +73,36 @@ export default function StoreCollectionPage({
     }
   };
 
-  const [servicesManager] = useState(() =>
-    createServicesManager(
-      createServicesMap()
-        .addService(
-          CollectionServiceDefinition,
-          CollectionService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          FilterServiceDefinition,
-          FilterService,
-          filteredCollectionServiceConfig
-        )
-        .addService(
-          CurrentCartServiceDefinition,
-          CurrentCartService,
-          currentCartServiceConfig
-        )
-        .addService(CategoryServiceDefinition, CategoryService, {
-          ...categoriesConfig,
-          onCategoryChange: handleCategoryChange,
-        })
-        .addService(SortServiceDefinition, SortService, {
-          initialSort: filteredCollectionServiceConfig.initialSort,
-        })
-        .addService(
-          CatalogPriceRangeServiceDefinition,
-          CatalogPriceRangeService,
-          {}
-        )
-        .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
-    )
+  const [servicesMap] = useState(() =>
+    createServicesMap()
+      .addService(
+        CollectionServiceDefinition,
+        CollectionService,
+        filteredCollectionServiceConfig
+      )
+      .addService(
+        FilterServiceDefinition,
+        FilterService,
+        filteredCollectionServiceConfig
+      )
+      .addService(
+        CurrentCartServiceDefinition,
+        CurrentCartService,
+        currentCartServiceConfig
+      )
+      .addService(CategoryServiceDefinition, CategoryService, {
+        ...categoriesConfig,
+        onCategoryChange: handleCategoryChange,
+      })
+      .addService(SortServiceDefinition, SortService, {
+        initialSort: filteredCollectionServiceConfig.initialSort,
+      })
+      .addService(
+        CatalogPriceRangeServiceDefinition,
+        CatalogPriceRangeService,
+        {}
+      )
+      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
   );
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -121,7 +116,7 @@ export default function StoreCollectionPage({
       />
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
+        servicesMap={servicesMap}
         showSuccessMessage={showSuccessMessage}
         onSuccessMessageChange={() => {}}
       >

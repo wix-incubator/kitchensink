@@ -1,7 +1,4 @@
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { createServicesMap } from '@wix/services-manager';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
 import {
@@ -42,7 +39,7 @@ export default function ProductDetailPage({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Create services manager with all required services
-  let servicesMap = createServicesMap()
+  const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService, productServiceConfig)
     .addService(
       CurrentCartServiceDefinition,
@@ -55,14 +52,12 @@ export default function ProductDetailPage({
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     });
 
-  const [servicesManager] = useState(() => createServicesManager(servicesMap));
-
   return (
     <>
       <KitchensinkLayout>
         <StoreLayout
           currentCartServiceConfig={currentCartServiceConfig}
-          servicesManager={servicesManager}
+          servicesMap={servicesMap}
           showSuccessMessage={showSuccessMessage}
           onSuccessMessageChange={setShowSuccessMessage}
         >

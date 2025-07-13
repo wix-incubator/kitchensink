@@ -1,9 +1,6 @@
-import { useState, type ReactNode } from 'react';
-import { ServicesManagerProvider } from '@wix/services-manager-react';
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { type ReactNode } from 'react';
+import { WixServices } from '@wix/services-manager-react';
+import { createServicesMap } from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
@@ -13,7 +10,7 @@ import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
-  servicesManager?: any; // Allow passing an existing services manager
+  servicesMap?: any;
   showSuccessMessage?: boolean;
   onSuccessMessageChange?: (show: boolean) => void;
 }
@@ -21,31 +18,22 @@ interface StoreLayoutProps {
 export function StoreLayout({
   children,
   currentCartServiceConfig,
-  servicesManager: externalServicesManager,
   showSuccessMessage = false,
-  onSuccessMessageChange,
+  servicesMap: externalServicesMap,
 }: StoreLayoutProps) {
-  const [internalShowSuccess] = useState(false);
+  const actualShowSuccess = showSuccessMessage;
 
-  // Use external services manager if provided, otherwise create one with just cart service
-  const [internalServicesManager] = useState(() =>
-    createServicesManager(
-      createServicesMap().addService(
-        CurrentCartServiceDefinition,
-        CurrentCartService,
-        currentCartServiceConfig
-      )
-    )
+  // Create services map with cart service
+  const interrnalServicesMap = createServicesMap().addService(
+    CurrentCartServiceDefinition,
+    CurrentCartService,
+    currentCartServiceConfig
   );
 
-  const servicesManager = externalServicesManager || internalServicesManager;
-
-  const actualShowSuccess = onSuccessMessageChange
-    ? showSuccessMessage
-    : internalShowSuccess;
+  const servicesMap = externalServicesMap || interrnalServicesMap;
 
   return (
-    <ServicesManagerProvider servicesManager={servicesManager}>
+    <WixServices servicesMap={servicesMap}>
       {/* Success Message */}
       {actualShowSuccess && (
         <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
@@ -74,6 +62,6 @@ export function StoreLayout({
       {children}
 
       <MiniCartContent />
-    </ServicesManagerProvider>
+    </WixServices>
   );
 }

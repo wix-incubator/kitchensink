@@ -1,7 +1,4 @@
-import {
-  createServicesManager,
-  createServicesMap,
-} from '@wix/services-manager';
+import { createServicesMap } from '@wix/services-manager';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
@@ -15,8 +12,7 @@ import {
   SelectedVariantServiceDefinition,
 } from '../headless/store/services/selected-variant-service';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
-import { ServicesManagerProvider } from '@wix/services-manager-react';
+import { WixServices } from '@wix/services-manager-react';
 import {
   FilterService,
   FilterServiceDefinition,
@@ -61,7 +57,7 @@ export default function WixServicesProvider({
   children,
   showCartIcon = false,
 }: WixServicesProviderProps) {
-  let servicesMap = createServicesMap()
+  const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService)
     .addService(CurrentCartServiceDefinition, CurrentCartService)
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
@@ -74,20 +70,15 @@ export default function WixServicesProvider({
     .addService(ProductModifiersServiceDefinition, ProductModifiersService)
     .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
 
-  const [servicesManager] = useState(() => createServicesManager(servicesMap));
-
   return (
-    <ServicesManagerProvider servicesManager={servicesManager}>
+    <>
       {showCartIcon ? (
-        <StoreLayout
-          currentCartServiceConfig={null}
-          servicesManager={servicesManager}
-        >
+        <StoreLayout currentCartServiceConfig={null} servicesMap={servicesMap}>
           {children}
         </StoreLayout>
       ) : (
-        children
+        <WixServices servicesMap={servicesMap}>{children}</WixServices>
       )}
-    </ServicesManagerProvider>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
 import { RelatedProductsServiceDefinition } from '../services/related-products-service';
+import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import { productsV3 } from '@wix/stores';
 
 /**
@@ -35,6 +36,7 @@ export const List = (props: ListProps) => {
   const service = useService(RelatedProductsServiceDefinition) as ServiceAPI<
     typeof RelatedProductsServiceDefinition
   >;
+  const signalsService = useService(SignalsServiceDefinition);
 
   const [products, setProducts] = React.useState<productsV3.V3Product[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -42,15 +44,23 @@ export const List = (props: ListProps) => {
   const [hasProducts, setHasProducts] = React.useState(false);
 
   React.useEffect(() => {
-    const unsubscribes = [
-      service.relatedProducts.subscribe(setProducts),
-      service.isLoading.subscribe(setIsLoading),
-      service.error.subscribe(setError),
-      service.hasRelatedProducts.subscribe(setHasProducts),
+    const effects = [
+      signalsService.effect(() => {
+        setProducts(service.relatedProducts.get());
+      }),
+      signalsService.effect(() => {
+        setIsLoading(service.isLoading.get());
+      }),
+      signalsService.effect(() => {
+        setError(service.error.get());
+      }),
+      signalsService.effect(() => {
+        setHasProducts(service.hasRelatedProducts.get());
+      }),
     ];
 
-    return () => unsubscribes.forEach(fn => fn());
-  }, [service]);
+    return () => effects.forEach(dispose => dispose());
+  }, [service, signalsService]);
 
   return props.children({
     products,

@@ -224,7 +224,6 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 
 const ProductInfo = ({
   onAddToCart: _onAddToCart,
-  servicesManager,
 }: {
   onAddToCart: () => void;
   servicesManager: any;
@@ -1035,7 +1034,7 @@ export default function ProductDetailPage({
     <KitchensinkLayout>
       <StoreLayout
         currentCartServiceConfig={currentCartServiceConfig}
-        servicesManager={servicesManager}
+        servicesMap={servicesMap}
         showSuccessMessage={showSuccessMessage}
         onSuccessMessageChange={setShowSuccessMessage}
       >
