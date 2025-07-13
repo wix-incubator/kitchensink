@@ -526,3 +526,124 @@ export const Coupon = (props: CouponProps) => {
     error,
   });
 };
+
+/**
+ * Props for LineItemAdded headless component
+ */
+export interface LineItemAddedProps {
+  /** Render prop function that receives line item added subscription data */
+  children: (props: LineItemAddedRenderProps) => React.ReactNode;
+}
+
+/**
+ * Render props for LineItemAdded component
+ */
+export interface LineItemAddedRenderProps {
+  /**
+   * Subscribe to line item added events
+   *
+   * Call this function with a callback to receive notifications when items
+   * are added to the cart. The callback receives the updated line items array.
+   *
+   * @param callback - Function called when items are added to cart. Receives array of line items or undefined
+   * @returns Unsubscribe function to clean up the subscription
+   *
+   * @example
+   * ```tsx
+   * useEffect(() => {
+   *   return onAddedToCart((lineItems) => {
+   *     console.log('Items added:', lineItems);
+   *   });
+   * }, [onAddedToCart]);
+   * ```
+   */
+  onAddedToCart: (callback: LineItemAddedCallback) => void;
+}
+export type LineItem = NonNullable<
+  currentCart.AddToCurrentCartRequest['lineItems']
+>[number];
+/**
+ * Callback function type for line item added events
+ *
+ * @param lineItems - Array of line items currently in the cart, or undefined if cart is empty
+ */
+export type LineItemAddedCallback = (lineItems: LineItem[] | undefined) => void;
+
+/**
+ * Headless component for line item added event subscription
+ *
+ * Provides a way to subscribe to cart addition events and receive notifications
+ * when items are added to the current cart. The callback receives the updated
+ * line items array, allowing you to show notifications, trigger animations,
+ * or perform other actions when products are added.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage - show global notification
+ * <CurrentCart.LineItemAdded>
+ *   {({ onAddedToCart }) => {
+ *     useEffect(() => {
+ *       return onAddedToCart((lineItems) => {
+ *         setShowSuccessMessage(true);
+ *         setTimeout(() => setShowSuccessMessage(false), 3000);
+ *       });
+ *     }, [onAddedToCart]);
+ *     return null;
+ *   }}
+ * </CurrentCart.LineItemAdded>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Product-specific usage - show notification only for specific product
+ * <CurrentCart.LineItemAdded>
+ *   {({ onAddedToCart }) => {
+ *     useEffect(() => {
+ *       return onAddedToCart((lineItems) => {
+ *         if (!lineItems) return;
+ *         const myLineItemIsThere = lineItems.some(
+ *           lineItem => lineItem.catalogReference?.catalogItemId === product._id
+ *         );
+ *         if (!myLineItemIsThere) return;
+ *
+ *         setShowSuccessMessage(true);
+ *         setTimeout(() => setShowSuccessMessage(false), 3000);
+ *       });
+ *     }, [onAddedToCart, product._id]);
+ *     return null;
+ *   }}
+ * </CurrentCart.LineItemAdded>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Combined with cart opening - show notification then open cart
+ * <CurrentCart.Trigger>
+ *   {({ onOpen }) => (
+ *     <CurrentCart.LineItemAdded>
+ *       {({ onAddedToCart }) => {
+ *         useEffect(() => {
+ *           return onAddedToCart((lineItems) => {
+ *             setShowSuccessMessage(true);
+ *             setTimeout(() => {
+ *               setShowSuccessMessage(false);
+ *               onOpen(); // Open cart after notification
+ *             }, 3000);
+ *           });
+ *         }, [onAddedToCart]);
+ *         return null;
+ *       }}
+ *     </CurrentCart.LineItemAdded>
+ *   )}
+ * </CurrentCart.Trigger>
+ * ```
+ */
+export const LineItemAdded = (props: LineItemAddedProps) => {
+  const service = useService(CurrentCartServiceDefinition) as ServiceAPI<
+    typeof CurrentCartServiceDefinition
+  >;
+
+  return props.children({
+    onAddedToCart: service.onAddedToCart,
+  });
+};

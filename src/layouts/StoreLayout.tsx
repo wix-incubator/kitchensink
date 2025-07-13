@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { WixServices } from '@wix/services-manager-react';
 import { createServicesMap } from '@wix/services-manager';
 import {
@@ -6,6 +6,8 @@ import {
   CurrentCartService,
 } from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
+import { CurrentCart } from '../headless/ecom/components';
+import type { LineItem } from '../headless/ecom/components/CurrentCart';
 
 interface StoreLayoutProps {
   children: ReactNode;
@@ -18,10 +20,9 @@ interface StoreLayoutProps {
 export function StoreLayout({
   children,
   currentCartServiceConfig,
-  showSuccessMessage = false,
   servicesMap: externalServicesMap,
 }: StoreLayoutProps) {
-  const actualShowSuccess = showSuccessMessage;
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Create services map with cart service
   const interrnalServicesMap = createServicesMap().addService(
@@ -34,8 +35,29 @@ export function StoreLayout({
 
   return (
     <WixServices servicesMap={servicesMap}>
+      <CurrentCart.Trigger>
+        {({ onOpen }) => (
+          <CurrentCart.LineItemAdded>
+            {({ onAddedToCart }) => {
+              useEffect(
+                () =>
+                  onAddedToCart((lineItems: LineItem[] | undefined) => {
+                    setShowSuccessMessage(true);
+                    setTimeout(() => {
+                      setShowSuccessMessage(false);
+                      onOpen();
+                    }, 3000);
+                  }),
+                [onAddedToCart]
+              );
+
+              return null;
+            }}
+          </CurrentCart.LineItemAdded>
+        )}
+      </CurrentCart.Trigger>
       {/* Success Message */}
-      {actualShowSuccess && (
+      {showSuccessMessage && (
         <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
           <div className="flex items-center gap-2">
             <svg
@@ -51,7 +73,7 @@ export function StoreLayout({
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            Added to cart successfully!
+            Added to cart successfullyyyyy!
           </div>
         </div>
       )}

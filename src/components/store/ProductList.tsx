@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { productsV3 } from '@wix/stores';
 import ProductFilters from './ProductFilters';
 import StoreHeader from './StoreHeader';
@@ -27,21 +27,18 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from '@wix/headless-media/services';
+import { CurrentCart } from '../../headless/ecom/components';
+import type { LineItem } from '../../headless/ecom/components/CurrentCart';
 
 export const ProductGridContent = ({
   productPageRoute,
-  setLayoutSuccessMessage,
 }: {
   productPageRoute: string;
-  setLayoutSuccessMessage: (show: boolean) => void;
 }) => {
   const Navigation = useNavigation();
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<{
-    [key: string]: boolean;
-  }>({});
 
   const openQuickView = (product: productsV3.V3Product) => {
     setQuickViewProduct(product);
@@ -51,17 +48,6 @@ export const ProductGridContent = ({
   const closeQuickView = () => {
     setIsQuickViewOpen(false);
     setTimeout(() => setQuickViewProduct(null), 300); // Allow animation to complete
-  };
-
-  const handleShowSuccessMessage = (productId: string, show: boolean) => {
-    if (showSuccessMessage[productId] !== show) {
-      setLayoutSuccessMessage(show);
-    }
-    if (!show) {
-      setLayoutSuccessMessage(false);
-    }
-
-    setShowSuccessMessage(prev => ({ ...prev, [productId]: show }));
   };
 
   const ProductItem = ({ product }: { product: productsV3.V3Product }) => {
@@ -76,6 +62,9 @@ export const ProductGridContent = ({
       .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
         media: product?.media?.itemsInfo?.items ?? [],
       });
+
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
     return (
       <WixServices servicesMap={servicesMap}>
         <FilteredCollection.Item key={product._id} product={product}>
@@ -87,13 +76,38 @@ export const ProductGridContent = ({
               className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
             >
               {/* Success Message */}
-              {showSuccessMessage[product._id!] && (
-                <div className="absolute top-2 right-2 z-10">
-                  <div className="bg-status-success-light border border-status-success rounded-lg px-3 py-1 text-status-success text-sm font-medium">
+              {showSuccessMessage && (
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="bg-status-success-light/90 backdrop-blur-sm border border-status-success rounded-lg px-4 py-2 text-status-success text-base font-bold text-center shadow-md animate-bounce">
                     Added to Cart!
                   </div>
                 </div>
               )}
+
+              <CurrentCart.LineItemAdded>
+                {({ onAddedToCart }) => {
+                  useEffect(() => {
+                    return onAddedToCart(
+                      (lineItems: LineItem[] | undefined) => {
+                        if (!lineItems) return;
+                        const myLineItemIsThere = lineItems.some(
+                          lineItem =>
+                            lineItem.catalogReference?.catalogItemId ===
+                            product._id
+                        );
+                        if (!myLineItemIsThere) return;
+
+                        setShowSuccessMessage(true);
+                        setTimeout(() => {
+                          setShowSuccessMessage(false);
+                        }, 3000);
+                      }
+                    );
+                  }, [onAddedToCart]);
+
+                  return null;
+                }}
+              </CurrentCart.LineItemAdded>
 
               <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
                 {image ? (
@@ -397,9 +411,6 @@ export const ProductGridContent = ({
 
                       <ProductActionButtons
                         isQuickView={true} // This will hide the Buy Now button for list items
-                        onShowSuccessMessage={(show: boolean) =>
-                          handleShowSuccessMessage(product._id!, show)
-                        }
                       />
                     </div>
                   )}
@@ -700,17 +711,12 @@ export const LoadMoreSection = () => {
 
 export default function ProductList({
   productPageRoute,
-  setLayoutSuccessMessage,
 }: {
   productPageRoute: string;
-  setLayoutSuccessMessage: (show: boolean) => void;
 }) {
   return (
     <div>
-      <ProductGridContent
-        productPageRoute={productPageRoute}
-        setLayoutSuccessMessage={setLayoutSuccessMessage}
-      />
+      <ProductGridContent productPageRoute={productPageRoute} />
       <LoadMoreSection />
     </div>
   );

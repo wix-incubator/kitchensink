@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { productsV3 } from '@wix/stores';
 import { WixServices } from '@wix/services-manager-react';
 import { createServicesMap } from '@wix/services-manager';
@@ -24,6 +24,8 @@ import {
   SocialSharingService,
   SocialSharingServiceDefinition,
 } from '@wix/headless-stores/services';
+import { CurrentCart } from '../../headless/ecom/components';
+import type { LineItem } from '../../headless/ecom/components/CurrentCart';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -39,11 +41,11 @@ export default function QuickViewModal({
   productPageRoute,
 }: QuickViewModalProps) {
   const Navigation = useNavigation();
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(
     null
   );
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -84,16 +86,6 @@ export default function QuickViewModal({
       loadFullProduct();
     }
   }, [isOpen, product.slug]);
-
-  // Handle success message timer
-  useEffect(() => {
-    if (showSuccessMessage) {
-      const timer = setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccessMessage]);
 
   // Create services map with all required services EXCEPT cart service - recreate when fullProduct changes
   const [servicesMap, setServicesMap] = useState<any>(null);
@@ -144,6 +136,28 @@ export default function QuickViewModal({
         </div>
       )}
 
+      <CurrentCart.LineItemAdded>
+        {({ onAddedToCart }) => {
+          useEffect(() => {
+            return onAddedToCart((lineItems: LineItem[] | undefined) => {
+              if (!lineItems) return;
+              const myLineItemIsThere = lineItems.some(
+                lineItem =>
+                  lineItem.catalogReference?.catalogItemId === product._id
+              );
+              if (!myLineItemIsThere) return;
+
+              setShowSuccessMessage(true);
+              setTimeout(() => {
+                setShowSuccessMessage(false);
+              }, 3000);
+            });
+          }, [onAddedToCart]);
+
+          return null;
+        }}
+      </CurrentCart.LineItemAdded>
+
       {/* Backdrop */}
       <div className="absolute inset-0 bg-surface-overlay backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]" />
 
@@ -187,10 +201,7 @@ export default function QuickViewModal({
           ) : (
             <>
               <WixServices servicesMap={servicesMap}>
-                <ProductDetails
-                  setShowSuccessMessage={setShowSuccessMessage}
-                  isQuickView={true}
-                />
+                <ProductDetails isQuickView={true} />
               </WixServices>
 
               {/* View Full Product Page Link */}
