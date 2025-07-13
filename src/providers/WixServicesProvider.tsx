@@ -77,9 +77,7 @@ export default function WixServicesProvider({
           {children}
         </StoreLayout>
       ) : (
-        <WixServices servicesMap={servicesMap}>
-          {children}
-        </WixServices>
+        <WixServices servicesMap={servicesMap}>{children}</WixServices>
       )}
     </>
   );
