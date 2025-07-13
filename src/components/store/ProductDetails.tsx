@@ -8,7 +8,7 @@ import {
 } from '../../headless/store/components';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
-import { SocialSharingButtons } from './SocialSharingButtons';
+import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 

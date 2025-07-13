@@ -20,7 +20,7 @@ import {
   RelatedProducts,
   ProductActions,
 } from '../../../../headless/store/components';
-import { SocialSharingButtons } from '../../../../components/store/SocialSharingButtons';
+import { SocialSharingButtons } from '../../../../components/social/SocialSharingButtons';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
