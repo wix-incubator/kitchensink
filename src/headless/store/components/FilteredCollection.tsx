@@ -1,48 +1,12 @@
-import React, { createContext, useContext, type ReactNode } from 'react';
+import { useService } from '@wix/services-manager-react';
+import { productsV3 } from '@wix/stores';
+import React, { type ReactNode } from 'react';
+import { CollectionServiceDefinition } from '../services/collection-service';
 import {
   FilterServiceDefinition,
   type AvailableOptions,
-  type FilterServiceAPI,
   type Filter,
 } from '../services/filter-service';
-import { useService } from '@wix/services-manager-react';
-import { productsV3 } from '@wix/stores';
-import {
-  CollectionServiceDefinition,
-  type CollectionServiceAPI,
-} from '../services/collection-service';
-
-const FilteredCollectionContext = createContext<{
-  filter: FilterServiceAPI | null;
-  collection: CollectionServiceAPI | null;
-}>({ filter: null, collection: null });
-
-interface FilteredCollectionProviderProps {
-  children: ReactNode;
-}
-
-export const Provider: React.FC<FilteredCollectionProviderProps> = ({
-  children,
-}) => {
-  const filter = useService(FilterServiceDefinition);
-  const collection = useService(CollectionServiceDefinition);
-
-  return (
-    <FilteredCollectionContext.Provider value={{ filter, collection }}>
-      {children}
-    </FilteredCollectionContext.Provider>
-  );
-};
-
-export const useFilteredCollection = () => {
-  const context = useContext(FilteredCollectionContext);
-  if (!context) {
-    throw new Error(
-      'useFilteredCollection must be used within a FilteredCollectionProvider'
-    );
-  }
-  return context;
-};
 
 // Filters Loading component with pulse animation
 interface FiltersLoadingProps {
@@ -50,7 +14,7 @@ interface FiltersLoadingProps {
 }
 
 export const FiltersLoading: React.FC<FiltersLoadingProps> = ({ children }) => {
-  const { filter } = useFilteredCollection();
+  const filter = useService(FilterServiceDefinition);
 
   const isFullyLoaded = filter!.isFullyLoaded.get();
 
@@ -70,7 +34,7 @@ interface FilteredGridProps {
 }
 
 export const Grid: React.FC<FilteredGridProps> = ({ children }) => {
-  const { collection } = useFilteredCollection();
+  const collection = useService(CollectionServiceDefinition);
 
   const products = collection!.products.get() || [];
   const totalProducts = collection!.totalProducts.get();
@@ -166,7 +130,7 @@ interface FilteredLoadMoreProps {
 }
 
 export const LoadMore: React.FC<FilteredLoadMoreProps> = ({ children }) => {
-  const { collection } = useFilteredCollection();
+  const collection = useService(CollectionServiceDefinition);
 
   const loadMore = collection!.loadMore;
   const refresh = collection!.refresh;
@@ -202,7 +166,8 @@ interface FilteredFiltersProps {
 }
 
 export const Filters: React.FC<FilteredFiltersProps> = ({ children }) => {
-  const { collection, filter } = useFilteredCollection();
+  const collection = useService(CollectionServiceDefinition);
+  const filter = useService(FilterServiceDefinition);
 
   const applyFilters = filter!.applyFilters;
   const clearFilters = filter!.clearFilters;
