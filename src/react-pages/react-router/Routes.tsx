@@ -6,6 +6,7 @@ import ProductDetails from '../../components/store/ProductDetails';
 import { ProductServiceDefinition } from '../../headless/store/services/product-service';
 import { CategoryServiceDefinition } from '../../headless/store/services/category-service';
 import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import { SocialSharingServiceDefinition } from '../../headless/store/services/social-sharing-service';
 import '../../styles/theme-wix-vibe.css';
 import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
