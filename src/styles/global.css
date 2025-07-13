@@ -1,5 +1,3 @@
-@import 'tailwindcss';
-
 /* Global button fix - restore default browser behavior */
 button:not(:disabled) {
   cursor: pointer;
