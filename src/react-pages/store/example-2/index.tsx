@@ -47,344 +47,321 @@ interface StoreExample2PageProps {
 }
 const ProductGridContent = () => {
   return (
-    <FilteredCollection.Provider>
-      <FilteredCollection.Grid>
-        {({ products, isLoading, error, isEmpty, totalProducts }) => (
-          <FilteredCollection.Filters>
-            {({
-              currentFilters,
-              applyFilters,
-              clearFilters,
-              availableOptions,
-              isFiltered,
-            }) => {
-              return (
-                <div className="min-h-screen">
-                  <StoreHeader className="mb-6" />
+    <FilteredCollection.Grid>
+      {({ products, isLoading, error, isEmpty, totalProducts }) => (
+        <FilteredCollection.Filters>
+          {({
+            currentFilters,
+            applyFilters,
+            clearFilters,
+            availableOptions,
+            isFiltered,
+          }) => {
+            return (
+              <div className="min-h-screen">
+                <StoreHeader className="mb-6" />
 
-                  {/* Main Layout with Sidebar and Content */}
-                  <div className="flex gap-8">
-                    {/* Filters Sidebar */}
-                    <div className="w-80 flex-shrink-0">
-                      <div className="sticky top-6">
-                        <FilteredCollection.FiltersLoading>
-                          {({ isFullyLoaded }) => (
-                            <div className="relative">
-                              <ProductFilters
-                                availableOptions={availableOptions}
-                                onFiltersChange={applyFilters}
-                                clearFilters={clearFilters}
-                                currentFilters={currentFilters}
-                                isFiltered={isFiltered}
-                              />
+                {/* Main Layout with Sidebar and Content */}
+                <div className="flex gap-8">
+                  {/* Filters Sidebar */}
+                  <div className="w-80 flex-shrink-0">
+                    <div className="sticky top-6">
+                      <FilteredCollection.FiltersLoading>
+                        {({ isFullyLoaded }) => (
+                          <div className="relative">
+                            <ProductFilters
+                              availableOptions={availableOptions}
+                              onFiltersChange={applyFilters}
+                              clearFilters={clearFilters}
+                              currentFilters={currentFilters}
+                              isFiltered={isFiltered}
+                            />
 
-                              {/* Pulse Loading Overlay */}
-                              {!isFullyLoaded && (
-                                <div className="absolute inset-0 bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl">
-                                  <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[var(--theme-bg-card)] via-[var(--theme-bg-options)] to-[var(--theme-bg-card)] rounded-xl">
-                                    <div className="p-6 space-y-4">
-                                      <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-32"></div>
-                                      <div className="space-y-3">
-                                        <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
-                                        <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
-                                        <div className="h-16 bg-[var(--theme-bg-loading)] rounded"></div>
-                                      </div>
-                                      <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-24"></div>
-                                      <div className="space-y-2">
-                                        <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-                                        <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-                                        <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
-                                      </div>
+                            {/* Pulse Loading Overlay */}
+                            {!isFullyLoaded && (
+                              <div className="absolute inset-0 bg-[var(--theme-bg-options)] backdrop-blur-sm rounded-xl">
+                                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[var(--theme-bg-card)] via-[var(--theme-bg-options)] to-[var(--theme-bg-card)] rounded-xl">
+                                  <div className="p-6 space-y-4">
+                                    <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-32"></div>
+                                    <div className="space-y-3">
+                                      <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
+                                      <div className="h-10 bg-[var(--theme-bg-loading)] rounded"></div>
+                                      <div className="h-16 bg-[var(--theme-bg-loading)] rounded"></div>
+                                    </div>
+                                    <div className="h-6 bg-[var(--theme-bg-primary-20)] rounded w-24"></div>
+                                    <div className="space-y-2">
+                                      <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
+                                      <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
+                                      <div className="h-8 bg-[var(--theme-bg-loading)] rounded"></div>
                                     </div>
                                   </div>
                                 </div>
-                              )}
-                            </div>
-                          )}
-                        </FilteredCollection.FiltersLoading>
-                      </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </FilteredCollection.FiltersLoading>
                     </div>
+                  </div>
 
-                    {/* Main Content Area */}
-                    <div className="flex-1 min-w-0">
-                      {error && (
-                        <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-4 mb-6">
-                          <p className="text-[var(--theme-text-error)]">
-                            {error}
-                          </p>
-                        </div>
-                      )}
+                  {/* Main Content Area */}
+                  <div className="flex-1 min-w-0">
+                    {error && (
+                      <div className="bg-[var(--theme-bg-error)] border border-[var(--theme-border-error)] rounded-xl p-4 mb-6">
+                        <p className="text-[var(--theme-text-error)]">
+                          {error}
+                        </p>
+                      </div>
+                    )}
 
-                      {/* Filter Status Bar */}
-                      {isFiltered && (
-                        <div className="flex items-center justify-between bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] rounded-xl p-4 mb-6">
-                          <div className="flex items-center gap-2">
-                            <svg
-                              className="w-5 h-5 text-[var(--theme-text-primary-400)]"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                              />
-                            </svg>
-                            <span className="text-[var(--theme-text-primary-300)]">
-                              Showing {String(products.length)} of{' '}
-                              {totalProducts} products
-                            </span>
-                          </div>
-                          <button
-                            onClick={clearFilters}
-                            className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors text-sm"
+                    {/* Filter Status Bar */}
+                    {isFiltered && (
+                      <div className="flex items-center justify-between bg-[var(--theme-bg-primary-10)] border border-[var(--theme-border-primary-20)] rounded-xl p-4 mb-6">
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-5 h-5 text-[var(--theme-text-primary-400)]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                           >
-                            Clear Filters
-                          </button>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                            />
+                          </svg>
+                          <span className="text-[var(--theme-text-primary-300)]">
+                            Showing {String(products.length)} of {totalProducts}{' '}
+                            products
+                          </span>
                         </div>
-                      )}
+                        <button
+                          onClick={clearFilters}
+                          className="text-[var(--theme-text-primary-400)] hover:text-[var(--theme-text-primary-300)] transition-colors text-sm"
+                        >
+                          Clear Filters
+                        </button>
+                      </div>
+                    )}
 
-                      {isLoading && products.length === 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {Array.from({ length: 8 }).map((_, i) => (
-                            <div
-                              key={i}
-                              className="bg-[var(--theme-bg-card)] rounded-xl p-4 animate-pulse"
-                            >
-                              <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4"></div>
-                              <div className="h-4 bg-[var(--theme-bg-options)] rounded mb-2"></div>
-                              <div className="h-3 bg-[var(--theme-bg-options)] rounded w-2/3"></div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : isEmpty ? (
-                        <div className="text-center py-16">
-                          <div className="w-24 h-24 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg
-                              className="w-12 h-12 text-[var(--theme-text-content-60)]"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 009.586 13H7"
-                              />
-                            </svg>
+                    {isLoading && products.length === 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="bg-[var(--theme-bg-card)] rounded-xl p-4 animate-pulse"
+                          >
+                            <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4"></div>
+                            <div className="h-4 bg-[var(--theme-bg-options)] rounded mb-2"></div>
+                            <div className="h-3 bg-[var(--theme-bg-options)] rounded w-2/3"></div>
                           </div>
-                          <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
-                            {isFiltered
-                              ? 'No Products Match Your Filters'
-                              : 'No Products Found'}
-                          </h2>
-                          <p className="text-[var(--theme-text-content-70)]">
-                            {isFiltered
-                              ? 'Try adjusting your filters to see more products.'
-                              : "We couldn't find any products to display."}
-                          </p>
+                        ))}
+                      </div>
+                    ) : isEmpty ? (
+                      <div className="text-center py-16">
+                        <div className="w-24 h-24 bg-[var(--theme-bg-options)] rounded-full flex items-center justify-center mx-auto mb-6">
+                          <svg
+                            className="w-12 h-12 text-[var(--theme-text-content-60)]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 009.586 13H7"
+                            />
+                          </svg>
                         </div>
-                      ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {products.map(product => (
-                            <FilteredCollection.Item
-                              key={product._id}
-                              product={product}
-                            >
-                              {({
-                                title,
-                                image,
-                                price,
-                                compareAtPrice,
-                                slug,
-                                description,
-                              }) => (
-                                <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
-                                  <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4 overflow-hidden relative">
-                                    {image ? (
-                                      <WixMediaImage
-                                        media={{ image: image }}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                      />
-                                    ) : (
-                                      <div className="w-full h-full flex items-center justify-center">
-                                        <svg
-                                          className="w-12 h-12 text-[var(--theme-text-content-40)]"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                          />
-                                        </svg>
-                                      </div>
-                                    )}
-                                  </div>
+                        <h2 className="text-2xl font-bold text-[var(--theme-text-content)] mb-4">
+                          {isFiltered
+                            ? 'No Products Match Your Filters'
+                            : 'No Products Found'}
+                        </h2>
+                        <p className="text-[var(--theme-text-content-70)]">
+                          {isFiltered
+                            ? 'Try adjusting your filters to see more products.'
+                            : "We couldn't find any products to display."}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {products.map(product => (
+                          <FilteredCollection.Item
+                            key={product._id}
+                            product={product}
+                          >
+                            {({
+                              title,
+                              image,
+                              price,
+                              compareAtPrice,
+                              slug,
+                              description,
+                            }) => (
+                              <div className="bg-[var(--theme-bg-card)] backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border-card)] hover:border-[var(--theme-border-card-hover)] transition-all duration-200 hover:scale-105 group h-full flex flex-col">
+                                <div className="aspect-square bg-[var(--theme-bg-options)] rounded-lg mb-4 overflow-hidden relative">
+                                  {image ? (
+                                    <WixMediaImage
+                                      media={{ image: image }}
+                                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <svg
+                                        className="w-12 h-12 text-[var(--theme-text-content-40)]"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
+                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                      </svg>
+                                    </div>
+                                  )}
+                                </div>
 
-                                  {product.ribbon?.name && (
-                                    <div className="absolute top-2 left-2">
-                                      <span className="bg-[var(--theme-gradient-ribbon)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded-full font-medium">
-                                        {product.ribbon.name}
-                                      </span>
+                                {product.ribbon?.name && (
+                                  <div className="absolute top-2 left-2">
+                                    <span className="bg-[var(--theme-gradient-ribbon)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded-full font-medium">
+                                      {product.ribbon.name}
+                                    </span>
+                                  </div>
+                                )}
+
+                                <h3 className="text-[var(--theme-text-content)] font-semibold mb-2 line-clamp-2">
+                                  {title}
+                                </h3>
+
+                                {/* Product Options */}
+                                {product.options &&
+                                  product.options.length > 0 && (
+                                    <div className="mb-3 space-y-2">
+                                      {product.options.map((option: any) => (
+                                        <div
+                                          key={option._id}
+                                          className="space-y-1"
+                                        >
+                                          <span className="text-[var(--theme-text-content-80)] text-xs font-medium">
+                                            {String(option.name)}:
+                                          </span>
+                                          <div className="flex flex-wrap gap-1">
+                                            {option.choicesSettings?.choices
+                                              ?.slice(0, 3)
+                                              .map((choice: any) => {
+                                                // Check if this is a color option and if choice has color data
+                                                const isColorOption = String(
+                                                  option.name
+                                                )
+                                                  .toLowerCase()
+                                                  .includes('color');
+                                                const hasColorCode =
+                                                  choice.colorCode ||
+                                                  choice.media?.image;
+
+                                                if (
+                                                  isColorOption &&
+                                                  (choice.colorCode ||
+                                                    hasColorCode)
+                                                ) {
+                                                  return (
+                                                    <div
+                                                      key={choice.choiceId}
+                                                      className="relative group/color"
+                                                    >
+                                                      <div
+                                                        className="w-6 h-6 rounded-full border-2 border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] transition-colors cursor-pointer"
+                                                        style={{
+                                                          backgroundColor:
+                                                            choice.colorCode ||
+                                                            '#000000',
+                                                        }}
+                                                      />
+                                                      {/* Tooltip */}
+                                                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-[var(--theme-bg-tooltip)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                        {String(choice.name)}
+                                                      </div>
+                                                    </div>
+                                                  );
+                                                } else {
+                                                  return (
+                                                    <span
+                                                      key={choice.choiceId}
+                                                      className="inline-flex items-center px-2 py-1 bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] text-xs rounded border border-[var(--theme-border-primary-30)]"
+                                                    >
+                                                      {String(choice.name)}
+                                                    </span>
+                                                  );
+                                                }
+                                              })}
+                                            {option.choicesSettings?.choices
+                                              ?.length > 3 && (
+                                              <span className="text-[var(--theme-text-content-60)] text-xs">
+                                                +
+                                                {option.choicesSettings.choices
+                                                  .length - 3}{' '}
+                                                more
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                      ))}
                                     </div>
                                   )}
 
-                                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-2 line-clamp-2">
-                                    {title}
-                                  </h3>
+                                {description && (
+                                  <p className="text-[var(--theme-text-content-60)] text-sm mb-3 line-clamp-2">
+                                    {description}
+                                  </p>
+                                )}
 
-                                  {/* Product Options */}
-                                  {product.options &&
-                                    product.options.length > 0 && (
-                                      <div className="mb-3 space-y-2">
-                                        {product.options.map((option: any) => (
-                                          <div
-                                            key={option._id}
-                                            className="space-y-1"
-                                          >
-                                            <span className="text-[var(--theme-text-content-80)] text-xs font-medium">
-                                              {String(option.name)}:
-                                            </span>
-                                            <div className="flex flex-wrap gap-1">
-                                              {option.choicesSettings?.choices
-                                                ?.slice(0, 3)
-                                                .map((choice: any) => {
-                                                  // Check if this is a color option and if choice has color data
-                                                  const isColorOption = String(
-                                                    option.name
-                                                  )
-                                                    .toLowerCase()
-                                                    .includes('color');
-                                                  const hasColorCode =
-                                                    choice.colorCode ||
-                                                    choice.media?.image;
-
-                                                  if (
-                                                    isColorOption &&
-                                                    (choice.colorCode ||
-                                                      hasColorCode)
-                                                  ) {
-                                                    return (
-                                                      <div
-                                                        key={choice.choiceId}
-                                                        className="relative group/color"
-                                                      >
-                                                        <div
-                                                          className="w-6 h-6 rounded-full border-2 border-[var(--theme-color-border-40)] hover:border-[var(--theme-color-border-80)] transition-colors cursor-pointer"
-                                                          style={{
-                                                            backgroundColor:
-                                                              choice.colorCode ||
-                                                              '#000000',
-                                                          }}
-                                                        />
-                                                        {/* Tooltip */}
-                                                        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-[var(--theme-bg-tooltip)] text-[var(--theme-text-content)] text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                          {String(choice.name)}
-                                                        </div>
-                                                      </div>
-                                                    );
-                                                  } else {
-                                                    return (
-                                                      <span
-                                                        key={choice.choiceId}
-                                                        className="inline-flex items-center px-2 py-1 bg-[var(--theme-bg-options)] text-[var(--theme-text-content-80)] text-xs rounded border border-[var(--theme-border-primary-30)]"
-                                                      >
-                                                        {String(choice.name)}
-                                                      </span>
-                                                    );
-                                                  }
-                                                })}
-                                              {option.choicesSettings?.choices
-                                                ?.length > 3 && (
-                                                <span className="text-[var(--theme-text-content-60)] text-xs">
-                                                  +
-                                                  {option.choicesSettings
-                                                    .choices.length - 3}{' '}
-                                                  more
-                                                </span>
-                                              )}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-
-                                  {description && (
-                                    <p className="text-[var(--theme-text-content-60)] text-sm mb-3 line-clamp-2">
-                                      {description}
-                                    </p>
-                                  )}
-
-                                  <div className="mt-auto mb-3">
-                                    <div className="space-y-1">
-                                      {(() => {
-                                        const status =
-                                          product?.inventory
-                                            ?.availabilityStatus;
-                                        const stockInfo =
-                                          status === 'IN_STOCK'
+                                <div className="mt-auto mb-3">
+                                  <div className="space-y-1">
+                                    {(() => {
+                                      const status =
+                                        product?.inventory?.availabilityStatus;
+                                      const stockInfo =
+                                        status === 'IN_STOCK'
+                                          ? {
+                                              status: 'In Stock',
+                                              color:
+                                                'text-[var(--theme-text-success)]',
+                                              dotColor:
+                                                'bg-[var(--theme-text-success)]',
+                                            }
+                                          : status === 'PARTIALLY_OUT_OF_STOCK'
                                             ? {
-                                                status: 'In Stock',
+                                                status:
+                                                  'Partially out of stock',
                                                 color:
-                                                  'text-[var(--theme-text-success)]',
+                                                  'text-[var(--theme-text-warning)]',
                                                 dotColor:
-                                                  'bg-[var(--theme-text-success)]',
+                                                  'bg-[var(--theme-text-warning)]',
                                               }
-                                            : status ===
-                                                'PARTIALLY_OUT_OF_STOCK'
-                                              ? {
-                                                  status:
-                                                    'Partially out of stock',
-                                                  color:
-                                                    'text-[var(--theme-text-warning)]',
-                                                  dotColor:
-                                                    'bg-[var(--theme-text-warning)]',
-                                                }
-                                              : {
-                                                  status: 'Out of Stock',
-                                                  color:
-                                                    'text-[var(--theme-text-error)]',
-                                                  dotColor:
-                                                    'bg-[var(--theme-text-error)]',
-                                                };
-                                        return compareAtPrice &&
-                                          parseFloat(
-                                            compareAtPrice.replace(
-                                              /[^\d.]/g,
-                                              ''
-                                            )
-                                          ) > 0 ? (
-                                          <>
-                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                              {price}
-                                            </div>
-                                            <div className="flex items-center justify-between">
-                                              <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
-                                                {compareAtPrice}
-                                              </div>
-                                              <div className="flex items-center gap-2">
-                                                <span
-                                                  className={`${stockInfo.color} text-sm flex items-center gap-1`}
-                                                >
-                                                  <div
-                                                    className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
-                                                  ></div>
-                                                  {stockInfo.status}
-                                                </span>
-                                              </div>
-                                            </div>
-                                          </>
-                                        ) : (
+                                            : {
+                                                status: 'Out of Stock',
+                                                color:
+                                                  'text-[var(--theme-text-error)]',
+                                                dotColor:
+                                                  'bg-[var(--theme-text-error)]',
+                                              };
+                                      return compareAtPrice &&
+                                        parseFloat(
+                                          compareAtPrice.replace(/[^\d.]/g, '')
+                                        ) > 0 ? (
+                                        <>
+                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                            {price}
+                                          </div>
                                           <div className="flex items-center justify-between">
-                                            <div className="text-xl font-bold text-[var(--theme-text-content)]">
-                                              {price}
+                                            <div className="text-sm font-medium text-[var(--theme-text-content-50)] line-through">
+                                              {compareAtPrice}
                                             </div>
                                             <div className="flex items-center gap-2">
                                               <span
@@ -397,161 +374,175 @@ const ProductGridContent = () => {
                                               </span>
                                             </div>
                                           </div>
-                                        );
-                                      })()}
-                                    </div>
-                                  </div>
-
-                                  <div className="flex gap-2">
-                                    <a
-                                      href={`/store/example-2/${slug}`}
-                                      className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                                      style={{
-                                        background: 'var(--theme-btn-primary)',
-                                      }}
-                                      onMouseEnter={e => {
-                                        e.currentTarget.style.background =
-                                          'var(--theme-btn-primary-hover)';
-                                      }}
-                                      onMouseLeave={e => {
-                                        e.currentTarget.style.background =
-                                          'var(--theme-btn-primary)';
-                                      }}
-                                    >
-                                      View Product
-                                      <svg
-                                        className="w-4 h-4"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth="2"
-                                          d="M9 5l7 7-7 7"
-                                        />
-                                      </svg>
-                                    </a>
+                                        </>
+                                      ) : (
+                                        <div className="flex items-center justify-between">
+                                          <div className="text-xl font-bold text-[var(--theme-text-content)]">
+                                            {price}
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            <span
+                                              className={`${stockInfo.color} text-sm flex items-center gap-1`}
+                                            >
+                                              <div
+                                                className={`w-2 h-2 ${stockInfo.dotColor} rounded-full`}
+                                              ></div>
+                                              {stockInfo.status}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
-                              )}
-                            </FilteredCollection.Item>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+
+                                <div className="flex gap-2">
+                                  <a
+                                    href={`/store/example-2/${slug}`}
+                                    className="mt-4 w-full text-[var(--theme-text-content)] font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                    style={{
+                                      background: 'var(--theme-btn-primary)',
+                                    }}
+                                    onMouseEnter={e => {
+                                      e.currentTarget.style.background =
+                                        'var(--theme-btn-primary-hover)';
+                                    }}
+                                    onMouseLeave={e => {
+                                      e.currentTarget.style.background =
+                                        'var(--theme-btn-primary)';
+                                    }}
+                                  >
+                                    View Product
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M9 5l7 7-7 7"
+                                      />
+                                    </svg>
+                                  </a>
+                                </div>
+                              </div>
+                            )}
+                          </FilteredCollection.Item>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              );
-            }}
-          </FilteredCollection.Filters>
-        )}
-      </FilteredCollection.Grid>
-    </FilteredCollection.Provider>
+              </div>
+            );
+          }}
+        </FilteredCollection.Filters>
+      )}
+    </FilteredCollection.Grid>
   );
 };
 
 const LoadMoreSection = () => {
   return (
-    <FilteredCollection.Provider>
-      <FilteredCollection.LoadMore>
-        {({
-          loadMore,
-          refresh,
-          isLoading,
-          hasProducts,
-          totalProducts,
-          hasMoreProducts,
-        }) => {
-          return hasMoreProducts ? (
-            <>
-              {hasProducts && totalProducts > 0 && (
-                <div className="text-center mt-12">
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
-                      onClick={loadMore}
-                      disabled={isLoading}
-                      className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                      style={{
-                        background: isLoading
-                          ? 'linear-gradient(to right, #6b7280, #374151)'
-                          : 'var(--theme-btn-primary)',
-                      }}
-                      onMouseEnter={e => {
-                        if (!isLoading) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-primary-hover)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (!isLoading) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-primary)';
-                        }
-                      }}
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center gap-2">
-                          <svg
-                            className="animate-spin w-5 h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Loading...
-                        </span>
-                      ) : (
-                        'Load More Products'
-                      )}
-                    </button>
+    <FilteredCollection.LoadMore>
+      {({
+        loadMore,
+        refresh,
+        isLoading,
+        hasProducts,
+        totalProducts,
+        hasMoreProducts,
+      }) => {
+        return hasMoreProducts ? (
+          <>
+            {hasProducts && totalProducts > 0 && (
+              <div className="text-center mt-12">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={loadMore}
+                    disabled={isLoading}
+                    className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    style={{
+                      background: isLoading
+                        ? 'linear-gradient(to right, #6b7280, #374151)'
+                        : 'var(--theme-btn-primary)',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background =
+                          'var(--theme-btn-primary-hover)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background =
+                          'var(--theme-btn-primary)';
+                      }
+                    }}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <svg
+                          className="animate-spin w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Loading...
+                      </span>
+                    ) : (
+                      'Load More Products'
+                    )}
+                  </button>
 
-                    <button
-                      onClick={refresh}
-                      disabled={isLoading}
-                      className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{
-                        background: 'var(--theme-btn-secondary)',
-                      }}
-                      onMouseEnter={e => {
-                        if (!isLoading) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-secondary-hover)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (!isLoading) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-secondary)';
-                        }
-                      }}
-                    >
-                      Refresh Products
-                    </button>
-                  </div>
-                  <p className="text-[var(--theme-text-content-60)] text-sm mt-4">
-                    Advanced store experience • {totalProducts} products loaded
-                  </p>
+                  <button
+                    onClick={refresh}
+                    disabled={isLoading}
+                    className="text-[var(--theme-text-content)] font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      background: 'var(--theme-btn-secondary)',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background =
+                          'var(--theme-btn-secondary-hover)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isLoading) {
+                        e.currentTarget.style.background =
+                          'var(--theme-btn-secondary)';
+                      }
+                    }}
+                  >
+                    Refresh Products
+                  </button>
                 </div>
-              )}
-            </>
-          ) : null;
-        }}
-      </FilteredCollection.LoadMore>
-    </FilteredCollection.Provider>
+                <p className="text-[var(--theme-text-content-60)] text-sm mt-4">
+                  Advanced store experience • {totalProducts} products loaded
+                </p>
+              </div>
+            )}
+          </>
+        ) : null;
+      }}
+    </FilteredCollection.LoadMore>
   );
 };
 
