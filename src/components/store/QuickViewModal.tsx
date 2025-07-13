@@ -112,7 +112,7 @@ export default function QuickViewModal({
           media: fullProduct.media?.itemsInfo?.items ?? [],
         });
 
-      setServicesMap(newServicesMap);
+      setServicesMap(servicesMap);
     }
   }, [fullProduct]);
 
