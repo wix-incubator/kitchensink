@@ -71,12 +71,16 @@ export default function WixServicesProvider({
     .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
 
   return (
-    <WixServices servicesMap={servicesMap}>
+    <>
       {showCartIcon ? (
-        <StoreLayout currentCartServiceConfig={null}>{children}</StoreLayout>
+        <StoreLayout currentCartServiceConfig={null} servicesMap={servicesMap}>
+          {children}
+        </StoreLayout>
       ) : (
-        children
+        <WixServices servicesMap={servicesMap}>
+          {children}
+        </WixServices>
       )}
-    </WixServices>
+    </>
   );
 }
