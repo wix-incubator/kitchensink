@@ -41,6 +41,7 @@
     "@wix/services-definitions": "^0.1.1",
     "@wix/services-manager": "^0.2.19",
     "@wix/services-manager-react": "^0.1.26",
+    "@wix/stores": "^1.0.471",
     "astro": "^5.9.0",
     "clsx": "^2.1.1",
     "react": "^18.3.1",

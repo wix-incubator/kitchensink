@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductActions } from '../../headless/store/components';
+import { ProductActions } from '@wix/headless-stores/react';
 
 interface BaseButtonProps {
   disabled: boolean;

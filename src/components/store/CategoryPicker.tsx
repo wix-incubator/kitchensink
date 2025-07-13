@@ -1,5 +1,5 @@
 import { categories } from '@wix/categories';
-import { Category } from '../../headless/store/components';
+import { Category } from '@wix/headless-stores/react';
 
 // Use the Wix SDK category type directly
 type Category = categories.Category;
