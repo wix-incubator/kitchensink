@@ -150,7 +150,7 @@ export default function QuickViewModal({
 
       {/* Modal Container */}
       <div
-        className="relative w-full max-w-6xl mx-4 max-h-[90vh] bg-surface-card rounded-2xl border border-brand-subtle shadow-2xl animate-[slideUp_0.3s_ease-out] overflow-hidden"
+        className="relative w-full max-w-6xl mx-4 max-h-[90vh] bg-surface-modal rounded-2xl border border-brand-subtle shadow-2xl animate-[slideUp_0.3s_ease-out] overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
