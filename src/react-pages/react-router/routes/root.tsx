@@ -7,7 +7,10 @@ import {
   CurrentCartServiceDefinition,
   loadCurrentCartServiceConfig,
 } from '@wix/headless-ecom/services';
-import { MiniCartContent, MiniCartIcon } from '../../../components/ecom/MiniCart';
+import {
+  MiniCartContent,
+  MiniCartIcon,
+} from '../../../components/ecom/MiniCart';
 import { type LineItem } from '../../../headless/ecom/components/CurrentCart';
 import { CurrentCart } from '../../../headless/ecom/components';
 import {
@@ -106,4 +109,4 @@ export const rootRouteDefinition = {
     </RootRoute>
   ),
   loader: rootRouteLoader,
-}; 
+};

@@ -39,4 +39,4 @@ export const productDetailsRouteDefinition = {
   path: '/products/:slug',
   element: <ProductDetailsRoute />,
   loader: productRouteLoader,
-}; 
+};

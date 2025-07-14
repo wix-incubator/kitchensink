@@ -1,10 +1,6 @@
 import { PageDocsRegistration } from '../../../../components/DocsMode';
-import {
-  CurrentCartService,
-} from '@wix/headless-ecom/services';
-import {
-  ProductService,
-} from '@wix/headless-stores/services';
+import { CurrentCartService } from '@wix/headless-ecom/services';
+import { ProductService } from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-1.css';

@@ -82,4 +82,4 @@ export const storeCollectionRouteDefinition = {
   path: '/store/:categorySlug',
   element: <StoreCollectionRoute />,
   loader: storeCollectionRouteLoader,
-}; 
+};
