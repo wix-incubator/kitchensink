@@ -4,7 +4,7 @@ import '../../../styles/theme-2.css';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 import { WixMediaImage } from '../../../headless/media/components';
 import ProductFilters from '../../../components/store/ProductFilters';
-import { FilteredCollection } from '@wix/headless-stores/react';
+import { FilteredCollection } from "@wix/stores/components";
 import {
   CollectionService,
   CollectionServiceDefinition,
