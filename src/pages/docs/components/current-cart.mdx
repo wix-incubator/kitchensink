@@ -488,7 +488,7 @@ import type {
   CartModalProps,
   CartModalRenderProps,
   // ... other interfaces
-} from '../headless/store/components';
+} from ''@wix/headless-stores/react';
 ```
 
 ## Testing
@@ -497,7 +497,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render } from '@testing-library/react';
-import { CurrentCart } from '../headless/store/components';
+import { CurrentCart } from ''@wix/headless-stores/react';
 
 test('CartIcon renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
