@@ -1,6 +1,18 @@
-import { Sort } from '../../headless/store/components';
-import { type SortBy } from '../../headless/store/services/sort-service';
-import { SortType } from '../../headless/store/enums/sort-enums';
+import { Sort } from '@wix/headless-stores/react';
+// TODO: fix enums & types
+// import { type SortBy } from '@wix/headless-stores/services';
+// import { SortType } from '@wix/headless-stores/enums';
+
+enum SortType {
+  NEWEST = 'newest',
+  NAME_ASC = 'name_asc',
+  NAME_DESC = 'name_desc',
+  PRICE_ASC = 'price_asc',
+  PRICE_DESC = 'price_desc',
+  RECOMMENDED = 'recommended',
+}
+
+type SortBy = SortType;
 
 interface SortDropdownProps {}
 
