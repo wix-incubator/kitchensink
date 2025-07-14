@@ -20,6 +20,8 @@ import {
   ProductServiceDefinition,
   SelectedVariantService,
   SelectedVariantServiceDefinition,
+  type Filter,
+  type AvailableOptions,
 } from '@wix/headless-stores/services';
 import {
   MediaGalleryService,
@@ -456,12 +458,10 @@ export const ProductGridContent = ({
             availableOptions,
             isFiltered,
           }: {
-            currentFilters: import('@wix/headless-stores/services').Filter;
-            applyFilters: (
-              filters: import('@wix/headless-stores/services').Filter
-            ) => void;
+            currentFilters: Filter;
+            applyFilters: (filters: Filter) => void;
             clearFilters: () => void;
-            availableOptions: import('@wix/headless-stores/services').AvailableOptions;
+            availableOptions: AvailableOptions;
             isFiltered: boolean;
             allProducts: productsV3.V3Product[];
           }) => {
