@@ -10,10 +10,7 @@ import {
   WixMediaImage,
 } from '../../../../headless/media/components';
 import { CurrentCart } from '../../../../headless/ecom/components';
-import {
-  Product,
-  SelectedVariant,
-} from '../../../../headless/store/components';
+import { Product, SelectedVariant } from '@wix/headless-stores/react';
 import {
   ProductModifiers,
   ProductVariantSelector,

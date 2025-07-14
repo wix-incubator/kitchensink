@@ -41,7 +41,7 @@ import { StoreLayout } from '../layouts/StoreLayout';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '../headless/media/services/media-gallery-service';
+} from '@wix/headless-media/services';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
