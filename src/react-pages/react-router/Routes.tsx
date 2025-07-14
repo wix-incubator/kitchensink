@@ -5,9 +5,9 @@ import ProductList from '../../components/store/ProductList';
 import ProductDetails from '../../components/store/ProductDetails';
 import { ProductServiceDefinition } from '@wix/headless-stores/services';
 import { CategoryServiceDefinition } from '@wix/headless-stores/services';
-import { CurrentCartServiceDefinition } from '../../headless/ecom/services/current-cart-service';
+import { CurrentCartServiceDefinition } from '@wix/headless-ecom/services';
 import '../../styles/theme-wix-vibe.css';
-import { MediaGalleryServiceDefinition } from '../../headless/media/services/media-gallery-service';
+import { MediaGalleryServiceDefinition } from '@wix/headless-media/services';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 
 // Store Route Component with Categories Loading
