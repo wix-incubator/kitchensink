@@ -2,7 +2,7 @@ import { createServicesMap } from '@wix/services-manager';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import {
   ProductService,
   ProductServiceDefinition,

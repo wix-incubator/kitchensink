@@ -19,32 +19,32 @@ import {
   ProductVariantSelector,
   RelatedProducts,
   ProductActions,
-} from '../../../../headless/store/components';
+} from '@wix/headless-stores/react';
 import { SocialSharingButtons } from '../../../../components/social/SocialSharingButtons';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '../../../../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '../../../../headless/store/services/product-modifiers-service';
+} from '@wix/headless-stores/services';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '../../../../headless/store/services/product-service';
+} from '@wix/headless-stores/services';
 import {
   RelatedProductsService,
   RelatedProductsServiceDefinition,
-} from '../../../../headless/store/services/related-products-service';
+} from '@wix/headless-stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '../../../../headless/store/services/selected-variant-service';
+} from '@wix/headless-stores/services';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '../../../../headless/store/services/social-sharing-service';
+} from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-2.css';
@@ -52,7 +52,7 @@ import { getStockStatusMessage } from '../../../../components/store/enums/produc
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '../../../../headless/media/services/media-gallery-service';
+} from '@wix/headless-media/services';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;

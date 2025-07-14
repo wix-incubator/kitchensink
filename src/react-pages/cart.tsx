@@ -8,7 +8,7 @@ import '../styles/theme-1.css';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from '../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
 import CartContent from '../components/ecom/Cart';
 

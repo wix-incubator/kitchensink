@@ -17,7 +17,7 @@ import {
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '../../../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
