@@ -456,10 +456,12 @@ export const ProductGridContent = ({
             availableOptions,
             isFiltered,
           }: {
-            currentFilters: any;
-            applyFilters: (filters: any) => void;
+            currentFilters: import('@wix/headless-stores/services').Filter;
+            applyFilters: (
+              filters: import('@wix/headless-stores/services').Filter
+            ) => void;
             clearFilters: () => void;
-            availableOptions: any;
+            availableOptions: import('@wix/headless-stores/services').AvailableOptions;
             isFiltered: boolean;
             allProducts: productsV3.V3Product[];
           }) => {
