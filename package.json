@@ -43,7 +43,7 @@
     "@wix/services-definitions": "^0.1.1",
     "@wix/services-manager": "^0.2.19",
     "@wix/services-manager-react": "^0.1.26",
-    "@wix/stores": "^1.0.471",
+    "@wix/stores": "https://cdn.dev.wixpress.com/@wix/stores/ac05c1aa1d45a2c4922fea23e8b012d7e1e11e143080932fc08879e9.tar.gz",
     "astro": "^5.9.0",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
@@ -66,5 +66,6 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.7"
-  }
+  },
+  "packageManager": "yarn@3.6.4+sha512.e70835d4d6d62c07be76b3c1529cb640c7443f0fe434ef4b6478a5a399218cbaf1511b396b3c56eb03bc86424cff2320f6167ad2fde273aa0df6e60b7754029f"
 }
