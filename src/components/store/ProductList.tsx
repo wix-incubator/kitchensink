@@ -20,9 +20,11 @@ import {
   ProductServiceDefinition,
   SelectedVariantService,
   SelectedVariantServiceDefinition,
+} from '@wix/headless-stores/services';
+import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/headless-media/services';
 
 export const ProductGridContent = ({
   productPageRoute,
