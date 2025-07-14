@@ -30,13 +30,9 @@ import {
   CollectionServiceDefinition,
 } from '@wix/headless-stores/services';
 import {
-  CatalogPriceRangeService,
-  CatalogPriceRangeServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from '@wix/headless-stores/services';
+  CatalogService,
+  CatalogServiceDefinition,
+} from '../headless/store/services/catalog-service';
 import { StoreLayout } from '../layouts/StoreLayout';
 import {
   MediaGalleryService,
@@ -71,9 +67,8 @@ export default function WixServicesProvider({
     .addService(FilterServiceDefinition, FilterService)
     .addService(CategoryServiceDefinition, CategoryService)
     .addService(SortServiceDefinition, SortService)
-    .addService(CatalogPriceRangeServiceDefinition, CatalogPriceRangeService)
-    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService);
+    .addService(CatalogServiceDefinition, CatalogService)
+    .addService(ProductModifiersServiceDefinition, ProductModifiersService);
 
   return (
     <>

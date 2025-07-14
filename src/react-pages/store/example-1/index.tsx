@@ -2,13 +2,9 @@ import { createServicesMap } from '@wix/services-manager';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CatalogPriceRangeService,
-  CatalogPriceRangeServiceDefinition,
-} from '@wix/headless-stores/services';
+  CatalogService,
+  CatalogServiceDefinition,
+} from '../../../headless/store/services/catalog-service';
 import {
   CategoryService,
   CategoryServiceDefinition,
@@ -97,12 +93,7 @@ export default function StoreCollectionPage({
       .addService(SortServiceDefinition, SortService, {
         initialSort: filteredCollectionServiceConfig.initialSort,
       })
-      .addService(
-        CatalogPriceRangeServiceDefinition,
-        CatalogPriceRangeService,
-        {}
-      )
-      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+      .addService(CatalogServiceDefinition, CatalogService, {})
   );
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
