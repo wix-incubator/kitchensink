@@ -531,7 +531,7 @@ import type {
   CollectionHeaderRenderProps,
   CollectionPaginationProps,
   CollectionPaginationRenderProps,
-} from '../headless/store/components';
+} from ''@wix/headless-stores/react';
 ```
 
 ## Testing
@@ -540,7 +540,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render } from '@testing-library/react';
-import { Collection } from '../headless/store/components';
+import { Collection } from ''@wix/headless-stores/react';
 
 test('ProductGrid renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

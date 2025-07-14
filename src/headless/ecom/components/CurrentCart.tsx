@@ -1,6 +1,6 @@
 import type { ServiceAPI } from '@wix/services-definitions';
 import { useService } from '@wix/services-manager-react';
-import { CurrentCartServiceDefinition } from '../services/current-cart-service';
+import { CurrentCartServiceDefinition } from '@wix/headless-ecom/services';
 import { currentCart } from '@wix/ecom';
 import { media } from '@wix/sdk';
 

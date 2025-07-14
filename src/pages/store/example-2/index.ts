@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { loadCategoriesConfig } from '../../../headless/store/services/category-service';
+import { loadCategoriesConfig } from '@wix/headless-stores/services';
 
 export const GET: APIRoute = async ({ url, redirect }) => {
   // Redirect to the first category (typically "All Products") for consistent URL structure

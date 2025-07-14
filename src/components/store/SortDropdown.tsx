@@ -1,6 +1,4 @@
-import { Sort } from '../../headless/store/components';
-import { type SortBy } from '../../headless/store/services/sort-service';
-import { SortType } from '../../headless/store/enums/sort-enums';
+import { Sort } from '@wix/headless-stores/react';
 
 interface SortDropdownProps {}
 
@@ -8,8 +6,8 @@ function SortDropdownContent({
   sortBy,
   setSortBy,
 }: {
-  sortBy: SortBy;
-  setSortBy: (sortBy: SortBy) => void;
+  sortBy: any;
+  setSortBy: (sortBy: any) => void;
 }) {
   return (
     <div>
@@ -20,7 +18,7 @@ function SortDropdownContent({
       </div>
       <select
         value={sortBy}
-        onChange={e => setSortBy(e.target.value as SortBy)}
+        onChange={e => setSortBy(e.target.value)}
         className="px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary appearance-none min-w-[160px]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='${encodeURIComponent(
@@ -32,37 +30,37 @@ function SortDropdownContent({
         }}
       >
         <option
-          value={SortType.NEWEST}
+          value={'newest'}
           className="bg-surface-primary text-content-primary"
         >
           Latest Arrivals
         </option>
         <option
-          value={SortType.RECOMMENDED}
+          value={'recommended'}
           className="bg-surface-primary text-content-primary"
         >
           Recommended
         </option>
         <option
-          value={SortType.NAME_ASC}
+          value={'name_asc'}
           className="bg-surface-primary text-content-primary"
         >
           Name (A-Z)
         </option>
         <option
-          value={SortType.NAME_DESC}
+          value={'name_desc'}
           className="bg-surface-primary text-content-primary"
         >
           Name (Z-A)
         </option>
         <option
-          value={SortType.PRICE_ASC}
+          value={'price_asc'}
           className="bg-surface-primary text-content-primary"
         >
           Price (Low to High)
         </option>
         <option
-          value={SortType.PRICE_DESC}
+          value={'price_desc'}
           className="bg-surface-primary text-content-primary"
         >
           Price (High to Low)

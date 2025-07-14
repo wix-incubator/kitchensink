@@ -4,7 +4,7 @@ import { createServicesMap } from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from '../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 
 interface StoreLayoutProps {

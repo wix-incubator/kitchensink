@@ -9,7 +9,7 @@ import {
   ProductVariantSelector,
   SelectedVariant,
   ProductActions,
-} from '../../headless/store/components';
+} from '@wix/headless-stores/react';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -18,15 +18,13 @@ import { WixServices } from '@wix/services-manager-react';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '../../headless/store/services/product-service';
-import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '../../headless/store/services/selected-variant-service';
+} from '@wix/headless-stores/services';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '../../headless/media/services/media-gallery-service';
+} from '@wix/headless-media/services';
 
 export const ProductGridContent = ({
   productPageRoute,
@@ -458,12 +456,10 @@ export const ProductGridContent = ({
             availableOptions,
             isFiltered,
           }: {
-            currentFilters: import('../../headless/store/services/filter-service').Filter;
-            applyFilters: (
-              filters: import('../../headless/store/services/filter-service').Filter
-            ) => void;
+            currentFilters: any;
+            applyFilters: (filters: any) => void;
             clearFilters: () => void;
-            availableOptions: import('../../headless/store/services/filter-service').AvailableOptions;
+            availableOptions: any;
             isFiltered: boolean;
             allProducts: productsV3.V3Product[];
           }) => {

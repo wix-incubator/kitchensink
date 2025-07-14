@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import StoreCollectionPage from '../../../../react-pages/store/example-1/index';
-import { loadCollectionServiceConfig } from '../../../../headless/store/services/collection-service';
-import { loadCurrentCartServiceConfig } from '../../../../headless/ecom/services/current-cart-service';
-import { loadCategoriesConfig } from '../../../../headless/store/services/category-service';
+import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import { loadCategoriesConfig } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '../../../../headless/seo/services/seo-tags-service';
 import { SEO } from '../../../../headless/seo/components';
 

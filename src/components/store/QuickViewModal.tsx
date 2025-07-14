@@ -7,23 +7,23 @@ import { useNavigation } from '../NavigationContext';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '../../headless/store/services/product-service';
+} from '@wix/headless-stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '../../headless/store/services/selected-variant-service';
+} from '@wix/headless-stores/services';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '../../headless/media/services/media-gallery-service';
+} from '@wix/headless-media/services';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '../../headless/store/services/product-modifiers-service';
+} from '@wix/headless-stores/services';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '../../headless/store/services/social-sharing-service';
+} from '@wix/headless-stores/services';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -67,7 +67,7 @@ export default function QuickViewModal({
     if (isOpen && product.slug) {
       setIsLoading(true);
       // Import and use the loadProductServiceConfig function to get full product data
-      import('../../headless/store/services/product-service').then(
+      import('@wix/headless-stores/services').then(
         async ({ loadProductServiceConfig }) => {
           try {
             const result = await loadProductServiceConfig(product.slug!);

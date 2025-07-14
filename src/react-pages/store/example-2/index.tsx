@@ -4,37 +4,37 @@ import '../../../styles/theme-2.css';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 import { WixMediaImage } from '../../../headless/media/components';
 import ProductFilters from '../../../components/store/ProductFilters';
-import { FilteredCollection } from '../../../headless/store/components';
+import { FilteredCollection } from '@wix/headless-stores/react';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from '../../../headless/store/services/collection-service';
+} from '@wix/headless-stores/services';
 import { createServicesMap } from '@wix/services-manager';
 import {
   FilterService,
   FilterServiceDefinition,
-} from '../../../headless/store/services/filter-service';
+} from '@wix/headless-stores/services';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '../../../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from '../../../headless/store/services/category-service';
+} from '@wix/headless-stores/services';
 import StoreHeader from '../../../components/store/StoreHeader';
 import {
   SortService,
   SortServiceDefinition,
-} from '../../../headless/store/services/sort-service';
+} from '@wix/headless-stores/services';
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from '../../../headless/store/services/catalog-price-range-service';
+} from '@wix/headless-stores/services';
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
-} from '../../../headless/store/services/catalog-options-service';
+} from '@wix/headless-stores/services';
 
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
