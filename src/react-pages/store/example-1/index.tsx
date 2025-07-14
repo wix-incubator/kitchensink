@@ -4,19 +4,19 @@ import { PageDocsRegistration } from '../../../components/DocsMode';
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
-} from '../../../headless/store/services/catalog-options-service';
+} from '@wix/headless-stores/services';
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from '../../../headless/store/services/catalog-price-range-service';
+} from '@wix/headless-stores/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from '../../../headless/store/services/category-service';
+} from '@wix/headless-stores/services';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from '../../../headless/store/services/collection-service';
+} from '@wix/headless-stores/services';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
@@ -24,11 +24,11 @@ import {
 import {
   FilterService,
   FilterServiceDefinition,
-} from '../../../headless/store/services/filter-service';
+} from '@wix/headless-stores/services';
 import {
   SortService,
   SortServiceDefinition,
-} from '../../../headless/store/services/sort-service';
+} from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../layouts/StoreLayout';
 import '../../../styles/theme-1.css';

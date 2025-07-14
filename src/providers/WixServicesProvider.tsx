@@ -6,37 +6,37 @@ import {
 import {
   ProductService,
   ProductServiceDefinition,
-} from '../headless/store/services/product-service';
+} from '@wix/headless-stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '../headless/store/services/selected-variant-service';
+} from '@wix/headless-stores/services';
 import type { ReactNode } from 'react';
 import { WixServices } from '@wix/services-manager-react';
 import {
   FilterService,
   FilterServiceDefinition,
-} from '../headless/store/services/filter-service';
+} from '@wix/headless-stores/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from '../headless/store/services/category-service';
+} from '@wix/headless-stores/services';
 import {
   SortService,
   SortServiceDefinition,
-} from '../headless/store/services/sort-service';
+} from '@wix/headless-stores/services';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from '../headless/store/services/collection-service';
+} from '@wix/headless-stores/services';
 import {
   CatalogPriceRangeService,
   CatalogPriceRangeServiceDefinition,
-} from '../headless/store/services/catalog-price-range-service';
+} from '@wix/headless-stores/services';
 import {
   CatalogOptionsService,
   CatalogOptionsServiceDefinition,
-} from '../headless/store/services/catalog-options-service';
+} from '@wix/headless-stores/services';
 import { StoreLayout } from '../layouts/StoreLayout';
 import {
   MediaGalleryService,
@@ -45,11 +45,11 @@ import {
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '../headless/store/services/product-modifiers-service';
+} from '@wix/headless-stores/services';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '../headless/store/services/social-sharing-service';
+} from '@wix/headless-stores/services';
 
 export interface WixServicesProviderProps {
   children: ReactNode;
