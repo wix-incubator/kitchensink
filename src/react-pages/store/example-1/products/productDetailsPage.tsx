@@ -10,8 +10,6 @@ import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
 } from '@wix/headless-stores/services';
-import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
-import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-1.css';
 import ProductDetails from '../../../../components/store/ProductDetails';
 import {
@@ -24,7 +22,6 @@ import {
   SocialSharingServiceDefinition,
 } from '@wix/headless-stores/services';
 import { createServicesMap } from '@wix/services-manager';
-import type { ServiceFactoryConfig } from '@wix/services-manager/types';
 import { WixServices } from '@wix/services-manager-react';
 
 interface ProductDetailPageProps {

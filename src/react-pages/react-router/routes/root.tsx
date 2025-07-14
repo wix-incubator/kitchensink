@@ -6,7 +6,7 @@ import {
   CurrentCartService,
   CurrentCartServiceDefinition,
   loadCurrentCartServiceConfig,
-} from '../../../headless/ecom/services/current-cart-service';
+} from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../../../components/ecom/MiniCart';
 import { type LineItem } from '../../../headless/ecom/components/CurrentCart';
 import { CurrentCart } from '../../../headless/ecom/components';

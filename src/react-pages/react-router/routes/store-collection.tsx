@@ -1,7 +1,7 @@
 import { useLoaderData, redirect } from 'react-router-dom';
-import { loadCategoriesConfig } from '../../../headless/store/services/category-service';
-import { loadCollectionServiceConfig } from '../../../headless/store/services/collection-service';
-import { loadCurrentCartServiceConfig } from '../../../headless/ecom/services/current-cart-service';
+import { loadCategoriesConfig } from '@wix/headless-stores/services';
+import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import CategoryPage from '../../store/example-1/categoryPage';
 
 export async function storeCollectionRouteLoader({
