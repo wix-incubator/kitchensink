@@ -433,191 +433,190 @@ export const ProductGridContent = ({
   };
 
   return (
-    // <FilteredCollection.Grid>
-    //   {({
-    //     products,
-    //     isLoading,
-    //     error,
-    //     isEmpty,
-    //     totalProducts,
-    //   }: {
-    //     products: productsV3.V3Product[];
-    //     isLoading: boolean;
-    //     error: string | null;
-    //     isEmpty: boolean;
-    //     totalProducts: number;
-    //     hasMoreProducts: boolean;
-    //   }) => (
-    //     <FilteredCollection.Filters>
-    //       {({
-    //         currentFilters,
-    //         applyFilters,
-    //         clearFilters,
-    //         availableOptions,
-    //         isFiltered,
-    //       }: {
-    //         currentFilters: import('@wix/headless-stores/services').Filter;
-    //         applyFilters: (
-    //           filters: import('@wix/headless-stores/services').Filter
-    //         ) => void;
-    //         clearFilters: () => void;
-    //         availableOptions: import('@wix/headless-stores/services').AvailableOptions;
-    //         isFiltered: boolean;
-    //         allProducts: productsV3.V3Product[];
-    //       }) => {
-    //         return (
-    //           <div className="min-h-screen">
-    //             <StoreHeader className="mb-6" />
+    <FilteredCollection.Grid>
+      {({
+        products,
+        isLoading,
+        error,
+        isEmpty,
+        totalProducts,
+      }: {
+        products: productsV3.V3Product[];
+        isLoading: boolean;
+        error: string | null;
+        isEmpty: boolean;
+        totalProducts: number;
+        hasMoreProducts: boolean;
+      }) => (
+        <FilteredCollection.Filters>
+          {({
+            currentFilters,
+            applyFilters,
+            clearFilters,
+            availableOptions,
+            isFiltered,
+          }: {
+            currentFilters: import('@wix/headless-stores/services').Filter;
+            applyFilters: (
+              filters: import('@wix/headless-stores/services').Filter
+            ) => void;
+            clearFilters: () => void;
+            availableOptions: import('@wix/headless-stores/services').AvailableOptions;
+            isFiltered: boolean;
+            allProducts: productsV3.V3Product[];
+          }) => {
+            return (
+              <div className="min-h-screen">
+                <StoreHeader className="mb-6" />
 
-    //             {/* Main Layout with Sidebar and Content */}
-    //             <div className="flex gap-8">
-    //               {/* Filters Sidebar */}
-    //               <div className="w-80 flex-shrink-0">
-    //                 <div className="sticky top-6">
-    //                   <FilteredCollection.FiltersLoading>
-    //                     {({ isFullyLoaded }) => (
-    //                       <div className="relative">
-    //                         <ProductFilters
-    //                           availableOptions={availableOptions}
-    //                           onFiltersChange={applyFilters}
-    //                           clearFilters={clearFilters}
-    //                           currentFilters={currentFilters}
-    //                           isFiltered={isFiltered}
-    //                         />
+                {/* Main Layout with Sidebar and Content */}
+                <div className="flex gap-8">
+                  {/* Filters Sidebar */}
+                  <div className="w-80 flex-shrink-0">
+                    <div className="sticky top-6">
+                      <FilteredCollection.FiltersLoading>
+                        {({ isFullyLoaded }) => (
+                          <div className="relative">
+                            <ProductFilters
+                              availableOptions={availableOptions}
+                              onFiltersChange={applyFilters}
+                              clearFilters={clearFilters}
+                              currentFilters={currentFilters}
+                              isFiltered={isFiltered}
+                            />
 
-    //                         {/* Pulse Loading Overlay */}
-    //                         {!isFullyLoaded && (
-    //                           <div className="absolute inset-0 bg-surface-primary backdrop-blur-sm rounded-xl">
-    //                             <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-bg-surface-card via-bg-surface-primary to-bg-surface-card rounded-xl">
-    //                               <div className="p-6 space-y-4">
-    //                                 <div className="h-6 bg-brand-medium rounded w-32"></div>
-    //                                 <div className="space-y-3">
-    //                                   <div className="h-10 bg-surface-loading rounded"></div>
-    //                                   <div className="h-10 bg-surface-loading rounded"></div>
-    //                                   <div className="h-16 bg-surface-loading rounded"></div>
-    //                                 </div>
-    //                                 <div className="h-6 bg-brand-medium rounded w-24"></div>
-    //                                 <div className="space-y-2">
-    //                                   <div className="h-8 bg-surface-loading rounded"></div>
-    //                                   <div className="h-8 bg-surface-loading rounded"></div>
-    //                                   <div className="h-8 bg-surface-loading rounded"></div>
-    //                                 </div>
-    //                               </div>
-    //                             </div>
-    //                           </div>
-    //                         )}
-    //                       </div>
-    //                     )}
-    //                   </FilteredCollection.FiltersLoading>
-    //                 </div>
-    //               </div>
+                            {/* Pulse Loading Overlay */}
+                            {!isFullyLoaded && (
+                              <div className="absolute inset-0 bg-surface-primary backdrop-blur-sm rounded-xl">
+                                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-bg-surface-card via-bg-surface-primary to-bg-surface-card rounded-xl">
+                                  <div className="p-6 space-y-4">
+                                    <div className="h-6 bg-brand-medium rounded w-32"></div>
+                                    <div className="space-y-3">
+                                      <div className="h-10 bg-surface-loading rounded"></div>
+                                      <div className="h-10 bg-surface-loading rounded"></div>
+                                      <div className="h-16 bg-surface-loading rounded"></div>
+                                    </div>
+                                    <div className="h-6 bg-brand-medium rounded w-24"></div>
+                                    <div className="space-y-2">
+                                      <div className="h-8 bg-surface-loading rounded"></div>
+                                      <div className="h-8 bg-surface-loading rounded"></div>
+                                      <div className="h-8 bg-surface-loading rounded"></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </FilteredCollection.FiltersLoading>
+                    </div>
+                  </div>
 
-    //               {/* Main Content Area */}
-    //               <div className="flex-1 min-w-0">
-    //                 {error && (
-    //                   <div className="bg-surface-error border border-status-error rounded-xl p-4 mb-6">
-    //                     <p className="text-status-error">{error}</p>
-    //                   </div>
-    //                 )}
+                  {/* Main Content Area */}
+                  <div className="flex-1 min-w-0">
+                    {error && (
+                      <div className="bg-surface-error border border-status-error rounded-xl p-4 mb-6">
+                        <p className="text-status-error">{error}</p>
+                      </div>
+                    )}
 
-    //                 {/* Filter Status Bar */}
-    //                 {isFiltered && (
-    //                   <div className="flex items-center justify-between filter-status-bar rounded-xl p-4 mb-6">
-    //                     <div className="flex items-center gap-2">
-    //                       <svg
-    //                         className="w-5 h-5 text-brand-primary"
-    //                         fill="none"
-    //                         viewBox="0 0 24 24"
-    //                         stroke="currentColor"
-    //                       >
-    //                         <path
-    //                           strokeLinecap="round"
-    //                           strokeLinejoin="round"
-    //                           strokeWidth="2"
-    //                           d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-    //                         />
-    //                       </svg>
-    //                       <span className="text-brand-light">
-    //                         Showing {String(products.length)} of {totalProducts}{' '}
-    //                         products
-    //                       </span>
-    //                     </div>
-    //                     <button
-    //                       onClick={clearFilters}
-    //                       className="text-brand-primary hover:text-brand-light transition-colors text-sm"
-    //                     >
-    //                       Clear Filters
-    //                     </button>
-    //                   </div>
-    //                 )}
+                    {/* Filter Status Bar */}
+                    {isFiltered && (
+                      <div className="flex items-center justify-between filter-status-bar rounded-xl p-4 mb-6">
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-5 h-5 text-brand-primary"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                            />
+                          </svg>
+                          <span className="text-brand-light">
+                            Showing {String(products.length)} of {totalProducts}{' '}
+                            products
+                          </span>
+                        </div>
+                        <button
+                          onClick={clearFilters}
+                          className="text-brand-primary hover:text-brand-light transition-colors text-sm"
+                        >
+                          Clear Filters
+                        </button>
+                      </div>
+                    )}
 
-    //                 {isLoading && products.length === 0 ? (
-    //                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    //                     {Array.from({ length: 8 }).map((_, i) => (
-    //                       <div
-    //                         key={i}
-    //                         className="bg-surface-card rounded-xl p-4 animate-pulse"
-    //                       >
-    //                         <div className="aspect-square bg-surface-primary rounded-lg mb-4"></div>
-    //                         <div className="h-4 bg-surface-primary rounded mb-2"></div>
-    //                         <div className="h-3 bg-surface-primary rounded w-2/3"></div>
-    //                       </div>
-    //                     ))}
-    //                   </div>
-    //                 ) : isEmpty ? (
-    //                   <div className="text-center py-16">
-    //                     <div className="w-24 h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-6">
-    //                       <svg
-    //                         className="w-12 h-12 text-content-muted"
-    //                         fill="none"
-    //                         viewBox="0 0 24 24"
-    //                         stroke="currentColor"
-    //                       >
-    //                         <path
-    //                           strokeLinecap="round"
-    //                           strokeLinejoin="round"
-    //                           strokeWidth="2"
-    //                           d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-    //                         />
-    //                       </svg>
-    //                     </div>
-    //                     <h2 className="text-2xl font-bold text-content-primary mb-4">
-    //                       {isFiltered
-    //                         ? 'No Products Match Your Filters'
-    //                         : 'No Products Found'}
-    //                     </h2>
-    //                     <p className="text-content-light">
-    //                       {isFiltered
-    //                         ? 'Try adjusting your filters to see more products.'
-    //                         : "We couldn't find any products to display."}
-    //                     </p>
-    //                   </div>
-    //                 ) : (
-    //                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    //                     {products.map((product: productsV3.V3Product) => (
-    //                       <ProductItem key={product._id} product={product} />
-    //                     ))}
-    //                   </div>
-    //                 )}
-    //               </div>
-    //             </div>
+                    {isLoading && products.length === 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="bg-surface-card rounded-xl p-4 animate-pulse"
+                          >
+                            <div className="aspect-square bg-surface-primary rounded-lg mb-4"></div>
+                            <div className="h-4 bg-surface-primary rounded mb-2"></div>
+                            <div className="h-3 bg-surface-primary rounded w-2/3"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : isEmpty ? (
+                      <div className="text-center py-16">
+                        <div className="w-24 h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                          <svg
+                            className="w-12 h-12 text-content-muted"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                          </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-content-primary mb-4">
+                          {isFiltered
+                            ? 'No Products Match Your Filters'
+                            : 'No Products Found'}
+                        </h2>
+                        <p className="text-content-light">
+                          {isFiltered
+                            ? 'Try adjusting your filters to see more products.'
+                            : "We couldn't find any products to display."}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {products.map((product: productsV3.V3Product) => (
+                          <ProductItem key={product._id} product={product} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-    //             {/* Quick View Modal */}
-    //             {quickViewProduct && (
-    //               <QuickViewModal
-    //                 product={quickViewProduct}
-    //                 isOpen={isQuickViewOpen}
-    //                 onClose={closeQuickView}
-    //                 productPageRoute={productPageRoute}
-    //               />
-    //             )}
-    //           </div>
-    //         );
-    //       }}
-    //     </FilteredCollection.Filters>
-    //   )}
-    // </FilteredCollection.Grid>
-    <div>Grid</div>
+                {/* Quick View Modal */}
+                {quickViewProduct && (
+                  <QuickViewModal
+                    product={quickViewProduct}
+                    isOpen={isQuickViewOpen}
+                    onClose={closeQuickView}
+                    productPageRoute={productPageRoute}
+                  />
+                )}
+              </div>
+            );
+          }}
+        </FilteredCollection.Filters>
+      )}
+    </FilteredCollection.Grid>
   );
 };
 

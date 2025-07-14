@@ -64,26 +64,26 @@ export default function QuickViewModal({
 
   // Load full product data when modal opens
   useEffect(() => {
-    // if (isOpen && product.slug) {
-    //   setIsLoading(true);
-    //   // Import and use the loadProductServiceConfig function to get full product data
-    //   import('../../headless/store/services/product-service').then(
-    //     async ({ loadProductServiceConfig }) => {
-    //       try {
-    //         const result = await loadProductServiceConfig(product.slug!);
-    //         if (result.type === 'success') {
-    //           setFullProduct(result.config.product);
-    //         }
-    //       } catch (error) {
-    //         console.error('Failed to load full product data:', error);
-    //         // Fallback to original product data
-    //         setFullProduct(product);
-    //       } finally {
-    //         setIsLoading(false);
-    //       }
-    //     }
-    //   );
-    // }
+    if (isOpen && product.slug) {
+      setIsLoading(true);
+      // Import and use the loadProductServiceConfig function to get full product data
+      import('@wix/headless-stores/services').then(
+        async ({ loadProductServiceConfig }) => {
+          try {
+            const result = await loadProductServiceConfig(product.slug!);
+            if (result.type === 'success') {
+              setFullProduct(result.config.product);
+            }
+          } catch (error) {
+            console.error('Failed to load full product data:', error);
+            // Fallback to original product data
+            setFullProduct(product);
+          } finally {
+            setIsLoading(false);
+          }
+        }
+      );
+    }
   }, [isOpen, product.slug]);
 
   // Handle success message timer
