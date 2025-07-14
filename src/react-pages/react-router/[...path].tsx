@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import {
   rootRouteDefinition,
   productDetailsRouteDefinition,
@@ -11,6 +11,10 @@ import '../../styles/theme-wix-vibe.css';
 
 const router = createBrowserRouter(
   [
+    {
+      path: '/',
+      element: <Navigate to="/store" />,
+    },
     {
       ...rootRouteDefinition,
       children: [

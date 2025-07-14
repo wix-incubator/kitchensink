@@ -102,7 +102,6 @@ export function RootRoute(props: { children: React.ReactNode }) {
 }
 
 export const rootRouteDefinition = {
-  path: '/',
   element: (
     <RootRoute>
       <Outlet />

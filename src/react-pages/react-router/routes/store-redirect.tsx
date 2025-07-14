@@ -12,4 +12,5 @@ export const storeRedirectRouteDefinition = {
   path: '/store',
   element: <></>,
   loader: defaultStoreCollectionRouteRedirectLoader,
+  index: true,
 };
