@@ -7,6 +7,7 @@ import { ProductServiceDefinition } from '@wix/headless-stores/services';
 import { CategoryServiceDefinition } from '@wix/headless-stores/services';
 import { CurrentCartServiceDefinition } from '@wix/headless-ecom/services';
 import '../../styles/theme-wix-vibe.css';
+import '../../styles/global.css';
 import { MediaGalleryServiceDefinition } from '@wix/headless-media/services';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 
