@@ -2,15 +2,22 @@ import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
+  Outlet,
 } from 'react-router-dom';
-import {
-  rootRouteDefinition,
-  productDetailsRouteDefinition,
-  storeCollectionRouteDefinition,
-  storeRedirectRouteDefinition,
-  cartRouteDefinition,
-} from './routes/index';
 import '../../styles/theme-wix-vibe.css';
+
+// Import route components and loaders
+import { RootRoute, rootRouteLoader } from './routes/root';
+import {
+  ProductDetailsRoute,
+  productRouteLoader,
+} from './routes/product-details';
+import {
+  StoreCollectionRoute,
+  storeCollectionRouteLoader,
+} from './routes/store-collection';
+import { defaultStoreCollectionRouteRedirectLoader } from './routes/store-redirect';
+import Cart from '../../components/ecom/Cart';
 
 const router = createBrowserRouter(
   [
@@ -19,12 +26,33 @@ const router = createBrowserRouter(
       element: <Navigate to="/store" />,
     },
     {
-      ...rootRouteDefinition,
+      element: (
+        <RootRoute>
+          <Outlet />
+        </RootRoute>
+      ),
+      loader: rootRouteLoader,
       children: [
-        productDetailsRouteDefinition,
-        storeRedirectRouteDefinition,
-        storeCollectionRouteDefinition,
-        cartRouteDefinition,
+        {
+          path: '/products/:slug',
+          element: <ProductDetailsRoute />,
+          loader: productRouteLoader,
+        },
+        {
+          path: '/store',
+          element: <></>,
+          loader: defaultStoreCollectionRouteRedirectLoader,
+          index: true,
+        },
+        {
+          path: '/store/:categorySlug',
+          element: <StoreCollectionRoute />,
+          loader: storeCollectionRouteLoader,
+        },
+        {
+          path: '/cart',
+          element: <Cart />,
+        },
       ],
     },
   ],
