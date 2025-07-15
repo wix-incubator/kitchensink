@@ -1,4 +1,8 @@
-import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 import {
   rootRouteDefinition,
   productDetailsRouteDefinition,
