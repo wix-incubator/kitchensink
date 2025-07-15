@@ -4,8 +4,8 @@ import StoreCollectionPage from '../../../../react-pages/store/example-2/index';
 import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadSEOTagsServiceConfig } from '../../../../headless/seo/services/seo-tags-service';
-import { SEO } from '../../../../headless/seo/components';
+import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import { SEO } from '@wix/headless-seo/react';
 
 // Get category slug from URL params
 const { categorySlug } = Astro.params;

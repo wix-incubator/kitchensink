@@ -33,6 +33,7 @@
     "@wix/essentials": "^0.1.24",
     "@wix/headless-ecom": "^0.0.4",
     "@wix/headless-media": "^0.0.2",
+    "@wix/headless-seo": "^0.0.4",
     "@wix/headless-stores": "^0.0.17",
     "@wix/image": "^1.392.0",
     "@wix/media": "^1.0.170",
