@@ -3,7 +3,7 @@ import {
   PhotoUpload,
   CurrentMemberProfile,
 } from '../headless/members/components';
-import { FileUpload } from '../headless/media/components';
+import { FileUpload } from '@wix/headless-media/react';
 
 interface PhotoUploadDialogProps {
   isOpen: boolean;

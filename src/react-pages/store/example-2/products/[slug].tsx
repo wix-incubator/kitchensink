@@ -5,10 +5,8 @@ import {
 } from '@wix/services-manager';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
-import {
-  MediaGallery,
-  WixMediaImage,
-} from '../../../../headless/media/components';
+import { MediaGallery } from '@wix/headless-media/react';
+import { WixMediaImage } from '../../../../headless/media/components';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import { Product, SelectedVariant } from '@wix/headless-stores/react';
 import {
