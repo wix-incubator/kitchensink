@@ -95,7 +95,7 @@ function CategoryPage({
 
   return (
     <WixServices servicesMap={servicesMap}>
-        <ProductList productPageRoute={productPageRoute} />
+      <ProductList productPageRoute={productPageRoute} />
     </WixServices>
   );
 }
