@@ -1,4 +1,4 @@
-import { CurrentCart } from '../../headless/ecom/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 import { WixMediaImage } from '../../headless/media/components';
 import { useNavigation } from '../NavigationContext';
 

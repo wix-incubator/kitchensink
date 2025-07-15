@@ -27,8 +27,8 @@ import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
 } from '@wix/headless-media/services';
-import { CurrentCart } from '../../headless/ecom/components';
-import type { LineItem } from '../../headless/ecom/components/CurrentCart';
+import { CurrentCart } from '@wix/headless-ecom/react';
+import type { LineItem } from '@wix/headless-ecom/services';
 
 export const ProductGridContent = ({
   productPageRoute,

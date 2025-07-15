@@ -7,7 +7,7 @@ import {
   ProductActions,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
-import { CurrentCart } from '../../headless/ecom/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';

@@ -9,7 +9,7 @@ import {
   MediaGallery,
   WixMediaImage,
 } from '../../../../headless/media/components';
-import { CurrentCart } from '../../../../headless/ecom/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 import { Product, SelectedVariant } from '@wix/headless-stores/react';
 import {
   ProductModifiers,
