@@ -9,7 +9,7 @@ The `CurrentCart` namespace contains headless components for managing shopping c
 ## Overview
 
 ```tsx
-import { CurrentCart } from 'headless/store/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 
 // All available components
 const {
@@ -497,7 +497,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render } from '@testing-library/react';
-import { CurrentCart } from ''@wix/headless-stores/react';
+import { CurrentCart } from '@wix/headless-ecom/react';
 
 test('CartIcon renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

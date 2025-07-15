@@ -6,7 +6,7 @@ import {
   CurrentCartService,
 } from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
-import { CurrentCart } from '../headless/ecom/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 
 interface StoreLayoutProps {
   children: ReactNode;

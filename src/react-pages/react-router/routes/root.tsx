@@ -11,7 +11,7 @@ import {
   MiniCartContent,
   MiniCartIcon,
 } from '../../../components/ecom/MiniCart';
-import { CurrentCart } from '../../../headless/ecom/components';
+import { CurrentCart } from '@wix/headless-ecom/react';
 import {
   NavigationProvider,
   type NavigationComponent,
