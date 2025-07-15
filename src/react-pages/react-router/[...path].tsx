@@ -10,7 +10,6 @@ import {
   storeRedirectRouteDefinition,
   cartRouteDefinition,
 } from './routes/index';
-import '../../styles/theme-1.css'; // TODO: probaby needs fixing?
 import '../../styles/theme-wix-vibe.css';
 
 const router = createBrowserRouter(

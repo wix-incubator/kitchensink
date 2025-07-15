@@ -24,7 +24,6 @@ import {
   SortService,
   SortServiceDefinition,
 } from '@wix/headless-stores/services';
-import '../../../styles/theme-1.css';
 import ProductList from '../../../components/store/ProductList';
 import { WixServices } from '@wix/services-manager-react';
 
