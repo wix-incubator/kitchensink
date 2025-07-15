@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
   Outlet,
 } from 'react-router-dom';
-import '../../styles/theme-wix-vibe.css';
 
 // Import route components and loaders
 import { RootRoute, rootRouteLoader } from './routes/root';

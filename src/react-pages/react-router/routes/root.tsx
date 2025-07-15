@@ -17,6 +17,8 @@ import {
   type NavigationComponent,
 } from '../../../components/NavigationContext';
 import { Link } from 'react-router-dom';
+import '../../../styles/theme-wix-vibe.css';
+import '../../../styles/global.css';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
   route,
