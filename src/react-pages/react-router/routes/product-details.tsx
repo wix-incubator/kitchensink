@@ -4,7 +4,7 @@ import {
   ProductService,
 } from '@wix/headless-stores/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
-import ProductDetailPage from '../../store/example-1/products/productDetailsPage';
+import ProductDetailPage from '../../store/main-components/productDetailsPage';
 
 export async function productRouteLoader({
   params,

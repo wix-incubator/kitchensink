@@ -10,7 +10,7 @@ import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
 } from '@wix/headless-stores/services';
-import ProductDetails from '../../../../components/store/ProductDetails';
+import ProductDetails from '../../../components/store/ProductDetails';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,

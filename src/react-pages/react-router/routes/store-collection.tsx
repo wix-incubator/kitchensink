@@ -2,7 +2,7 @@ import { useLoaderData, redirect } from 'react-router-dom';
 import { loadCategoriesConfig } from '@wix/headless-stores/services';
 import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import CategoryPage from '../../store/example-1/categoryPage';
+import CategoryPage from '../../store/main-components/categoryPage';
 
 export async function storeCollectionRouteLoader({
   params,
