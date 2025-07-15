@@ -8,8 +8,14 @@ import '../../styles/theme-wix-vibe.css';
 
 // Import route components and loaders
 import { RootRoute, rootRouteLoader } from './routes/root';
-import { ProductDetailsRoute, productRouteLoader } from './routes/product-details';
-import { StoreCollectionRoute, storeCollectionRouteLoader } from './routes/store-collection';
+import {
+  ProductDetailsRoute,
+  productRouteLoader,
+} from './routes/product-details';
+import {
+  StoreCollectionRoute,
+  storeCollectionRouteLoader,
+} from './routes/store-collection';
 import { defaultStoreCollectionRouteRedirectLoader } from './routes/store-redirect';
 import Cart from '../../components/ecom/Cart';
 
