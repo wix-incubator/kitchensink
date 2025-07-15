@@ -100,7 +100,7 @@ export function StoreCollectionRoute({
   productPageRoute: string;
   storeRoute: string;
 }) {
-  const basename = useHref('/'); 
+  const basename = useHref('/');
   const {
     categoriesConfig,
     selectedCategory,
