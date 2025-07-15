@@ -25,7 +25,7 @@ import {
   SocialSharingServiceDefinition,
 } from '@wix/headless-stores/services';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import type { LineItem } from '@wix/headless-ecom/react';
+import type { LineItem } from '@wix/headless-ecom/services';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
