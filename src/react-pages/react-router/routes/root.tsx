@@ -86,7 +86,7 @@ export function RootRoute(props: { children: React.ReactNode }) {
 
           {showSuccessMessage && (
             <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
-              Added to cart successfully blyat!
+              Added to cart successfully!
             </div>
           )}
 
