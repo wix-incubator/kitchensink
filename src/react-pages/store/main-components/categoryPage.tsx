@@ -95,18 +95,7 @@ function CategoryPage({
 
   return (
     <WixServices servicesMap={servicesMap}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[var(--theme-text-content)] mb-4">
-            Product Collection - Example 1
-          </h1>
-          <p className="text-[var(--theme-text-content-70)] text-lg">
-            Browse our collection of amazing products with advanced filtering
-          </p>
-        </div>
-
-        <ProductList productPageRoute={productPageRoute} />
-      </div>
+      <ProductList productPageRoute={productPageRoute} />
     </WixServices>
   );
 }
