@@ -1,35 +1,12 @@
-import { createServicesMap } from '@wix/services-manager';
-import { useState } from 'react';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-} from '@wix/headless-ecom/services';
-import {
-  ProductModifiersService,
-  ProductModifiersServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  ProductService,
-  ProductServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  SelectedVariantService,
-  SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
+import { CurrentCartService } from '@wix/headless-ecom/services';
+import { ProductService } from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-1.css';
-import ProductDetails from '../../../../components/store/ProductDetails';
-import {
-  MediaGalleryService,
-  MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
-import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
+
+import ProductDetailsPage from './productDetailsPage';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
@@ -40,32 +17,10 @@ export default function ProductDetailPage({
   productServiceConfig,
   currentCartServiceConfig,
 }: ProductDetailPageProps) {
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
-  // Create services manager with all required services
-  const servicesMap = createServicesMap()
-    .addService(ProductServiceDefinition, ProductService, productServiceConfig)
-    .addService(
-      CurrentCartServiceDefinition,
-      CurrentCartService,
-      currentCartServiceConfig
-    )
-    .addService(SocialSharingServiceDefinition, SocialSharingService)
-    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
-      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
-    });
-
   return (
     <>
       <KitchensinkLayout>
-        <StoreLayout
-          currentCartServiceConfig={currentCartServiceConfig}
-          servicesMap={servicesMap}
-          showSuccessMessage={showSuccessMessage}
-          onSuccessMessageChange={setShowSuccessMessage}
-        >
+        <StoreLayout currentCartServiceConfig={currentCartServiceConfig}>
           {/* Register page documentation */}
           <PageDocsRegistration
             title="Product Detail Page"
@@ -73,35 +28,7 @@ export default function ProductDetailPage({
             docsUrl="/docs/examples/product-detail-overview"
           />
 
-          {/* Main Content */}
-          <div className="min-h-screen p-6">
-            <div className="max-w-7xl mx-auto">
-              {/* Back to Store */}
-              <div className="mb-8">
-                <a
-                  href="/store/example-1"
-                  className="inline-flex items-center gap-2 text-[var(--theme-text-content-60)] hover:text-[var(--theme-text-content)] transition-colors"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                  Back to Store
-                </a>
-              </div>
-
-              <ProductDetails setShowSuccessMessage={setShowSuccessMessage} />
-            </div>
-          </div>
+          <ProductDetailsPage productServiceConfig={productServiceConfig} />
         </StoreLayout>
       </KitchensinkLayout>
     </>
