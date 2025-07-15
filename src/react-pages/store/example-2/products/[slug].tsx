@@ -10,13 +10,13 @@ import {
   WixMediaImage,
 } from '../../../../headless/media/components';
 import { CurrentCart } from '../../../../headless/ecom/components';
-import { Product, SelectedVariant } from '@wix/headless-stores/react';
+import { Product, SelectedVariant } from '@wix/stores/components';
 import {
   ProductModifiers,
   ProductVariantSelector,
   RelatedProducts,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from '@wix/stores/components';
 import { SocialSharingButtons } from '../../../../components/social/SocialSharingButtons';
 import {
   CurrentCartService,

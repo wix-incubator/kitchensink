@@ -5,7 +5,7 @@ import {
   ProductVariantSelector,
   SelectedVariant,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from "@wix/stores/components";
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '../../headless/ecom/components';
 import { SocialSharingButtons } from '../social/SocialSharingButtons';

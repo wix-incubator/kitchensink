@@ -9,7 +9,7 @@ import {
   ProductVariantSelector,
   SelectedVariant,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from '@wix/stores/components';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
