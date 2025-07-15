@@ -54,7 +54,7 @@ test.describe('React Router Page - Initialization', () => {
 
     await page.waitForTimeout(2000);
 
-    await expect(page).toHaveURL(/\/react-router\/store$/, { timeout: 10000 });
+    await expect(page).toHaveURL(/\/react-router\/store\/all-products$/, { timeout: 10000 });
 
     const storeContent = page.locator('body');
     await expect(storeContent).toBeVisible();
