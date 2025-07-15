@@ -115,11 +115,31 @@
   --theme-bg-accent-20: rgba(20, 184, 166, 0.2); /* Medium accent background */
 
   /* Social Sharing Background Colors */
-  --theme-bg-social-button: rgba(255, 255, 255, 0.1); /* Social button background */
+  --theme-bg-social-button: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Social button background */
   --theme-bg-social-x: rgba(255, 255, 255, 0.2); /* X hover background */
-  --theme-bg-social-facebook: rgba(24, 119, 242, 0.2); /* Facebook hover background */
-  --theme-bg-social-linkedin: rgba(0, 119, 181, 0.2); /* LinkedIn hover background */
-  --theme-bg-social-link: rgba(20, 184, 166, 0.2); /* Link/copy hover background */
+  --theme-bg-social-facebook: rgba(
+    24,
+    119,
+    242,
+    0.2
+  ); /* Facebook hover background */
+  --theme-bg-social-linkedin: rgba(
+    0,
+    119,
+    181,
+    0.2
+  ); /* LinkedIn hover background */
+  --theme-bg-social-link: rgba(
+    20,
+    184,
+    166,
+    0.2
+  ); /* Link/copy hover background */
 
   /* Border Colors */
   --theme-border-primary-10: rgba(
@@ -180,7 +200,12 @@
   --theme-border-danger-30: rgba(239, 68, 68, 0.3); /* Stronger danger border */
 
   /* Social Sharing Border Colors */
-  --theme-border-social-subtle: rgba(255, 255, 255, 0.1); /* Subtle border for social sharing container */
+  --theme-border-social-subtle: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Subtle border for social sharing container */
   --theme-border-accent-20: rgba(20, 184, 166, 0.2); /* Accent border */
   --theme-border-accent-30: rgba(
     20,
@@ -245,10 +270,19 @@
   --theme-text-accent: #2dd4bf; /* Accent text color */
 
   /* Social Sharing Theme Variables */
-  --theme-text-social-muted: rgba(255, 255, 255, 0.6); /* Muted text for social sharing labels */
+  --theme-text-social-muted: rgba(
+    255,
+    255,
+    255,
+    0.6
+  ); /* Muted text for social sharing labels */
   --theme-text-social-x: var(--theme-social-x); /* X text color */
-  --theme-text-social-facebook: var(--theme-social-facebook); /* Facebook text color */
-  --theme-text-social-linkedin: var(--theme-social-linkedin); /* LinkedIn text color */
+  --theme-text-social-facebook: var(
+    --theme-social-facebook
+  ); /* Facebook text color */
+  --theme-text-social-linkedin: var(
+    --theme-social-linkedin
+  ); /* LinkedIn text color */
   --theme-text-social-link: var(--theme-social-link); /* Link/copy text color */
 
   /* Color Picker Border Colors */
