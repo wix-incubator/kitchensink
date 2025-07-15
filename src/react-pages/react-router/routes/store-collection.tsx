@@ -1,4 +1,4 @@
-import { useLoaderData, redirect } from 'react-router-dom';
+import { useLoaderData, redirect, useHref } from 'react-router-dom';
 import { loadCategoriesConfig } from '@wix/headless-stores/services';
 import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
@@ -60,7 +60,14 @@ export async function storeCollectionRouteLoader({
   };
 }
 
-export function StoreCollectionRoute() {
+export function StoreCollectionRoute({
+  productPageRoute,
+  storeRoute,
+}: {
+  productPageRoute: string;
+  storeRoute: string;
+}) {
+  const basename = useHref('/'); 
   const {
     filteredCollectionServiceConfig,
     categoriesConfig,
@@ -73,7 +80,8 @@ export function StoreCollectionRoute() {
         ...categoriesConfig,
         initialCategoryId: selectedCategory._id,
       }}
-      productPageRoute="/products"
+      productPageRoute={productPageRoute}
+      basePath={`${basename}${storeRoute}`}
     />
   );
 }

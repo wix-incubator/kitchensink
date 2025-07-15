@@ -31,17 +31,18 @@ interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
   categoriesConfig: any;
   productPageRoute: string;
+  basePath: string;
 }
 
 function CategoryPage({
   filteredCollectionServiceConfig,
   categoriesConfig,
   productPageRoute,
+  basePath,
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
   const handleCategoryChange = (categoryId: string | null, category: any) => {
     if (typeof window !== 'undefined') {
-      const basePath = '/store/example-1';
       let newPath: string = basePath;
 
       if (categoryId !== null) {
@@ -52,7 +53,7 @@ function CategoryPage({
           );
         }
         const categorySlug = category?.slug || categoryId;
-        newPath = `${basePath}/category/${categorySlug}`;
+        newPath = `${basePath}/${categorySlug}`;
       }
 
       window.history.pushState(

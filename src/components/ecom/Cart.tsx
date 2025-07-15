@@ -17,7 +17,7 @@ export default function CartContent() {
                 </h1>
                 <CurrentCart.Trigger>
                   {({ itemCount }) => (
-                    <p className="text-content-secondary text-xl">
+                    <p className="t`ex`t-content-secondary text-xl">
                       {itemCount} {itemCount === 1 ? 'item' : 'items'} in your
                       cart
                     </p>
