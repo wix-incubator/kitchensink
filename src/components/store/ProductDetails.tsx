@@ -50,10 +50,8 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
 );
 
 export default function ProductDetails({
-  setShowSuccessMessage = () => {},
   isQuickView = false,
 }: {
-  setShowSuccessMessage?: (show: boolean) => void;
   isQuickView?: boolean;
 }) {
   const Navigation = useNavigation();
@@ -652,10 +650,7 @@ export default function ProductDetails({
                     </div>
                   )}
 
-                  <ProductActionButtons
-                    onShowSuccessMessage={setShowSuccessMessage}
-                    isQuickView={isQuickView}
-                  />
+                  <ProductActionButtons isQuickView={isQuickView} />
                 </div>
               )}
             </ProductActions.Actions>

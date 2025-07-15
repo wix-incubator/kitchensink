@@ -16,7 +16,6 @@ interface AddToCartButtonProps extends BaseButtonProps {
 interface BuyNowButtonProps extends BaseButtonProps {}
 
 interface ProductActionButtonsProps {
-  onShowSuccessMessage: (show: boolean) => void;
   isQuickView?: boolean;
 }
 
@@ -114,7 +113,6 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
 
 // Main Product Action Buttons Container
 export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
-  onShowSuccessMessage,
   isQuickView = false,
 }) => {
   return (
@@ -122,7 +120,6 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
       {({
         onAddToCart,
         onBuyNow,
-        onOpenCart,
         canAddToCart,
         isLoading,
         inStock,
@@ -130,14 +127,6 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
       }) => {
         const handleAddToCart = async () => {
           await onAddToCart();
-          onShowSuccessMessage(true);
-          setTimeout(() => {
-            onShowSuccessMessage(false);
-            if (!isPreOrderEnabled) {
-              onOpenCart();
-            }
-          }, 3000);
-
           if (isPreOrderEnabled) {
             window.location.href = '/cart';
           }
