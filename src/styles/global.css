@@ -332,7 +332,8 @@ button:not(:disabled) {
 /* Button Styles */
 .btn-primary {
   background: var(--theme-btn-primary);
-  color: var(--theme-text-content);
+  color: var(--theme-btn-primary-text);
+  border-color: var(--theme-btn-primary-border);
 }
 
 .btn-primary:hover {
@@ -341,7 +342,8 @@ button:not(:disabled) {
 
 .btn-secondary {
   background: var(--theme-btn-secondary);
-  color: var(--theme-text-content);
+  color: var(--theme-btn-secondary-text);
+  border-color: var(--theme-btn-secondary-border);
 }
 
 .btn-secondary:hover {
@@ -529,6 +531,8 @@ button:not(:disabled) {
 
 .theme-btn-primary {
   background: var(--theme-btn-primary);
+  color: var(--theme-btn-primary-text);
+  border-color: var(--theme-btn-primary-border);
 }
 
 .theme-btn-primary:hover {
@@ -537,6 +541,8 @@ button:not(:disabled) {
 
 .theme-btn-secondary {
   background: var(--theme-btn-secondary);
+  color: var(--theme-btn-secondary-text);
+  border-color: var(--theme-btn-secondary-border);
 }
 
 .theme-btn-secondary:hover {

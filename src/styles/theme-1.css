@@ -295,6 +295,8 @@
     #2563eb,
     #7c3aed
   ); /* Primary button hover state gradient */
+  --theme-btn-primary-text: #ffffff; /* Primary button text color */
+  --theme-btn-primary-border: transparent; /* Primary button border color */
   --theme-btn-secondary: linear-gradient(
     to right,
     #3b82f6,
@@ -305,6 +307,8 @@
     #2563eb,
     #7c3aed
   ); /* Secondary button hover state gradient */
+  --theme-btn-secondary-text: #ffffff; /* Secondary button text color */
+  --theme-btn-secondary-border: transparent; /* Secondary button border color */
   --theme-btn-warning: linear-gradient(
     to right,
     #f59e0b,

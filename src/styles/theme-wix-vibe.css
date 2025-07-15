@@ -431,12 +431,16 @@
   --theme-btn-primary-hover: rgb(
     var(--color-primary-dark)
   ); /* Primary button hover state for interactive feedback */
+  --theme-btn-primary-text: #ffffff; /* Primary button text color */
+  --theme-btn-primary-border: transparent; /* Primary button border color */
   --theme-btn-secondary: rgb(
     var(--color-secondary)
   ); /* Secondary button background for secondary actions and alternative CTAs */
   --theme-btn-secondary-hover: rgb(
     var(--color-secondary-dark)
   ); /* Secondary button hover state for interactive feedback */
+  --theme-btn-secondary-text: #ffffff; /* Secondary button text color */
+  --theme-btn-secondary-border: transparent; /* Secondary button border color */
   --theme-btn-warning: rgb(
     var(--color-warning)
   ); /* Warning button background for caution actions (can be gradient) */
