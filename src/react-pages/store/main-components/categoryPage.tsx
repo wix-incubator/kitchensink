@@ -31,23 +31,21 @@ interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
   categoriesConfig: any;
   productPageRoute: string;
+  basePath: string;
 }
 
 function CategoryPage({
   filteredCollectionServiceConfig,
   categoriesConfig,
   productPageRoute,
+  basePath,
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
   const handleCategoryChange = (categoryId: string | null, category: any) => {
     if (typeof window !== 'undefined') {
-      const basePath = '/store/example-1';
-      let newPath;
+      let newPath: string = basePath;
 
-      if (categoryId === null) {
-        // No category selected - fallback to base path
-        newPath = basePath;
-      } else {
+      if (categoryId !== null) {
         // Use category slug for URL
         if (!category?.slug) {
           console.warn(
@@ -55,7 +53,7 @@ function CategoryPage({
           );
         }
         const categorySlug = category?.slug || categoryId;
-        newPath = `${basePath}/category/${categorySlug}`;
+        newPath = `${basePath}/${categorySlug}`;
       }
 
       window.history.pushState(

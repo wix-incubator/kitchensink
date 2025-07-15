@@ -1,4 +1,4 @@
-import { useLoaderData, Outlet } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { WixServices } from '@wix/services-manager-react';
 import { createServicesMap } from '@wix/services-manager';

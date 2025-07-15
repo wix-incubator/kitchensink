@@ -46,7 +46,12 @@ const router = createBrowserRouter(
         },
         {
           path: '/store/:categorySlug',
-          element: <StoreCollectionRoute />,
+          element: (
+            <StoreCollectionRoute
+              productPageRoute="/products"
+              storeRoute="/store"
+            />
+          ),
           loader: storeCollectionRouteLoader,
         },
         {

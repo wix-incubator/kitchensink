@@ -1,4 +1,4 @@
-import { useLoaderData, redirect, Await } from 'react-router-dom';
+import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
 import React from 'react';
 import { loadCategoriesConfig } from '@wix/headless-stores/services';
 import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
@@ -93,7 +93,14 @@ export async function storeCollectionRouteLoader({
   };
 }
 
-export function StoreCollectionRoute() {
+export function StoreCollectionRoute({
+  productPageRoute,
+  storeRoute,
+}: {
+  productPageRoute: string;
+  storeRoute: string;
+}) {
+  const basename = useHref('/');
   const {
     categoriesConfig,
     selectedCategory,
@@ -115,7 +122,8 @@ export function StoreCollectionRoute() {
                 ...categoriesConfig,
                 initialCategoryId: selectedCategory._id,
               }}
-              productPageRoute="/products"
+              productPageRoute={productPageRoute}
+              basePath={`${basename}${storeRoute}`}
             />
           )}
         </Await>
