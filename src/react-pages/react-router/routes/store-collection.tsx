@@ -12,7 +12,7 @@ function CollectionSkeleton() {
         <div className="h-10 w-64 bg-surface-loading rounded animate-pulse mb-4"></div>
         <div className="h-6 w-96 bg-surface-loading rounded animate-pulse"></div>
       </div>
-      
+
       {/* Filters skeleton */}
       <div className="mb-6">
         <div className="h-10 w-32 bg-surface-loading rounded animate-pulse mb-4"></div>
@@ -44,7 +44,9 @@ function CollectionError() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="text-center">
         <div className="text-status-danger text-2xl mb-4">⚠️</div>
-        <h2 className="text-content-primary text-xl mb-2">Failed to load products</h2>
+        <h2 className="text-content-primary text-xl mb-2">
+          Failed to load products
+        </h2>
         <p className="text-content-secondary">Please try refreshing the page</p>
       </div>
     </div>
@@ -106,7 +108,7 @@ export function StoreCollectionRoute() {
           resolve={filteredCollectionServiceConfigPromise}
           errorElement={<CollectionError />}
         >
-          {(filteredCollectionServiceConfig) => (
+          {filteredCollectionServiceConfig => (
             <CategoryPage
               filteredCollectionServiceConfig={filteredCollectionServiceConfig}
               categoriesConfig={{
