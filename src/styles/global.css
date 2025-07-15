@@ -158,6 +158,115 @@ button:not(:disabled) {
   color: var(--theme-text-accent);
 }
 
+/* Social Sharing Colors */
+.text-social-muted {
+  color: var(--theme-text-social-muted);
+}
+
+.text-social-x {
+  color: var(--theme-text-social-x);
+}
+
+.text-social-facebook {
+  color: var(--theme-text-social-facebook);
+}
+
+.text-social-linkedin {
+  color: var(--theme-text-social-linkedin);
+}
+
+.text-social-link {
+  color: var(--theme-text-social-link);
+}
+
+/* Social Sharing Backgrounds */
+.bg-social-button {
+  background-color: var(--theme-bg-social-button);
+}
+
+.bg-social-x-hover {
+  background-color: var(--theme-bg-social-twitter);
+}
+
+.bg-social-facebook-hover {
+  background-color: var(--theme-bg-social-facebook);
+}
+
+.bg-social-linkedin-hover {
+  background-color: var(--theme-bg-social-linkedin);
+}
+
+.bg-social-link-hover {
+  background-color: var(--theme-bg-social-link);
+}
+
+/* Social Sharing Borders */
+.border-social-subtle {
+  border-color: var(--theme-border-social-subtle);
+}
+
+/* Social Sharing Button Styles with Hover Effects */
+.btn-social-x {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--theme-bg-social-button);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-social-x:hover {
+  background-color: var(--theme-bg-social-x);
+}
+
+.btn-social-x:hover svg {
+  color: var(--theme-text-social-x);
+}
+
+.btn-social-facebook {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--theme-bg-social-button);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-social-facebook:hover {
+  background-color: var(--theme-bg-social-facebook);
+}
+
+.btn-social-facebook:hover svg {
+  color: var(--theme-text-social-facebook);
+}
+
+.btn-social-linkedin {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--theme-bg-social-button);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-social-linkedin:hover {
+  background-color: var(--theme-bg-social-linkedin);
+}
+
+.btn-social-linkedin:hover svg {
+  color: var(--theme-text-social-linkedin);
+}
+
+.btn-social-link {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--theme-bg-social-button);
+  transition: all 0.15s ease-in-out;
+  position: relative;
+}
+
+.btn-social-link:hover {
+  background-color: var(--theme-bg-social-link);
+}
+
+.btn-social-link:hover svg {
+  color: var(--theme-text-social-link);
+}
+
 /* Background Colors */
 .bg-surface-primary {
   background-color: var(--theme-bg-options);

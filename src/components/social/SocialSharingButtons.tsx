@@ -36,29 +36,29 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
 
         return (
           <div
-            className={`flex items-center gap-2 pt-2 border-t border-white/10 ${className}`}
+            className={`flex items-center gap-2 pt-2 border-t border-social-subtle ${className}`}
           >
-            <span className="text-white/60 text-sm">Share:</span>
+            <span className="text-social-muted text-sm">Share:</span>
             <button
               onClick={shareTwitter}
-              className="p-2 rounded-full bg-white/10 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
-              title="Share on Twitter"
+              className="btn-social-x"
+              title="Share on X"
             >
               <svg
-                className="w-4 h-4 text-white/60 hover:text-blue-400 transition-colors"
+                className="w-4 h-4 text-social-muted transition-colors"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                <path d="M14.095479,10.316482L22.286354,1h-1.940718l-7.115352,8.087682L7.551414,1H1l8.589488,12.231093L1,23h1.940717  l7.509372-8.542861L16.448587,23H23L14.095479,10.316482z M11.436522,13.338465l-0.871624-1.218704l-6.924311-9.68815h2.981339  l5.58978,7.82155l0.867949,1.218704l7.26506,10.166271h-2.981339L11.436522,13.338465z"/>
               </svg>
             </button>
             <button
               onClick={shareFacebook}
-              className="p-2 rounded-full bg-white/10 hover:bg-blue-600/20 hover:text-blue-500 transition-all"
+              className="btn-social-facebook"
               title="Share on Facebook"
             >
               <svg
-                className="w-4 h-4 text-white/60 hover:text-blue-500 transition-colors"
+                className="w-4 h-4 text-social-muted transition-colors"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -67,11 +67,11 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
             </button>
             <button
               onClick={shareLinkedIn}
-              className="p-2 rounded-full bg-white/10 hover:bg-blue-700/20 hover:text-blue-600 transition-all"
+              className="btn-social-linkedin"
               title="Share on LinkedIn"
             >
               <svg
-                className="w-4 h-4 text-white/60 hover:text-blue-600 transition-colors"
+                className="w-4 h-4 text-social-muted transition-colors"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -80,12 +80,12 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
             </button>
             <button
               onClick={handleCopyLink}
-              className="p-2 rounded-full bg-white/10 hover:bg-teal-500/20 hover:text-teal-400 transition-all relative"
+              className="btn-social-link"
               title="Copy link"
             >
               {copySuccess ? (
                 <svg
-                  className="w-4 h-4 text-teal-400"
+                  className="w-4 h-4 text-social-link transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -99,7 +99,7 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
                 </svg>
               ) : (
                 <svg
-                  className="w-4 h-4 text-white/60 hover:text-teal-400 transition-colors"
+                  className="w-4 h-4 text-social-muted transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -114,7 +114,7 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
               )}
             </button>
             {copySuccess && (
-              <span className="text-teal-400 text-xs ml-2 animate-fade-in">
+              <span className="text-social-link text-xs ml-2 animate-fade-in">
                 Copied!
               </span>
             )}
