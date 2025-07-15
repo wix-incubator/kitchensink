@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { WixServices } from '@wix/services-manager-react';
 import { createServicesMap } from '@wix/services-manager';
 import {
@@ -7,7 +7,6 @@ import {
 } from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 import { CurrentCart } from '../headless/ecom/components';
-import type { LineItem } from '../headless/ecom/components/CurrentCart';
 
 interface StoreLayoutProps {
   children: ReactNode;
@@ -41,7 +40,7 @@ export function StoreLayout({
             {({ onAddedToCart }) => {
               useEffect(
                 () =>
-                  onAddedToCart((lineItems: LineItem[] | undefined) => {
+                  onAddedToCart(() => {
                     setShowSuccessMessage(true);
                     setTimeout(() => {
                       setShowSuccessMessage(false);

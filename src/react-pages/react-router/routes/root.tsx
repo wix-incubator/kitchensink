@@ -69,7 +69,7 @@ export function RootRoute(props: { children: React.ReactNode }) {
                 {({ onAddedToCart }) => {
                   useEffect(
                     () =>
-                      onAddedToCart((lineItems: LineItem[] | undefined) => {
+                      onAddedToCart(() => {
                         setShowSuccessMessage(true);
                         setTimeout(() => {
                           setShowSuccessMessage(false);

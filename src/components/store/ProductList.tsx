@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { productsV3 } from '@wix/stores';
 import ProductFilters from './ProductFilters';
 import StoreHeader from './StoreHeader';
