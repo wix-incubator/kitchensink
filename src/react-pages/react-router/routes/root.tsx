@@ -99,12 +99,3 @@ export function RootRoute(props: { children: React.ReactNode }) {
     </div>
   );
 }
-
-export const rootRouteDefinition = {
-  element: (
-    <RootRoute>
-      <Outlet />
-    </RootRoute>
-  ),
-  loader: rootRouteLoader,
-};

@@ -7,10 +7,3 @@ export async function defaultStoreCollectionRouteRedirectLoader() {
   const selectedCategory = categoriesConfig.categories[0];
   return redirect(`/store/${selectedCategory.slug}`);
 }
-
-export const storeRedirectRouteDefinition = {
-  path: '/store',
-  element: <></>,
-  loader: defaultStoreCollectionRouteRedirectLoader,
-  index: true,
-};

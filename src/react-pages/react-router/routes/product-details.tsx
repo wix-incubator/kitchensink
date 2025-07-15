@@ -34,9 +34,3 @@ export function ProductDetailsRoute() {
   const { productServiceConfig } = useLoaderData<typeof productRouteLoader>();
   return <ProductDetailPage productServiceConfig={productServiceConfig} />;
 }
-
-export const productDetailsRouteDefinition = {
-  path: '/products/:slug',
-  element: <ProductDetailsRoute />,
-  loader: productRouteLoader,
-};
