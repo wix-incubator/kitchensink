@@ -807,13 +807,7 @@ const ProductInfo = ({
                 {products.map((product: any) => {
                   return (
                     <RelatedProducts.Item key={product._id} product={product}>
-                      {({
-                        title,
-                        image,
-                        price,
-                        available,
-                        description,
-                      }) => (
+                      {({ title, image, price, available, description }) => (
                         <a
                           href={`/store/example-2/products/${product.slug}`}
                           className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all duration-200 group cursor-pointer block"
