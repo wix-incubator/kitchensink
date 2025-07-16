@@ -1,12 +1,8 @@
 import { createServicesMap } from '@wix/services-manager';
 import { useState } from 'react';
 import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CatalogPriceRangeService,
-  CatalogPriceRangeServiceDefinition,
+  CatalogService,
+  CatalogServiceDefinition,
 } from '@wix/headless-stores/services';
 import {
   CategoryService,
@@ -83,12 +79,7 @@ function CategoryPage({
       .addService(SortServiceDefinition, SortService, {
         initialSort: filteredCollectionServiceConfig.initialSort,
       })
-      .addService(
-        CatalogPriceRangeServiceDefinition,
-        CatalogPriceRangeService,
-        {}
-      )
-      .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {})
+      .addService(CatalogServiceDefinition, CatalogService, {})
   );
 
   return (
