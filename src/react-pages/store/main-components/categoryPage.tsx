@@ -22,6 +22,12 @@ import {
 } from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
 import { WixServices } from '@wix/services-manager-react';
+import {
+  ProductListService,
+  ProductListServiceDefinition,
+  ProductListQueryBuilderService,
+  ProductListQueryBuilderServiceDefinition,
+} from '@wix/headless-stores/services';
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -62,24 +68,30 @@ function CategoryPage({
 
   const [servicesMap] = useState(() =>
     createServicesMap()
+      // .addService(
+      //   CollectionServiceDefinition,
+      //   CollectionService,
+      //   filteredCollectionServiceConfig
+      // )
+      // .addService(
+      //   FilterServiceDefinition,
+      //   FilterService,
+      //   filteredCollectionServiceConfig
+      // )
+      // .addService(CategoryServiceDefinition, CategoryService, {
+      //   ...categoriesConfig,
+      //   onCategoryChange: handleCategoryChange,
+      // })
+      // .addService(SortServiceDefinition, SortService, {
+      //   initialSort: filteredCollectionServiceConfig.initialSort,
+      // })
+      // .addService(CatalogServiceDefinition, CatalogService, {})
+      .addService(ProductListServiceDefinition, ProductListService, {})
       .addService(
-        CollectionServiceDefinition,
-        CollectionService,
-        filteredCollectionServiceConfig
+        ProductListQueryBuilderServiceDefinition,
+        ProductListQueryBuilderService,
+        {}
       )
-      .addService(
-        FilterServiceDefinition,
-        FilterService,
-        filteredCollectionServiceConfig
-      )
-      .addService(CategoryServiceDefinition, CategoryService, {
-        ...categoriesConfig,
-        onCategoryChange: handleCategoryChange,
-      })
-      .addService(SortServiceDefinition, SortService, {
-        initialSort: filteredCollectionServiceConfig.initialSort,
-      })
-      .addService(CatalogServiceDefinition, CatalogService, {})
   );
 
   return (

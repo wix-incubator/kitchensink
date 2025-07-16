@@ -446,7 +446,7 @@ export const ProductGridContent = ({
   };
 
   return (
-    <FilteredCollection.Grid>
+    <HeadlessProductList>
       {({
         products,
         isLoading,
@@ -627,7 +627,7 @@ export const ProductGridContent = ({
           }}
         </FilteredCollection.Filters>
       )}
-    </FilteredCollection.Grid>
+    </HeadlessProductList>
   );
 };
 
