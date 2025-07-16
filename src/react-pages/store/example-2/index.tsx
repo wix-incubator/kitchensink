@@ -28,12 +28,8 @@ import {
   SortServiceDefinition,
 } from '@wix/headless-stores/services';
 import {
-  CatalogPriceRangeService,
-  CatalogPriceRangeServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CatalogOptionsService,
-  CatalogOptionsServiceDefinition,
+  CatalogService,
+  CatalogServiceDefinition,
 } from '@wix/headless-stores/services';
 
 interface StoreExample2PageProps {
@@ -597,12 +593,7 @@ export default function StoreExample2Page({
     .addService(SortServiceDefinition, SortService, {
       initialSort: filteredCollectionServiceConfig.initialSort,
     })
-    .addService(
-      CatalogPriceRangeServiceDefinition,
-      CatalogPriceRangeService,
-      {}
-    )
-    .addService(CatalogOptionsServiceDefinition, CatalogOptionsService, {});
+    .addService(CatalogServiceDefinition, CatalogService, {});
 
   return (
     <KitchensinkLayout>
