@@ -527,7 +527,9 @@ export const ProductGridContent = ({
                   <div className="flex-1 min-w-0">
                     {error && (
                       <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-                        <p className="text-status-error text-sm sm:text-base">{error}</p>
+                        <p className="text-status-error text-sm sm:text-base">
+                          {error}
+                        </p>
                       </div>
                     )}
 
