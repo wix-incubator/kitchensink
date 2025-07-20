@@ -1,0 +1,14 @@
+---
+import type { productsV3 } from "@wix/stores";
+import { parseSearchOptionsFromUrl } from "./parseSearchOptionsFromUrl";
+import { loadProductsListServiceConfig } from "./products-list";
+import { ProductsListPage } from "./products-list-page";
+
+const searchOptions = parseSearchOptionsFromUrl(Astro.url.href);
+const productsListConfig = await loadProductsListServiceConfig(searchOptions);
+---
+
+<ProductsListPage 
+    client:load
+    productsListConfig={productsListConfig}
+/>
