@@ -1,4 +1,4 @@
-import type { productsV3 } from '@wix/stores';
+import { productsV3 } from '@wix/stores';
 
 export type SearchOptions = Parameters<typeof productsV3.searchProducts>[0];
 
@@ -107,6 +107,53 @@ export function parseSearchOptionsFromUrl(url: string): SearchOptions {
   if (Object.keys(filter).length > 0) {
     searchOptions.filter = filter;
   }
+
+  searchOptions.aggregations = [
+    // Price range aggregations
+    {
+      name: 'minPrice',
+      fieldPath: 'actualPriceRange.minValue.amount',
+      type: 'SCALAR' as const,
+      scalar: { type: 'MIN' as const },
+    },
+    {
+      name: 'maxPrice',
+      fieldPath: 'actualPriceRange.maxValue.amount',
+      type: 'SCALAR' as const,
+      scalar: { type: 'MAX' as const },
+    },
+    // Options aggregations
+    {
+      name: 'optionNames',
+      fieldPath: 'options.name',
+      type: productsV3.SortType.VALUE,
+      value: {
+        limit: 20,
+        sortType: productsV3.SortType.VALUE,
+        sortDirection: productsV3.SortDirection.ASC,
+      },
+    },
+    {
+      name: 'choiceNames',
+      fieldPath: 'options.choicesSettings.choices.name',
+      type: productsV3.SortType.VALUE,
+      value: {
+        limit: 50,
+        sortType: productsV3.SortType.VALUE,
+        sortDirection: productsV3.SortDirection.ASC,
+      },
+    },
+    {
+      name: 'inventoryStatus',
+      fieldPath: 'inventory.availabilityStatus',
+      type: productsV3.SortType.VALUE,
+      value: {
+        limit: 10,
+        sortType: productsV3.SortType.VALUE,
+        sortDirection: productsV3.SortDirection.ASC,
+      },
+    },
+  ];
 
   return searchOptions;
 }

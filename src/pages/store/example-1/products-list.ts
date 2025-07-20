@@ -9,6 +9,7 @@ export type ProductsListServiceConfig = {
   products: productsV3.V3Product[];
   searchOptions: Parameters<typeof productsV3.searchProducts>[0];
   pagingMetadata: productsV3.CommonCursorPagingMetadata;
+  aggregations: productsV3.AggregationData;
 };
 
 export async function loadProductsListServiceConfig(
@@ -19,6 +20,7 @@ export async function loadProductsListServiceConfig(
     products: result.products ?? [],
     searchOptions,
     pagingMetadata: result.pagingMetadata!,
+    aggregations: result.aggregationData!,
   };
 }
 
