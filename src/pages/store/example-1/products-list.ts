@@ -27,6 +27,7 @@ export async function loadProductsListServiceConfig(
 export const ProductsListServiceDefinition = defineService<
   {
     products: Signal<productsV3.V3Product[]>;
+    aggregations: Signal<productsV3.AggregationData>;
     pagingMetadata: Signal<productsV3.CommonCursorPagingMetadata>;
     searchOptions: Signal<Parameters<typeof productsV3.searchProducts>[0]>;
     isLoading: Signal<boolean>;
@@ -55,6 +56,10 @@ export const ProductListService =
         signalsService.signal<productsV3.CommonCursorPagingMetadata>(
           config.pagingMetadata
         );
+
+      const aggregationsSignal =
+        signalsService.signal<productsV3.AggregationData>(config.aggregations);
+
       const isLoadingSignal = signalsService.signal<boolean>(false);
       const errorSignal = signalsService.signal<string | null>(null);
 
@@ -104,6 +109,7 @@ export const ProductListService =
         products: productsSignal,
         searchOptions: searchOptionsSignal,
         pagingMetadata: pagingMetadataSignal,
+        aggregations: aggregationsSignal,
         setSearchOptions: (
           searchOptions: Parameters<typeof productsV3.searchProducts>[0]
         ) => searchOptionsSignal.set(searchOptions),

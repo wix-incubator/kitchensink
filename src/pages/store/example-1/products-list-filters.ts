@@ -24,6 +24,12 @@ export const ProductsListFiltersService =
       const signalsService = getService(SignalsServiceDefinition);
       const productsListService = getService(ProductsListServiceDefinition);
 
+      const aggregationData = productsListService.aggregations.get();
+      // TODO: use the aggregations to get the available inventory statuses
+      // and the available price ranges
+      // and the available product options
+      // and the available product choices
+
       const minPriceSignal = signalsService.signal(
         getMinPrice(productsListService.searchOptions.get())
       );
