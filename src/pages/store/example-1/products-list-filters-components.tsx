@@ -57,8 +57,28 @@ function MaxPrice(props: MaxPriceProps) {
     : props.children;
 }
 
+export type InventoryStatusProps = {
+  children: ((props: InventoryStatusRenderProps) => ReactNode) | ReactNode;
+};
+
+export type InventoryStatusRenderProps = {
+  inventoryStatus: string | null;
+  setInventoryStatus: (status: string | null) => void;
+};
+
+function InventoryStatus(props: InventoryStatusProps) {
+  const service = useService(ProductsListFiltersServiceDefinition);
+  const inventoryStatus = service.inventoryStatus.get();
+  const setInventoryStatus = service.setInventoryStatus;
+
+  return typeof props.children === 'function'
+    ? props.children({ inventoryStatus, setInventoryStatus })
+    : props.children;
+}
+
 export const ProductsListFilters = {
   Root,
   MinPrice,
   MaxPrice,
+  InventoryStatus,
 };

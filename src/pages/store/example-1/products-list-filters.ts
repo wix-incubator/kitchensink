@@ -10,8 +10,10 @@ import { ProductsListServiceDefinition } from './products-list';
 export const ProductsListFiltersServiceDefinition = defineService<{
   minPrice: Signal<number>;
   maxPrice: Signal<number>;
+  inventoryStatus: Signal<string | null>;
   setMinPrice: (minPrice: number) => void;
   setMaxPrice: (maxPrice: number) => void;
+  setInventoryStatus: (status: string | null) => void;
 }>('products-list-filters');
 
 export type ProductsListFiltersServiceConfig = {};
@@ -36,12 +38,16 @@ export const ProductsListFiltersService =
       const maxPriceSignal = signalsService.signal(
         getMaxPrice(productsListService.searchOptions.get())
       );
+      const inventoryStatusSignal = signalsService.signal(
+        getInventoryStatus(productsListService.searchOptions.get())
+      );
 
       if (typeof window !== 'undefined') {
         signalsService.effect(() => {
           // CRITICAL: Read the signals FIRST to establish dependencies, even on first run
           const minPrice = minPriceSignal.get();
           const maxPrice = maxPriceSignal.get();
+          const inventoryStatus = inventoryStatusSignal.get();
 
           if (firstRun) {
             firstRun = false;
@@ -74,6 +80,11 @@ export const ProductsListFiltersService =
             'actualPriceRange.maxValue.amount'
           ];
 
+          // Remove existing inventory filter
+          delete (newSearchOptions.filter as any)[
+            'inventory.availabilityStatus'
+          ];
+
           // Add new price filters if they have valid values
           if (minPrice > 0) {
             (newSearchOptions.filter as any)[
@@ -86,19 +97,31 @@ export const ProductsListFiltersService =
             ] = { $lte: maxPrice };
           }
 
+          // Add new inventory filter if it has a valid value
+          if (inventoryStatus) {
+            (newSearchOptions.filter as any)['inventory.availabilityStatus'] =
+              inventoryStatus;
+          }
+
           // Use callback to update search options
           productsListService.setSearchOptions(newSearchOptions);
+
+          console.log('🔥 newSearchOptions', newSearchOptions);
         });
       }
 
       return {
         minPrice: minPriceSignal,
         maxPrice: maxPriceSignal,
+        inventoryStatus: inventoryStatusSignal,
         setMinPrice: (minPrice: number) => {
           minPriceSignal.set(minPrice);
         },
         setMaxPrice: (maxPrice: number) => {
           maxPriceSignal.set(maxPrice);
+        },
+        setInventoryStatus: (status: string | null) => {
+          inventoryStatusSignal.set(status);
         },
       };
     }
@@ -138,4 +161,18 @@ function getMaxPrice(
   }
 
   return 0;
+}
+
+function getInventoryStatus(
+  searchOptions: Parameters<typeof productsV3.searchProducts>[0]
+): string | null {
+  const filter = searchOptions.filter;
+  if (!filter) return null;
+
+  const inventoryFilter = (filter as any)['inventory.availabilityStatus'];
+  if (typeof inventoryFilter === 'string' && inventoryFilter.length > 0) {
+    return inventoryFilter;
+  }
+
+  return null;
 }

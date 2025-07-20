@@ -1,4 +1,5 @@
 import { Product } from '@wix/headless-stores/react';
+import { productsV3 } from '@wix/stores';
 import { type ProductsListServiceConfig } from './products-list';
 import { ProductsList } from './products-list-components';
 import { ProductsListFilters } from './products-list-filters-components';
