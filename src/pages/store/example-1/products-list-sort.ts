@@ -2,7 +2,7 @@ import type { Signal } from '@wix/services-definitions/core-services/signals';
 import { defineService, implementService } from '@wix/services-definitions';
 import { SignalsServiceDefinition } from '@wix/services-definitions/core-services/signals';
 import { ProductsListServiceDefinition } from './products-list';
-import type { productsV3 } from '@wix/stores';
+import { productsV3 } from '@wix/stores';
 
 export const ProductsListSortServiceDefinition = defineService<{
   sort: Signal<string>;
@@ -10,6 +10,15 @@ export const ProductsListSortServiceDefinition = defineService<{
 }>('products-list-sort');
 
 export type ProductsListSortServiceConfig = {};
+
+export enum SortType {
+  NEWEST = 'newest',
+  NAME_ASC = 'name_asc',
+  NAME_DESC = 'name_desc',
+  PRICE_ASC = 'price_asc',
+  PRICE_DESC = 'price_desc',
+  RECOMMENDED = 'recommended',
+}
 
 export const ProductsListSortService =
   implementService.withConfig<ProductsListSortServiceConfig>()(
@@ -37,6 +46,50 @@ export const ProductsListSortService =
             // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
+
+          if (!newSearchOptions.sort) {
+            newSearchOptions.sort = [];
+          } else {
+            // Copy existing filter to avoid mutation
+            newSearchOptions.sort = [...newSearchOptions.sort];
+          }
+
+          switch (sort) {
+            case SortType.NAME_ASC:
+              newSearchOptions.sort = [
+                { fieldName: 'name', order: productsV3.SortDirection.ASC },
+              ];
+              break;
+            case SortType.NAME_DESC:
+              newSearchOptions.sort = [
+                { fieldName: 'name', order: productsV3.SortDirection.DESC },
+              ];
+              break;
+            case SortType.PRICE_ASC:
+              newSearchOptions.sort = [
+                {
+                  fieldName: 'actualPriceRange.minValue.amount',
+                  order: productsV3.SortDirection.ASC,
+                },
+              ];
+              break;
+            case SortType.PRICE_DESC:
+              newSearchOptions.sort = [
+                {
+                  fieldName: 'actualPriceRange.minValue.amount',
+                  order: productsV3.SortDirection.DESC,
+                },
+              ];
+              break;
+            case SortType.RECOMMENDED:
+              newSearchOptions.sort = [
+                {
+                  fieldName: 'name',
+                  order: productsV3.SortDirection.DESC,
+                },
+              ];
+              break;
+          }
 
           productsListService.setSearchOptions(newSearchOptions);
         });

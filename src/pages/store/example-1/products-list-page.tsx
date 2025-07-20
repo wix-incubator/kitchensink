@@ -3,6 +3,7 @@ import { type ProductsListServiceConfig } from './products-list';
 import { ProductsList } from './products-list-components';
 import { ProductsListFilters } from './products-list-filters-components';
 import { ProductsListPagination } from './products-list-pagination-components';
+import { ProductsListSort } from './products-list-sort-components';
 
 export function ProductsListPage({
   productsListConfig,
@@ -92,6 +93,30 @@ export function ProductsListPage({
               </div>
             </div>
           </ProductsListFilters.Root>
+
+          <ProductsListSort.Root>
+            <ProductsListSort.Sort>
+              {({ sort, setSort }) => (
+                <div className="flex flex-col">
+                  <label className="text-content-secondary text-sm mb-1">
+                    Sort
+                  </label>
+                  <select
+                    value={sort}
+                    onChange={e => setSort(e.target.value)}
+                    className="bg-surface-primary border-surface-primary border rounded px-3 py-2 text-content-primary w-44"
+                  >
+                    <option value="name_asc">Name (A-Z)</option>
+                    <option value="name_desc">Name (Z-A)</option>
+                    <option value="price_asc">Price (Low to High)</option>
+                    <option value="price_desc">Price (High to Low)</option>
+                    <option value="newest">Newest First</option>
+                    <option value="recommended">Recommended</option>
+                  </select>
+                </div>
+              )}
+            </ProductsListSort.Sort>
+          </ProductsListSort.Root>
 
           {/* Pagination Info */}
           <ProductsListPagination.Info>
