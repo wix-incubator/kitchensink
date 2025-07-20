@@ -5,8 +5,9 @@ import { ProductsListServiceDefinition } from './products-list';
 import { productsV3 } from '@wix/stores';
 
 export const ProductsListSortServiceDefinition = defineService<{
-  sort: Signal<string>;
-  setSort: (sort: string) => void;
+  selectedSortOption: Signal<string>;
+  setSelectedSortOption: (sort: string) => void;
+  sortOptions: SortType[];
 }>('products-list-sort');
 
 export type ProductsListSortServiceConfig = {};
@@ -28,12 +29,11 @@ export const ProductsListSortService =
       const signalsService = getService(SignalsServiceDefinition);
       const productsListService = getService(ProductsListServiceDefinition);
 
-      const sortSignal = signalsService.signal<string>('name');
+      const selectedSortOptionSignal = signalsService.signal<string>('name');
 
       if (typeof window !== 'undefined') {
         signalsService.effect(() => {
-          const sort = sortSignal.get();
-          console.log('🔥 sort changed:', sort);
+          const sort = selectedSortOptionSignal.get();
 
           if (firstRun) {
             firstRun = false;
@@ -96,8 +96,10 @@ export const ProductsListSortService =
       }
 
       return {
-        sort: sortSignal,
-        setSort: (sort: string) => sortSignal.set(sort),
+        selectedSortOption: selectedSortOptionSignal,
+        sortOptions: Object.values(SortType),
+        setSelectedSortOption: (sort: string) =>
+          selectedSortOptionSignal.set(sort),
       };
     }
   );

@@ -69,7 +69,20 @@ export const ProductListService =
           try {
             isLoadingSignal.set(true);
 
-            const result = await productsV3.searchProducts(searchOptions);
+            const affectiveSearchOptions: Parameters<
+              typeof productsV3.searchProducts
+            >[0] = searchOptions.cursorPaging?.cursor
+              ? {
+                  cursorPaging: {
+                    cursor: searchOptions.cursorPaging.cursor,
+                    limit: searchOptions.cursorPaging.limit,
+                  },
+                }
+              : searchOptions;
+
+            const result = await productsV3.searchProducts(
+              affectiveSearchOptions
+            );
 
             productsSignal.set(result.products ?? []);
             pagingMetadataSignal.set(result.pagingMetadata!);

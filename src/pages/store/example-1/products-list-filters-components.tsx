@@ -1,15 +1,12 @@
 import { createServicesMap } from '@wix/services-manager';
 import { useService, WixServices } from '@wix/services-manager-react';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { type ProductsListServiceConfig } from './products-list';
 import {
   ProductsListFiltersService,
   ProductsListFiltersServiceDefinition,
 } from './products-list-filters';
 
-function Root(
-  props: PropsWithChildren<{ productsListConfig: ProductsListServiceConfig }>
-) {
+function Root(props: PropsWithChildren) {
   return (
     <WixServices
       servicesMap={createServicesMap().addService(

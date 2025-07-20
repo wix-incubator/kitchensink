@@ -1,15 +1,12 @@
 import { createServicesMap } from '@wix/services-manager';
 import { useService, WixServices } from '@wix/services-manager-react';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { type ProductsListServiceConfig } from './products-list';
 import {
   ProductsListPaginationService,
   ProductsListPaginationServiceDefinition,
 } from './products-list-pagination';
 
-function Root(
-  props: PropsWithChildren<{ productsListConfig: ProductsListServiceConfig }>
-) {
+function Root(props: PropsWithChildren) {
   return (
     <WixServices
       servicesMap={createServicesMap().addService(
@@ -41,63 +38,65 @@ function PageSize(props: PageSizeProps) {
     : props.children;
 }
 
-type NavigationProps = {
-  children: ((props: NavigationRenderProps) => ReactNode) | ReactNode;
+type NextPageProps = {
+  children: ((props: NextPageRenderProps) => ReactNode) | ReactNode;
 };
 
-type NavigationRenderProps = {
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
+type NextPageRenderProps = {
   nextPage: () => void;
-  prevPage: () => void;
-  firstPage: () => void;
+  hasNextPage: boolean;
 };
 
-function Navigation(props: NavigationProps) {
+function NextPage(props: NextPageProps) {
   const service = useService(ProductsListPaginationServiceDefinition);
-  const hasNextPage = service.hasNextPage.get();
-  const hasPrevPage = service.hasPrevPage.get();
   const nextPage = service.nextPage;
-  const prevPage = service.prevPage;
-  const firstPage = service.firstPage;
-
+  const hasNextPage = service.hasNextPage.get();
   return typeof props.children === 'function'
-    ? props.children({
-        hasNextPage,
-        hasPrevPage,
-        nextPage,
-        prevPage,
-        firstPage,
-      })
+    ? props.children({ nextPage, hasNextPage })
     : props.children;
 }
 
-type InfoProps = {
-  children: ((props: InfoRenderProps) => ReactNode) | ReactNode;
+type PrevPageProps = {
+  children: ((props: PrevPageRenderProps) => ReactNode) | ReactNode;
 };
 
-type InfoRenderProps = {
-  totalCount: number;
-  currentLimit: number;
-  currentCursor: string | null;
+type PrevPageRenderProps = {
+  prevPage: () => void;
+  hasPrevPage: boolean;
 };
 
-function Info(props: InfoProps) {
+function PrevPage(props: PrevPageProps) {
   const service = useService(ProductsListPaginationServiceDefinition);
-  const totalCount = service.totalCount.get();
-  const currentLimit = service.currentLimit.get();
-  const currentCursor = service.currentCursor.get();
+  const prevPage = service.prevPage;
+  const hasPrevPage = service.hasPrevPage.get();
+  return typeof props.children === 'function'
+    ? props.children({ prevPage, hasPrevPage })
+    : props.children;
+}
+
+type FirstPageProps = {
+  children: ((props: FirstPageRenderProps) => ReactNode) | ReactNode;
+};
+
+type FirstPageRenderProps = {
+  goToFirstPage: () => void;
+  hasPrevPage: boolean;
+};
+
+function FirstPage(props: FirstPageProps) {
+  const service = useService(ProductsListPaginationServiceDefinition);
+  const goToFirstPage = service.goToFirstPage;
+  const hasPrevPage = service.hasPrevPage.get();
 
   return typeof props.children === 'function'
-    ? props.children({ totalCount, currentLimit, currentCursor })
+    ? props.children({ goToFirstPage, hasPrevPage })
     : props.children;
 }
 
 export const ProductsListPagination = {
   Root,
   PageSize,
-  Navigation,
-  Info,
+  NextPage,
+  PrevPage,
+  FirstPage,
 };
-
-export type { PageSizeRenderProps, NavigationRenderProps, InfoRenderProps };

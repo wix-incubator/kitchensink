@@ -99,4 +99,16 @@ describe('parseSearchOptionsFromUrl', () => {
     const searchOptions = parseSearchOptionsFromUrl(url);
     expect(searchOptions).toEqual({});
   });
+
+  describe('default values', () => {
+    it('should set default values for search options', () => {
+      const url = 'https://example.com/search';
+      const searchOptions = parseSearchOptionsFromUrl(url);
+      expect(searchOptions).toEqual({
+        cursorPaging: {
+          limit: 100,
+        },
+      });
+    });
+  });
 });

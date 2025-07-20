@@ -6,7 +6,11 @@ export function parseSearchOptionsFromUrl(url: string): SearchOptions {
   const urlObj = new URL(url);
   const searchParams = urlObj.searchParams;
 
-  const searchOptions: SearchOptions = {};
+  const searchOptions: SearchOptions = {
+    cursorPaging: {
+      limit: 100,
+    },
+  };
 
   // Handle text search (q parameter)
   const query = searchParams.get('q');

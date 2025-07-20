@@ -1,10 +1,10 @@
 import { createServicesMap } from '@wix/services-manager';
 import { useService, WixServices } from '@wix/services-manager-react';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { type ProductsListServiceConfig } from './products-list';
 import {
   ProductsListSortService,
   ProductsListSortServiceDefinition,
+  SortType,
 } from './products-list-sort';
 
 function Root(props: PropsWithChildren) {
@@ -21,26 +21,32 @@ function Root(props: PropsWithChildren) {
   );
 }
 
-type SortProps = {
+type OptionsProps = {
   children: ((props: SortRenderProps) => ReactNode) | ReactNode;
 };
 
 type SortRenderProps = {
-  sort: string;
-  setSort: (sort: string) => void;
+  selectedSortOption: string;
+  setSelectedSortOption: (sort: string) => void;
+  sortOptions: SortType[];
 };
 
-function Sort(props: SortProps) {
+function Options(props: OptionsProps) {
   const service = useService(ProductsListSortServiceDefinition);
-  const sort = service.sort.get();
-  const setSort = service.setSort;
+  const selectedSortOption = service.selectedSortOption.get();
+  const sortOptions = service.sortOptions;
+  const setSelectedSortOption = service.setSelectedSortOption;
 
   return typeof props.children === 'function'
-    ? props.children({ sort, setSort })
+    ? props.children({
+        selectedSortOption,
+        setSelectedSortOption,
+        sortOptions,
+      })
     : props.children;
 }
 
 export const ProductsListSort = {
   Root,
-  Sort,
+  Options,
 };

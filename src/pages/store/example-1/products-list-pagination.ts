@@ -12,11 +12,10 @@ export const ProductsListPaginationServiceDefinition = defineService<{
   currentCursor: Signal<string | null>;
   hasNextPage: { get: () => boolean };
   hasPrevPage: { get: () => boolean };
-  totalCount: { get: () => number };
   setLimit: (limit: number) => void;
   nextPage: () => void;
   prevPage: () => void;
-  firstPage: () => void;
+  goToFirstPage: () => void;
 }>('products-list-pagination');
 
 export type ProductsListPaginationServiceConfig = {};
@@ -29,31 +28,23 @@ export const ProductsListPaginationService =
       const signalsService = getService(SignalsServiceDefinition);
       const productsListService = getService(ProductsListServiceDefinition);
 
-      // Track cursor history for previous page functionality
-      const cursorHistory: string[] = [];
-      let nextCursor: string | null = null;
-
       const currentLimitSignal = signalsService.signal(
         getCurrentLimit(productsListService.searchOptions.get())
       );
+
       const currentCursorSignal = signalsService.signal<string | null>(
         getCurrentCursor(productsListService.searchOptions.get())
       );
+
       // Computed signals derived from paging metadata
       const hasNextPageSignal = signalsService.computed(() => {
         const pagingMetadata = productsListService.pagingMetadata.get();
         return pagingMetadata?.hasNext || false;
       });
 
-      const totalCountSignal = signalsService.computed(() => {
-        const pagingMetadata = productsListService.pagingMetadata.get();
-        return pagingMetadata?.count || 0;
-      });
-
       const hasPrevPageSignal = signalsService.computed(() => {
-        
-        const currentCursor = currentCursorSignal.get();
-        return !!currentCursor || cursorHistory.length > 0;
+        const pagingMetadata = productsListService.pagingMetadata.get();
+        return typeof pagingMetadata.cursors?.prev !== 'undefined';
       });
 
       if (typeof window !== 'undefined') {
@@ -69,7 +60,9 @@ export const ProductsListPaginationService =
           }
 
           // Build new search options with updated pagination
-          const newSearchOptions = {
+          const newSearchOptions: Parameters<
+            typeof productsV3.searchProducts
+          >[0] = {
             // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
@@ -87,12 +80,6 @@ export const ProductsListPaginationService =
           // Use callback to update search options
           productsListService.setSearchOptions(newSearchOptions);
         });
-
-        // Update next cursor for navigation when paging metadata changes
-        signalsService.effect(() => {
-          const pagingMetadata = productsListService.pagingMetadata.get();
-          nextCursor = pagingMetadata?.cursors?.next || null;
-        });
       }
 
       return {
@@ -100,39 +87,31 @@ export const ProductsListPaginationService =
         currentCursor: currentCursorSignal,
         hasNextPage: hasNextPageSignal,
         hasPrevPage: hasPrevPageSignal,
-        totalCount: totalCountSignal,
 
         setLimit: (limit: number) => {
           currentLimitSignal.set(limit);
           // Reset pagination when changing page size
           currentCursorSignal.set(null);
-          cursorHistory.length = 0;
         },
 
         nextPage: () => {
-          const currentCursor = currentCursorSignal.get();
-          if (currentCursor) {
-            cursorHistory.push(currentCursor);
-          }
-
+          const pagingMetadata = productsListService.pagingMetadata.get();
+          const nextCursor = pagingMetadata?.cursors?.next;
           if (nextCursor) {
             currentCursorSignal.set(nextCursor);
           }
         },
 
         prevPage: () => {
-          if (cursorHistory.length > 0) {
-            const previousCursor = cursorHistory.pop();
-            currentCursorSignal.set(previousCursor || null);
-          } else {
-            // Go to first page
-            currentCursorSignal.set(null);
+          const pagingMetadata = productsListService.pagingMetadata.get();
+          const previousCursor = pagingMetadata?.cursors?.prev;
+          if (previousCursor) {
+            currentCursorSignal.set(previousCursor);
           }
         },
 
-        firstPage: () => {
+        goToFirstPage: () => {
           currentCursorSignal.set(null);
-          cursorHistory.length = 0;
         },
       };
     }
@@ -141,7 +120,7 @@ export const ProductsListPaginationService =
 function getCurrentLimit(
   searchOptions: Parameters<typeof productsV3.searchProducts>[0]
 ): number {
-  return searchOptions.cursorPaging?.limit || 12; // Default to 12 items per page
+  return searchOptions.cursorPaging?.limit || 100;
 }
 
 function getCurrentCursor(

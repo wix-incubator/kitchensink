@@ -43,10 +43,14 @@ export const ProductsListFiltersService =
           }
 
           // Build new search options with updated price filters
-          const newSearchOptions = {
+          const newSearchOptions: Parameters<
+            typeof productsV3.searchProducts
+          >[0] = {
             // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
+
+          delete newSearchOptions.cursorPaging?.cursor;
 
           // Initialize filter if it doesn't exist
           if (!newSearchOptions.filter) {
