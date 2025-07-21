@@ -393,7 +393,9 @@
   --theme-btn-primary-hover: rgb(
     var(--color-primary-dark)
   ); /* Primary button hover state for interactive feedback */
-  --theme-btn-primary-text: var(--color-primary-info); /* Primary button text color */
+  --theme-btn-primary-text: var(
+    --color-primary-info
+  ); /* Primary button text color */
   --theme-btn-primary-border: transparent; /* Primary button border color */
   --theme-btn-secondary: rgb(
     var(--color-secondary)
@@ -401,7 +403,9 @@
   --theme-btn-secondary-hover: rgb(
     var(--color-secondary-dark)
   ); /* Secondary button hover state for interactive feedback */
-  --theme-btn-secondary-text: var(--color-secondary-info); /* Secondary button text color */
+  --theme-btn-secondary-text: var(
+    --color-secondary-info
+  ); /* Secondary button text color */
   --theme-btn-secondary-border: transparent; /* Secondary button border color */
   --theme-btn-warning: rgb(
     var(--color-warning)

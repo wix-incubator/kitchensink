@@ -14,7 +14,7 @@
     0, 188, 212; /* Darker variant of secondary color - used for hover states on secondary elements */
   --color-secondary-darker:
     9, 151, 167; /* Darkest variant of secondary color - used for pressed states and high emphasis */
-  
+
   --color-primary-info: #ffffff; /* Color for elements that are on top of the primary color, like text on primary buttons, should have good contrast with --color-primary and --color-primary-dark */
   --color-secondary-info: #ffffff; /* Color for elements that are on top of the secondary color, like text on secondary buttons, should have good contrast with --color-secondary and --color-secondary-dark */
 
