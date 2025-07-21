@@ -78,7 +78,9 @@ export function parseSearchOptionsFromUrl(url: string): SearchOptions {
 
   const category = searchParams.get('category');
   if (category) {
-    filter['directCategoriesInfo.categories._id'] = category;
+    filter['allCategoriesInfo.categories'] = {
+      $matchItems: [{ _id: { $in: [category] } }],
+    };
   }
 
   // Note: brand._id is not filterable in Wix API
