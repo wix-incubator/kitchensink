@@ -20,8 +20,7 @@ import {
   storeCollectionRouteLoader,
 } from './routes/store-collection';
 import { defaultStoreCollectionRouteRedirectLoader } from './routes/store-redirect';
-import Cart from '../../components/ecom/Cart';
-import '../../styles/theme-wix-vibe-vars.css';
+import { Cart } from './routes/cart';
 
 const router = createBrowserRouter(
   [
