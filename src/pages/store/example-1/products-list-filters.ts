@@ -34,7 +34,15 @@ export const ProductsListFiltersService =
       let firstRun = true;
       const signalsService = getService(SignalsServiceDefinition);
       const productsListService = getService(ProductsListServiceDefinition);
-      const categoriesListService = getService(CategoriesListServiceDefinition);
+
+      let categoriesListService:
+        | ReturnType<typeof getService<typeof CategoriesListServiceDefinition>>
+        | undefined;
+      try {
+        categoriesListService = getService(CategoriesListServiceDefinition);
+      } catch (error) {
+        categoriesListService = undefined;
+      }
 
       const aggregationData = productsListService.aggregations.get();
       // TODO: use the aggregations to get the available inventory statuses
@@ -65,7 +73,7 @@ export const ProductsListFiltersService =
           const selectedInventoryStatuses =
             selectedInventoryStatusesSignal.get();
           const selectedCategoryId =
-            categoriesListService.selectedCategoryId.get();
+            categoriesListService?.selectedCategoryId.get();
 
           if (firstRun) {
             firstRun = false;
@@ -133,9 +141,7 @@ export const ProductsListFiltersService =
             }
           }
 
-          console.log('🔥 selectedCategoryId', selectedCategoryId);
-          // Add new category filter if a category is selected
-          if (selectedCategoryId) {
+          if (categoriesListService && selectedCategoryId) {
             (newSearchOptions.filter as any)['allCategoriesInfo.categories'] = {
               $matchItems: [{ _id: { $in: [selectedCategoryId] } }],
             };
@@ -143,8 +149,6 @@ export const ProductsListFiltersService =
 
           // Use callback to update search options
           productsListService.setSearchOptions(newSearchOptions);
-
-          console.log('🔥 newSearchOptions', newSearchOptions);
         });
       }
 
