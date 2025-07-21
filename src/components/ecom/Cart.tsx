@@ -84,17 +84,7 @@ export default function CartContent() {
                         </p>
                         <Navigation
                           route="/store"
-                          className="inline-flex items-center gap-2 text-content-primary font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 btn-primary"
-                          onMouseEnter={(e: any) => {
-                            e.currentTarget.classList.remove('btn-primary');
-                            e.currentTarget.classList.add('btn-primary:hover');
-                          }}
-                          onMouseLeave={(e: any) => {
-                            e.currentTarget.classList.remove(
-                              'btn-primary:hover'
-                            );
-                            e.currentTarget.classList.add('btn-primary');
-                          }}
+                          className="inline-flex items-center gap-2 font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 btn-primary"
                         >
                           Continue Shopping
                           <svg

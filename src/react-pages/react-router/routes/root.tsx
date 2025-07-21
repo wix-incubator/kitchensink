@@ -42,7 +42,7 @@ export async function rootRouteLoader() {
   };
 }
 
-export function RootRoute(props: { children: React.ReactNode }) {
+export function WixServicesProvider(props: { children: React.ReactNode }) {
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 
   const servicesMap = createServicesMap().addService(
@@ -51,53 +51,68 @@ export function RootRoute(props: { children: React.ReactNode }) {
     currentCartServiceConfig
   );
 
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
   return (
-    <div
-      className="min-h-screen bg-surface-primary p-4 pt-16"
-      data-testid="main-container"
-    >
+    <div data-testid="main-container">
       <WixServices servicesMap={servicesMap}>
         <NavigationProvider
           navigationComponent={ReactRouterNavigationComponent}
         >
-          <MiniCartIcon />
-
-          <CurrentCart.Trigger>
-            {({ onOpen }) => (
-              <CurrentCart.LineItemAdded>
-                {({ onAddedToCart }) => {
-                  useEffect(
-                    () =>
-                      onAddedToCart(() => {
-                        setShowSuccessMessage(true);
-                        setTimeout(() => {
-                          setShowSuccessMessage(false);
-                          onOpen();
-                        }, 3000);
-                      }),
-                    [onAddedToCart]
-                  );
-
-                  return null;
-                }}
-              </CurrentCart.LineItemAdded>
-            )}
-          </CurrentCart.Trigger>
-
-          {showSuccessMessage && (
-            <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
-              Added to cart successfully!
-            </div>
-          )}
-
-          {/* Main Content */}
           {props.children}
-
-          <MiniCartContent />
         </NavigationProvider>
       </WixServices>
     </div>
+  );
+}
+
+export function MiniCartLayout({
+  children,
+  cartIcon,
+  showMiniCart = true,
+}: {
+  children: React.ReactNode;
+  cartIcon?: React.ComponentType;
+  showMiniCart?: boolean;
+}) {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  return showMiniCart ? (
+    <>
+      <MiniCartIcon Icon={cartIcon} />
+
+      <CurrentCart.Trigger>
+        {({ onOpen }) => (
+          <CurrentCart.LineItemAdded>
+            {({ onAddedToCart }) => {
+              useEffect(
+                () =>
+                  onAddedToCart(() => {
+                    setShowSuccessMessage(true);
+                    setTimeout(() => {
+                      setShowSuccessMessage(false);
+                      onOpen();
+                    }, 3000);
+                  }),
+                [onAddedToCart]
+              );
+
+              return null;
+            }}
+          </CurrentCart.LineItemAdded>
+        )}
+      </CurrentCart.Trigger>
+
+      {showSuccessMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
+          Added to cart successfully!
+        </div>
+      )}
+
+      {/* Main Content */}
+      {children}
+
+      <MiniCartContent />
+    </>
+  ) : (
+    <>{children}</>
   );
 }
