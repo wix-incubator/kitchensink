@@ -4,16 +4,24 @@ import {
   type Signal,
   SignalsServiceDefinition,
 } from '@wix/services-definitions/core-services/signals';
-import type { productsV3 } from '@wix/stores';
+import { productsV3 } from '@wix/stores';
 import { ProductsListServiceDefinition } from './products-list';
+
+export enum InventoryStatusType {
+  IN_STOCK = productsV3.InventoryAvailabilityStatus.IN_STOCK,
+  OUT_OF_STOCK = productsV3.InventoryAvailabilityStatus.OUT_OF_STOCK,
+  PARTIALLY_OUT_OF_STOCK = productsV3.InventoryAvailabilityStatus
+    .PARTIALLY_OUT_OF_STOCK,
+}
 
 export const ProductsListFiltersServiceDefinition = defineService<{
   minPrice: Signal<number>;
   maxPrice: Signal<number>;
-  inventoryStatus: Signal<string | null>;
+  availableInventoryStatuses: Signal<InventoryStatusType[]>;
+  selectedInventoryStatuses: Signal<InventoryStatusType[]>;
   setMinPrice: (minPrice: number) => void;
   setMaxPrice: (maxPrice: number) => void;
-  setInventoryStatus: (status: string | null) => void;
+  toggleInventoryStatus: (status: InventoryStatusType) => void;
 }>('products-list-filters');
 
 export type ProductsListFiltersServiceConfig = {};
@@ -38,8 +46,13 @@ export const ProductsListFiltersService =
       const maxPriceSignal = signalsService.signal(
         getMaxPrice(productsListService.searchOptions.get())
       );
-      const inventoryStatusSignal = signalsService.signal(
-        getInventoryStatus(productsListService.searchOptions.get())
+      const availableInventoryStatusesSignal = signalsService.signal([
+        InventoryStatusType.IN_STOCK,
+        InventoryStatusType.OUT_OF_STOCK,
+        InventoryStatusType.PARTIALLY_OUT_OF_STOCK,
+      ] as InventoryStatusType[]);
+      const selectedInventoryStatusesSignal = signalsService.signal(
+        getSelectedInventoryStatuses(productsListService.searchOptions.get())
       );
 
       if (typeof window !== 'undefined') {
@@ -47,7 +60,8 @@ export const ProductsListFiltersService =
           // CRITICAL: Read the signals FIRST to establish dependencies, even on first run
           const minPrice = minPriceSignal.get();
           const maxPrice = maxPriceSignal.get();
-          const inventoryStatus = inventoryStatusSignal.get();
+          const selectedInventoryStatuses =
+            selectedInventoryStatusesSignal.get();
 
           if (firstRun) {
             firstRun = false;
@@ -97,10 +111,17 @@ export const ProductsListFiltersService =
             ] = { $lte: maxPrice };
           }
 
-          // Add new inventory filter if it has a valid value
-          if (inventoryStatus) {
-            (newSearchOptions.filter as any)['inventory.availabilityStatus'] =
-              inventoryStatus;
+          // Add new inventory filter if there are selected statuses
+          if (selectedInventoryStatuses.length > 0) {
+            if (selectedInventoryStatuses.length === 1) {
+              (newSearchOptions.filter as any)['inventory.availabilityStatus'] =
+                selectedInventoryStatuses[0];
+            } else {
+              (newSearchOptions.filter as any)['inventory.availabilityStatus'] =
+                {
+                  $in: selectedInventoryStatuses,
+                };
+            }
           }
 
           // Use callback to update search options
@@ -113,15 +134,24 @@ export const ProductsListFiltersService =
       return {
         minPrice: minPriceSignal,
         maxPrice: maxPriceSignal,
-        inventoryStatus: inventoryStatusSignal,
+        availableInventoryStatuses: availableInventoryStatusesSignal,
+        selectedInventoryStatuses: selectedInventoryStatusesSignal,
         setMinPrice: (minPrice: number) => {
           minPriceSignal.set(minPrice);
         },
         setMaxPrice: (maxPrice: number) => {
           maxPriceSignal.set(maxPrice);
         },
-        setInventoryStatus: (status: string | null) => {
-          inventoryStatusSignal.set(status);
+        toggleInventoryStatus: (status: InventoryStatusType) => {
+          const current = selectedInventoryStatusesSignal.get();
+          const isSelected = current.includes(status);
+          if (isSelected) {
+            selectedInventoryStatusesSignal.set(
+              current.filter((s: InventoryStatusType) => s !== status)
+            );
+          } else {
+            selectedInventoryStatusesSignal.set([...current, status]);
+          }
         },
       };
     }
@@ -163,16 +193,25 @@ function getMaxPrice(
   return 0;
 }
 
-function getInventoryStatus(
+function getSelectedInventoryStatuses(
   searchOptions: Parameters<typeof productsV3.searchProducts>[0]
-): string | null {
+): InventoryStatusType[] {
   const filter = searchOptions.filter;
-  if (!filter) return null;
+  if (!filter) return [];
 
   const inventoryFilter = (filter as any)['inventory.availabilityStatus'];
+
   if (typeof inventoryFilter === 'string' && inventoryFilter.length > 0) {
-    return inventoryFilter;
+    return [inventoryFilter as InventoryStatusType];
   }
 
-  return null;
+  if (
+    typeof inventoryFilter === 'object' &&
+    inventoryFilter !== null &&
+    '$in' in inventoryFilter
+  ) {
+    return Array.isArray(inventoryFilter.$in) ? inventoryFilter.$in : [];
+  }
+
+  return [];
 }

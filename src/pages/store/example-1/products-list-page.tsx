@@ -1,11 +1,11 @@
 import { Product } from '@wix/headless-stores/react';
-import { productsV3 } from '@wix/stores';
 import { type ProductsListServiceConfig } from './products-list';
 import { ProductsList } from './products-list-components';
 import { ProductsListFilters } from './products-list-filters-components';
 import { ProductsListPagination } from './products-list-pagination-components';
 import { ProductsListSort } from './products-list-sort-components';
 import { SortType } from './products-list-sort';
+import { InventoryStatusType } from './products-list-filters';
 
 export function ProductsListPage({
   productsListConfig,
@@ -157,6 +157,45 @@ export function ProductsListPage({
                   </div>
                 )}
               </ProductsListFilters.MaxPrice>
+
+              <ProductsListFilters.InventoryStatus>
+                {({
+                  availableInventoryStatuses,
+                  selectedInventoryStatuses,
+                  toggleInventoryStatus,
+                }) => (
+                  <div>
+                    <label>Availability</label>
+                    <div>
+                      {availableInventoryStatuses.map(status => (
+                        <div key={status}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={selectedInventoryStatuses.includes(
+                                status
+                              )}
+                              onChange={() => toggleInventoryStatus(status)}
+                            />
+                            <span>
+                              {(() => {
+                                switch (status) {
+                                  case InventoryStatusType.IN_STOCK:
+                                    return 'In Stock';
+                                  case InventoryStatusType.OUT_OF_STOCK:
+                                    return 'Out of Stock';
+                                  case InventoryStatusType.PARTIALLY_OUT_OF_STOCK:
+                                    return 'Partially Available';
+                                }
+                              })()}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </ProductsListFilters.InventoryStatus>
             </div>
           </div>
         </ProductsListFilters.Root>

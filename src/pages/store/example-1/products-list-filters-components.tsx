@@ -4,6 +4,7 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import {
   ProductsListFiltersService,
   ProductsListFiltersServiceDefinition,
+  InventoryStatusType,
 } from './products-list-filters';
 
 function Root(props: PropsWithChildren) {
@@ -62,17 +63,23 @@ export type InventoryStatusProps = {
 };
 
 export type InventoryStatusRenderProps = {
-  inventoryStatus: string | null;
-  setInventoryStatus: (status: string | null) => void;
+  availableInventoryStatuses: InventoryStatusType[];
+  selectedInventoryStatuses: InventoryStatusType[];
+  toggleInventoryStatus: (status: InventoryStatusType) => void;
 };
 
 function InventoryStatus(props: InventoryStatusProps) {
   const service = useService(ProductsListFiltersServiceDefinition);
-  const inventoryStatus = service.inventoryStatus.get();
-  const setInventoryStatus = service.setInventoryStatus;
+  const availableInventoryStatuses = service.availableInventoryStatuses.get();
+  const selectedInventoryStatuses = service.selectedInventoryStatuses.get();
+  const toggleInventoryStatus = service.toggleInventoryStatus;
 
   return typeof props.children === 'function'
-    ? props.children({ inventoryStatus, setInventoryStatus })
+    ? props.children({
+        availableInventoryStatuses,
+        selectedInventoryStatuses,
+        toggleInventoryStatus,
+      })
     : props.children;
 }
 
