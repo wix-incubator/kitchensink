@@ -1,5 +1,5 @@
 import { redirect } from 'react-router-dom';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
+import { loadCategoriesConfig } from '@wix/stores/services';
 
 export async function defaultStoreCollectionRouteRedirectLoader() {
   const [categoriesConfig] = await Promise.all([loadCategoriesConfig()]);

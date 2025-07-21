@@ -4,33 +4,33 @@ import '../../../styles/theme-2.css';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 import { WixMediaImage } from '../../../headless/media/components';
 import ProductFilters from '../../../components/store/ProductFilters';
-import { FilteredCollection } from '@wix/headless-stores/react';
+import { FilteredCollection } from '@wix/stores/components';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import { createServicesMap } from '@wix/services-manager';
 import {
   FilterService,
   FilterServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '@wix/headless-ecom/services';
+} from '@wix/ecom/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import StoreHeader from '../../../components/store/StoreHeader';
 import {
   SortService,
   SortServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
-  CatalogService,
-  CatalogServiceDefinition,
-} from '@wix/headless-stores/services';
+  CatalogOptionsService as CatalogService,
+  CatalogOptionsServiceDefinition as CatalogServiceDefinition,
+} from '@wix/stores/services';
 
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;

@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ProductDetailPage from '../../../react-pages/store/example-2/products/[slug]';
-import { loadProductServiceConfig } from '@wix/headless-stores/services';
-import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import { loadRelatedProductsServiceConfig } from '@wix/headless-stores/services';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
-import { SEO } from '@wix/headless-seo/react';
+import { loadProductServiceConfig } from '@wix/stores/services';
+import { loadCurrentCartServiceConfig } from '@wix/ecom/services';
+import { loadRelatedProductsServiceConfig } from '@wix/stores/services';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
+import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
 
 const { slug } = Astro.params;

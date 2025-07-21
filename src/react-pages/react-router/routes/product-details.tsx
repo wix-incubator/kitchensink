@@ -2,7 +2,7 @@ import { useLoaderData } from 'react-router-dom';
 import {
   loadProductServiceConfig,
   ProductService,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
 import ProductDetailPage from '../../store/main-components/productDetailsPage';
 

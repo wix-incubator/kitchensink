@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SocialSharing } from '@wix/headless-stores/react';
+import { SocialSharing } from '@wix/stores/components';
 
 interface SocialSharingButtonsProps {
   url?: string;

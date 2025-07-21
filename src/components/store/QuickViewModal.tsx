@@ -7,25 +7,25 @@ import { useNavigation } from '../NavigationContext';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
+} from '@wix/media/services';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
-import { CurrentCart } from '@wix/headless-ecom/react';
-import type { LineItem } from '@wix/headless-ecom/services';
+} from '@wix/stores/services';
+import { CurrentCart } from '@wix/ecom/components';
+import type { LineItem } from '@wix/ecom/services';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;

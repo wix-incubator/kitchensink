@@ -9,7 +9,7 @@ import {
   ProductVariantSelector,
   SelectedVariant,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from '@wix/stores/components';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -22,13 +22,13 @@ import {
   SelectedVariantServiceDefinition,
   type Filter,
   type AvailableOptions,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
-import { CurrentCart } from '@wix/headless-ecom/react';
-import type { LineItem } from '@wix/headless-ecom/services';
+} from '@wix/media/services';
+import { CurrentCart } from '@wix/ecom/components';
+import type { LineItem } from '@wix/ecom/services';
 
 export const ProductGridContent = ({
   productPageRoute,

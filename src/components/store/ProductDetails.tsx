@@ -1,4 +1,4 @@
-import { MediaGallery } from '@wix/headless-media/react';
+import { MediaGallery } from '@wix/media/components';
 import { WixMediaImage } from '../../headless/media/components';
 import {
   Product,
@@ -6,9 +6,9 @@ import {
   ProductVariantSelector,
   SelectedVariant,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from '@wix/stores/components';
 import { ProductActionButtons } from './ProductActionButtons';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@wix/ecom/components';
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';

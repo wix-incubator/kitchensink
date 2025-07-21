@@ -6,12 +6,12 @@ import {
   CurrentCartService,
   CurrentCartServiceDefinition,
   loadCurrentCartServiceConfig,
-} from '@wix/headless-ecom/services';
+} from '@wix/ecom/services';
 import {
   MiniCartContent,
   MiniCartIcon,
 } from '../../../components/ecom/MiniCart';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@wix/ecom/components';
 import {
   NavigationProvider,
   type NavigationComponent,

@@ -1,7 +1,7 @@
 import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
 import React from 'react';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadCategoriesConfig } from '@wix/stores/services';
+import { loadCollectionServiceConfig } from '@wix/stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 
 // Skeleton component for product collection loading

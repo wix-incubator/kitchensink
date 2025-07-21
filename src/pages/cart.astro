@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CartPage from '../react-pages/cart';
-import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import { loadCurrentCartServiceConfig } from '@wix/ecom/services';
 
 // Load initial cart data server-side
 const cartServiceConfig = await loadCurrentCartServiceConfig();

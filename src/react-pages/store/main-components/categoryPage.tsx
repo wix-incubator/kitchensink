@@ -1,25 +1,25 @@
 import { createServicesMap } from '@wix/services-manager';
 import { useState } from 'react';
 import {
-  CatalogService,
-  CatalogServiceDefinition,
-} from '@wix/headless-stores/services';
+  CatalogOptionsService as CatalogService,
+  CatalogOptionsServiceDefinition as CatalogServiceDefinition,
+} from '@wix/stores/services';
 import {
   CategoryService,
   CategoryServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   CollectionService,
   CollectionServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   FilterService,
   FilterServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SortService,
   SortServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import ProductList from '../../../components/store/ProductList';
 import { WixServices } from '@wix/services-manager-react';
 

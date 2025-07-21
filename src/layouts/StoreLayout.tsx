@@ -4,9 +4,9 @@ import { createServicesMap } from '@wix/services-manager';
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from '@wix/headless-ecom/services';
+} from '@wix/ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@wix/ecom/components';
 
 interface StoreLayoutProps {
   children: ReactNode;

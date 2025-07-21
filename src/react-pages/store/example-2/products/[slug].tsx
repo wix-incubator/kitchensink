@@ -5,41 +5,41 @@ import {
 } from '@wix/services-manager';
 import { useState } from 'react';
 import { PageDocsRegistration } from '../../../../components/DocsMode';
-import { MediaGallery } from '@wix/headless-media/react';
+import { MediaGallery } from '@wix/media/components';
 import { WixMediaImage } from '../../../../headless/media/components';
-import { CurrentCart } from '@wix/headless-ecom/react';
-import { Product, SelectedVariant } from '@wix/headless-stores/react';
+import { CurrentCart } from '@wix/ecom/components';
+import { Product, SelectedVariant } from '@wix/stores/components';
 import {
   ProductModifiers,
   ProductVariantSelector,
   RelatedProducts,
   ProductActions,
-} from '@wix/headless-stores/react';
+} from '@wix/stores/components';
 import { SocialSharingButtons } from '../../../../components/social/SocialSharingButtons';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
-} from '@wix/headless-ecom/services';
+} from '@wix/ecom/services';
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   RelatedProductsService,
   RelatedProductsServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-2.css';
@@ -47,7 +47,7 @@ import { getStockStatusMessage } from '../../../../components/store/enums/produc
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
+} from '@wix/media/services';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;

@@ -1,5 +1,5 @@
-import { Sort } from '@wix/headless-stores/react';
-import { type SortBy } from '@wix/headless-stores/services';
+import { Sort } from '@wix/stores/components';
+import { type SortBy } from '@wix/stores/services';
 
 interface SortDropdownProps {}
 

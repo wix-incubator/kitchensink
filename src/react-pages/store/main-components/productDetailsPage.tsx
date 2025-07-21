@@ -1,25 +1,25 @@
 import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   ProductService,
   ProductServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import ProductDetails from '../../../components/store/ProductDetails';
 import {
   MediaGalleryService,
   MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
+} from '@wix/media/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
 import {
   SocialSharingService,
   SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 import { createServicesMap } from '@wix/services-manager';
 import { WixServices } from '@wix/services-manager-react';
 

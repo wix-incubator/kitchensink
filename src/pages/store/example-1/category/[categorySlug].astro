@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import StoreCollectionPage from '../../../../react-pages/store/example-1/index';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
-import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
-import { SEO } from '@wix/headless-seo/react';
+import { loadCollectionServiceConfig } from '@wix/stores/services';
+import { loadCurrentCartServiceConfig } from '@wix/ecom/services';
+import { loadCategoriesConfig } from '@wix/stores/services';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
+import { SEO } from '@wix/seo/components';
 
 // Get category slug from URL params
 const { categorySlug } = Astro.params;
