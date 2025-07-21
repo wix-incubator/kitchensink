@@ -135,14 +135,14 @@ export const ProductGridContent = ({
                 )}
 
                 {/* Quick View Button - appears on hover */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-90 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
                   <button
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
                       openQuickView(product);
                     }}
-                    className="bg-gradient-primary text-white px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium bg-gradient-primary-hover transition-all duration-200 whitespace-nowrap"
+                    className="btn-secondary px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium transition-all duration-200 whitespace-nowrap"
                   >
                     <svg
                       className="w-4 h-4"
@@ -170,7 +170,7 @@ export const ProductGridContent = ({
 
               {product.ribbon?.name && (
                 <div className="absolute top-2 left-2">
-                  <span className="bg-gradient-ribbon text-content-primary text-xs px-2 py-1 rounded-full font-medium">
+                  <span className="btn-ribbon text-xs px-2 py-1 rounded-full font-medium">
                     {product.ribbon.name}
                   </span>
                 </div>

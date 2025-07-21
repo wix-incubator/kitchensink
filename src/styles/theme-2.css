@@ -309,11 +309,6 @@
     #14b8a6,
     #06b6d4
   ); /* Main brand gradient used for primary buttons and CTAs */
-  --theme-gradient-primary-hover: linear-gradient(
-    to right,
-    #0d9488,
-    #0e7490
-  ); /* Darker gradient used for button hover states */
   --theme-gradient-ribbon: linear-gradient(
     to right,
     #14b8a6,

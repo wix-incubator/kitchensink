@@ -83,7 +83,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 btn-warning disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
+      className={`flex-1 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">

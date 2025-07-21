@@ -60,11 +60,11 @@ export default function ProductDetails({
   return (
     <>
       <div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         data-testid="product-details"
       >
         {/* Product Images */}
-        <div className="space-y-4">
+        <div className="space-y-4 px-3">
           {/* Main Image */}
           <div className="aspect-square bg-surface-primary rounded-2xl overflow-hidden border border-brand-subtle relative">
             <MediaGallery.Viewport>
@@ -205,7 +205,7 @@ export default function ProductDetails({
         </div>
 
         {/* Product Info */}
-        <div className="space-y-8">
+        <div className="space-y-8 px-3">
           {/* Product Name & Price */}
           <div>
             <Product.Name>

@@ -440,19 +440,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
         /* Different colors for min and max sliders */
         .range-slider-min::-webkit-slider-thumb {
-          background: var(--theme-gradient-primary);
+          background: var(--theme-primary-500);
         }
         
         .range-slider-min::-moz-range-thumb {
-          background: var(--theme-gradient-primary);
+          background: var(--theme-primary-500);
         }
         
         .range-slider-max::-webkit-slider-thumb {
-          background: var(--theme-gradient-primary);
+          background: var(--theme-primary-600);
         }
         
         .range-slider-max::-moz-range-thumb {
-          background: var(--theme-gradient-primary);
+          background: var(--theme-primary-600);
         }
       `}</style>
     </div>

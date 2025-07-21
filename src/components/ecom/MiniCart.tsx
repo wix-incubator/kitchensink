@@ -62,7 +62,27 @@ const CouponFormMini = ({
   );
 };
 
-export function MiniCartIcon() {
+const DefaultMiniCartIcon = () => (
+  <svg
+    className="w-6 h-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h12"
+    />
+  </svg>
+);
+
+export function MiniCartIcon({
+  Icon = DefaultMiniCartIcon,
+}: {
+  Icon?: React.ComponentType;
+}) {
   return (
     <>
       {/* Fixed Cart Icon */}
@@ -73,19 +93,7 @@ export function MiniCartIcon() {
               onClick={onOpen}
               className="relative p-2 text-content-primary hover:text-brand-light transition-colors"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h12"
-                />
-              </svg>
+              <Icon />
               {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-accent-medium text-content-primary text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {itemCount}
@@ -445,7 +453,7 @@ export function MiniCartContent() {
                                   <button
                                     onClick={onProceed}
                                     disabled={!canCheckout}
-                                    className="w-full bg-gradient-primary bg-gradient-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                    className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
                                   >
                                     Proceed to Checkout
                                   </button>
