@@ -2,7 +2,10 @@ import { productsV3 } from '@wix/stores';
 
 export type SearchOptions = Parameters<typeof productsV3.searchProducts>[0];
 
-export function parseSearchOptionsFromUrl(url: string): SearchOptions {
+export function buildSearchOptionsFromUrl(
+  url: string,
+  defaultSearchOptions?: SearchOptions
+): SearchOptions {
   const urlObj = new URL(url);
   const searchParams = urlObj.searchParams;
 
@@ -10,6 +13,7 @@ export function parseSearchOptionsFromUrl(url: string): SearchOptions {
     cursorPaging: {
       limit: 100,
     },
+    ...defaultSearchOptions,
   };
 
   // Handle text search (q parameter)

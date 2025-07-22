@@ -43,7 +43,6 @@ export const ProductsListSortService =
           const newSearchOptions: Parameters<
             typeof productsV3.searchProducts
           >[0] = {
-            // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
 

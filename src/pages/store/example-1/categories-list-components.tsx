@@ -7,6 +7,7 @@ import {
 } from './categories-list';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { categories } from '@wix/categories';
+import { Category } from './category-components';
 
 function Root(
   props: PropsWithChildren<{
@@ -89,8 +90,6 @@ function Error(props: ErrorProps) {
 
 export type ItemContentRenderProps = {
   category: categories.Category;
-  isSelected: boolean;
-  onSelect: () => void;
 };
 
 export type ItemContentProps = {
@@ -98,29 +97,23 @@ export type ItemContentProps = {
 };
 
 function ItemContent(props: ItemContentProps) {
-  const { categories, isLoading, error, selectedCategoryId, selectCategory } =
-    useService(CategoriesListServiceDefinition);
+  const { categories, isLoading, error } = useService(
+    CategoriesListServiceDefinition
+  );
   const categoriesValue = categories.get();
-  const selectedCategoryIdValue = selectedCategoryId.get();
 
   if (isLoading.get() || error.get() || categoriesValue.length === 0) {
     return null;
   }
 
-  const handleSelectCategory = (categoryId: string) => {
-    selectCategory(categoryId);
-  };
-
   return categoriesValue.map(category => (
-    <div key={category._id}>
+    <Category.Root key={category._id} categoryServiceConfig={{ category }}>
       {typeof props.children === 'function'
         ? props.children({
             category,
-            isSelected: selectedCategoryIdValue === category._id,
-            onSelect: () => handleSelectCategory(category._id!),
           })
         : props.children}
-    </div>
+    </Category.Root>
   ));
 }
 

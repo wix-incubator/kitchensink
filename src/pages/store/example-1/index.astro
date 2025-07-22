@@ -1,11 +1,10 @@
 ---
-import type { productsV3 } from '@wix/stores';
-import { parseSearchOptionsFromUrl } from './parseSearchOptionsFromUrl';
+import { loadCategoriesListServiceConfig } from './categories-list';
+import { buildSearchOptionsFromUrl } from './parseSearchOptionsFromUrl';
 import { loadProductsListServiceConfig } from './products-list';
 import { ProductsListPage } from './products-list-page';
-import { loadCategoriesListServiceConfig } from './categories-list';
 
-const searchOptions = parseSearchOptionsFromUrl(Astro.url.href);
+const searchOptions = buildSearchOptionsFromUrl(Astro.url.href);
 const categoriesListConfig = await loadCategoriesListServiceConfig();
 const productsListConfig = await loadProductsListServiceConfig(searchOptions);
 ---

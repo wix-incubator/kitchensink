@@ -8,6 +8,7 @@ import { SortType } from './products-list-sort';
 import { InventoryStatusType } from './products-list-filters';
 import { CategoriesList } from './categories-list-components';
 import type { CategoriesListServiceConfig } from './categories-list';
+import { Category } from './category-components';
 
 export function ProductsListPage({
   productsListConfig,
@@ -23,13 +24,7 @@ export function ProductsListPage({
       </div>
       <CategoriesList.Root categoriesListConfig={categoriesListConfig}>
         <CategoriesList.ItemContent>
-          {({ category, isSelected, onSelect }) => (
-            <div>
-              <button onClick={onSelect} disabled={isSelected}>
-                {category.name}
-              </button>
-            </div>
-          )}
+          <Category.Name>{({ name }) => <h3>{name}</h3>}</Category.Name>
         </CategoriesList.ItemContent>
         <ProductsList.Root productsListConfig={productsListConfig}>
           <div>

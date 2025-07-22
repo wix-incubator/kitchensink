@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "wix dev",
     "build": "wix build",
     "preview": "wix preview",
@@ -60,6 +61,7 @@
     "astro": "^5.9.0",
     "clsx": "^2.1.1",
     "lodash.kebabcase": "^4.1.1",
+    "patch-package": "^8.0.0",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "react": "^18.3.1",

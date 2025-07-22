@@ -6,7 +6,6 @@ import {
 } from '@wix/services-definitions/core-services/signals';
 import { productsV3 } from '@wix/stores';
 import { ProductsListServiceDefinition } from './products-list';
-import { CategoriesListServiceDefinition } from './categories-list';
 
 export enum InventoryStatusType {
   IN_STOCK = productsV3.InventoryAvailabilityStatus.IN_STOCK,
@@ -34,15 +33,6 @@ export const ProductsListFiltersService =
       let firstRun = true;
       const signalsService = getService(SignalsServiceDefinition);
       const productsListService = getService(ProductsListServiceDefinition);
-
-      let categoriesListService:
-        | ReturnType<typeof getService<typeof CategoriesListServiceDefinition>>
-        | undefined;
-      try {
-        categoriesListService = getService(CategoriesListServiceDefinition);
-      } catch (error) {
-        categoriesListService = undefined;
-      }
 
       const aggregationData = productsListService.aggregations.get();
       // TODO: use the aggregations to get the available inventory statuses
@@ -72,8 +62,6 @@ export const ProductsListFiltersService =
           const maxPrice = maxPriceSignal.get();
           const selectedInventoryStatuses =
             selectedInventoryStatusesSignal.get();
-          const selectedCategoryId =
-            categoriesListService?.selectedCategoryId.get();
 
           if (firstRun) {
             firstRun = false;
@@ -84,7 +72,6 @@ export const ProductsListFiltersService =
           const newSearchOptions: Parameters<
             typeof productsV3.searchProducts
           >[0] = {
-            // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
 
@@ -111,11 +98,6 @@ export const ProductsListFiltersService =
             'inventory.availabilityStatus'
           ];
 
-          // Remove existing category filter
-          delete (newSearchOptions.filter as any)[
-            'allCategoriesInfo.categories'
-          ];
-
           // Add new price filters if they have valid values
           if (minPrice > 0) {
             (newSearchOptions.filter as any)[
@@ -139,12 +121,6 @@ export const ProductsListFiltersService =
                   $in: selectedInventoryStatuses,
                 };
             }
-          }
-
-          if (categoriesListService && selectedCategoryId) {
-            (newSearchOptions.filter as any)['allCategoriesInfo.categories'] = {
-              $matchItems: [{ _id: { $in: [selectedCategoryId] } }],
-            };
           }
 
           // Use callback to update search options

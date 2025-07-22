@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { productsV3 } from '@wix/stores';
-import { parseSearchOptionsFromUrl } from '../store/example-1/parseSearchOptionsFromUrl';
+import { buildSearchOptionsFromUrl } from '../store/example-1/parseSearchOptionsFromUrl';
 
 export const GET: APIRoute = async ({ request, url }) => {
   try {
@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     console.log('Testing URL:', testUrl);
 
     // Parse the URL using our function
-    const searchOptions = parseSearchOptionsFromUrl(testUrl);
+    const searchOptions = buildSearchOptionsFromUrl(testUrl);
 
     console.log(
       'Parsed search options:',
@@ -77,7 +77,7 @@ export const GET: APIRoute = async ({ request, url }) => {
           testUrl: url.href,
           searchOptions: (() => {
             try {
-              return parseSearchOptionsFromUrl(url.href);
+              return buildSearchOptionsFromUrl(url.href);
             } catch (parseError) {
               return {
                 parseError:
