@@ -6,11 +6,7 @@ import {
 } from 'react-router-dom';
 
 // Import route components and loaders
-import {
-  MiniCartLayout,
-  rootRouteLoader,
-  WixServicesProvider,
-} from './routes/root';
+import { MiniCart, rootRouteLoader, WixServicesProvider } from './routes/root';
 import {
   ProductDetailsRoute,
   productRouteLoader,
@@ -31,13 +27,11 @@ const router = createBrowserRouter(
     {
       element: (
         <WixServicesProvider>
-          {/* A layout that includes the mini cart icon and the cart content, the cart icon is on the top right of the page */}
-          <MiniCartLayout
-            showMiniCart={true} // pass false to hide the mini cart
+          <MiniCart
             // cartIcon={... optionally use your own icon...}
-          >
-            <Outlet />
-          </MiniCartLayout>
+            cartIconClassName="fixed top-2 right-2 z-50"
+          />
+          <Outlet />
         </WixServicesProvider>
       ),
       loader: rootRouteLoader,
