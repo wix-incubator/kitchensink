@@ -22,6 +22,8 @@ export const ProductsListFiltersServiceDefinition = defineService<{
   setMinPrice: (minPrice: number) => void;
   setMaxPrice: (maxPrice: number) => void;
   toggleInventoryStatus: (status: InventoryStatusType) => void;
+  isFiltered: Signal<boolean>;
+  reset: () => void;
 }>('products-list-filters');
 
 export type ProductsListFiltersServiceConfig = {};
@@ -55,6 +57,8 @@ export const ProductsListFiltersService =
         getSelectedInventoryStatuses(productsListService.searchOptions.get())
       );
 
+      const isFilteredSignal = signalsService.signal(false);
+
       if (typeof window !== 'undefined') {
         signalsService.effect(() => {
           // CRITICAL: Read the signals FIRST to establish dependencies, even on first run
@@ -67,6 +71,8 @@ export const ProductsListFiltersService =
             firstRun = false;
             return;
           }
+
+          isFilteredSignal.set(true);
 
           // Build new search options with updated price filters
           const newSearchOptions: Parameters<
@@ -149,6 +155,14 @@ export const ProductsListFiltersService =
           } else {
             selectedInventoryStatusesSignal.set([...current, status]);
           }
+        },
+        isFiltered: isFilteredSignal,
+        reset: () => {
+          // TODO: reset the filters to the original values from the aggregation data
+          minPriceSignal.set(0);
+          maxPriceSignal.set(0);
+          selectedInventoryStatusesSignal.set([]);
+          isFilteredSignal.set(false);
         },
       };
     }

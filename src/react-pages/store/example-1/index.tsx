@@ -3,18 +3,23 @@ import { StoreLayout } from '../../../layouts/StoreLayout';
 import '../../../styles/theme-1.css';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import CategoryPage from '../main-components/categoryPage';
-
-interface StoreCollectionPageProps {
-  filteredCollectionServiceConfig: any;
-  currentCartServiceConfig: any;
-  categoriesConfig: any;
-}
+import type { CategoriesListServiceConfig } from '../../../pages/store/example-1/categories-list';
+import type { ProductsListServiceConfig } from '../../../pages/store/example-1/products-list';
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 
 export default function StoreCollectionPage({
-  filteredCollectionServiceConfig,
+  productsListConfig,
+  categoriesListConfig,
   currentCartServiceConfig,
-  categoriesConfig,
-}: StoreCollectionPageProps) {
+  slug,
+}: {
+  productsListConfig: ProductsListServiceConfig;
+  categoriesListConfig: CategoriesListServiceConfig;
+  currentCartServiceConfig: Awaited<
+    ReturnType<typeof loadCurrentCartServiceConfig>
+  >; // TODO: import this type from the ecom package
+  slug: string;
+}) {
   return (
     <KitchensinkLayout>
       <PageDocsRegistration
@@ -34,10 +39,10 @@ export default function StoreCollectionPage({
           </div>
 
           <CategoryPage
-            filteredCollectionServiceConfig={filteredCollectionServiceConfig}
-            categoriesConfig={categoriesConfig}
+            productsListConfig={productsListConfig}
+            categoriesListConfig={categoriesListConfig}
+            currentCategorySlug={slug}
             productPageRoute="/store/example-1"
-            basePath="/store/example-1/category"
           />
         </div>
       </StoreLayout>

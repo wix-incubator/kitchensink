@@ -83,9 +83,53 @@ function InventoryStatus(props: InventoryStatusProps) {
     : props.children;
 }
 
+export type ResetTriggerProps = {
+  children: ((props: ResetTriggerRenderProps) => ReactNode) | ReactNode;
+};
+
+export type ResetTriggerRenderProps = {
+  resetFilters: () => void;
+  isFiltered: boolean;
+};
+
+function ResetTrigger(props: ResetTriggerProps) {
+  const service = useService(ProductsListFiltersServiceDefinition);
+  const resetFilters = service.reset;
+  const isFiltered = service.isFiltered.get();
+
+  return typeof props.children === 'function'
+    ? props.children({ resetFilters, isFiltered })
+    : props.children;
+}
+
+export type PriceRangeProps = {
+  children: ((props: PriceRangeRenderProps) => ReactNode) | ReactNode;
+};
+
+export type PriceRangeRenderProps = {
+  minPrice: number;
+  maxPrice: number;
+  setMinPrice: (minPrice: number) => void;
+  setMaxPrice: (maxPrice: number) => void;
+};
+
+function PriceRange(props: PriceRangeProps) {
+  const service = useService(ProductsListFiltersServiceDefinition);
+  const minPrice = service.minPrice.get();
+  const maxPrice = service.maxPrice.get();
+  const setMinPrice = service.setMinPrice;
+  const setMaxPrice = service.setMaxPrice;
+
+  return typeof props.children === 'function'
+    ? props.children({ minPrice, maxPrice, setMinPrice, setMaxPrice })
+    : props.children;
+}
+
 export const ProductsListFilters = {
   Root,
   MinPrice,
   MaxPrice,
   InventoryStatus,
+  ResetTrigger,
+  PriceRange,
 };

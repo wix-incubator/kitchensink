@@ -5,6 +5,7 @@ import {
   ProductsListPaginationService,
   ProductsListPaginationServiceDefinition,
 } from './products-list-pagination';
+import { ProductsListServiceDefinition } from './products-list';
 
 function Root(props: PropsWithChildren) {
   return (
@@ -93,10 +94,34 @@ function FirstPage(props: FirstPageProps) {
     : props.children;
 }
 
+type LoadMoreProps = {
+  children: ((props: LoadMoreRenderProps) => ReactNode) | ReactNode;
+};
+
+type LoadMoreRenderProps = {
+  loadMore: (count: number) => void;
+  hasMoreProducts: boolean;
+  isLoading: boolean;
+};
+
+function LoadMore(props: LoadMoreProps) {
+  const service = useService(ProductsListPaginationServiceDefinition);
+  const productsListService = useService(ProductsListServiceDefinition);
+
+  const loadMore = service.loadMore;
+  const hasMoreProducts = service.hasNextPage.get();
+  const isLoading = productsListService.isLoading.get();
+
+  return typeof props.children === 'function'
+    ? props.children({ loadMore, hasMoreProducts, isLoading })
+    : props.children;
+}
+
 export const ProductsListPagination = {
   Root,
   PageSize,
   NextPage,
   PrevPage,
   FirstPage,
+  LoadMore,
 };

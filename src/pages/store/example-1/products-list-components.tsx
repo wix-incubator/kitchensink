@@ -123,10 +123,28 @@ function ItemContent(props: ItemContentProps) {
   ));
 }
 
+export type ItemsProps = {
+  children: ((props: ItemsRenderProps) => ReactNode) | ReactNode;
+};
+
+export type ItemsRenderProps = {
+  products: productsV3.V3Product[];
+};
+
+function Items(props: ItemsProps) {
+  const { products } = useService(ProductsListServiceDefinition);
+  const productsValue = products.get();
+
+  return typeof props.children === 'function'
+    ? props.children({ products: productsValue })
+    : props.children;
+}
+
 export const ProductsList = {
   Root,
   EmptyState,
   Loading,
   Error,
   ItemContent,
+  Items,
 };

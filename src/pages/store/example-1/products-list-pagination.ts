@@ -16,6 +16,7 @@ export const ProductsListPaginationServiceDefinition = defineService<{
   nextPage: () => void;
   prevPage: () => void;
   goToFirstPage: () => void;
+  loadMore: (count: number) => void;
 }>('products-list-pagination');
 
 export type ProductsListPaginationServiceConfig = {};
@@ -63,7 +64,6 @@ export const ProductsListPaginationService =
           const newSearchOptions: Parameters<
             typeof productsV3.searchProducts
           >[0] = {
-            // @ts-expect-error
             ...productsListService.searchOptions.peek(),
           };
 
@@ -92,6 +92,11 @@ export const ProductsListPaginationService =
           currentLimitSignal.set(limit);
           // Reset pagination when changing page size
           currentCursorSignal.set(null);
+        },
+
+        loadMore: (count: number) => {
+          const limit = currentLimitSignal.get();
+          currentLimitSignal.set(limit + count);
         },
 
         nextPage: () => {

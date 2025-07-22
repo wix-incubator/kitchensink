@@ -1,46 +1,52 @@
 ---
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import { loadCategoriesConfig, loadCollectionServiceConfig } from '@wix/headless-stores/services';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
-import StoreCollectionPage from '../../../../react-pages/store/example-1/index';
+import StoreCollectionPage from '../../../../react-pages/store/example-1';
+import { loadCategoriesListServiceConfig } from '../categories-list';
+import { loadCategoryServiceConfig } from '../category';
+import { buildSearchOptionsFromUrl } from '../parseSearchOptionsFromUrl';
+import { loadProductsListServiceConfig } from '../products-list';
 
-// Get category slug from URL params
 const { categorySlug } = Astro.params;
 
+if (!categorySlug) {
+  throw new Error('Category slug is required');
+}
 
-// Load categories and cart config in parallel (cart is independent)
-const [categoriesConfig, currentCartServiceConfig] = await Promise.all([
-  loadCategoriesConfig(),
-  loadCurrentCartServiceConfig(),
-]);
+const categoryLoadResult = await loadCategoryServiceConfig(categorySlug);
 
-// Find category by its real slug
-const selectedCategory = categoriesConfig.categories.find(
-  (cat: any) => cat.slug === categorySlug
-);
-
-// Load collection config with selected category (pass pre-loaded categories)
-const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
-  selectedCategory?._id || undefined,
-  Astro.url.searchParams,
-  categoriesConfig.categories
-);
-
-// If category not found, return 404
-if (!selectedCategory) {
+if (categoryLoadResult.type === 'not-found') {
   return Astro.rewrite('/404');
 }
+
+const category = categoryLoadResult.config.category;
+
+const searchOptions = buildSearchOptionsFromUrl(Astro.url.href, {
+  filter: {
+    'allCategoriesInfo.categories': {
+      $matchItems: [{ _id: category._id! }],
+    },
+  },
+  cursorPaging: {
+    limit: 10,
+  },
+});
+
+const [productsListConfig, categoriesListConfig, currentCartServiceConfig] =
+  await Promise.all([
+    loadProductsListServiceConfig(searchOptions),
+    loadCategoriesListServiceConfig(),
+    loadCurrentCartServiceConfig(),
+  ]);
 ---
 
 <BaseLayout>
   <StoreCollectionPage
     client:load
-    filteredCollectionServiceConfig={filteredCollectionServiceConfig}
+    slug={categorySlug}
+    productsListConfig={productsListConfig}
+    categoriesListConfig={categoriesListConfig}
     currentCartServiceConfig={currentCartServiceConfig}
-    categoriesConfig={{
-      ...categoriesConfig,
-      initialCategoryId: selectedCategory._id,
-    }}
     slot="body"
   />
 </BaseLayout>
