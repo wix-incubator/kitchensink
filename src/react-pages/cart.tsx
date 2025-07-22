@@ -31,7 +31,12 @@ export default function CartPage({ data }: CartPageProps) {
   return (
     <KitchensinkLayout>
       <ServicesManagerProvider servicesManager={servicesManager}>
-        <CartContent />
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-content-primary text-4xl font-bold mb-4">
+            Shopping Cart
+          </h1>
+          <CartContent />
+        </div>
       </ServicesManagerProvider>
     </KitchensinkLayout>
   );

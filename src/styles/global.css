@@ -90,6 +90,9 @@ button:not(:disabled) {
 /* =========================== */
 /* MEANINGFUL THEME CLASSES */
 /* =========================== */
+.wix-verticals-container {
+  font-family: var(--theme-font-family);
+}
 
 /* Content Text Colors */
 .text-content-primary {
