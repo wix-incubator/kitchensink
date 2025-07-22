@@ -32,5 +32,9 @@ export async function productRouteLoader({
 
 export function ProductDetailsRoute() {
   const { productServiceConfig } = useLoaderData<typeof productRouteLoader>();
-  return <ProductDetailPage productServiceConfig={productServiceConfig} />;
+  return (
+    <div className="wix-verticals-container">
+      <ProductDetailPage productServiceConfig={productServiceConfig} />
+    </div>
+  );
 }

@@ -125,7 +125,7 @@ export function MiniCartContent() {
           }
 
           return (
-            <>
+            <div className="wix-verticals-container">
               {isOpen && (
                 <div
                   className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm"
@@ -469,7 +469,7 @@ export function MiniCartContent() {
                   </div>
                 </div>
               )}
-            </>
+            </div>
           );
         }}
       </CurrentCart.Content>

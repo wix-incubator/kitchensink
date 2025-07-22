@@ -108,7 +108,7 @@ export function StoreCollectionRoute({
   } = useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
-    <>
+    <div className="wix-verticals-container">
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
         <Await
@@ -128,6 +128,6 @@ export function StoreCollectionRoute({
           )}
         </Await>
       </React.Suspense>
-    </>
+    </div>
   );
 }

@@ -1,3 +1,9 @@
-import Cart from '../../../components/ecom/Cart';
+import CartContent from '../../../components/ecom/Cart';
 
-export { Cart };
+export function Cart() {
+  return (
+    <div className="wix-verticals-container">
+      <CartContent />
+    </div>
+  );
+}
