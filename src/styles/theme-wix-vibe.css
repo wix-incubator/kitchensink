@@ -90,19 +90,19 @@
     0.2
   ); /* More opaque primary background for emphasized primary-themed elements */
   --theme-bg-options: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.025
   ); /* Very subtle background for product option tags and choice buttons on light surfaces */
   --theme-bg-modal: rgba(
-    var(--color-white),
+    var(--color-modal-bg),
     0.95
   ); /* Semi-transparent white background for modal dialogs and overlay content */
   --theme-bg-loading: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.08
   ); /* Subtle background for loading skeleton elements and placeholder content */
   --theme-bg-card: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.02
   ); /* Very light background for cards, product items, and content containers */
   --theme-bg-error: rgba(
@@ -110,7 +110,7 @@
     0.1
   ); /* Light red background for error message containers and alert backgrounds */
   --theme-bg-tooltip: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.75
   ); /* Semi-transparent dark background for tooltips, overlays, and floating elements */
 
@@ -194,11 +194,11 @@
     0.3
   ); /* Strong primary border for product option tags and selected states */
   --theme-border-card: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.12
   ); /* Light neutral border for cards, product items, and content containers */
   --theme-border-card-hover: rgba(
-    var(--color-black),
+    var(--color-overlay),
     0.2
   ); /* Medium neutral border for card hover states and interactive containers */
   --theme-border-error: rgba(

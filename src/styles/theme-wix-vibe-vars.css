@@ -1,9 +1,4 @@
 :root {
-  /* =========================== */
-  /* BASE COLOR PALETTE */
-  /* =========================== */
-
-  /* Primary Brand Colors - Main brand identity colors used throughout the interface */
   --color-primary:
     66, 165, 245; /* Primary brand color - used for key UI elements, buttons, and interactive components */
   --color-primary-dark:
@@ -70,9 +65,9 @@
     38, 198, 218; /* Lighter accent color - used for accent text and subtle accent indicators */
 
   --color-amber:
-    255, 193, 7; /* Amber color - golden yellow used for special highlights, premium features, and attention-grabbing elements */
+    255, 193, 7; /* Special highlights, premium features, and attention-grabbing elements */
   --color-amber-dark:
-    255, 160, 0; /* Darker amber color - used for hover states on amber elements */
+    255, 160, 0; /* Darker special highlights - used for hover states on amber elements */
 
   /* Content Colors - Typography and content-related colors */
   --color-content:
@@ -81,21 +76,16 @@
     255, 255, 255; /* Light content color - white used for text on dark backgrounds */
 
   /* Neutral Colors - Basic colors for backgrounds, borders, and neutral elements */
-  --color-black:
-    0, 0, 0; /* Pure black - used for high contrast elements and overlays */
-  --color-white:
-    255, 255, 255; /* Pure white - used for clean backgrounds and high contrast text */
+  --color-overlay:
+    0, 0, 0; /* used for overlays, skeleton loading, and other semi-transparent elements */
+  --color-modal-bg:
+    255, 255, 255; /* used for modal backgrounds and other elements which are popping up on top of the page */
   --color-grey-dark:
-    66, 66, 66; /* Dark grey - used for secondary text and subtle elements */
+    66, 66, 66; /* used for secondary text and subtle elements */
   --color-grey-medium:
     117, 117, 117; /* Medium grey - used for muted text, borders, and inactive elements */
 
-  /* =========================== */
-  /* THEME VARIABLES */
-  /* =========================== */
-
-  /* Typography Settings - Font family and weight definitions for consistent text styling */
-  --theme-font-family: inherit; /* Primary font family for all themed text elements */
+  --theme-font-family: inherit; /* Primary font family for all text elements */
   --theme-font-weight-normal: 400; /* Normal font weight for body text and regular content */
   --theme-font-weight-medium: 500; /* Medium font weight for emphasized text and semi-bold content */
   --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings, labels, and important text */
