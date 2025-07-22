@@ -1,0 +1,42 @@
+---
+import { loadCategoriesListServiceConfig } from '../categories-list';
+import { loadCategoryServiceConfig } from '../category';
+import { buildSearchOptionsFromUrl } from '../parseSearchOptionsFromUrl';
+import { loadProductsListServiceConfig } from '../products-list';
+import { CategoryPage } from './[slug]';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Category slug is required');
+}
+
+const categoryLoadResult = await loadCategoryServiceConfig(slug);
+
+if (categoryLoadResult.type === 'not-found') {
+  return Astro.rewrite('/404');
+}
+
+const category = categoryLoadResult.config.category;
+
+const searchOptions = buildSearchOptionsFromUrl(Astro.url.href, {
+  filter: {
+    'allCategoriesInfo.categories': {
+      $matchItems: [{ _id: category._id! }],
+    },
+  },
+});
+
+const [productsListConfig, categoriesListConfig] = await Promise.all([
+  loadProductsListServiceConfig(searchOptions),
+  loadCategoriesListServiceConfig(),
+]);
+---
+
+<CategoryPage
+  client:load
+  categoryServiceConfig={categoryLoadResult.config}
+  categoriesListConfig={categoriesListConfig}
+  productsListConfig={productsListConfig}
+  slug={slug}
+/>

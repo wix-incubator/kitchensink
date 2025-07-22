@@ -1,0 +1,20 @@
+diff --git a/node_modules/@wix/services-manager/build/core-services/signals/service.js b/node_modules/@wix/services-manager/build/core-services/signals/service.js
+index 84bb469..f6cea1e 100644
+--- a/node_modules/@wix/services-manager/build/core-services/signals/service.js
++++ b/node_modules/@wix/services-manager/build/core-services/signals/service.js
+@@ -8,6 +8,7 @@ export const SignalsServiceFactory = implementService(SignalsServiceDefinition,
+             const signal = {
+                 get: () => sig.value,
+                 set: (newValue) => (sig.value = newValue),
++                peek: () => sig.peek(),
+             };
+             return signal;
+         },
+@@ -15,6 +16,7 @@ export const SignalsServiceFactory = implementService(SignalsServiceDefinition,
+             const sig = pcomputed(fn);
+             const signal = {
+                 get: () => sig.value,
++                peek: () => sig.peek(),
+             };
+             return signal;
+         },

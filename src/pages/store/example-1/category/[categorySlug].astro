@@ -1,14 +1,12 @@
 ---
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import { loadCategoriesConfig, loadCollectionServiceConfig } from '@wix/headless-stores/services';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import StoreCollectionPage from '../../../../react-pages/store/example-1/index';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
-import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
-import { SEO } from '@wix/headless-seo/react';
 
 // Get category slug from URL params
 const { categorySlug } = Astro.params;
+
 
 // Load categories and cart config in parallel (cart is independent)
 const [categoriesConfig, currentCartServiceConfig] = await Promise.all([
@@ -30,35 +28,11 @@ const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
 
 // If category not found, return 404
 if (!selectedCategory) {
-  return Astro.redirect('/404');
+  return Astro.rewrite('/404');
 }
-
-const categoryName = selectedCategory?.name || '';
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemData: {
-    pageName: categoryName,
-    seoData: {
-      tags: [
-        {
-          type: 'title',
-          children: `Store Example 1 - ${categoryName}`,
-        },
-        {
-          type: 'meta',
-          props: {
-            content: `Browse our ${categoryName} products with traditional grid layout`,
-            name: 'description',
-          },
-        },
-      ],
-    },
-  },
-});
 ---
 
 <BaseLayout>
-  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <StoreCollectionPage
     client:load
     filteredCollectionServiceConfig={filteredCollectionServiceConfig}

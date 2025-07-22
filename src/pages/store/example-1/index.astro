@@ -1,0 +1,16 @@
+---
+import { loadCategoriesListServiceConfig } from './categories-list';
+import { buildSearchOptionsFromUrl } from './parseSearchOptionsFromUrl';
+import { loadProductsListServiceConfig } from './products-list';
+import { ProductsListPage } from './products-list-page';
+
+const searchOptions = buildSearchOptionsFromUrl(Astro.url.href);
+const categoriesListConfig = await loadCategoriesListServiceConfig();
+const productsListConfig = await loadProductsListServiceConfig(searchOptions);
+---
+
+<ProductsListPage
+  client:load
+  categoriesListConfig={categoriesListConfig}
+  productsListConfig={productsListConfig}
+/>
