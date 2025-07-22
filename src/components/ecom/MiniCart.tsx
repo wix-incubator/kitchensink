@@ -80,13 +80,15 @@ const DefaultMiniCartIcon = () => (
 
 export function MiniCartIcon({
   Icon = DefaultMiniCartIcon,
+  className = 'fixed top-6 right-6 z-50',
 }: {
   Icon?: React.ComponentType;
+  className?: string;
 }) {
   return (
     <>
       {/* Fixed Cart Icon */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className={className}>
         <CurrentCart.Trigger>
           {({ onOpen, itemCount }) => (
             <button

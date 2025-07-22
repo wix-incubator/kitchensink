@@ -64,20 +64,19 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
   );
 }
 
-export function MiniCartLayout({
-  children,
+export function MiniCart({
   cartIcon,
-  showMiniCart = true,
+  cartIconClassName,
 }: {
-  children: React.ReactNode;
   cartIcon?: React.ComponentType;
   showMiniCart?: boolean;
+  cartIconClassName?: string;
 }) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  return showMiniCart ? (
+  return (
     <>
-      <MiniCartIcon Icon={cartIcon} />
+      <MiniCartIcon Icon={cartIcon} className={cartIconClassName} />
 
       <CurrentCart.Trigger>
         {({ onOpen }) => (
@@ -106,13 +105,7 @@ export function MiniCartLayout({
           Added to cart successfully!
         </div>
       )}
-
-      {/* Main Content */}
-      {children}
-
       <MiniCartContent />
     </>
-  ) : (
-    <>{children}</>
   );
 }
