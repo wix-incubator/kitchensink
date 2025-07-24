@@ -36,10 +36,7 @@ import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
 } from '@wix/headless-stores/services';
-import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
+
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-2.css';
@@ -902,7 +899,6 @@ export default function ProductDetailPage({
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     })
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(SocialSharingServiceDefinition, SocialSharingService)
     .addService(
       RelatedProductsServiceDefinition,
       RelatedProductsService,
