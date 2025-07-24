@@ -13,23 +13,25 @@ if (!slug) {
   return Astro.redirect('/store');
 }
 
-const [productServiceConfigResult, currentCartServiceConfig] =
-  await Promise.all([
-    loadProductServiceConfig(slug),
-    loadCurrentCartServiceConfig(),
-  ]);
+const [
+  productServiceConfigResult,
+  currentCartServiceConfig,
+  seoTagsServiceConfig,
+] = await Promise.all([
+  loadProductServiceConfig(slug),
+  loadCurrentCartServiceConfig(),
+  loadSEOTagsServiceConfig({
+    pageUrl: Astro.url.href,
+    itemData: { slug },
+    itemType: seoTags.ItemType.STORES_PRODUCT,
+  }),
+]);
 
 if (productServiceConfigResult.type === 'notFound') {
   return Astro.redirect('/404');
 }
 
 const productServiceConfig = productServiceConfigResult.config;
-
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemData: { slug },
-  itemType: seoTags.ItemType.STORES_PRODUCT,
-});
 ---
 
 <BaseLayout>
