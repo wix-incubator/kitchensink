@@ -16,10 +16,7 @@ import {
   MediaGalleryServiceDefinition,
 } from '@wix/headless-media/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
-import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
+
 import { createServicesMap } from '@wix/services-manager';
 import { WixServices } from '@wix/services-manager-react';
 
@@ -31,7 +28,6 @@ function ProductDetailsPage({ productServiceConfig }: ProductDetailPageProps) {
   // Create services manager with all required services
   const servicesMap = createServicesMap()
     .addService(ProductServiceDefinition, ProductService, productServiceConfig)
-    .addService(SocialSharingServiceDefinition, SocialSharingService)
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
     .addService(ProductModifiersServiceDefinition, ProductModifiersService)
     .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
