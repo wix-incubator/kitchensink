@@ -5,6 +5,7 @@ import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
 import '../../../../styles/theme-1.css';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
+import { CurrentCart } from '@wix/headless-ecom/react';
 
 import ProductDetailsPage from '../../main-components/productDetailsPage';
 

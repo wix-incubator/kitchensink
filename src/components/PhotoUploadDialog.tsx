@@ -189,120 +189,132 @@ export default function PhotoUploadDialog({
             </PhotoUpload.FileSelector>
 
             {/* Upload Status */}
-            <FileUpload.UploadProgress>
-              {({ uploadState, hasMessage }) => (
-                <>
-                  {hasMessage && (
-                    <div className="mb-6">
-                      <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
-                        <div className="flex items-center gap-3">
-                          <div>
-                            {uploadState.type === 'loading' && (
-                              <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
-                            )}
-                            {uploadState.type === 'success' && (
-                              <svg
-                                className="w-6 h-6 text-[var(--theme-text-success)]"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            )}
-                            {uploadState.type === 'error' && (
-                              <svg
-                                className="w-6 h-6 text-[var(--theme-text-error)]"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M6 18L18 6M6 6l12 12"
-                                />
-                              </svg>
-                            )}
+            <FileUpload.Root
+              fileUploadServiceConfig={{
+                maxFileSize: 10 * 1024 * 1024, // 10MB
+                allowedTypes: ['image/*'],
+                allowedExtensions: ['.jpg', '.png', '.gif'],
+                uploadAction: () => Promise.resolve(), //TODO: Add upload action
+                onUploadSuccess: result =>
+                  console.log('Upload success:', result),
+                onUploadError: error => console.error('Upload error:', error),
+              }}
+            >
+              <FileUpload.UploadProgress>
+                {({ uploadState, hasMessage }) => (
+                  <>
+                    {hasMessage && (
+                      <div className="mb-6">
+                        <div className="bg-[var(--theme-bg-options)] rounded-xl p-4">
+                          <div className="flex items-center gap-3">
+                            <div>
+                              {uploadState.type === 'loading' && (
+                                <div className="animate-spin w-6 h-6 border-2 border-[var(--theme-border-primary-30)] border-t-[var(--theme-primary-500)] rounded-full"></div>
+                              )}
+                              {uploadState.type === 'success' && (
+                                <svg
+                                  className="w-6 h-6 text-[var(--theme-text-success)]"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              )}
+                              {uploadState.type === 'error' && (
+                                <svg
+                                  className="w-6 h-6 text-[var(--theme-text-error)]"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              )}
+                            </div>
+                            <p className="text-[var(--theme-text-content)] font-medium">
+                              {uploadState.message}
+                            </p>
                           </div>
-                          <p className="text-[var(--theme-text-content)] font-medium">
-                            {uploadState.message}
-                          </p>
                         </div>
                       </div>
+                    )}
+                  </>
+                )}
+              </FileUpload.UploadProgress>
+
+              {/* Form Actions */}
+              <FileUpload.UploadTrigger>
+                {({ uploadFile, canUpload, isUploading }) => {
+                  const handleUploadPhoto = async () => {
+                    await uploadFile();
+                    onClose();
+                  };
+
+                  return (
+                    <div className="flex gap-4">
+                      <button
+                        onClick={handleUploadPhoto}
+                        disabled={!canUpload}
+                        className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
+                        style={{
+                          background: canUpload
+                            ? 'var(--theme-btn-primary)'
+                            : 'var(--theme-bg-options)',
+                          cursor: !canUpload ? 'not-allowed' : 'pointer',
+                        }}
+                        onMouseEnter={e => {
+                          if (canUpload) {
+                            e.currentTarget.style.background =
+                              'var(--theme-btn-primary-hover)';
+                          }
+                        }}
+                        onMouseLeave={e => {
+                          if (canUpload) {
+                            e.currentTarget.style.background =
+                              'var(--theme-btn-primary)';
+                          }
+                        }}
+                      >
+                        <span className="flex items-center justify-center gap-3">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                            />
+                          </svg>
+                          {isUploading ? 'Uploading...' : 'Update Photo'}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-8 py-4 bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] text-[var(--theme-text-content)] font-semibold rounded-xl transition-all duration-200"
+                      >
+                        Cancel
+                      </button>
                     </div>
-                  )}
-                </>
-              )}
-            </FileUpload.UploadProgress>
-
-            {/* Form Actions */}
-            <FileUpload.UploadTrigger>
-              {({ uploadFile, canUpload, isUploading }) => {
-                const handleUploadPhoto = async () => {
-                  await uploadFile();
-                  onClose();
-                };
-
-                return (
-                  <div className="flex gap-4">
-                    <button
-                      onClick={handleUploadPhoto}
-                      disabled={!canUpload}
-                      className="flex-1 text-[var(--theme-text-content)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-xl disabled:hover:scale-100 disabled:hover:shadow-none"
-                      style={{
-                        background: canUpload
-                          ? 'var(--theme-btn-primary)'
-                          : 'var(--theme-bg-options)',
-                        cursor: !canUpload ? 'not-allowed' : 'pointer',
-                      }}
-                      onMouseEnter={e => {
-                        if (canUpload) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-primary-hover)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (canUpload) {
-                          e.currentTarget.style.background =
-                            'var(--theme-btn-primary)';
-                        }
-                      }}
-                    >
-                      <span className="flex items-center justify-center gap-3">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                          />
-                        </svg>
-                        {isUploading ? 'Uploading...' : 'Update Photo'}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="px-8 py-4 bg-[var(--theme-bg-options)] hover:bg-[var(--theme-bg-primary-10)] text-[var(--theme-text-content)] font-semibold rounded-xl transition-all duration-200"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                );
-              }}
-            </FileUpload.UploadTrigger>
+                  );
+                }}
+              </FileUpload.UploadTrigger>
+            </FileUpload.Root>
           </div>
         </div>
       </div>
