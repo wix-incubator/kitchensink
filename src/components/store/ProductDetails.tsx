@@ -9,7 +9,6 @@ import {
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 
@@ -630,8 +629,6 @@ export default function ProductDetails({
               }}
             </ProductVariantSelector.Stock>
           </div>
-
-          <SocialSharingButtons />
 
           {/* Add to Cart */}
           <div className="space-y-4">

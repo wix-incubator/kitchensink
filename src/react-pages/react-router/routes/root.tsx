@@ -45,7 +45,6 @@ export async function rootRouteLoader() {
 export function WixServicesProvider(props: { children: React.ReactNode }) {
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 
-
   return (
     <div data-testid="main-container">
       <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>

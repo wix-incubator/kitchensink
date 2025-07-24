@@ -15,7 +15,6 @@ import {
   RelatedProducts,
   ProductActions,
 } from '@wix/headless-stores/react';
-import { SocialSharingButtons } from '../../../../components/social/SocialSharingButtons';
 import {
   CurrentCartService,
   CurrentCartServiceDefinition,
@@ -35,10 +34,6 @@ import {
 import {
   SelectedVariantService,
   SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
 } from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
@@ -746,7 +741,6 @@ const ProductInfo = ({
                   )}
                 </button>
               </div>
-              <SocialSharingButtons />
             </div>
           </div>
         )}
@@ -902,7 +896,6 @@ export default function ProductDetailPage({
       media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
     })
     .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(SocialSharingServiceDefinition, SocialSharingService)
     .addService(
       RelatedProductsServiceDefinition,
       RelatedProductsService,
