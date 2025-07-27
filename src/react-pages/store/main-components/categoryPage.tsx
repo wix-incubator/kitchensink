@@ -1,5 +1,4 @@
 import { createServicesMap } from '@wix/services-manager';
-import { useState } from 'react';
 import {
   CatalogService,
   CatalogServiceDefinition,
@@ -60,27 +59,25 @@ function CategoryPage({
     }
   };
 
-  const [servicesMap] = useState(() =>
-    createServicesMap()
-      .addService(
-        CollectionServiceDefinition,
-        CollectionService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        FilterServiceDefinition,
-        FilterService,
-        filteredCollectionServiceConfig
-      )
-      .addService(CategoryServiceDefinition, CategoryService, {
-        ...categoriesConfig,
-        onCategoryChange: handleCategoryChange,
-      })
-      .addService(SortServiceDefinition, SortService, {
-        initialSort: filteredCollectionServiceConfig.initialSort,
-      })
-      .addService(CatalogServiceDefinition, CatalogService, {})
-  );
+  const servicesMap = createServicesMap()
+    .addService(
+      CollectionServiceDefinition,
+      CollectionService,
+      filteredCollectionServiceConfig
+    )
+    .addService(
+      FilterServiceDefinition,
+      FilterService,
+      filteredCollectionServiceConfig
+    )
+    .addService(CategoryServiceDefinition, CategoryService, {
+      ...categoriesConfig,
+      onCategoryChange: handleCategoryChange,
+    })
+    .addService(SortServiceDefinition, SortService, {
+      initialSort: filteredCollectionServiceConfig.initialSort,
+    })
+    .addService(CatalogServiceDefinition, CatalogService, {});
 
   return (
     <WixServices servicesMap={servicesMap}>

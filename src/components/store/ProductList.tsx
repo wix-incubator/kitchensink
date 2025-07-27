@@ -14,7 +14,6 @@ import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
 import {
-
   type Filter,
   type AvailableOptions,
 } from '@wix/headless-stores/services';

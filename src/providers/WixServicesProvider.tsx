@@ -68,9 +68,7 @@ export default function WixServicesProvider({
   return (
     <>
       {showCartIcon ? (
-        <StoreLayout currentCartServiceConfig={null}>
-          {children}
-        </StoreLayout>
+        <StoreLayout currentCartServiceConfig={null}>{children}</StoreLayout>
       ) : (
         <WixServices servicesMap={servicesMap}>{children}</WixServices>
       )}
