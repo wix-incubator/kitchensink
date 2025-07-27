@@ -1,12 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { WixServices } from '@wix/services-manager-react';
-import { createServicesMap } from '@wix/services-manager';
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-  loadCurrentCartServiceConfig,
-} from '@wix/headless-ecom/services';
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   MiniCartContent,
   MiniCartIcon,

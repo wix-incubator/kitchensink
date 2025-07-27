@@ -31,6 +31,7 @@ import {
   CatalogService,
   CatalogServiceDefinition,
 } from '@wix/headless-stores/services';
+import { WixServices } from '@wix/services-manager-react';
 
 interface StoreExample2PageProps {
   filteredCollectionServiceConfig: any;
@@ -597,129 +598,134 @@ export default function StoreExample2Page({
 
   return (
     <KitchensinkLayout>
-      <StoreLayout
-        currentCartServiceConfig={currentCartServiceConfig}
-        servicesMap={servicesMap}
-      >
-        <PageDocsRegistration
-          title="Advanced Store Collection"
-          description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
-          docsUrl="/docs/examples/advanced-store-collection"
-        />
+      <WixServices servicesMap={servicesMap}>
+        <StoreLayout currentCartServiceConfig={currentCartServiceConfig}>
+          <PageDocsRegistration
+            title="Advanced Store Collection"
+            description="Enhanced product collection interface with advanced product interactions, wishlist functionality, and modern design patterns using Collection and CurrentCart headless components."
+            docsUrl="/docs/examples/advanced-store-collection"
+          />
 
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
-                <span
-                  style={{
-                    background: 'var(--theme-hero-text-gradient)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  Advanced Store
-                </span>
-              </h1>
-              <p className="text-[var(--theme-text-content-80)] text-xl max-w-2xl mx-auto">
-                Experience our next-generation e-commerce platform with enhanced
-                interactions and modern design patterns
-              </p>
-            </div>
+          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-12">
+                <h1 className="text-5xl font-bold text-[var(--theme-text-content)] mb-4">
+                  <span
+                    style={{
+                      background: 'var(--theme-hero-text-gradient)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    Advanced Store
+                  </span>
+                </h1>
+                <p className="text-[var(--theme-text-content-80)] text-xl max-w-2xl mx-auto">
+                  Experience our next-generation e-commerce platform with
+                  enhanced interactions and modern design patterns
+                </p>
+              </div>
 
-            <div
-              className="backdrop-blur-lg rounded-2xl border border-[var(--theme-border-card)] p-6 mb-12"
-              style={{ background: 'var(--theme-hero-card-gradient)' }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+              <div
+                className="backdrop-blur-lg rounded-2xl border border-[var(--theme-border-card)] p-6 mb-12"
+                style={{ background: 'var(--theme-hero-card-gradient)' }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: 'var(--theme-hero-feature-gradient)',
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Enhanced UI
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Modern design patterns
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Enhanced UI
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Modern design patterns
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: 'var(--theme-hero-feature-gradient)',
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Smart Interactions
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Advanced user flows
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Smart Interactions
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Advanced user flows
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{ background: 'var(--theme-hero-feature-gradient)' }}
-                  >
-                    <svg
-                      className="w-6 h-6 text-[var(--theme-text-content)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div className="text-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: 'var(--theme-hero-feature-gradient)',
+                      }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
+                      <svg
+                        className="w-6 h-6 text-[var(--theme-text-content)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
+                      Headless Components
+                    </h3>
+                    <p className="text-[var(--theme-text-content-60)] text-sm">
+                      Built with Collection & CurrentCart
+                    </p>
                   </div>
-                  <h3 className="text-[var(--theme-text-content)] font-semibold mb-1">
-                    Headless Components
-                  </h3>
-                  <p className="text-[var(--theme-text-content-60)] text-sm">
-                    Built with Collection & CurrentCart
-                  </p>
                 </div>
               </div>
+
+              <ProductGridContent />
+
+              <LoadMoreSection />
             </div>
-
-            <ProductGridContent />
-
-            <LoadMoreSection />
           </div>
-        </div>
-      </StoreLayout>
+        </StoreLayout>
+      </WixServices>
     </KitchensinkLayout>
   );
 }
