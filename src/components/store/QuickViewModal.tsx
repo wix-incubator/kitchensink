@@ -20,10 +20,6 @@ import {
   ProductModifiersService,
   ProductModifiersServiceDefinition,
 } from '@wix/headless-stores/services';
-import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 
@@ -93,7 +89,6 @@ export default function QuickViewModal({
   useEffect(() => {
     if (fullProduct) {
       const servicesMap = createServicesMap()
-        .addService(SocialSharingServiceDefinition, SocialSharingService)
         .addService(ProductServiceDefinition, ProductService, {
           product: fullProduct,
         })

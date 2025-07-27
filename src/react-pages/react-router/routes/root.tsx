@@ -1,12 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { WixServices } from '@wix/services-manager-react';
-import { createServicesMap } from '@wix/services-manager';
-import {
-  CurrentCartService,
-  CurrentCartServiceDefinition,
-  loadCurrentCartServiceConfig,
-} from '@wix/headless-ecom/services';
+import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   MiniCartContent,
   MiniCartIcon,
@@ -45,21 +39,15 @@ export async function rootRouteLoader() {
 export function WixServicesProvider(props: { children: React.ReactNode }) {
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 
-  const servicesMap = createServicesMap().addService(
-    CurrentCartServiceDefinition,
-    CurrentCartService,
-    currentCartServiceConfig
-  );
-
   return (
     <div data-testid="main-container">
-      <WixServices servicesMap={servicesMap}>
+      <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
         <NavigationProvider
           navigationComponent={ReactRouterNavigationComponent}
         >
           {props.children}
         </NavigationProvider>
-      </WixServices>
+      </CurrentCart.Root>
     </div>
   );
 }

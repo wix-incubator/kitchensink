@@ -1,47 +1,33 @@
-import {
-  ProductModifiersService,
-  ProductModifiersServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  ProductService,
-  ProductServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  SelectedVariantService,
-  SelectedVariantServiceDefinition,
-} from '@wix/headless-stores/services';
+import { ProductService } from '@wix/headless-stores/services';
 import ProductDetails from '../../../components/store/ProductDetails';
-import {
-  MediaGalleryService,
-  MediaGalleryServiceDefinition,
-} from '@wix/headless-media/services';
+import { MediaGallery } from '@wix/headless-media/react';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
+
 import {
-  SocialSharingService,
-  SocialSharingServiceDefinition,
-} from '@wix/headless-stores/services';
-import { createServicesMap } from '@wix/services-manager';
-import { WixServices } from '@wix/services-manager-react';
+  Product,
+  ProductModifiers,
+  SelectedVariant,
+} from '@wix/headless-stores/react';
 
 interface ProductDetailPageProps {
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
 }
 
 function ProductDetailsPage({ productServiceConfig }: ProductDetailPageProps) {
-  // Create services manager with all required services
-  const servicesMap = createServicesMap()
-    .addService(ProductServiceDefinition, ProductService, productServiceConfig)
-    .addService(SocialSharingServiceDefinition, SocialSharingService)
-    .addService(SelectedVariantServiceDefinition, SelectedVariantService)
-    .addService(ProductModifiersServiceDefinition, ProductModifiersService)
-    .addService(MediaGalleryServiceDefinition, MediaGalleryService, {
-      media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
-    });
-
   return (
-    <WixServices servicesMap={servicesMap}>
-      <ProductDetails />
-    </WixServices>
+    <Product.Root productServiceConfig={productServiceConfig}>
+      <SelectedVariant.Root>
+        <MediaGallery.Root
+          mediaGalleryServiceConfig={{
+            media: productServiceConfig.product?.media?.itemsInfo?.items ?? [],
+          }}
+        >
+          <ProductModifiers.Root>
+            <ProductDetails />
+          </ProductModifiers.Root>
+        </MediaGallery.Root>
+      </SelectedVariant.Root>
+    </Product.Root>
   );
 }
 
