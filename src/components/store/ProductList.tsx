@@ -37,6 +37,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   categoriesListConfig,
   slug,
 }) => {
+  const Navigation = useNavigation();
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -321,6 +322,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   openQuickView,
 }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const Navigation = useNavigation();
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =
@@ -331,7 +333,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
   return (
     <Product.Root productServiceConfig={{ product }}>
       <SelectedVariant.Root>
-        <div className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative">
+        <div
+          data-testid="product-item"
+          data-product-id={product._id}
+          data-product-available={available}
+          className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
+        >
           {/* Success Message */}
           {showSuccessMessage && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -398,7 +405,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                   e.stopPropagation();
                   openQuickView(product);
                 }}
-                className="bg-gradient-primary text-white px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium bg-gradient-primary-hover transition-all duration-200 whitespace-nowrap"
+                className="btn-secondary px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium transition-all duration-200 whitespace-nowrap"
               >
                 <svg
                   className="w-4 h-4"
@@ -427,18 +434,21 @@ const ProductItem: React.FC<ProductItemProps> = ({
           {/* Product Ribbon */}
           {product.ribbon?.name && (
             <div className="absolute top-2 left-2">
-              <span className="bg-gradient-ribbon text-content-primary text-xs px-2 py-1 rounded-full font-medium">
+              <span className="btn-ribbon text-xs px-2 py-1 rounded-full font-medium">
                 {product.ribbon.name}
               </span>
             </div>
           )}
 
           {/* Product Title */}
-          <a href={`${productPageRoute}/${product.slug}`}>
+          <Navigation
+            data-testid="title-navigation"
+            route={`${productPageRoute}/${product.slug}`}
+          >
             <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
               {product.name}
             </h3>
-          </a>
+          </Navigation>
 
           {/* Product Variants */}
           <ProductVariantSelector.Options>
@@ -649,8 +659,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <div className="space-y-2">
             <ProductActionButtons isQuickView={true} />
 
-            <a
-              href={`${productPageRoute}/${product.slug}`}
+            <Navigation
+              data-testid="view-product-button"
+              route={`${productPageRoute}/${product.slug}`}
               className="w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
             >
               View Product
@@ -667,7 +678,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-            </a>
+            </Navigation>
           </div>
         </div>
       </SelectedVariant.Root>
