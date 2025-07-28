@@ -23,34 +23,6 @@ export function CategoryPicker({
           </h3>
         </div>
 
-        {/* Loading State */}
-        <CategoryList.Loading>
-          <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-surface-primary animate-pulse rounded-lg h-10 w-24"
-              ></div>
-            ))}
-          </div>
-        </CategoryList.Loading>
-
-        {/* Error State */}
-        <CategoryList.Error>
-          {({ error }) => (
-            <div className="text-status-error text-sm p-2 border border-status-error rounded-lg">
-              Error loading categories: {error}
-            </div>
-          )}
-        </CategoryList.Error>
-
-        {/* Empty State */}
-        <CategoryList.EmptyState>
-          <div className="text-content-muted text-sm">
-            No categories available
-          </div>
-        </CategoryList.EmptyState>
-
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
           <CategoryList.ItemContent>

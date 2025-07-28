@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { productsV3 } from '@wix/stores';
+import React from 'react';
+import { SelectedVariant } from '@wix/headless-stores/react';
 
 interface BaseButtonProps {
   disabled: boolean;
@@ -9,16 +9,14 @@ interface BaseButtonProps {
 }
 
 interface AddToCartButtonProps extends BaseButtonProps {
-  isPreOrderEnabled?: boolean;
-  inStock?: boolean;
+  isPreOrderEnabled: boolean;
+  inStock: boolean;
 }
 
 interface BuyNowButtonProps extends BaseButtonProps {}
 
 interface ProductActionButtonsProps {
   isQuickView?: boolean;
-  product?: productsV3.V3Product;
-  selectedVariant?: any;
 }
 
 // Add to Cart / Pre Order Button Component
@@ -26,8 +24,8 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   disabled,
   isLoading,
   onClick,
-  isPreOrderEnabled = false,
-  inStock = true,
+  isPreOrderEnabled,
+  inStock,
   className = '',
 }) => {
   const buttonText =
@@ -38,7 +36,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       data-testid="add-to-cart-button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
+      className={`flex-1 text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
         disabled ? 'bg-surface-primary cursor-not-allowed' : 'btn-primary'
       } ${className}`}
     >
@@ -47,7 +45,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
           <span className="opacity-0">{buttonText}</span>
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
-              className="animate-spin w-5 h-5 text-content-primary"
+              className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -83,16 +81,13 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
 }) => {
   return (
     <button
-      data-testid="buy-now-button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 text-content-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
-        disabled ? 'bg-surface-primary cursor-not-allowed' : 'btn-secondary'
-      } ${className}`}
+      className={`flex-1 btn-warning disabled:opacity-50 disabled:cursor-not-allowed text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">
-          <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
               cx="12"
@@ -119,93 +114,74 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
 // Main Product Action Buttons Container
 export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   isQuickView = false,
-  product,
-  selectedVariant,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Basic availability logic - simplified for now
-  const availabilityStatus =
-    selectedVariant?.inventory?.availabilityStatus ||
-    (product?.inventory?.availabilityStatus ??
-      productsV3.InventoryAvailabilityStatus.IN_STOCK);
-  const inStock =
-    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus ===
-      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
-  const isPreOrderEnabled = false; // Simplified for now
-  const canAddToCart = inStock || isPreOrderEnabled;
-
-  const handleAddToCart = async () => {
-    if (!canAddToCart) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Placeholder - this would integrate with cart API
-      console.log('Add to cart clicked for product:', product?._id);
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Show success message
-      alert('Product added to cart!');
-
-      if (isPreOrderEnabled) {
-        window.location.href = '/cart';
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add to cart');
-      console.error('Add to cart failed:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleBuyNow = async () => {
-    try {
-      await handleAddToCart();
-      if (!isPreOrderEnabled) {
-        // Redirect to cart for immediate purchase
-        setTimeout(() => {
-          window.location.href = '/cart';
-        }, 500);
-      }
-    } catch (error) {
-      console.error('Buy now failed:', error);
-    }
-  };
-
   return (
-    <div className="space-y-2">
-      {error && (
-        <div className="bg-status-danger-light border border-status-danger rounded-lg p-2">
-          <p className="text-status-error text-xs">{error}</p>
-        </div>
-      )}
+    <SelectedVariant.Actions>
+      {({
+        onAddToCart,
+        onBuyNow,
+        canAddToCart,
+        isLoading,
+        inStock,
+        isPreOrderEnabled,
+        error,
+        preOrderMessage,
+      }) => {
+        const handleAddToCart = async () => {
+          await onAddToCart();
+          if (isPreOrderEnabled) {
+            window.location.href = '/cart';
+          }
+        };
 
-      <div className="flex gap-3">
-        {/* Add to Cart / Pre Order Button */}
-        <AddToCartButton
-          disabled={!canAddToCart || isLoading}
-          isLoading={isLoading}
-          onClick={handleAddToCart}
-          isPreOrderEnabled={isPreOrderEnabled}
-          inStock={inStock}
-        />
+        const handleBuyNow = async () => {
+          try {
+            await onBuyNow();
+          } catch (error) {
+            console.error('Buy now failed:', error);
+          }
+        };
 
-        {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
-        {inStock && !isQuickView && (
-          <BuyNowButton
-            disabled={!canAddToCart || isLoading}
-            isLoading={isLoading}
-            onClick={handleBuyNow}
-          />
-        )}
-      </div>
-    </div>
+        return (
+          <div className="space-y-4">
+            {/* Error Display */}
+            {error && (
+              <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
+                <p className="text-status-danger text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Pre-order Message Display */}
+            {!inStock && preOrderMessage && isPreOrderEnabled && (
+              <div className="bg-status-info-light border border-status-info rounded-lg p-3">
+                <p className="text-status-info text-sm">{preOrderMessage}</p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              {/* Add to Cart / Pre Order Button */}
+              <AddToCartButton
+                disabled={!canAddToCart || isLoading}
+                isLoading={isLoading}
+                onClick={handleAddToCart}
+                isPreOrderEnabled={isPreOrderEnabled}
+                inStock={inStock}
+              />
+
+              {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
+              {inStock && !isQuickView && (
+                <BuyNowButton
+                  disabled={!canAddToCart || isLoading}
+                  isLoading={isLoading}
+                  onClick={handleBuyNow}
+                />
+              )}
+            </div>
+          </div>
+        );
+      }}
+    </SelectedVariant.Actions>
   );
 };
 
