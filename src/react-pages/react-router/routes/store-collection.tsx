@@ -1,7 +1,7 @@
 import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
 import React from 'react';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
+import { loadProductsListServiceConfig } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 
 // Skeleton component for product collection loading
@@ -59,7 +59,7 @@ export async function storeCollectionRouteLoader({
   params: { categorySlug?: string };
 }) {
   // Load categories config immediately (blocks the transition - this is fast)
-  const categoriesConfig = await loadCategoriesConfig();
+  const categoriesConfig = await loadCategoriesListServiceConfig();
 
   // Find category by its real slug
   let selectedCategory = null;
@@ -81,11 +81,11 @@ export async function storeCollectionRouteLoader({
   const searchOptions = {
     filter: selectedCategory?._id
       ? { categoryIds: [selectedCategory._id] }
-      : undefined,
+      : {},
     cursorPaging: { limit: 20 },
   };
   const filteredCollectionServiceConfigPromise =
-    loadCollectionServiceConfig(searchOptions);
+    loadProductsListServiceConfig(searchOptions);
 
   return {
     // Immediate data (blocks transition - fast category data)

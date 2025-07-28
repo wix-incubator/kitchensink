@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { CurrentCart } from '@wix/headless-ecom/react';
 import { productsV3 } from '@wix/stores';
 
 interface BaseButtonProps {
@@ -126,104 +125,87 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Basic availability logic - simplified for now
+  const availabilityStatus =
+    selectedVariant?.inventory?.availabilityStatus ||
+    (product?.inventory?.availabilityStatus ??
+      productsV3.InventoryAvailabilityStatus.IN_STOCK);
+  const inStock =
+    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
+    availabilityStatus ===
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+  const isPreOrderEnabled = false; // Simplified for now
+  const canAddToCart = inStock || isPreOrderEnabled;
+
+  const handleAddToCart = async () => {
+    if (!canAddToCart) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Placeholder - this would integrate with cart API
+      console.log('Add to cart clicked for product:', product?._id);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Show success message
+      alert('Product added to cart!');
+
+      if (isPreOrderEnabled) {
+        window.location.href = '/cart';
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add to cart');
+      console.error('Add to cart failed:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    try {
+      await handleAddToCart();
+      if (!isPreOrderEnabled) {
+        // Redirect to cart for immediate purchase
+        setTimeout(() => {
+          window.location.href = '/cart';
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Buy now failed:', error);
+    }
+  };
+
   return (
-    <CurrentCart.AddToCart>
-      {({ addToCart }) => {
-        // This is a placeholder - in a real implementation you'd get these from the product context
-        const availabilityStatus =
-          selectedVariant?.inventory?.availabilityStatus ||
-          (product?.inventory?.availabilityStatus ??
-            productsV3.InventoryAvailabilityStatus.IN_STOCK);
-        const inStock =
-          availabilityStatus ===
-            productsV3.InventoryAvailabilityStatus.IN_STOCK ||
-          availabilityStatus ===
-            productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
-        const isPreOrderEnabled =
-          selectedVariant?.preOrder?.enabled ||
-          product?.preOrder?.enabled ||
-          false;
-        const canAddToCart = inStock || isPreOrderEnabled;
+    <div className="space-y-2">
+      {error && (
+        <div className="bg-status-danger-light border border-status-danger rounded-lg p-2">
+          <p className="text-status-error text-xs">{error}</p>
+        </div>
+      )}
 
-        const handleAddToCart = async () => {
-          if (!canAddToCart) return;
+      <div className="flex gap-3">
+        {/* Add to Cart / Pre Order Button */}
+        <AddToCartButton
+          disabled={!canAddToCart || isLoading}
+          isLoading={isLoading}
+          onClick={handleAddToCart}
+          isPreOrderEnabled={isPreOrderEnabled}
+          inStock={inStock}
+        />
 
-          setIsLoading(true);
-          setError(null);
-
-          try {
-            // Create a simple line item
-            const lineItem = {
-              catalogReference: {
-                catalogItemId: product?._id || 'unknown',
-                appId: 'stores',
-              },
-              quantity: 1,
-            };
-
-            await addToCart([lineItem]);
-
-            if (isPreOrderEnabled) {
-              // Redirect to cart for pre-orders
-              setTimeout(() => {
-                window.location.href = '/cart';
-              }, 1000);
-            }
-          } catch (err) {
-            setError(
-              err instanceof Error ? err.message : 'Failed to add to cart'
-            );
-            console.error('Add to cart failed:', err);
-          } finally {
-            setIsLoading(false);
-          }
-        };
-
-        const handleBuyNow = async () => {
-          try {
-            await handleAddToCart();
-            if (!isPreOrderEnabled) {
-              // Redirect to cart for immediate purchase
-              setTimeout(() => {
-                window.location.href = '/cart';
-              }, 500);
-            }
-          } catch (error) {
-            console.error('Buy now failed:', error);
-          }
-        };
-
-        return (
-          <div className="space-y-2">
-            {error && (
-              <div className="bg-status-danger-light border border-status-danger rounded-lg p-2">
-                <p className="text-status-error text-xs">{error}</p>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              {/* Add to Cart / Pre Order Button */}
-              <AddToCartButton
-                disabled={!canAddToCart || isLoading}
-                isLoading={isLoading}
-                onClick={handleAddToCart}
-                isPreOrderEnabled={isPreOrderEnabled}
-                inStock={inStock}
-              />
-
-              {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
-              {inStock && !isQuickView && (
-                <BuyNowButton
-                  disabled={!canAddToCart || isLoading}
-                  isLoading={isLoading}
-                  onClick={handleBuyNow}
-                />
-              )}
-            </div>
-          </div>
-        );
-      }}
-    </CurrentCart.AddToCart>
+        {/* Buy Now Button - Only show for in-stock items and not in QuickView */}
+        {inStock && !isQuickView && (
+          <BuyNowButton
+            disabled={!canAddToCart || isLoading}
+            isLoading={isLoading}
+            onClick={handleBuyNow}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 

@@ -37,7 +37,12 @@ function CategoryPage({
     }
   };
 
-  return <ProductList productPageRoute={productPageRoute} />;
+  return (
+    <ProductList
+      productPageRoute={productPageRoute}
+      productsListConfig={filteredCollectionServiceConfig}
+    />
+  );
 }
 
 export default CategoryPage;

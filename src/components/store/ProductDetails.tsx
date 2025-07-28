@@ -5,7 +5,6 @@ import {
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
-  ProductActions,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
@@ -680,33 +679,7 @@ export default function ProductDetails({
 
                   {/* Add to Cart */}
                   <div className="space-y-4">
-                    <ProductActions.Actions>
-                      {({
-                        error,
-                        isPreOrderEnabled,
-                        preOrderMessage,
-                        inStock,
-                      }) => (
-                        <div className="space-y-4">
-                          {error && (
-                            <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">
-                              <p className="text-status-error text-sm">
-                                {error}
-                              </p>
-                            </div>
-                          )}
-                          {!inStock && preOrderMessage && isPreOrderEnabled && (
-                            <div className="bg-status-info-light border border-status-info rounded-lg p-3">
-                              <p className="text-status-info text-sm">
-                                {preOrderMessage}
-                              </p>
-                            </div>
-                          )}
-
-                          <ProductActionButtons isQuickView={isQuickView} />
-                        </div>
-                      )}
-                    </ProductActions.Actions>
+                    <ProductActionButtons isQuickView={isQuickView} />
 
                     {/* Stock Status */}
                     <ProductVariantSelector.Stock>
