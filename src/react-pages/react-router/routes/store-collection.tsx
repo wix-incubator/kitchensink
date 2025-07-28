@@ -78,11 +78,14 @@ export async function storeCollectionRouteLoader({
   }
 
   // Start collection data load but don't await it (deferred)
-  const filteredCollectionServiceConfigPromise = loadCollectionServiceConfig(
-    selectedCategory?._id || undefined,
-    new URLSearchParams(),
-    categoriesConfig.categories
-  );
+  const searchOptions = {
+    filter: selectedCategory?._id
+      ? { categoryIds: [selectedCategory._id] }
+      : undefined,
+    cursorPaging: { limit: 20 },
+  };
+  const filteredCollectionServiceConfigPromise =
+    loadCollectionServiceConfig(searchOptions);
 
   return {
     // Immediate data (blocks transition - fast category data)

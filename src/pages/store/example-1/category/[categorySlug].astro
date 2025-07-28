@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import StoreCollectionPage from '../../../../react-pages/store/example-1/index';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadProductsListServiceConfig } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
+import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
 import { seoTags } from '@wix/seo';
@@ -14,7 +14,7 @@ const { categorySlug } = Astro.params;
 // Load categories and cart config in parallel (cart is independent)
 const [categoriesConfig, currentCartServiceConfig, seoTagsServiceConfig] =
   await Promise.all([
-    loadCategoriesConfig(),
+    loadCategoriesListServiceConfig(),
     loadCurrentCartServiceConfig(),
     loadSEOTagsServiceConfig({
       pageUrl: Astro.url.href,
@@ -23,17 +23,18 @@ const [categoriesConfig, currentCartServiceConfig, seoTagsServiceConfig] =
     }),
   ]);
 
-// Find category by its real slug
+// Find the selected category by its slug
 const selectedCategory = categoriesConfig.categories.find(
-  (cat: any) => cat.slug === categorySlug
+  category => category.slug === categorySlug
 );
 
-// Load collection config with selected category (pass pre-loaded categories)
-const filteredCollectionServiceConfig = await loadCollectionServiceConfig(
-  selectedCategory?._id || undefined,
-  Astro.url.searchParams,
-  categoriesConfig.categories
-);
+// Load collection config with selected category
+const searchOptions = {
+  filter: selectedCategory?._id ? { categoryIds: [selectedCategory._id] } : {},
+  cursorPaging: { limit: 20 },
+};
+const filteredCollectionServiceConfig =
+  await loadProductsListServiceConfig(searchOptions);
 
 // If category not found, return 404
 if (!selectedCategory) {
