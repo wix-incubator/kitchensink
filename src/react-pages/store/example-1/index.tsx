@@ -8,6 +8,7 @@ import { CurrentCart } from '@wix/headless-ecom/react';
 interface StoreCollectionPageProps {
   currentCartServiceConfig: any;
   categoriesListConfig: any;
+  categoryServiceConfig: any;
   productsListConfig: any;
   productsListFiltersConfig: any;
   slug: string;
@@ -17,6 +18,7 @@ export default function StoreCollectionPage({
   currentCartServiceConfig,
   categoriesListConfig,
   productsListConfig,
+  categoryServiceConfig,
   productsListFiltersConfig,
   slug,
 }: StoreCollectionPageProps) {
@@ -39,14 +41,14 @@ export default function StoreCollectionPage({
             </p>
           </div>
 
-          {/* <CategoryPage
+          <CategoryPage
             categoriesListConfig={categoriesListConfig}
             productsListConfig={productsListConfig}
             productsListFiltersConfig={productsListFiltersConfig}
             slug={slug}
             productPageRoute="/store/example-1"
             basePath="/store/example-1/category"
-          /> */}
+          />
         </div>
       </StoreLayout>
     </KitchensinkLayout>
