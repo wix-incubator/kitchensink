@@ -1,27 +1,4 @@
-import { createServicesMap } from '@wix/services-manager';
-import { useState } from 'react';
-import {
-  CatalogService,
-  CatalogServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CategoryService,
-  CategoryServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  CollectionService,
-  CollectionServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  FilterService,
-  FilterServiceDefinition,
-} from '@wix/headless-stores/services';
-import {
-  SortService,
-  SortServiceDefinition,
-} from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
-import { WixServices } from '@wix/services-manager-react';
 
 interface StoreCollectionPageProps {
   filteredCollectionServiceConfig: any;
@@ -60,33 +37,7 @@ function CategoryPage({
     }
   };
 
-  const [servicesMap] = useState(() =>
-    createServicesMap()
-      .addService(
-        CollectionServiceDefinition,
-        CollectionService,
-        filteredCollectionServiceConfig
-      )
-      .addService(
-        FilterServiceDefinition,
-        FilterService,
-        filteredCollectionServiceConfig
-      )
-      .addService(CategoryServiceDefinition, CategoryService, {
-        ...categoriesConfig,
-        onCategoryChange: handleCategoryChange,
-      })
-      .addService(SortServiceDefinition, SortService, {
-        initialSort: filteredCollectionServiceConfig.initialSort,
-      })
-      .addService(CatalogServiceDefinition, CatalogService, {})
-  );
-
-  return (
-    <WixServices servicesMap={servicesMap}>
-      <ProductList productPageRoute={productPageRoute} />
-    </WixServices>
-  );
+  return <ProductList productPageRoute={productPageRoute} />;
 }
 
 export default CategoryPage;

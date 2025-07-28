@@ -1,39 +1,20 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { WixServices } from '@wix/services-manager-react';
-import { createServicesMap } from '@wix/services-manager';
-import {
-  CurrentCartServiceDefinition,
-  CurrentCartService,
-} from '@wix/headless-ecom/services';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
 import { CurrentCart } from '@wix/headless-ecom/react';
 
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: any;
-  servicesMap?: any;
-  showSuccessMessage?: boolean;
-  onSuccessMessageChange?: (show: boolean) => void;
 }
 
 export function StoreLayout({
   children,
   currentCartServiceConfig,
-  servicesMap: externalServicesMap,
 }: StoreLayoutProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Create services map with cart service
-  const interrnalServicesMap = createServicesMap().addService(
-    CurrentCartServiceDefinition,
-    CurrentCartService,
-    currentCartServiceConfig
-  );
-
-  const servicesMap = externalServicesMap || interrnalServicesMap;
-
   return (
-    <WixServices servicesMap={servicesMap}>
+    <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
       <CurrentCart.Trigger>
         {({ onOpen }) => (
           <CurrentCart.LineItemAdded>
@@ -83,6 +64,6 @@ export function StoreLayout({
       {children}
 
       <MiniCartContent />
-    </WixServices>
+    </CurrentCart.Root>
   );
 }

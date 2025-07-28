@@ -53,14 +53,16 @@ function CategoryPicker({
 
 export default function CategoryPickerWithContext() {
   return (
-    <Category.List>
-      {({ categories, selectedCategory, setSelectedCategory }) => (
-        <CategoryPicker
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-        />
-      )}
-    </Category.List>
+    <Category.Root>
+      <Category.List>
+        {({ categories, selectedCategory, setSelectedCategory }) => (
+          <CategoryPicker
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+          />
+        )}
+      </Category.List>
+    </Category.Root>
   );
 }
