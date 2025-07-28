@@ -1,15 +1,19 @@
 import ProductList from '../../../components/store/ProductList';
 
 interface StoreCollectionPageProps {
-  filteredCollectionServiceConfig: any;
-  categoriesConfig: any;
+  productsListConfig: any;
+  categoriesListConfig: any;
+  productsListFiltersConfig: any;
+  slug: string;
   productPageRoute: string;
   basePath: string;
 }
 
 function CategoryPage({
-  filteredCollectionServiceConfig,
-  categoriesConfig,
+  productsListConfig,
+  categoriesListConfig,
+  productsListFiltersConfig,
+  slug,
   productPageRoute,
   basePath,
 }: StoreCollectionPageProps) {
@@ -40,7 +44,8 @@ function CategoryPage({
   return (
     <ProductList
       productPageRoute={productPageRoute}
-      productsListConfig={filteredCollectionServiceConfig}
+      productsListConfig={productsListConfig}
+      productsListFiltersConfig={productsListFiltersConfig}
     />
   );
 }
