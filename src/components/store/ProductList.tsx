@@ -21,6 +21,7 @@ import type { LineItem } from '@wix/headless-ecom/services';
 import { productsV3 } from '@wix/stores';
 import SortDropdown from './SortDropdown';
 import CategoryPicker from './CategoryPicker';
+import ProductFilters from './ProductFilters';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -59,25 +60,41 @@ export const ProductList: React.FC<ProductListProps> = ({
           {/* Error State */}
           <HeadlessProductList.Error>
             {({ error }) => (
-              <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-                <p className="text-status-error text-sm sm:text-base">
-                  {error}
-                </p>
+              <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <svg
+                    className="w-5 h-5 text-status-error flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p className="text-status-error text-sm sm:text-base font-medium">
+                    {error}
+                  </p>
+                </div>
               </div>
             )}
           </HeadlessProductList.Error>
 
-          <div
-            className={`bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6`}
-          >
-            <div className="flex items-center justify-end">
-              <CategoryPicker
-                categoriesListConfig={categoriesListConfig}
-                currentCategorySlug={slug}
-                onCategorySelect={slug => {
-                  window.location.href = `/category/${slug}`;
-                }}
-              />
+          {/* Header Controls */}
+          <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <CategoryPicker
+                  categoriesListConfig={categoriesListConfig}
+                  currentCategorySlug={slug}
+                  onCategorySelect={slug => {
+                    window.location.href = `/category/${slug}`;
+                  }}
+                />
+              </div>
               <SortDropdown />
             </div>
           </div>
@@ -87,22 +104,20 @@ export const ProductList: React.FC<ProductListProps> = ({
             <ProductListFilters.Root
               productsListFiltersConfig={productsListFiltersConfig}
             >
-              <div className="mb-6 bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4">
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                  {/* Filters Sidebar */}
-                  <div className="w-full lg:w-80 lg:flex-shrink-0">
-                    <div className="lg:sticky lg:top-6">
-                      <FiltersSidebar />
-                    </div>
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                {/* Filters Sidebar */}
+                <div className="w-full lg:w-80 lg:flex-shrink-0">
+                  <div className="lg:sticky lg:top-6">
+                    <ProductFilters />
                   </div>
+                </div>
 
-                  {/* Main Content Area */}
-                  <div className="flex-1 min-w-0">
-                    <ProductGrid
-                      productPageRoute={productPageRoute}
-                      openQuickView={openQuickView}
-                    />
-                  </div>
+                {/* Main Content Area */}
+                <div className="flex-1 min-w-0">
+                  <ProductGrid
+                    productPageRoute={productPageRoute}
+                    openQuickView={openQuickView}
+                  />
                 </div>
               </div>
             </ProductListFilters.Root>
@@ -134,110 +149,6 @@ export const ProductList: React.FC<ProductListProps> = ({
   );
 };
 
-// Filters Sidebar Component
-const FiltersSidebar: React.FC = () => {
-  return (
-    <div className="bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-content-primary font-semibold text-lg">Filters</h3>
-        <ProductListFilters.ResetTrigger>
-          {({ resetFilters, isFiltered }) =>
-            isFiltered && (
-              <button
-                onClick={resetFilters}
-                className="text-sm text-content-muted hover:text-content-primary transition-colors"
-              >
-                Clear All
-              </button>
-            )
-          }
-        </ProductListFilters.ResetTrigger>
-      </div>
-
-      {/* Price Range Filter */}
-      <div className="mb-6">
-        <h4 className="text-content-primary font-medium mb-3">Price Range</h4>
-        <ProductListFilters.PriceRange>
-          {({ minPrice, maxPrice, setMinPrice, setMaxPrice }) => (
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  value={minPrice}
-                  onChange={e => setMinPrice(Number(e.target.value))}
-                  placeholder="Min"
-                  className="flex-1 px-3 py-2 border border-surface-primary rounded-lg bg-surface-primary text-content-primary"
-                />
-                <input
-                  type="number"
-                  value={maxPrice}
-                  onChange={e => setMaxPrice(Number(e.target.value))}
-                  placeholder="Max"
-                  className="flex-1 px-3 py-2 border border-surface-primary rounded-lg bg-surface-primary text-content-primary"
-                />
-              </div>
-            </div>
-          )}
-        </ProductListFilters.PriceRange>
-      </div>
-
-      {/* Inventory Status Filter */}
-      <div className="mb-6">
-        <h4 className="text-content-primary font-medium mb-3">Availability</h4>
-        <ProductListFilters.InventoryStatus>
-          {({
-            availableInventoryStatuses,
-            selectedInventoryStatuses,
-            toggleInventoryStatus,
-          }) => (
-            <div className="space-y-2">
-              {availableInventoryStatuses.map(status => (
-                <label key={status} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedInventoryStatuses.includes(status)}
-                    onChange={() => toggleInventoryStatus(status)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-content-secondary text-sm">
-                    {status}
-                  </span>
-                </label>
-              ))}
-            </div>
-          )}
-        </ProductListFilters.InventoryStatus>
-      </div>
-
-      {/* Product Options Filter */}
-      <ProductListFilters.ProductOptions>
-        {({ option, selectedChoices, toggleChoice }) => (
-          <div key={option.id} className="mb-6">
-            <h4 className="text-content-primary font-medium mb-3">
-              {option.name}
-            </h4>
-            <div className="space-y-2">
-              {option.choices.map(choice => (
-                <label key={choice.id} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedChoices.includes(choice.id)}
-                    onChange={() => toggleChoice(choice.id)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-content-secondary text-sm">
-                    {choice.name}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-      </ProductListFilters.ProductOptions>
-    </div>
-  );
-};
-
 // Product Grid Component
 interface ProductGridProps {
   productPageRoute: string;
@@ -250,26 +161,47 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 }) => {
   return (
     <>
-      {/* Loading State */}
+      {/* Enhanced Loading State */}
       <HeadlessProductList.Loading>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="bg-surface-card rounded-xl p-4 animate-pulse"
+              className="bg-surface-card rounded-xl p-4 border border-surface-subtle shadow-sm overflow-hidden relative"
             >
-              <div className="aspect-square bg-surface-primary rounded-lg mb-4"></div>
-              <div className="h-4 bg-surface-primary rounded mb-2"></div>
-              <div className="h-3 bg-surface-primary rounded w-2/3"></div>
+              {/* Shimmer Effect */}
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface-loading/30 to-transparent"></div>
+
+              {/* Content Skeleton */}
+              <div className="relative">
+                <div className="aspect-square bg-surface-loading rounded-lg mb-4 animate-pulse"></div>
+                <div className="space-y-3">
+                  <div className="h-4 bg-surface-loading rounded animate-pulse"></div>
+                  <div className="h-3 bg-surface-loading rounded w-2/3 animate-pulse"></div>
+                  <div className="flex gap-2 mt-3">
+                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="h-6 bg-surface-loading rounded w-16 animate-pulse"></div>
+                    <div className="h-4 bg-surface-loading rounded w-20 animate-pulse"></div>
+                  </div>
+                  <div className="space-y-2 mt-4">
+                    <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+                    <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </HeadlessProductList.Loading>
 
-      {/* Empty State */}
+      {/* Enhanced Empty State */}
       <HeadlessProductList.EmptyState>
         <div className="text-center py-12 sm:py-16">
-          <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
             <svg
               className="w-8 h-8 sm:w-12 sm:h-12 text-content-muted"
               fill="none"
@@ -287,8 +219,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           <h2 className="text-xl sm:text-2xl font-bold text-content-primary mb-3 sm:mb-4">
             No Products Found
           </h2>
-          <p className="text-content-light text-sm sm:text-base">
-            We couldn't find any products to display.
+          <p className="text-content-muted text-sm sm:text-base max-w-md mx-auto">
+            We couldn't find any products to display. Try adjusting your search
+            or filters.
           </p>
         </div>
       </HeadlessProductList.EmptyState>
@@ -337,13 +270,28 @@ const ProductItem: React.FC<ProductItemProps> = ({
           data-testid="product-item"
           data-product-id={product._id}
           data-product-available={available}
-          className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col relative"
+          className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col shadow-sm hover:shadow-md"
         >
-          {/* Success Message */}
+          {/* Enhanced Success Message */}
           {showSuccessMessage && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-              <div className="bg-status-success-light/90 backdrop-blur-sm border border-status-success rounded-lg px-4 py-2 text-status-success text-base font-bold text-center shadow-md animate-bounce">
-                Added to Cart!
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+              <div className="bg-status-success-light/95 backdrop-blur-sm border border-status-success rounded-lg px-4 py-2 text-status-success text-base font-bold text-center shadow-lg animate-bounce">
+                <div className="flex items-center gap-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  Added to Cart!
+                </div>
               </div>
             </div>
           )}
@@ -397,7 +345,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               </div>
             )}
 
-            {/* Quick View Button */}
+            {/* Enhanced Quick View Button */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
               <button
                 onClick={e => {
@@ -405,7 +353,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                   e.stopPropagation();
                   openQuickView(product);
                 }}
-                className="btn-secondary px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium transition-all duration-200 whitespace-nowrap"
+                className="btn-secondary px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium transition-all duration-200 whitespace-nowrap backdrop-blur-sm hover:scale-105"
               >
                 <svg
                   className="w-4 h-4"
@@ -433,8 +381,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           {/* Product Ribbon */}
           {product.ribbon?.name && (
-            <div className="absolute top-2 left-2">
-              <span className="btn-ribbon text-xs px-2 py-1 rounded-full font-medium">
+            <div className="absolute top-2 left-2 z-10">
+              <span className="btn-ribbon text-xs px-2 py-1 rounded-full font-medium shadow-sm">
                 {product.ribbon.name}
               </span>
             </div>
@@ -445,12 +393,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
             data-testid="title-navigation"
             route={`${productPageRoute}/${product.slug}`}
           >
-            <h3 className="text-content-primary font-semibold mb-2 line-clamp-2">
+            <h3 className="text-content-primary font-semibold mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
               {product.name}
             </h3>
           </Navigation>
 
-          {/* Product Variants */}
+          {/* Enhanced Product Variants */}
           <ProductVariantSelector.Options>
             {({ options, hasOptions }) => (
               <>
@@ -462,11 +410,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
                         option={option}
                       >
                         {({ name, choices }) => (
-                          <div className="space-y-1">
-                            <span className="text-content-secondary text-xs font-medium">
+                          <div className="space-y-2">
+                            <span className="text-content-secondary text-xs font-medium uppercase tracking-wide">
                               {String(name)}:
                             </span>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1.5">
                               {choices?.slice(0, 3).map((choice: any) => (
                                 <ProductVariantSelector.Choice
                                   key={choice.choiceId}
@@ -496,10 +444,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                       return (
                                         <div className="relative group/color">
                                           <div
-                                            className={`w-6 h-6 rounded-full border-2 transition-colors cursor-pointer ${
+                                            className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${
                                               isSelected
-                                                ? 'border-brand-primary shadow-md ring-1 ring-brand-primary/30'
-                                                : 'border-color-swatch hover:border-color-swatch-hover'
+                                                ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
+                                                : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
                                             } ${
                                               !isInStock && !isPreOrderEnabled
                                                 ? 'grayscale opacity-50'
@@ -515,7 +463,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                           {!isInStock && !isPreOrderEnabled && (
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                               <svg
-                                                className="w-3 h-3 text-status-error"
+                                                className="w-3 h-3 text-status-error drop-shadow-sm"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
@@ -529,7 +477,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                               </svg>
                                             </div>
                                           )}
-                                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                          <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                             {String(value)}
                                             {!isInStock &&
                                               !isPreOrderEnabled &&
@@ -540,10 +488,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                     } else {
                                       return (
                                         <span
-                                          className={`inline-flex items-center px-2 py-1 text-xs rounded border transition-colors cursor-pointer ${
+                                          className={`inline-flex items-center px-3 py-1.5 text-xs rounded-lg border transition-all cursor-pointer transform hover:scale-105 ${
                                             isSelected
-                                              ? 'bg-brand-primary text-content-primary border-brand-primary'
-                                              : 'bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary'
+                                              ? 'bg-brand-primary text-content-primary border-brand-primary shadow-sm scale-105'
+                                              : 'bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary hover:shadow-sm'
                                           } ${
                                             !isInStock && !isPreOrderEnabled
                                               ? 'opacity-50 line-through'
@@ -559,7 +507,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                 </ProductVariantSelector.Choice>
                               ))}
                               {choices?.length > 3 && (
-                                <span className="text-content-muted text-xs">
+                                <span className="text-content-muted text-xs self-center bg-surface-subtle px-2 py-1 rounded-full">
                                   +{choices.length - 3} more
                                 </span>
                               )}
@@ -578,10 +526,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <ProductVariantSelector.Reset>
             {({ onReset, hasSelections }) =>
               hasSelections && (
-                <div className="pt-4">
+                <div className="pt-2 pb-2">
                   <button
                     onClick={onReset}
-                    className="text-sm text-brand-primary hover:text-brand-light transition-colors"
+                    className="text-xs text-brand-primary hover:text-brand-light transition-colors underline"
                   >
                     Reset Selections
                   </button>
@@ -596,7 +544,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <>
                 {plainDescription && (
                   <p
-                    className="text-content-muted text-sm mb-3 line-clamp-2"
+                    className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: plainDescription }}
                   />
                 )}
@@ -604,31 +552,32 @@ const ProductItem: React.FC<ProductItemProps> = ({
             )}
           </Product.Description>
 
-          {/* Price and Stock */}
+          {/* Enhanced Price and Stock */}
           <div className="mt-auto mb-3">
-            <div className="space-y-1">
+            <div className="space-y-2">
               <SelectedVariant.Price>
                 {({ price, compareAtPrice }) => {
                   return compareAtPrice &&
                     parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 ? (
                     <>
-                      <div className="text-xl font-bold text-content-primary">
-                        {price}
-                      </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="text-xl font-bold text-content-primary">
+                          {price}
+                        </div>
                         <div className="text-sm font-medium text-content-faded line-through">
                           {compareAtPrice}
                         </div>
-                        <div className="flex items-center gap-2">
-                          {available ? (
-                            <span className="text-status-success text-sm">
-                              In Stock
-                            </span>
-                          ) : (
-                            <span className="text-status-error text-sm">
-                              Out of Stock
-                            </span>
-                          )}
+                      </div>
+                      <div className="flex items-center justify-end">
+                        <div className="flex items-center gap-1">
+                          <div
+                            className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
+                          ></div>
+                          <span
+                            className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
+                          >
+                            {available ? 'In Stock' : 'Out of Stock'}
+                          </span>
                         </div>
                       </div>
                     </>
@@ -637,16 +586,15 @@ const ProductItem: React.FC<ProductItemProps> = ({
                       <div className="text-xl font-bold text-content-primary">
                         {price}
                       </div>
-                      <div className="flex items-center gap-2">
-                        {available ? (
-                          <span className="text-status-success text-sm">
-                            In Stock
-                          </span>
-                        ) : (
-                          <span className="text-status-error text-sm">
-                            Out of Stock
-                          </span>
-                        )}
+                      <div className="flex items-center gap-1">
+                        <div
+                          className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
+                        ></div>
+                        <span
+                          className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
+                        >
+                          {available ? 'In Stock' : 'Out of Stock'}
+                        </span>
                       </div>
                     </div>
                   );
@@ -655,18 +603,18 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Enhanced Action Buttons */}
           <div className="space-y-2">
             <ProductActionButtons isQuickView={true} />
 
             <Navigation
               data-testid="view-product-button"
               route={`${productPageRoute}/${product.slug}`}
-              className="w-full text-content-primary font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary"
+              className="w-full text-content-primary font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary hover:scale-105 hover:shadow-sm"
             >
               View Product
               <svg
-                className="w-4 h-4"
+                className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -686,7 +634,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   );
 };
 
-// Load More Section Component
+// Enhanced Load More Section Component
 const LoadMoreSection: React.FC = () => {
   return (
     <ProductListPagination.LoadMoreTrigger>
@@ -696,46 +644,50 @@ const LoadMoreSection: React.FC = () => {
             hasMoreProducts ? (
               <>
                 {products.length > 0 && (
-                  <div className="text-center mt-12">
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <button
-                        onClick={() => loadMore(10)}
-                        disabled={isLoading}
-                        className={`text-content-primary font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 ${
-                          isLoading ? 'bg-surface-loading' : 'btn-primary'
-                        }`}
-                      >
-                        {isLoading ? (
-                          <span className="flex items-center gap-2">
-                            <svg
-                              className="animate-spin w-5 h-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Loading...
-                          </span>
-                        ) : (
-                          'Load More Products'
-                        )}
-                      </button>
+                  <div className="text-center mt-12 mb-8">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                          onClick={() => loadMore(10)}
+                          disabled={isLoading}
+                          className={`text-content-primary font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transform hover:scale-105 ${
+                            isLoading
+                              ? 'bg-surface-loading animate-pulse'
+                              : 'btn-primary shadow-md hover:shadow-lg'
+                          }`}
+                        >
+                          {isLoading ? (
+                            <span className="flex items-center gap-2">
+                              <svg
+                                className="animate-spin w-5 h-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                              Loading...
+                            </span>
+                          ) : (
+                            'Load More Products'
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-content-muted text-sm mt-4">
+                        {products.length} products loaded
+                      </p>
                     </div>
-                    <p className="text-content-muted text-sm mt-4">
-                      {products.length} products loaded
-                    </p>
                   </div>
                 )}
               </>
