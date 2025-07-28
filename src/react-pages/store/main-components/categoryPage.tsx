@@ -46,6 +46,8 @@ function CategoryPage({
       productPageRoute={productPageRoute}
       productsListConfig={productsListConfig}
       productsListFiltersConfig={productsListFiltersConfig}
+      categoriesListConfig={categoriesListConfig}
+      slug={slug}
     />
   );
 }

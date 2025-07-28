@@ -11,6 +11,7 @@ import {
 import {
   type ProductsListServiceConfig,
   type ProductsListFiltersServiceConfig,
+  type CategoriesListServiceConfig,
 } from '@wix/headless-stores/services';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
@@ -18,17 +19,23 @@ import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 import { productsV3 } from '@wix/stores';
+import SortDropdown from './SortDropdown';
+import CategoryPicker from './CategoryPicker';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
   productsListFiltersConfig?: ProductsListFiltersServiceConfig;
   productPageRoute: string;
+  categoriesListConfig: CategoriesListServiceConfig;
+  slug: string;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
   productsListConfig,
   productsListFiltersConfig,
   productPageRoute,
+  categoriesListConfig,
+  slug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
@@ -58,6 +65,21 @@ export const ProductList: React.FC<ProductListProps> = ({
               </div>
             )}
           </HeadlessProductList.Error>
+
+          <div
+            className={`bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6`}
+          >
+            <div className="flex items-center justify-end">
+              <CategoryPicker
+                categoriesListConfig={categoriesListConfig}
+                currentCategorySlug={slug}
+                onCategorySelect={slug => {
+                  window.location.href = `/category/${slug}`;
+                }}
+              />
+              <SortDropdown />
+            </div>
+          </div>
 
           {/* Filters Section */}
           {productsListFiltersConfig && (
