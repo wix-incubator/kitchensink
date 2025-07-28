@@ -13,115 +13,154 @@ import { CurrentCart } from '@wix/headless-ecom/react';
 
 // All available components
 const {
-  CartIcon,
-  CartModal,
-  CartLineItems,
-  CartLineItem,
-  CartSummary,
-  ClearCart,
-  CheckoutButton,
+  Content,
+  OpenTrigger,
+  EmptyState,
+  LineItemsList,
+  Item,
+  Clear,
+  Notes,
+  Coupon,
+  Summary,
+  Checkout,
 } = CurrentCart;
 ```
 
 ## Components
 
-### CartIcon
+### Content
 
-Displays a cart icon with item count and provides cart opening functionality.
-
-#### Props
-
-- `children`: Render prop function receiving `CartIconRenderProps`
-
-#### Render Props
-
-- `itemCount: number` - Number of items in cart
-- `hasItems: boolean` - Whether cart has items
-- `openCart: () => void` - Function to open cart
-- `isLoading: boolean` - Whether cart is currently loading
-
-#### Example
-
-```tsx
-<CurrentCart.CartIcon>
-  {({ itemCount, hasItems, openCart, isLoading }) => (
-    <button
-      onClick={openCart}
-      className="relative p-3 bg-blue-500 rounded-full"
-    >
-      <CartIconSVG />
-      {hasItems && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2">
-          {itemCount}
-        </span>
-      )}
-      {isLoading && <LoadingSpinner />}
-    </button>
-  )}
-</CurrentCart.CartIcon>
-```
-
-### CartModal
-
-Manages the cart modal/drawer state and provides cart data.
+The main cart content wrapper that provides cart state and modal functionality.
 
 #### Props
 
-- `children`: Render prop function receiving `CartModalRenderProps`
+- `children`: Render prop function receiving `ContentRenderProps`
 
 #### Render Props
 
-- `isOpen: boolean` - Whether cart modal is open
-- `closeCart: () => void` - Function to close cart
 - `cart: Cart | null` - Cart data object
-- `isLoading: boolean` - Whether cart is loading
-- `error: string | null` - Error message if any
+- `isLoading: boolean` - Whether cart is currently loading
+- `isOpen: boolean` - Whether cart modal is open
+- `close: () => void` - Function to close cart modal
 
 #### Example
 
 ```tsx
-<CurrentCart.CartModal>
-  {({ isOpen, closeCart, cart, isLoading, error }) => (
+<CurrentCart.Content>
+  {({ cart, isLoading, isOpen, close }) => (
     <>
+      {isLoading && !cart && (
+        <div className="flex justify-center">
+          <span>Loading your cart...</span>
+        </div>
+      )}
+
       {isOpen && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={closeCart} />
+          <div className="absolute inset-0 bg-black/50" onClick={close} />
           <div className="absolute right-0 top-0 h-full w-96 bg-white p-6">
             <h2>Shopping Cart</h2>
-            {error && <div className="text-red-500">{error}</div>}
             {/* Cart content here */}
           </div>
         </div>
       )}
     </>
   )}
-</CurrentCart.CartModal>
+</CurrentCart.Content>
 ```
 
-### CartLineItems
+### OpenTrigger
+
+Provides cart opening functionality and item count for cart icons/triggers.
+
+#### Props
+
+- `children`: Render prop function receiving `OpenTriggerRenderProps`
+
+#### Render Props
+
+- `open: () => void` - Function to open cart modal
+- `totalItems: number` - Total number of items in cart
+
+#### Example
+
+```tsx
+<CurrentCart.OpenTrigger>
+  {({ open, totalItems }) => (
+    <button onClick={open} className="relative p-3 bg-blue-500 rounded-full">
+      <CartIconSVG />
+      {totalItems > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2">
+          {totalItems}
+        </span>
+      )}
+    </button>
+  )}
+</CurrentCart.OpenTrigger>
+```
+
+### EmptyState
+
+Renders when the cart is empty. This component automatically shows/hides based on cart state.
+
+#### Props
+
+- `children`: React element to render when cart is empty
+
+#### Example
+
+```tsx
+<CurrentCart.EmptyState>
+  <div className="text-center py-16">
+    <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
+      <svg
+        className="w-16 h-16 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6h9M7 13l-1.5 6m0 0h9"
+        />
+      </svg>
+    </div>
+    <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
+    <p className="text-gray-600 text-lg mb-8">
+      Start shopping to add items to your cart
+    </p>
+    <a href="/store" className="bg-blue-500 text-white py-3 px-8 rounded-xl">
+      Continue Shopping
+    </a>
+  </div>
+</CurrentCart.EmptyState>
+```
+
+### LineItemsList
 
 Provides access to all line items in the cart.
 
 #### Props
 
-- `children`: Render prop function receiving `CartLineItemsRenderProps`
+- `children`: Render prop function receiving `LineItemsListRenderProps`
 
 #### Render Props
 
-- `lineItems: any[]` - Array of line items in cart
-- `hasItems: boolean` - Whether cart has items
-- `totalItems: number` - Total number of items
+- `totalItems: number` - Total number of items in cart
+- `items: any[]` - Array of line items in cart
 
 #### Example
 
 ```tsx
-<CurrentCart.CartLineItems>
-  {({ lineItems, hasItems, totalItems }) => (
+<CurrentCart.LineItemsList>
+  {({ totalItems, items }) => (
     <div>
-      {hasItems ? (
+      {totalItems > 0 ? (
         <div>
           <p>{totalItems} items in cart</p>
-          {lineItems.map(item => (
+          {items.map(item => (
             <div key={item._id}>{/* Line item content */}</div>
           ))}
         </div>
@@ -130,56 +169,51 @@ Provides access to all line items in the cart.
       )}
     </div>
   )}
-</CurrentCart.CartLineItems>
+</CurrentCart.LineItemsList>
 ```
 
-### CartLineItem
+### Item
 
 Manages individual cart line item functionality including quantity changes and removal.
 
 #### Props
 
-- `lineItemId: string` - Line item ID
-- `children`: Render prop function receiving `CartLineItemRenderProps`
+- `item: any` - Line item object
+- `children`: Render prop function receiving `ItemRenderProps`
 
 #### Render Props
 
-- `lineItem: any | null` - Line item data
-- `quantity: number` - Current quantity
-- `productName: string` - Product name
-- `imageUrl: string | null` - Product image URL
+- `title: string` - Product title
+- `image: any | null` - Product image object
 - `price: string` - Line item price (formatted)
+- `quantity: number` - Current quantity
 - `selectedOptions: Array<{ name: string; value: string | { name: string; code: string } }>` - Selected product options
 - `increaseQuantity: () => Promise<void>` - Function to increase quantity
 - `decreaseQuantity: () => Promise<void>` - Function to decrease quantity
-- `removeItem: () => Promise<void>` - Function to remove item
-- `isLoading: boolean` - Whether item is loading
+- `remove: () => Promise<void>` - Function to remove item
+- `isLoading: boolean` - Whether item operation is loading
 
 #### Example
 
 ```tsx
-<CurrentCart.CartLineItem lineItemId={item._id}>
+<CurrentCart.Item item={item}>
   {({
-    productName,
-    quantity,
+    title,
+    image,
     price,
+    quantity,
     selectedOptions,
     increaseQuantity,
     decreaseQuantity,
-    removeItem,
-    imageUrl,
+    remove,
     isLoading,
   }) => (
     <div className="flex items-center gap-4 p-4 border-b">
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={productName}
-          className="w-16 h-16 object-cover"
-        />
+      {image && (
+        <img src={image.url} alt={title} className="w-16 h-16 object-cover" />
       )}
       <div className="flex-1">
-        <h3>{productName}</h3>
+        <h3>{title}</h3>
 
         {/* Display variant information */}
         {selectedOptions.length > 0 && (
@@ -229,92 +263,235 @@ Manages individual cart line item functionality including quantity changes and r
         <button onClick={increaseQuantity} disabled={isLoading}>
           +
         </button>
-        <button onClick={removeItem} className="text-red-500">
+        <button onClick={remove} className="text-red-500">
           Remove
         </button>
       </div>
     </div>
   )}
-</CurrentCart.CartLineItem>
+</CurrentCart.Item>
 ```
 
-### CartSummary
-
-Provides cart summary information including totals and checkout availability.
-
-#### Props
-
-- `children`: Render prop function receiving `CartSummaryRenderProps`
-
-#### Render Props
-
-- `subtotal: string` - Cart subtotal (formatted)
-- `total: string` - Cart total (formatted)
-- `currency: string` - Currency code
-- `itemCount: number` - Total number of items
-- `canCheckout: boolean` - Whether checkout is available
-
-#### Example
-
-```tsx
-<CurrentCart.CartSummary>
-  {({ subtotal, total, itemCount, canCheckout }) => (
-    <div className="border-t pt-4">
-      <div className="flex justify-between">
-        <span>Subtotal ({itemCount} items)</span>
-        <span>{subtotal}</span>
-      </div>
-      <div className="flex justify-between font-bold text-lg">
-        <span>Total</span>
-        <span>{total}</span>
-      </div>
-      {canCheckout && (
-        <button className="w-full bg-green-500 text-white py-2 mt-4 rounded">
-          Proceed to Checkout
-        </button>
-      )}
-    </div>
-  )}
-</CurrentCart.CartSummary>
-```
-
-### ClearCart
+### Clear
 
 Provides functionality to clear all items from the cart.
 
 #### Props
 
-- `children`: Render prop function receiving `ClearCartRenderProps`
+- `children`: Render prop function receiving `ClearRenderProps`
 
 #### Render Props
 
-- `clearCart: () => Promise<void>` - Function to clear all items from cart
-- `hasItems: boolean` - Whether cart has items to clear
+- `clear: () => Promise<void>` - Function to clear all items from cart
+- `totalItems: number` - Total number of items in cart
 - `isLoading: boolean` - Whether clear action is loading
 
 #### Example
 
 ```tsx
-<CurrentCart.ClearCart>
-  {({ clearCart, hasItems, isLoading }) => (
+<CurrentCart.Clear>
+  {({ clear, totalItems, isLoading }) => (
     <button
-      onClick={clearCart}
-      disabled={!hasItems || isLoading}
+      onClick={clear}
+      disabled={totalItems === 0 || isLoading}
       className="text-red-500 hover:text-red-700 disabled:opacity-50"
     >
       {isLoading ? 'Clearing...' : 'Clear Cart'}
     </button>
   )}
-</CurrentCart.ClearCart>
+</CurrentCart.Clear>
 ```
 
-### CheckoutButton
+### Notes
+
+Manages order notes functionality.
+
+#### Props
+
+- `children`: Render prop function receiving `NotesRenderProps`
+
+#### Render Props
+
+- `notes: string` - Current order notes
+- `updateNotes: (notes: string) => void` - Function to update notes
+
+#### Example
+
+```tsx
+<CurrentCart.Notes>
+  {({ notes, updateNotes }) => (
+    <div>
+      <label className="block text-sm font-medium mb-2">Order Notes:</label>
+      <textarea
+        value={notes}
+        onChange={e => updateNotes(e.target.value)}
+        placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
+        rows={3}
+        className="w-full px-3 py-2 border rounded-lg"
+      />
+    </div>
+  )}
+</CurrentCart.Notes>
+```
+
+### Coupon
+
+Manages coupon code functionality.
+
+#### Props
+
+- `children`: Render prop function receiving `CouponRenderProps`
+
+#### Render Props
+
+- `appliedCoupon: string | null` - Currently applied coupon code
+- `apply: (code: string) => Promise<void>` - Function to apply coupon
+- `remove: () => Promise<void>` - Function to remove current coupon
+- `isLoading: boolean` - Whether coupon operation is loading
+- `error: string | null` - Error message if coupon operation fails
+
+#### Example
+
+```tsx
+<CurrentCart.Coupon>
+  {({ appliedCoupon, apply, remove, isLoading, error }) => (
+    <div>
+      {appliedCoupon ? (
+        <div className="flex items-center justify-between p-3 bg-green-100 border border-green-300 rounded-lg">
+          <span className="text-green-700 text-sm font-medium">
+            Coupon: {appliedCoupon}
+          </span>
+          <button
+            onClick={remove}
+            disabled={isLoading}
+            className="text-red-500 hover:text-red-700 text-sm disabled:opacity-50"
+          >
+            {isLoading ? 'Removing...' : 'Remove'}
+          </button>
+        </div>
+      ) : (
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const code = formData.get('couponCode') as string;
+            if (code?.trim()) {
+              apply(code.trim());
+            }
+          }}
+          className="space-y-3"
+        >
+          <input
+            type="text"
+            name="couponCode"
+            placeholder="Enter promo code"
+            className="w-full px-3 py-2 border rounded-lg"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg disabled:opacity-50"
+          >
+            {isLoading ? 'Applying...' : 'Apply Coupon'}
+          </button>
+        </form>
+      )}
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+    </div>
+  )}
+</CurrentCart.Coupon>
+```
+
+### Summary
+
+Provides comprehensive cart summary information including totals and checkout availability.
+
+#### Props
+
+- `children`: Render prop function receiving `SummaryRenderProps`
+
+#### Render Props
+
+- `subtotal: string` - Cart subtotal (formatted)
+- `discount: string | null` - Discount amount (formatted)
+- `appliedCoupon: string | null` - Applied coupon code
+- `shipping: string` - Shipping cost (formatted)
+- `tax: string` - Tax amount (formatted)
+- `total: string` - Cart total (formatted)
+- `itemCount: number` - Total number of items
+- `isTotalsLoading: boolean` - Whether totals are being calculated
+
+#### Example
+
+```tsx
+<CurrentCart.Summary>
+  {({
+    subtotal,
+    discount,
+    appliedCoupon,
+    shipping,
+    tax,
+    total,
+    itemCount,
+    isTotalsLoading,
+  }) => {
+    const LoadingOrValue = ({ children }: { children: string }) =>
+      isTotalsLoading ? (
+        <span className="text-gray-500">Calculating...</span>
+      ) : (
+        children
+      );
+
+    return (
+      <div className="border-t pt-4">
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Subtotal ({itemCount} items)</span>
+            <span>
+              <LoadingOrValue>{subtotal}</LoadingOrValue>
+            </span>
+          </div>
+          {appliedCoupon && discount && (
+            <div className="flex justify-between text-green-600">
+              <span>Discount</span>
+              <span>
+                -<LoadingOrValue>{discount}</LoadingOrValue>
+              </span>
+            </div>
+          )}
+          <div className="flex justify-between">
+            <span>Shipping</span>
+            <span>
+              <LoadingOrValue>{shipping}</LoadingOrValue>
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax</span>
+            <span>
+              <LoadingOrValue>{tax}</LoadingOrValue>
+            </span>
+          </div>
+          <div className="flex justify-between font-bold text-lg border-t pt-2">
+            <span>Total</span>
+            <span>
+              <LoadingOrValue>{total}</LoadingOrValue>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }}
+</CurrentCart.Summary>
+```
+
+### Checkout
 
 Handles the checkout process initiation with proper state management.
 
 #### Props
 
-- `children`: Render prop function receiving `CheckoutButtonRenderProps`
+- `children`: Render prop function receiving `CheckoutRenderProps`
 
 #### Render Props
 
@@ -326,7 +503,7 @@ Handles the checkout process initiation with proper state management.
 #### Example
 
 ```tsx
-<CurrentCart.CheckoutButton>
+<CurrentCart.Checkout>
   {({ proceedToCheckout, canCheckout, isLoading, error }) => (
     <div>
       <button
@@ -339,39 +516,152 @@ Handles the checkout process initiation with proper state management.
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   )}
-</CurrentCart.CheckoutButton>
+</CurrentCart.Checkout>
 ```
 
 ## Usage Patterns
 
-### Complete Cart Sidebar
+### Complete Cart Page
 
 ```tsx
-<CurrentCart.CartModal>
-  {({ isOpen, closeCart }) => (
+<CurrentCart.Content>
+  {({ cart, isLoading }) => (
+    <>
+      {/* Loading State */}
+      {isLoading && !cart && (
+        <div className="flex justify-center items-center min-h-64">
+          <span>Loading your cart...</span>
+        </div>
+      )}
+
+      {/* Empty Cart */}
+      <CurrentCart.EmptyState>
+        <div className="text-center py-16">
+          <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
+          <p className="text-gray-600 mb-8">
+            Start shopping to add items to your cart
+          </p>
+          <a href="/store" className="bg-blue-500 text-white py-3 px-8 rounded">
+            Continue Shopping
+          </a>
+        </div>
+      </CurrentCart.EmptyState>
+
+      {/* Cart with Items */}
+      <CurrentCart.LineItemsList>
+        {({ totalItems, items }) => (
+          <>
+            {totalItems > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Cart Items */}
+                <div className="lg:col-span-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold">Cart Items</h2>
+                    <CurrentCart.Clear>
+                      {({ clear, totalItems, isLoading }) =>
+                        totalItems > 0 && (
+                          <button
+                            onClick={clear}
+                            disabled={isLoading}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            Clear all items
+                          </button>
+                        )
+                      }
+                    </CurrentCart.Clear>
+                  </div>
+
+                  <div className="space-y-6">
+                    {items.map(item => (
+                      <CurrentCart.Item key={item._id} item={item}>
+                        {/* Item render prop content */}
+                      </CurrentCart.Item>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Order Summary */}
+                <div className="lg:col-span-1">
+                  <div className="bg-gray-50 rounded-xl p-6 sticky top-6">
+                    <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+
+                    {/* Order Notes */}
+                    <CurrentCart.Notes>
+                      {({ notes, updateNotes }) => (
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium mb-2">
+                            Notes:
+                          </label>
+                          <textarea
+                            value={notes}
+                            onChange={e => updateNotes(e.target.value)}
+                            placeholder="Special instructions..."
+                            rows={3}
+                            className="w-full px-3 py-2 border rounded-lg"
+                          />
+                        </div>
+                      )}
+                    </CurrentCart.Notes>
+
+                    {/* Coupon Code */}
+                    <div className="mb-6">
+                      <CurrentCart.Coupon>
+                        {/* Coupon render prop content */}
+                      </CurrentCart.Coupon>
+                    </div>
+
+                    <CurrentCart.Summary>
+                      {/* Summary render prop content */}
+                      <CurrentCart.Checkout>
+                        {/* Checkout button content */}
+                      </CurrentCart.Checkout>
+                    </CurrentCart.Summary>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </CurrentCart.LineItemsList>
+    </>
+  )}
+</CurrentCart.Content>
+```
+
+### Mini Cart Sidebar
+
+```tsx
+<CurrentCart.Content>
+  {({ isOpen, close }) => (
     <>
       {isOpen && (
-        <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={closeCart} />
-          <div className="absolute right-0 top-0 h-full w-96 bg-white">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">Shopping Cart</h2>
-                <button onClick={closeCart}>×</button>
-              </div>
+        <div className="fixed inset-0 z-50 bg-black/50" onClick={close}>
+          <div
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-xl flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            <CurrentCart.Summary>
+              {({ itemCount }) => (
+                <div className="flex items-center justify-between p-6 border-b">
+                  <h2 className="text-xl font-bold">
+                    Shopping Cart ({itemCount})
+                  </h2>
+                  <button onClick={close}>×</button>
+                </div>
+              )}
+            </CurrentCart.Summary>
 
-              <CurrentCart.CartLineItems>
-                {({ lineItems, hasItems }) => (
+            <div className="flex-1 overflow-y-auto p-6">
+              <CurrentCart.LineItemsList>
+                {({ totalItems, items }) => (
                   <>
-                    {hasItems ? (
-                      <div className="space-y-4 mb-6">
-                        {lineItems.map(item => (
-                          <CurrentCart.CartLineItem
-                            key={item._id}
-                            lineItemId={item._id}
-                          >
-                            {/* Line item render prop content */}
-                          </CurrentCart.CartLineItem>
+                    {totalItems > 0 ? (
+                      <div className="space-y-4">
+                        {items.map(item => (
+                          <CurrentCart.Item key={item._id} item={item}>
+                            {/* Compact item render prop content */}
+                          </CurrentCart.Item>
                         ))}
                       </div>
                     ) : (
@@ -381,38 +671,47 @@ Handles the checkout process initiation with proper state management.
                     )}
                   </>
                 )}
-              </CurrentCart.CartLineItems>
+              </CurrentCart.LineItemsList>
+            </div>
 
-              <CurrentCart.CartSummary>
-                {({ canCheckout }) => (
+            <div className="border-t p-6">
+              <CurrentCart.Summary>
+                {({ total, canCheckout }) => (
                   <>
-                    {canCheckout && (
-                      <div className="border-t pt-4">
-                        {/* Summary content */}
-                        <CurrentCart.CheckoutButton>
-                          {/* Checkout button content */}
-                        </CurrentCart.CheckoutButton>
-                      </div>
-                    )}
+                    <div className="flex justify-between font-bold text-lg mb-4">
+                      <span>Total</span>
+                      <span>{total}</span>
+                    </div>
+                    <CurrentCart.Checkout>
+                      {({ proceedToCheckout, canCheckout }) => (
+                        <button
+                          onClick={proceedToCheckout}
+                          disabled={!canCheckout}
+                          className="w-full bg-blue-500 text-white py-3 rounded disabled:opacity-50"
+                        >
+                          Proceed to Checkout
+                        </button>
+                      )}
+                    </CurrentCart.Checkout>
                   </>
                 )}
-              </CurrentCart.CartSummary>
+              </CurrentCart.Summary>
             </div>
           </div>
         </div>
       )}
     </>
   )}
-</CurrentCart.CartModal>
+</CurrentCart.Content>
 ```
 
 ### Cart Icon with Badge
 
 ```tsx
-<CurrentCart.CartIcon>
-  {({ itemCount, hasItems, openCart, isLoading }) => (
+<CurrentCart.OpenTrigger>
+  {({ open, totalItems }) => (
     <button
-      onClick={openCart}
+      onClick={open}
       className="relative p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors"
     >
       <svg
@@ -425,24 +724,18 @@ Handles the checkout process initiation with proper state management.
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="2"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5-6m0 0h15M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h15M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"
         />
       </svg>
 
-      {hasItems && (
+      {totalItems > 0 && (
         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
-          {itemCount}
+          {totalItems}
         </span>
-      )}
-
-      {isLoading && (
-        <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center">
-          <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-        </div>
       )}
     </button>
   )}
-</CurrentCart.CartIcon>
+</CurrentCart.OpenTrigger>
 ```
 
 ## Service Dependencies
@@ -483,12 +776,12 @@ All components export comprehensive TypeScript interfaces for both props and ren
 
 ```tsx
 import type {
-  CartIconProps,
-  CartIconRenderProps,
-  CartModalProps,
-  CartModalRenderProps,
+  ContentProps,
+  ContentRenderProps,
+  OpenTriggerProps,
+  OpenTriggerRenderProps,
   // ... other interfaces
-} from ''@wix/headless-stores/react';
+} from '@wix/headless-ecom/react';
 ```
 
 ## Testing
@@ -499,20 +792,18 @@ These headless components are easy to test by providing mock render functions:
 import { render } from '@testing-library/react';
 import { CurrentCart } from '@wix/headless-ecom/react';
 
-test('CartIcon renders correctly', () => {
+test('OpenTrigger renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
 
   render(
     <ServicesManagerProvider servicesManager={mockServicesManager}>
-      <CurrentCart.CartIcon>{mockRenderProp}</CurrentCart.CartIcon>
+      <CurrentCart.OpenTrigger>{mockRenderProp}</CurrentCart.OpenTrigger>
     </ServicesManagerProvider>
   );
 
   expect(mockRenderProp).toHaveBeenCalledWith({
-    itemCount: 0,
-    hasItems: false,
-    openCart: expect.any(Function),
-    isLoading: false,
+    open: expect.any(Function),
+    totalItems: 0,
   });
 });
 ```

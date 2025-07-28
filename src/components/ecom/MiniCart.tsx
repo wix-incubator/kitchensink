@@ -4,10 +4,10 @@ import { WixMediaImage } from '../../headless/media/components';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
-  onApply,
+  apply,
   isLoading,
 }: {
-  onApply: (code: string) => void;
+  apply: (code: string) => void;
   isLoading: boolean;
 }) => {
   const [code, setCode] = useState('');
@@ -16,7 +16,7 @@ const CouponFormMini = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim()) {
-      onApply(code.trim());
+      apply(code.trim());
       setCode('');
     }
   };
@@ -91,21 +91,21 @@ export function MiniCartIcon({
     <>
       {/* Fixed Cart Icon */}
       <div className={className}>
-        <CurrentCart.Trigger>
-          {({ onOpen, itemCount }) => (
+        <CurrentCart.OpenTrigger>
+          {({ open, totalItems }) => (
             <button
-              onClick={onOpen}
+              onClick={open}
               className="relative text-content-primary hover:text-brand-light transition-colors"
             >
               <Icon />
-              {itemCount > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-accent-medium text-content-primary text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {itemCount}
+                  {totalItems}
                 </span>
               )}
             </button>
           )}
-        </CurrentCart.Trigger>
+        </CurrentCart.OpenTrigger>
       </div>
     </>
   );
@@ -116,7 +116,7 @@ export function MiniCartContent() {
     <>
       {/* Cart Modal */}
       <CurrentCart.Content>
-        {({ isOpen, onClose }) => {
+        {({ isOpen, close }) => {
           // Lock body scroll when modal is open
           if (typeof document !== 'undefined') {
             if (isOpen) {
@@ -131,20 +131,20 @@ export function MiniCartContent() {
               {isOpen && (
                 <div
                   className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm"
-                  onClick={onClose}
+                  onClick={close}
                 >
                   <div
                     className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col"
                     onClick={e => e.stopPropagation()}
                   >
                     <CurrentCart.Summary>
-                      {({ itemCount }) => (
+                      {({ totalItems }) => (
                         <div className="flex items-center justify-between p-6 border-b border-surface-subtle flex-shrink-0">
                           <h2 className="text-xl font-bold text-content-primary">
-                            Shopping Cart ({itemCount})
+                            Shopping Cart ({totalItems})
                           </h2>
                           <button
-                            onClick={onClose}
+                            onClick={close}
                             className="p-2 text-content-primary hover:text-brand-light transition-colors"
                           >
                             <svg
@@ -166,165 +166,162 @@ export function MiniCartContent() {
                     </CurrentCart.Summary>
 
                     <div className="flex-1 overflow-y-auto p-6 min-h-0">
-                      <CurrentCart.Items>
-                        {({ hasItems, items }) => (
-                          <>
-                            {hasItems ? (
-                              <div className="space-y-4">
-                                {items.map(item => (
-                                  <CurrentCart.Item key={item._id} item={item}>
-                                    {({
-                                      title,
-                                      image,
-                                      price,
-                                      quantity,
-                                      selectedOptions,
-                                      onIncrease,
-                                      onDecrease,
-                                      onRemove,
-                                    }) => (
-                                      <div className="flex gap-4 p-4 bg-surface-card rounded-xl border border-surface-subtle">
-                                        <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
-                                          {image && (
-                                            <WixMediaImage
-                                              media={{ image: image }}
-                                              width={64}
-                                              height={64}
-                                            />
-                                          )}
-                                        </div>
+                      <CurrentCart.EmptyState>
+                        <div className="text-center py-8">
+                          <div className="w-16 h-16 bg-surface-interactive rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg
+                              className="w-8 h-8 text-content-muted"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
+                              />
+                            </svg>
+                          </div>
+                          <p className="text-content-muted">
+                            Your cart is empty
+                          </p>
+                        </div>
+                      </CurrentCart.EmptyState>
+                      <CurrentCart.LineItemsList>
+                        {({ totalItems, items }) =>
+                          totalItems > 0 && (
+                            <div className="space-y-4">
+                              {items.map(item => (
+                                <CurrentCart.Item key={item._id} item={item}>
+                                  {({
+                                    title,
+                                    image,
+                                    price,
+                                    quantity,
+                                    selectedOptions,
+                                    increaseQuantity,
+                                    decreaseQuantity,
+                                    remove,
+                                  }) => (
+                                    <div className="flex gap-4 p-4 bg-surface-card rounded-xl border border-surface-subtle">
+                                      <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
+                                        {image && (
+                                          <WixMediaImage
+                                            media={{ image: image }}
+                                            width={64}
+                                            height={64}
+                                          />
+                                        )}
+                                      </div>
 
-                                        <div className="flex-1 min-w-0">
-                                          <h3 className="text-content-primary font-medium text-sm truncate">
-                                            {title}
-                                          </h3>
-                                          {selectedOptions.length > 0 && (
-                                            <div className="mt-1 mb-2">
-                                              <div className="flex flex-wrap gap-1">
-                                                {selectedOptions.map(
-                                                  (option, index) => {
-                                                    const isColor =
-                                                      typeof option.value ===
-                                                      'object';
-                                                    const text = isColor
-                                                      ? (option.value as any)
-                                                          .name
-                                                      : option.value;
-                                                    const color = isColor
-                                                      ? (option.value as any)
-                                                          .code
-                                                      : null;
+                                      <div className="flex-1 min-w-0">
+                                        <h3 className="text-content-primary font-medium text-sm truncate">
+                                          {title}
+                                        </h3>
+                                        {selectedOptions.length > 0 && (
+                                          <div className="mt-1 mb-2">
+                                            <div className="flex flex-wrap gap-1">
+                                              {selectedOptions.map(
+                                                (option, index) => {
+                                                  const isColor =
+                                                    typeof option.value ===
+                                                    'object';
+                                                  const text = isColor
+                                                    ? (option.value as any).name
+                                                    : option.value;
+                                                  const color = isColor
+                                                    ? (option.value as any).code
+                                                    : null;
 
-                                                    return (
-                                                      <div
-                                                        key={index}
-                                                        className="flex items-center gap-1 text-xs text-content-light"
-                                                      >
-                                                        <span>
-                                                          {option.name}:
-                                                        </span>
-                                                        <div className="flex items-center gap-1">
-                                                          {color && (
-                                                            <div
-                                                              className="w-3 h-3 rounded-full border border-surface-strong"
-                                                              style={{
-                                                                backgroundColor:
-                                                                  color,
-                                                              }}
-                                                              title={text}
-                                                            />
-                                                          )}
-                                                          <span className="font-medium">
-                                                            {text}
-                                                          </span>
-                                                        </div>
-                                                        {index <
-                                                          selectedOptions.length -
-                                                            1 && (
-                                                          <span className="text-content-subtle">
-                                                            ,
-                                                          </span>
+                                                  return (
+                                                    <div
+                                                      key={index}
+                                                      className="flex items-center gap-1 text-xs text-content-light"
+                                                    >
+                                                      <span>
+                                                        {option.name}:
+                                                      </span>
+                                                      <div className="flex items-center gap-1">
+                                                        {color && (
+                                                          <div
+                                                            className="w-3 h-3 rounded-full border border-surface-strong"
+                                                            style={{
+                                                              backgroundColor:
+                                                                color,
+                                                            }}
+                                                            title={text}
+                                                          />
                                                         )}
+                                                        <span className="font-medium">
+                                                          {text}
+                                                        </span>
                                                       </div>
-                                                    );
-                                                  }
-                                                )}
-                                              </div>
+                                                      {index <
+                                                        selectedOptions.length -
+                                                          1 && (
+                                                        <span className="text-content-subtle">
+                                                          ,
+                                                        </span>
+                                                      )}
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
                                             </div>
-                                          )}
-                                          <p className="text-accent font-semibold text-sm mt-1">
-                                            {price}
-                                          </p>
+                                          </div>
+                                        )}
+                                        <p className="text-accent font-semibold text-sm mt-1">
+                                          {price}
+                                        </p>
 
-                                          <div className="flex items-center justify-between mt-3">
-                                            <div className="flex items-center gap-2">
-                                              <button
-                                                onClick={onDecrease}
-                                                className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
-                                              >
-                                                -
-                                              </button>
-                                              <span className="text-content-primary text-sm w-6 text-center">
-                                                {quantity}
-                                              </span>
-                                              <button
-                                                onClick={onIncrease}
-                                                className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
-                                              >
-                                                +
-                                              </button>
-                                            </div>
-
+                                        <div className="flex items-center justify-between mt-3">
+                                          <div className="flex items-center gap-2">
                                             <button
-                                              onClick={onRemove}
-                                              className="text-status-danger hover:text-status-error text-xs transition-colors"
+                                              onClick={decreaseQuantity}
+                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
                                             >
-                                              Remove
+                                              -
+                                            </button>
+                                            <span className="text-content-primary text-sm w-6 text-center">
+                                              {quantity}
+                                            </span>
+                                            <button
+                                              onClick={increaseQuantity}
+                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
+                                            >
+                                              +
                                             </button>
                                           </div>
+
+                                          <button
+                                            onClick={remove}
+                                            className="text-status-danger hover:text-status-error text-xs transition-colors"
+                                          >
+                                            Remove
+                                          </button>
                                         </div>
                                       </div>
-                                    )}
-                                  </CurrentCart.Item>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="text-center py-8">
-                                <div className="w-16 h-16 bg-surface-interactive rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <svg
-                                    className="w-8 h-8 text-content-muted"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth="2"
-                                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
-                                    />
-                                  </svg>
-                                </div>
-                                <p className="text-content-muted">
-                                  Your cart is empty
-                                </p>
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </CurrentCart.Items>
+                                    </div>
+                                  )}
+                                </CurrentCart.Item>
+                              ))}
+                            </div>
+                          )
+                        }
+                      </CurrentCart.LineItemsList>
                     </div>
 
                     <div className="border-t border-surface-subtle p-6 flex-shrink-0">
                       <CurrentCart.Notes>
-                        {({ notes, onNotesChange }) => (
+                        {({ notes, updateNotes }) => (
                           <div>
                             <label className="block text-xs font-medium text-content-secondary mb-2">
                               Notes:
                             </label>
                             <textarea
                               value={notes}
-                              onChange={e => onNotesChange(e.target.value)}
+                              onChange={e => updateNotes(e.target.value)}
                               placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
                               rows={2}
                               className="w-full px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none transition-colors duration-200 resize-vertical mb-4"
@@ -337,8 +334,8 @@ export function MiniCartContent() {
                       <CurrentCart.Coupon>
                         {({
                           appliedCoupon,
-                          onApply,
-                          onRemove,
+                          apply,
+                          remove,
                           isLoading,
                           error,
                         }) => (
@@ -349,7 +346,7 @@ export function MiniCartContent() {
                                   Coupon: {appliedCoupon}
                                 </span>
                                 <button
-                                  onClick={onRemove}
+                                  onClick={remove}
                                   disabled={isLoading}
                                   className="text-status-danger hover:text-status-error text-xs disabled:opacity-50"
                                 >
@@ -358,7 +355,7 @@ export function MiniCartContent() {
                               </div>
                             ) : (
                               <CouponFormMini
-                                onApply={onApply}
+                                apply={apply}
                                 isLoading={isLoading}
                               />
                             )}
@@ -380,7 +377,7 @@ export function MiniCartContent() {
                           shipping,
                           tax,
                           total,
-                          itemCount,
+                          totalItems,
                           isTotalsLoading,
                         }) => {
                           const LoadingOrValue = ({
@@ -401,8 +398,8 @@ export function MiniCartContent() {
                               <div className="space-y-2">
                                 <div className="flex justify-between">
                                   <span className="text-content-secondary">
-                                    Subtotal ({itemCount}{' '}
-                                    {itemCount === 1 ? 'item' : 'items'})
+                                    Subtotal ({totalItems}{' '}
+                                    {totalItems === 1 ? 'item' : 'items'})
                                   </span>
                                   <span className="text-content-primary font-semibold">
                                     <LoadingOrValue>{subtotal}</LoadingOrValue>
@@ -453,9 +450,9 @@ export function MiniCartContent() {
                               </div>
 
                               <CurrentCart.Checkout>
-                                {({ onProceed, canCheckout }) => (
+                                {({ proceedToCheckout, canCheckout }) => (
                                   <button
-                                    onClick={onProceed}
+                                    onClick={proceedToCheckout}
                                     disabled={!canCheckout}
                                     className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
                                   >

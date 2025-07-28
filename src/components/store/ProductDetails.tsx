@@ -791,17 +791,17 @@ export default function ProductDetails({
               {!isQuickView && (
                 <div className="mt-12 pt-8 border-t border-brand-subtle">
                   <CurrentCart.Summary>
-                    {({ subtotal, itemCount }) => (
+                    {({ subtotal, totalItems }) => (
                       <>
-                        {itemCount > 0 && (
+                        {totalItems > 0 && (
                           <div className="bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle">
                             <h3 className="text-xl font-semibold text-content-primary mb-4">
                               Cart Summary
                             </h3>
                             <div className="flex items-center justify-between">
                               <span className="text-content-secondary">
-                                {itemCount} item{itemCount !== 1 ? 's' : ''} in
-                                cart
+                                {totalItems} item{totalItems !== 1 ? 's' : ''}{' '}
+                                in cart
                               </span>
                               <span className="text-xl font-bold text-content-primary">
                                 {subtotal}

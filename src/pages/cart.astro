@@ -4,7 +4,7 @@ import CartPage from '../react-pages/cart';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 
 // Load initial cart data server-side
-const cartServiceConfig = await loadCurrentCartServiceConfig();
+const currentCartServiceConfig = await loadCurrentCartServiceConfig();
 ---
 
 <BaseLayout>
@@ -14,5 +14,9 @@ const cartServiceConfig = await loadCurrentCartServiceConfig();
     content="Review and manage items in your Shopping Cart"
   />
 
-  <CartPage client:load data={cartServiceConfig} slot="body" />
+  <CartPage
+    client:load
+    currentCartServiceConfig={currentCartServiceConfig}
+    slot="body"
+  />
 </BaseLayout>

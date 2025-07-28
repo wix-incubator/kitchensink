@@ -70,8 +70,8 @@ export function MiniCart({
   return (
     <>
       <MiniCartIcon Icon={cartIcon} className={cartIconClassName} />
-      <CurrentCart.Trigger>
-        {({ onOpen }) => (
+      <CurrentCart.OpenTrigger>
+        {({ open }) => (
           <CurrentCart.LineItemAdded>
             {({ onAddedToCart }) => {
               useEffect(
@@ -80,7 +80,7 @@ export function MiniCart({
                     setShowSuccessMessage(true);
                     setTimeout(() => {
                       setShowSuccessMessage(false);
-                      onOpen();
+                      open();
                     }, 3000);
                   }),
                 [onAddedToCart]
@@ -90,7 +90,7 @@ export function MiniCart({
             }}
           </CurrentCart.LineItemAdded>
         )}
-      </CurrentCart.Trigger>
+      </CurrentCart.OpenTrigger>
 
       {showSuccessMessage && (
         <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
