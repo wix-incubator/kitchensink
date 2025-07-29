@@ -573,10 +573,7 @@ export default function ProductDetails({
                                           <ProductModifiers.ToggleFreeText
                                             modifier={modifier}
                                           >
-                                            {({
-                                              isTextInputShown,
-                                              toggle,
-                                            }) => (
+                                            {({ isTextInputShown, toggle }) => (
                                               <div className="space-y-3">
                                                 <label className="flex items-center gap-2">
                                                   <input

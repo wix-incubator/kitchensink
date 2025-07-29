@@ -73,11 +73,7 @@ Displays the currently selected product image.
   {({ src, alt }) => (
     <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
       {src ? (
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover"
-        />
+        <img src={src} alt={alt} className="w-full h-full object-cover" />
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <div className="text-gray-400">No image available</div>
@@ -255,11 +251,7 @@ Renders individual thumbnail images for gallery navigation.
       }`}
     >
       {src ? (
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover"
-        />
+        <img src={src} alt={alt} className="w-full h-full object-cover" />
       ) : (
         <div className="w-full h-full bg-gray-100 flex items-center justify-center">
           <div className="text-gray-400 text-sm">No image</div>
@@ -287,11 +279,7 @@ Renders individual thumbnail images for gallery navigation.
         {({ src, alt }) => (
           <>
             {src ? (
-              <img
-                src={src}
-                alt={alt}
-                className="w-full h-full object-cover"
-              />
+              <img src={src} alt={alt} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <div className="text-gray-400">No image available</div>
@@ -389,11 +377,7 @@ Renders individual thumbnail images for gallery navigation.
     <MediaGallery.Viewport>
       {({ src, alt }) => (
         <div className="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden relative">
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-cover"
-          />
+          <img src={src} alt={alt} className="w-full h-full object-cover" />
 
           {/* Image Counter */}
           <div className="absolute top-4 right-4">
@@ -464,7 +448,7 @@ import { WixMediaImage } from '../../headless/media/components';
       )}
     </div>
   )}
-</MediaGallery.Viewport>
+</MediaGallery.Viewport>;
 ```
 
 ## TypeScript Support
@@ -488,9 +472,7 @@ test('Viewport renders correctly', () => {
 
   render(
     <MediaGallery.Root mediaGalleryServiceConfig={{ media: [] }}>
-      <MediaGallery.Viewport>
-        {mockRenderProp}
-      </MediaGallery.Viewport>
+      <MediaGallery.Viewport>{mockRenderProp}</MediaGallery.Viewport>
     </MediaGallery.Root>
   );
 
