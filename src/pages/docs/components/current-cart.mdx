@@ -419,7 +419,7 @@ Provides comprehensive cart summary information including totals and checkout av
 - `shipping: string` - Shipping cost (formatted)
 - `tax: string` - Tax amount (formatted)
 - `total: string` - Cart total (formatted)
-- `itemCount: number` - Total number of items
+- `totalItems: number` - Total number of items
 - `isTotalsLoading: boolean` - Whether totals are being calculated
 
 #### Example
@@ -433,7 +433,7 @@ Provides comprehensive cart summary information including totals and checkout av
     shipping,
     tax,
     total,
-    itemCount,
+    totalItems,
     isTotalsLoading,
   }) => {
     const LoadingOrValue = ({ children }: { children: string }) =>
@@ -447,7 +447,7 @@ Provides comprehensive cart summary information including totals and checkout av
       <div className="border-t pt-4">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <span>Subtotal ({itemCount} items)</span>
+            <span>Subtotal ({totalItems} items)</span>
             <span>
               <LoadingOrValue>{subtotal}</LoadingOrValue>
             </span>
@@ -642,10 +642,10 @@ Handles the checkout process initiation with proper state management.
             onClick={e => e.stopPropagation()}
           >
             <CurrentCart.Summary>
-              {({ itemCount }) => (
+              {({ totalItems }) => (
                 <div className="flex items-center justify-between p-6 border-b">
                   <h2 className="text-xl font-bold">
-                    Shopping Cart ({itemCount})
+                    Shopping Cart ({totalItems})
                   </h2>
                   <button onClick={close}>×</button>
                 </div>
