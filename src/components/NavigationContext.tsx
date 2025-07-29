@@ -38,7 +38,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
   );
 };
 
-export const useNavigationComponent = (): NavigationComponent => {
+export const useNavigation = (): NavigationComponent => {
   const navigationComponent = useContext(NavigationContext);
 
   return navigationComponent || DefaultNavigationComponent;

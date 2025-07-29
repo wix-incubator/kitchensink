@@ -14,7 +14,7 @@ import {
   type CategoriesListServiceConfig,
   type Category,
 } from '@wix/headless-stores/services';
-import { useNavigationComponent } from '../NavigationContext';
+import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
@@ -304,7 +304,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   openQuickView,
 }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const Navigation = useNavigationComponent();
+  const Navigation = useNavigation();
 
   const availabilityStatus = product.inventory?.availabilityStatus;
   const available =

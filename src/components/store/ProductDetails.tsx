@@ -12,7 +12,7 @@ import { CurrentCart } from '@wix/headless-ecom/react';
 import { productsV3 } from '@wix/stores';
 
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
-import { useNavigationComponent } from '../NavigationContext';
+import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 
 // Reusable FreeText Input Component
@@ -59,7 +59,7 @@ export default function ProductDetails({
   isQuickView?: boolean;
   product: productsV3.V3Product;
 }) {
-  const Navigation = useNavigationComponent();
+  const Navigation = useNavigation();
 
   return (
     <Product.Root productServiceConfig={{ product }}>
