@@ -5,7 +5,7 @@ interface StoreCollectionPageProps {
   productsListConfig: any;
   categoriesListConfig: any;
   productsListFiltersConfig: any;
-  slug: string;
+  currentCategorySlug: string;
   productPageRoute: string;
   basePath: string;
 }
@@ -14,7 +14,7 @@ function CategoryPage({
   productsListConfig,
   categoriesListConfig,
   productsListFiltersConfig,
-  slug,
+  currentCategorySlug,
   productPageRoute,
   basePath,
 }: StoreCollectionPageProps) {
@@ -50,7 +50,7 @@ function CategoryPage({
       productsListConfig={productsListConfig}
       productsListFiltersConfig={productsListFiltersConfig}
       categoriesListConfig={categoriesListConfig}
-      slug={slug}
+      currentCategorySlug={currentCategorySlug}
       onCategorySelect={handleCategoryChange}
     />
   );

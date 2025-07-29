@@ -28,7 +28,7 @@ interface ProductListProps {
   productsListFiltersConfig?: ProductsListFiltersServiceConfig;
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
-  slug: string;
+  currentCategorySlug: string;
   onCategorySelect: (
     category: CategoriesListServiceConfig['categories'][0]
   ) => void;
@@ -40,7 +40,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   productPageRoute,
   categoriesListConfig,
   onCategorySelect,
-  slug,
+  currentCategorySlug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
@@ -92,7 +92,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               <div className="flex items-center gap-4">
                 <CategoryPicker
                   categoriesListConfig={categoriesListConfig}
-                  currentCategorySlug={slug}
+                  currentCategorySlug={currentCategorySlug}
                   onCategorySelect={onCategorySelect}
                 />
               </div>

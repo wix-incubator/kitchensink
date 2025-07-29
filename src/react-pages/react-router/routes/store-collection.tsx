@@ -101,6 +101,7 @@ export async function storeCollectionRouteLoader({
     categoriesConfig,
     productsListConfig,
     productsListFiltersConfig,
+    currentCategorySlug: params.categorySlug,
   };
 }
 
@@ -112,8 +113,12 @@ export function StoreCollectionRoute({
   storeRoute: string;
 }) {
   const basename = useHref('/');
-  const { categoriesConfig, productsListConfig, productsListFiltersConfig } =
-    useLoaderData<typeof storeCollectionRouteLoader>();
+  const {
+    categoriesConfig,
+    productsListConfig,
+    productsListFiltersConfig,
+    currentCategorySlug,
+  } = useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
     <div className="wix-verticals-container">
@@ -124,7 +129,7 @@ export function StoreCollectionRoute({
             categoriesListConfig={categoriesConfig}
             productsListConfig={productsListConfig}
             productsListFiltersConfig={productsListFiltersConfig}
-            slug={''}
+            currentCategorySlug={currentCategorySlug}
             productPageRoute={productPageRoute}
             basePath={`${basename}${storeRoute}`}
           />
