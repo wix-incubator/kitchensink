@@ -90,11 +90,11 @@ export const ProductList: React.FC<ProductListProps> = ({
           <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <CategoryPicker
+                {/* <CategoryPicker
                   categoriesListConfig={categoriesListConfig}
                   currentCategorySlug={slug}
                   onCategorySelect={onCategorySelect}
-                />
+                /> */}
               </div>
               <SortDropdown />
             </div>
