@@ -12,6 +12,7 @@ import {
   type ProductsListServiceConfig,
   type ProductsListFiltersServiceConfig,
   type CategoriesListServiceConfig,
+  type Category,
 } from '@wix/headless-stores/services';
 import { useNavigationComponent } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
@@ -29,9 +30,7 @@ interface ProductListProps {
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
   currentCategorySlug: string;
-  onCategorySelect: (
-    category: CategoriesListServiceConfig['categories'][0]
-  ) => void;
+  onCategorySelect: (category: Category) => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
