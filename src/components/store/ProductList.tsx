@@ -315,7 +315,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
   return (
     <Product.Root productServiceConfig={{ product }}>
-      <SelectedVariant.Root selectedVariantServiceConfig={{}}>
+      <SelectedVariant.Root>
         <div
           data-testid="product-item"
           data-product-id={product._id}
@@ -477,7 +477,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                     isVisible,
                                     isInStock,
                                     isPreOrderEnabled,
-                                    onSelect,
+                                    select,
                                   }) => {
                                     if (!isVisible) return null;
 
@@ -508,7 +508,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                                 choice.colorCode ||
                                                 'var(--theme-fallback-color)',
                                             }}
-                                            onClick={onSelect}
+                                            onClick={select}
                                           />
                                           {!isInStock && !isPreOrderEnabled && (
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -547,7 +547,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                               ? 'opacity-50 line-through'
                                               : ''
                                           }`}
-                                          onClick={onSelect}
+                                          onClick={select}
                                         >
                                           {String(value)}
                                         </span>
@@ -574,11 +574,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           {/* Reset Selections */}
           <ProductVariantSelector.Reset>
-            {({ onReset, hasSelections }) =>
+            {({ reset, hasSelections }) =>
               hasSelections && (
                 <div className="pt-2 pb-2">
                   <button
-                    onClick={onReset}
+                    onClick={reset}
                     className="text-xs text-brand-primary hover:text-brand-light transition-colors underline"
                   >
                     Reset Selections

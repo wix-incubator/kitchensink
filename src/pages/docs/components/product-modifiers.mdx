@@ -89,9 +89,9 @@ Handles individual modifier display and interaction.
               modifier={modifier}
               choice={choice}
             >
-              {({ value, isSelected, colorCode, onSelect }) => (
+              {({ value, isSelected, colorCode, select }) => (
                 <button
-                  onClick={onSelect}
+                  onClick={select}
                   className={`w-10 h-10 rounded-full border-4 ${
                     isSelected ? 'border-blue-500' : 'border-gray-300'
                   }`}
@@ -112,9 +112,9 @@ Handles individual modifier display and interaction.
               modifier={modifier}
               choice={choice}
             >
-              {({ value, isSelected, onSelect }) => (
+              {({ value, isSelected, select }) => (
                 <button
-                  onClick={onSelect}
+                  onClick={select}
                   className={`px-4 py-2 border rounded-lg ${
                     isSelected
                       ? 'border-blue-500 bg-blue-50'
@@ -133,7 +133,7 @@ Handles individual modifier display and interaction.
         <ProductModifiers.FreeText modifier={modifier}>
           {({
             value,
-            onChange,
+            setText,
             placeholder,
             charCount,
             isOverLimit,
@@ -142,7 +142,7 @@ Handles individual modifier display and interaction.
             <div className="space-y-2">
               <textarea
                 value={value}
-                onChange={e => onChange(e.target.value)}
+                onChange={e => setText(e.target.value)}
                 placeholder={placeholder}
                 maxLength={maxChars}
                 className="w-full px-3 py-2 border rounded-lg"
@@ -187,9 +187,9 @@ Handles individual modifier choice selection for swatch and text choices.
 
 ```tsx
 <ProductModifiers.Choice modifier={modifier} choice={choice}>
-  {({ value, isSelected, colorCode, onSelect }) => (
+  {({ value, isSelected, colorCode, select }) => (
     <button
-      onClick={onSelect}
+      onClick={select}
       className={`px-4 py-2 border rounded-lg transition-all ${
         isSelected
           ? 'border-blue-500 bg-blue-50 shadow-md'
@@ -225,11 +225,11 @@ Manages free text input for custom modifiers.
 
 ```tsx
 <ProductModifiers.FreeText modifier={modifier}>
-  {({ value, onChange, placeholder, charCount, isOverLimit, maxChars }) => (
+  {({ value, setText, placeholder, charCount, isOverLimit, maxChars }) => (
     <div className="space-y-2">
       <textarea
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => setText(e.target.value)}
         placeholder={placeholder}
         maxLength={maxChars}
         className={`w-full px-3 py-2 border rounded-lg resize-none ${
@@ -269,19 +269,19 @@ Provides toggle functionality for optional free text modifiers.
 #### Render Props
 
 - `isTextInputShown: boolean` - Whether text input is currently shown
-- `onToggle: () => void` - Function to toggle text input visibility
+- `toggle: () => void` - Function to toggle text input visibility
 
 #### Example
 
 ```tsx
 <ProductModifiers.ToggleFreeText modifier={modifier}>
-  {({ isTextInputShown, onToggle }) => (
+  {({ isTextInputShown, toggle }) => (
     <div className="space-y-3">
       <label className="flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
           checked={isTextInputShown}
-          onChange={onToggle}
+          onChange={toggle}
           className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
         />
         <span className="text-gray-700">
@@ -342,11 +342,11 @@ Provides toggle functionality for optional free text modifiers.
                         </ProductModifiers.FreeText>
                       ) : (
                         <ProductModifiers.ToggleFreeText modifier={modifier}>
-                          {({ isTextInputShown, onToggle }) => (
+                          {({ isTextInputShown, toggle }) => (
                             <OptionalTextInput
                               modifier={modifier}
                               isShown={isTextInputShown}
-                              onToggle={onToggle}
+                              onToggle={toggle}
                             />
                           )}
                         </ProductModifiers.ToggleFreeText>
@@ -485,9 +485,9 @@ When implementing these components, consider accessibility best practices:
 
 ```tsx
 <ProductModifiers.Choice modifier={modifier} choice={choice}>
-  {({ value, isSelected, onSelect }) => (
+  {({ value, isSelected, select }) => (
     <button
-      onClick={onSelect}
+      onClick={select}
       className={`px-4 py-2 border rounded-lg ${
         isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300"
       }`}
@@ -500,10 +500,10 @@ When implementing these components, consider accessibility best practices:
 </ProductModifiers.Choice>
 
 <ProductModifiers.FreeText modifier={modifier}>
-  {({ value, onChange, placeholder }) => (
+  {({ value, setText, placeholder }) => (
     <textarea
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => setText(e.target.value)}
       placeholder={placeholder}
       aria-label={`Custom text for ${modifier.name}`}
       aria-describedby={`${modifier.name}-description`}
