@@ -56,7 +56,7 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({
   return (
     <Category.Root categoryServiceConfig={{ category }}>
       <Category.Slug>
-        {({ slug }) => (
+        {({}) => (
           <button
             onClick={onSelect}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${

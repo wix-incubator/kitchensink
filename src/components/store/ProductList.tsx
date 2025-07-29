@@ -42,7 +42,6 @@ export const ProductList: React.FC<ProductListProps> = ({
   onCategorySelect,
   slug,
 }) => {
-  const Navigation = useNavigation();
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);

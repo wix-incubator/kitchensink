@@ -64,8 +64,8 @@ export default function ProductDetails({
   return (
     <Product.Root productServiceConfig={{ product }}>
       <ProductModifiers.Root>
-        <ProductVariantSelector.Root>
-          <SelectedVariant.Root>
+        <ProductVariantSelector.Root selectedVariantServiceConfig={{}}>
+          <SelectedVariant.Root selectedVariantServiceConfig={{}}>
             <>
               <div
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8"
