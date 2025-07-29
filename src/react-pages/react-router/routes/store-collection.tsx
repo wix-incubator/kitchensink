@@ -1,7 +1,10 @@
 import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
 import React from 'react';
-import { loadCategoriesConfig } from '@wix/headless-stores/services';
-import { loadCollectionServiceConfig } from '@wix/headless-stores/services';
+import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
+import {
+  loadProductsListServiceConfig,
+  loadProductsListFiltersServiceConfig,
+} from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 
 // Skeleton component for product collection loading
@@ -59,7 +62,7 @@ export async function storeCollectionRouteLoader({
   params: { categorySlug?: string };
 }) {
   // Load categories config immediately (blocks the transition - this is fast)
-  const categoriesConfig = await loadCategoriesConfig();
+  const categoriesConfig = await loadCategoriesListServiceConfig();
 
   // Find category by its real slug
   let selectedCategory = null;
@@ -78,18 +81,26 @@ export async function storeCollectionRouteLoader({
   }
 
   // Start collection data load but don't await it (deferred)
-  const filteredCollectionServiceConfigPromise = loadCollectionServiceConfig(
-    selectedCategory?._id || undefined,
-    new URLSearchParams(),
-    categoriesConfig.categories
-  );
+  const searchOptions = {
+    cursorPaging: {
+      limit: 20,
+    },
+    filter: {
+      'allCategoriesInfo.categories': {
+        $matchItems: [{ _id: selectedCategory._id! }],
+      },
+    },
+  };
+
+  const [productsListConfig, productsListFiltersConfig] = await Promise.all([
+    loadProductsListServiceConfig(searchOptions),
+    loadProductsListFiltersServiceConfig(),
+  ]);
 
   return {
-    // Immediate data (blocks transition - fast category data)
     categoriesConfig,
-    selectedCategory,
-    // Deferred data (shows skeleton while loading)
-    filteredCollectionServiceConfigPromise,
+    productsListConfig,
+    productsListFiltersConfig,
   };
 }
 
@@ -101,31 +112,22 @@ export function StoreCollectionRoute({
   storeRoute: string;
 }) {
   const basename = useHref('/');
-  const {
-    categoriesConfig,
-    selectedCategory,
-    filteredCollectionServiceConfigPromise,
-  } = useLoaderData<typeof storeCollectionRouteLoader>();
+  const { categoriesConfig, productsListConfig, productsListFiltersConfig } =
+    useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
     <div className="wix-verticals-container">
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await
-          resolve={filteredCollectionServiceConfigPromise}
-          errorElement={<CollectionError />}
-        >
-          {filteredCollectionServiceConfig => (
-            <CategoryPage
-              filteredCollectionServiceConfig={filteredCollectionServiceConfig}
-              categoriesConfig={{
-                ...categoriesConfig,
-                initialCategoryId: selectedCategory._id,
-              }}
-              productPageRoute={productPageRoute}
-              basePath={`${basename}${storeRoute}`}
-            />
-          )}
+        <Await resolve={productsListConfig} errorElement={<CollectionError />}>
+          <CategoryPage
+            categoriesListConfig={categoriesConfig}
+            productsListConfig={productsListConfig}
+            productsListFiltersConfig={productsListFiltersConfig}
+            slug={''}
+            productPageRoute={productPageRoute}
+            basePath={`${basename}${storeRoute}`}
+          />
         </Await>
       </React.Suspense>
     </div>

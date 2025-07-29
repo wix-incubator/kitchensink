@@ -1,31 +1,38 @@
+import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
 
 interface StoreCollectionPageProps {
-  filteredCollectionServiceConfig: any;
-  categoriesConfig: any;
+  productsListConfig: any;
+  categoriesListConfig: any;
+  productsListFiltersConfig: any;
+  slug: string;
   productPageRoute: string;
   basePath: string;
 }
 
 function CategoryPage({
-  filteredCollectionServiceConfig,
-  categoriesConfig,
+  productsListConfig,
+  categoriesListConfig,
+  productsListFiltersConfig,
+  slug,
   productPageRoute,
   basePath,
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
-  const handleCategoryChange = (categoryId: string | null, category: any) => {
+  const handleCategoryChange = (
+    category: CategoriesListServiceConfig['categories'][0]
+  ) => {
     if (typeof window !== 'undefined') {
       let newPath: string = basePath;
 
-      if (categoryId !== null) {
+      if (category.slug !== null) {
         // Use category slug for URL
         if (!category?.slug) {
           console.warn(
-            `Category ${categoryId} has no slug, using category ID as fallback`
+            `Category ${category.name} has no slug, using category ID as fallback`
           );
         }
-        const categorySlug = category?.slug || categoryId;
+        const categorySlug = category?.slug || category.slug;
         newPath = `${basePath}/${categorySlug}`;
       }
 
@@ -37,7 +44,16 @@ function CategoryPage({
     }
   };
 
-  return <ProductList productPageRoute={productPageRoute} />;
+  return (
+    <ProductList
+      productPageRoute={productPageRoute}
+      productsListConfig={productsListConfig}
+      productsListFiltersConfig={productsListFiltersConfig}
+      categoriesListConfig={categoriesListConfig}
+      slug={slug}
+      onCategorySelect={handleCategoryChange}
+    />
+  );
 }
 
 export default CategoryPage;

@@ -17,7 +17,6 @@ import {
 } from './routes/store-collection';
 import { defaultStoreCollectionRouteRedirectLoader } from './routes/store-redirect';
 import { Cart } from './routes/cart';
-import { CurrentCart } from '@wix/headless-ecom/react';
 
 const router = createBrowserRouter(
   [

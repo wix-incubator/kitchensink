@@ -1,68 +1,76 @@
+import React from 'react';
 import { categories } from '@wix/categories';
-import { Category } from '@wix/headless-stores/react';
-
-// Use the Wix SDK category type directly
-type Category = categories.Category;
+import { CategoryList, Category } from '@wix/headless-stores/react';
+import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 
 interface CategoryPickerProps {
-  onCategorySelect: (categoryId: string | null) => void;
-  selectedCategory: string | null;
-  categories: categories.Category[];
+  onCategorySelect: (category: categories.Category) => void;
+  categoriesListConfig: CategoriesListServiceConfig;
+  currentCategorySlug?: string;
 }
 
-function CategoryPicker({
+export function CategoryPicker({
   onCategorySelect,
-  selectedCategory,
-  categories,
+  categoriesListConfig,
+  currentCategorySlug,
 }: CategoryPickerProps) {
-  if (!categories || categories.length === 0) {
-    return null; // No categories to show
-  }
-  if (selectedCategory === null) {
-    onCategorySelect(categories[0]._id || null);
-  }
-
   return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
-          Shop by Category
-        </h3>
-      </div>
+    <CategoryList.Root categoriesListConfig={categoriesListConfig}>
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
+            Shop by Category
+          </h3>
+        </div>
 
-      {/* Category Navigation - Horizontal scrollable for mobile */}
-      <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-        {/* Category buttons */}
-        {categories.map(category => (
+        {/* Category Navigation - Horizontal scrollable for mobile */}
+        <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
+          <CategoryList.ItemContent>
+            {({ category }) => (
+              <CategoryButton
+                key={category._id}
+                category={category}
+                isSelected={currentCategorySlug === category.slug}
+                onSelect={() => onCategorySelect(category)}
+              />
+            )}
+          </CategoryList.ItemContent>
+        </div>
+      </div>
+    </CategoryList.Root>
+  );
+}
+
+// Individual Category Button Component
+interface CategoryButtonProps {
+  category: categories.Category;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+const CategoryButton: React.FC<CategoryButtonProps> = ({
+  category,
+  isSelected,
+  onSelect,
+}) => {
+  return (
+    <Category.Root categoryServiceConfig={{ category }}>
+      <Category.Slug>
+        {({}) => (
           <button
-            key={category._id}
-            onClick={() => onCategorySelect(category._id || null)}
+            onClick={onSelect}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-              selectedCategory === category._id
+              isSelected
                 ? 'text-content-primary shadow-lg transform scale-105 btn-primary'
                 : 'bg-surface-primary text-content-secondary hover:bg-brand-light hover:text-content-primary'
             }`}
           >
-            {category.name}
+            <Category.Name>{({ name }) => name}</Category.Name>
           </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default function CategoryPickerWithContext() {
-  return (
-    <Category.Root>
-      <Category.List>
-        {({ categories, selectedCategory, setSelectedCategory }) => (
-          <CategoryPicker
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategorySelect={setSelectedCategory}
-          />
         )}
-      </Category.List>
+      </Category.Slug>
     </Category.Root>
   );
-}
+};
+
+export default CategoryPicker;

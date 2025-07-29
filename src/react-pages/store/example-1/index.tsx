@@ -3,18 +3,21 @@ import { StoreLayout } from '../../../layouts/StoreLayout';
 import '../../../styles/theme-1.css';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import CategoryPage from '../main-components/categoryPage';
-import { CurrentCart } from '@wix/headless-ecom/react';
 
 interface StoreCollectionPageProps {
-  filteredCollectionServiceConfig: any;
   currentCartServiceConfig: any;
-  categoriesConfig: any;
+  categoriesListConfig: any;
+  productsListConfig: any;
+  productsListFiltersConfig: any;
+  slug: string;
 }
 
 export default function StoreCollectionPage({
-  filteredCollectionServiceConfig,
   currentCartServiceConfig,
-  categoriesConfig,
+  categoriesListConfig,
+  productsListConfig,
+  productsListFiltersConfig,
+  slug,
 }: StoreCollectionPageProps) {
   return (
     <KitchensinkLayout>
@@ -36,8 +39,10 @@ export default function StoreCollectionPage({
           </div>
 
           <CategoryPage
-            filteredCollectionServiceConfig={filteredCollectionServiceConfig}
-            categoriesConfig={categoriesConfig}
+            categoriesListConfig={categoriesListConfig}
+            productsListConfig={productsListConfig}
+            productsListFiltersConfig={productsListFiltersConfig}
+            slug={slug}
             productPageRoute="/store/example-1"
             basePath="/store/example-1/category"
           />
