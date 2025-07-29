@@ -4,7 +4,7 @@ import { CategoryList, Category } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 
 interface CategoryPickerProps {
-  onCategorySelect: (categorySlug: string) => void;
+  onCategorySelect: (category: categories.Category) => void;
   categoriesListConfig: CategoriesListServiceConfig;
   currentCategorySlug?: string;
 }
@@ -31,7 +31,7 @@ export function CategoryPicker({
                 key={category._id}
                 category={category}
                 isSelected={currentCategorySlug === category.slug}
-                onSelect={onCategorySelect}
+                onSelect={() => onCategorySelect(category)}
               />
             )}
           </CategoryList.ItemContent>
@@ -45,7 +45,7 @@ export function CategoryPicker({
 interface CategoryButtonProps {
   category: categories.Category;
   isSelected: boolean;
-  onSelect: (slug: string) => void;
+  onSelect: () => void;
 }
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({
@@ -58,7 +58,7 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({
       <Category.Slug>
         {({ slug }) => (
           <button
-            onClick={() => onSelect(slug)}
+            onClick={onSelect}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               isSelected
                 ? 'text-content-primary shadow-lg transform scale-105 btn-primary'

@@ -29,6 +29,9 @@ interface ProductListProps {
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
   slug: string;
+  onCategorySelect: (
+    category: CategoriesListServiceConfig['categories'][0]
+  ) => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
@@ -36,6 +39,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   productsListFiltersConfig,
   productPageRoute,
   categoriesListConfig,
+  onCategorySelect,
   slug,
 }) => {
   const Navigation = useNavigation();
@@ -90,9 +94,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 <CategoryPicker
                   categoriesListConfig={categoriesListConfig}
                   currentCategorySlug={slug}
-                  onCategorySelect={slug => {
-                    window.location.href = `/category/${slug}`;
-                  }}
+                  onCategorySelect={onCategorySelect}
                 />
               </div>
               <SortDropdown />
