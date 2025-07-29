@@ -55,20 +55,16 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({
 }) => {
   return (
     <Category.Root categoryServiceConfig={{ category }}>
-      <Category.Slug>
-        {({}) => (
-          <button
-            onClick={onSelect}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-              isSelected
-                ? 'text-content-primary shadow-lg transform scale-105 btn-primary'
-                : 'bg-surface-primary text-content-secondary hover:bg-brand-light hover:text-content-primary'
-            }`}
-          >
-            <Category.Name>{({ name }) => name}</Category.Name>
-          </button>
-        )}
-      </Category.Slug>
+      <button
+        onClick={onSelect}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+          isSelected
+            ? 'text-content-primary shadow-lg transform scale-105 btn-primary'
+            : 'bg-surface-primary text-content-secondary hover:bg-brand-light hover:text-content-primary'
+        }`}
+      >
+        <Category.Name>{({ name }) => name}</Category.Name>
+      </button>
     </Category.Root>
   );
 };

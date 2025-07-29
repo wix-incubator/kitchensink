@@ -12,6 +12,7 @@ import {
   type ProductsListServiceConfig,
   type ProductsListFiltersServiceConfig,
   type CategoriesListServiceConfig,
+  type Category,
 } from '@wix/headless-stores/services';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
@@ -28,10 +29,8 @@ interface ProductListProps {
   productsListFiltersConfig?: ProductsListFiltersServiceConfig;
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
-  slug: string;
-  onCategorySelect: (
-    category: CategoriesListServiceConfig['categories'][0]
-  ) => void;
+  currentCategorySlug: string;
+  onCategorySelect: (category: Category) => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
@@ -40,7 +39,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   productPageRoute,
   categoriesListConfig,
   onCategorySelect,
-  slug,
+  currentCategorySlug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
@@ -90,11 +89,11 @@ export const ProductList: React.FC<ProductListProps> = ({
           <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                {/* <CategoryPicker
+                <CategoryPicker
                   categoriesListConfig={categoriesListConfig}
-                  currentCategorySlug={slug}
+                  currentCategorySlug={currentCategorySlug}
                   onCategorySelect={onCategorySelect}
-                /> */}
+                />
               </div>
               <SortDropdown />
             </div>

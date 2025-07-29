@@ -9,7 +9,7 @@ interface StoreCollectionPageProps {
   categoriesListConfig: any;
   productsListConfig: any;
   productsListFiltersConfig: any;
-  slug: string;
+  currentCategorySlug: string;
 }
 
 export default function StoreCollectionPage({
@@ -17,7 +17,7 @@ export default function StoreCollectionPage({
   categoriesListConfig,
   productsListConfig,
   productsListFiltersConfig,
-  slug,
+  currentCategorySlug,
 }: StoreCollectionPageProps) {
   return (
     <KitchensinkLayout>
@@ -42,7 +42,7 @@ export default function StoreCollectionPage({
             categoriesListConfig={categoriesListConfig}
             productsListConfig={productsListConfig}
             productsListFiltersConfig={productsListFiltersConfig}
-            slug={slug}
+            currentCategorySlug={currentCategorySlug}
             productPageRoute="/store/example-1"
             basePath="/store/example-1/category"
           />

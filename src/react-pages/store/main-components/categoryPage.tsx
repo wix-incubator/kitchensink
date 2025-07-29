@@ -1,11 +1,11 @@
-import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
+import type { Category } from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
 
 interface StoreCollectionPageProps {
   productsListConfig: any;
   categoriesListConfig: any;
   productsListFiltersConfig: any;
-  slug: string;
+  currentCategorySlug: string;
   productPageRoute: string;
   basePath: string;
 }
@@ -14,14 +14,12 @@ function CategoryPage({
   productsListConfig,
   categoriesListConfig,
   productsListFiltersConfig,
-  slug,
+  currentCategorySlug,
   productPageRoute,
   basePath,
 }: StoreCollectionPageProps) {
   // Create navigation handler for example-1 specific URLs
-  const handleCategoryChange = (
-    category: CategoriesListServiceConfig['categories'][0]
-  ) => {
+  const handleCategoryChange = (category: Category) => {
     if (typeof window !== 'undefined') {
       let newPath: string = basePath;
 
@@ -50,7 +48,7 @@ function CategoryPage({
       productsListConfig={productsListConfig}
       productsListFiltersConfig={productsListFiltersConfig}
       categoriesListConfig={categoriesListConfig}
-      slug={slug}
+      currentCategorySlug={currentCategorySlug}
       onCategorySelect={handleCategoryChange}
     />
   );
