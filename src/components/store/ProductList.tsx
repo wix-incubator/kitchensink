@@ -316,7 +316,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
   return (
     <Product.Root productServiceConfig={{ product }}>
-      <SelectedVariant.Root>
+      <SelectedVariant.Root selectedVariantServiceConfig={{}}>
         <div
           data-testid="product-item"
           data-product-id={product._id}
