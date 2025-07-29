@@ -41,7 +41,6 @@ function CategoryPage({
         'Showing Category ' + category?.name,
         newPath
       );
-      window.location.href = newPath;
     }
   };
 
