@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { productsV3 } from '@wix/stores';
 
 import ProductDetails from './ProductDetails';
-import { useNavigation } from '../NavigationContext';
+import { useNavigationComponent } from '../NavigationContext';
 
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
@@ -20,7 +20,7 @@ export default function QuickViewModal({
   onClose,
   productPageRoute,
 }: QuickViewModalProps) {
-  const Navigation = useNavigation();
+  const Navigation = useNavigationComponent();
   const [isLoading, setIsLoading] = useState(false);
   const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(
     product

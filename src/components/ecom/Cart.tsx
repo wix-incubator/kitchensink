@@ -1,9 +1,9 @@
 import { CurrentCart } from '@wix/headless-ecom/react';
 import { WixMediaImage } from '../../headless/media/components';
-import { useNavigation } from '../NavigationContext';
+import { useNavigationComponent } from '../NavigationContext';
 
 export default function CartContent() {
-  const Navigation = useNavigation();
+  const Navigation = useNavigationComponent();
   return (
     <div data-testid="cart-summary">
       <CurrentCart.Content>
