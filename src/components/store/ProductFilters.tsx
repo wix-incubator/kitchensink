@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getStockStatusMessage } from './enums/product-status-enums';
 import { ProductListFilters } from '@wix/headless-stores/react';
-import type { ProductsListFiltersServiceConfig } from '@wix/headless-stores/services';
+import PriceRangeSelector from './PriceRangeSelector';
 
 interface ProductFiltersProps {
   className?: string;
@@ -85,107 +85,22 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
       <div className={`space-y-6 ${isExpanded ? 'block' : 'hidden lg:block'}`}>
         <ProductListFilters.PriceRange>
-          {({ minPrice, maxPrice, setMinPrice, setMaxPrice }) => (
-            <div
-              className={`space-y-6 ${isExpanded ? 'block' : 'hidden lg:block'}`}
-            >
-              <div>
-                <h4 className="text-content-primary font-medium mb-4">
-                  Price Range
-                </h4>
-                <div className="space-y-4">
-                  {/* Price Range Display */}
-                  <div className="flex items-center justify-between text-sm text-content-light">
-                    <span>${String(minPrice)}</span>
-                    <span>${String(maxPrice)}</span>
-                  </div>
-
-                  {/* Dual Range Slider */}
-                  <div className="relative h-6">
-                    <div className="absolute top-2 left-0 right-0 h-2 bg-brand-medium rounded-full">
-                      <div
-                        className="absolute h-2 rounded-full bg-gradient-primary"
-                        style={{
-                          left: `${
-                            ((minPrice - minPrice) / (maxPrice - minPrice)) *
-                            100
-                          }%`,
-                          width: `${
-                            ((maxPrice - minPrice) / (maxPrice - minPrice)) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
-
-                    {/* Min Range Input */}
-
-                    <input
-                      type="range"
-                      min={minPrice}
-                      max={maxPrice}
-                      value={minPrice}
-                      onChange={e => setMinPrice(Number(e.target.value))}
-                      className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
-                      style={{
-                        zIndex:
-                          minPrice > minPrice + (maxPrice - minPrice) * 0.5
-                            ? 2
-                            : 1,
-                      }}
-                    />
-
-                    {/* Max Range Input */}
-                    <input
-                      type="range"
-                      min={minPrice}
-                      max={maxPrice}
-                      value={maxPrice}
-                      onChange={e => setMaxPrice(Number(e.target.value))}
-                      className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
-                      style={{
-                        zIndex:
-                          maxPrice < minPrice + (maxPrice - minPrice) * 0.5
-                            ? 2
-                            : 1,
-                      }}
-                    />
-                  </div>
-
-                  {/* Manual Price Input */}
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <label className="block text-xs text-content-muted mb-1">
-                        Min
-                      </label>
-
-                      <input
-                        type="number"
-                        value={minPrice}
-                        onChange={e => {
-                          setMinPrice(Number(e.target.value));
-                        }}
-                        className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs text-content-muted mb-1">
-                        Max
-                      </label>
-
-                      <input
-                        type="number"
-                        value={maxPrice}
-                        onChange={e => {
-                          setMaxPrice(Number(e.target.value));
-                        }}
-                        className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {({
+            availableMinPrice,
+            availableMaxPrice,
+            selectedMinPrice,
+            selectedMaxPrice,
+            setSelectedMinPrice,
+            setSelectedMaxPrice,
+          }) => (
+            <PriceRangeSelector
+              min={availableMinPrice}
+              max={availableMaxPrice}
+              selectedMin={selectedMinPrice}
+              selectedMax={selectedMaxPrice}
+              setSelectedMin={setSelectedMinPrice}
+              setSelectedMax={setSelectedMaxPrice}
+            />
           )}
         </ProductListFilters.PriceRange>
 
