@@ -10,7 +10,7 @@ import {
 } from '@wix/headless-stores/react';
 import {
   type ProductsListServiceConfig,
-  type ProductsListFiltersServiceConfig,
+  type ProductsListSearchServiceConfig,
   type CategoriesListServiceConfig,
   type Category,
 } from '@wix/headless-stores/services';
@@ -26,7 +26,7 @@ import ProductFilters from './ProductFilters';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
-  productsListFiltersConfig?: ProductsListFiltersServiceConfig;
+  productsListSearchConfig: ProductsListSearchServiceConfig;
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
   currentCategorySlug: string;
@@ -35,7 +35,7 @@ interface ProductListProps {
 
 export const ProductList: React.FC<ProductListProps> = ({
   productsListConfig,
-  productsListFiltersConfig,
+  productsListSearchConfig,
   productPageRoute,
   categoriesListConfig,
   onCategorySelect,
@@ -56,95 +56,92 @@ export const ProductList: React.FC<ProductListProps> = ({
   };
 
   return (
-    <HeadlessProductList.Root productsListConfig={productsListConfig}>
-      <ProductListPagination.Root>
-        <div className="min-h-screen">
-          {/* Error State */}
-          <HeadlessProductList.Error>
-            {({ error }) => (
-              <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg
-                    className="w-5 h-5 text-status-error flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p className="text-status-error text-sm sm:text-base font-medium">
-                    {error}
-                  </p>
-                </div>
-              </div>
-            )}
-          </HeadlessProductList.Error>
-
-          {/* Header Controls */}
-          <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <CategoryPicker
-                  categoriesListConfig={categoriesListConfig}
-                  currentCategorySlug={currentCategorySlug}
-                  onCategorySelect={onCategorySelect}
-                />
-              </div>
-              <SortDropdown />
-            </div>
-          </div>
-
-          {/* Filters Section */}
-          {productsListFiltersConfig && (
-            <ProductListFilters.Root
-              productsListFiltersConfig={productsListFiltersConfig}
-            >
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                {/* Filters Sidebar */}
-                <div className="w-full lg:w-80 lg:flex-shrink-0">
-                  <div className="lg:sticky lg:top-6">
-                    <ProductFilters />
-                  </div>
-                </div>
-
-                {/* Main Content Area */}
-                <div className="flex-1 min-w-0">
-                  <ProductGrid
-                    productPageRoute={productPageRoute}
-                    openQuickView={openQuickView}
+    <HeadlessProductList.Root
+      productsListConfig={productsListConfig}
+      productsListSearchConfig={productsListSearchConfig}
+    >
+      <div className="min-h-screen">
+        {/* Error State */}
+        <HeadlessProductList.Error>
+          {({ error }) => (
+            <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
+              <div className="flex items-center gap-3">
+                <svg
+                  className="w-5 h-5 text-status-error flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
-                </div>
+                </svg>
+                <p className="text-status-error text-sm sm:text-base font-medium">
+                  {error}
+                </p>
               </div>
-            </ProductListFilters.Root>
+            </div>
           )}
+        </HeadlessProductList.Error>
 
-          {/* Products Grid (when no filters config provided) */}
-          {!productsListFiltersConfig && (
-            <ProductGrid
-              productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
-            />
-          )}
-
-          {/* Load More Section */}
-          <LoadMoreSection />
+        {/* Header Controls */}
+        <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <CategoryPicker
+                categoriesListConfig={categoriesListConfig}
+                currentCategorySlug={currentCategorySlug}
+                onCategorySelect={onCategorySelect}
+              />
+            </div>
+            <SortDropdown />
+          </div>
         </div>
 
-        {/* Quick View Modal */}
-        {quickViewProduct && (
-          <QuickViewModal
-            product={quickViewProduct}
-            isOpen={isQuickViewOpen}
-            onClose={closeQuickView}
+        {/* Filters Section */}
+        {productsListSearchConfig && (
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Filters Sidebar */}
+            <div className="w-full lg:w-80 lg:flex-shrink-0">
+              <div className="lg:sticky lg:top-6">
+                <ProductFilters />
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="flex-1 min-w-0">
+              <ProductGrid
+                productPageRoute={productPageRoute}
+                openQuickView={openQuickView}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Products Grid (when no filters config provided) */}
+        {!productsListSearchConfig && (
+          <ProductGrid
             productPageRoute={productPageRoute}
+            openQuickView={openQuickView}
           />
         )}
-      </ProductListPagination.Root>
+
+        {/* Load More Section */}
+        <LoadMoreSection />
+      </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          isOpen={isQuickViewOpen}
+          onClose={closeQuickView}
+          productPageRoute={productPageRoute}
+        />
+      )}
     </HeadlessProductList.Root>
   );
 };

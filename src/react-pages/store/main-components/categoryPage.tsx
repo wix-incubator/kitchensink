@@ -1,10 +1,16 @@
 import type { Category } from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
 
+import {
+  type ProductsListSearchServiceConfig,
+  type CategoriesListServiceConfig,
+  type ProductsListServiceConfig,
+} from '@wix/headless-stores/services';
+
 interface StoreCollectionPageProps {
-  productsListConfig: any;
-  categoriesListConfig: any;
-  productsListFiltersConfig: any;
+  productsListConfig: ProductsListServiceConfig;
+  categoriesListConfig: CategoriesListServiceConfig;
+  productsListSearchConfig: ProductsListSearchServiceConfig;
   currentCategorySlug: string;
   productPageRoute: string;
   basePath: string;
@@ -13,7 +19,7 @@ interface StoreCollectionPageProps {
 function CategoryPage({
   productsListConfig,
   categoriesListConfig,
-  productsListFiltersConfig,
+  productsListSearchConfig,
   currentCategorySlug,
   productPageRoute,
   basePath,
@@ -46,7 +52,7 @@ function CategoryPage({
     <ProductList
       productPageRoute={productPageRoute}
       productsListConfig={productsListConfig}
-      productsListFiltersConfig={productsListFiltersConfig}
+      productsListSearchConfig={productsListSearchConfig}
       categoriesListConfig={categoriesListConfig}
       currentCategorySlug={currentCategorySlug}
       onCategorySelect={handleCategoryChange}

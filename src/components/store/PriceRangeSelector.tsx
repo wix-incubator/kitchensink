@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface PriceRangeSelectorProps {
   min: number;
@@ -21,9 +21,8 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
   const [localSelectedMin, setLocalSelectedMin] = useState(selectedMin);
   const [localSelectedMax, setLocalSelectedMax] = useState(selectedMax);
 
-  // Round functions for display only
-  const roundMinValue = (value: number): number => Math.floor(value);
-  const roundMaxValue = (value: number): number => Math.ceil(value);
+  const roundedMin = Math.floor(min);
+  const roundedMax = Math.ceil(max);
 
   return (
     <div>
@@ -31,8 +30,8 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
         <h4 className="text-content-primary font-medium mb-4">Price Range</h4>
         {/* Price Range Display */}
         <div className="flex items-center justify-between text-sm text-content-light">
-          <span>${String(roundMinValue(min))}</span>
-          <span>${String(roundMaxValue(max))}</span>
+          <span>${String(roundedMin)}</span>
+          <span>${String(roundedMax)}</span>
         </div>
 
         {/* Dual Range Slider */}
@@ -41,10 +40,14 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             <div
               className="absolute h-2 rounded-full bg-gradient-primary"
               style={{
-                left: `${((localSelectedMin - min) / (max - min)) * 100}%`,
+                left: `${((localSelectedMin - roundedMin) / (roundedMax - roundedMin)) * 100}%`,
                 width: `${
-                  ((localSelectedMax - min) / (max - min)) * 100 -
-                  ((localSelectedMin - min) / (max - min)) * 100
+                  ((localSelectedMax - roundedMin) /
+                    (roundedMax - roundedMin)) *
+                    100 -
+                  ((localSelectedMin - roundedMin) /
+                    (roundedMax - roundedMin)) *
+                    100
                 }%`,
               }}
             />
@@ -53,8 +56,8 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
           {/* Min Range Input */}
           <input
             type="range"
-            min={min}
-            max={max}
+            min={roundedMin}
+            max={roundedMax}
             value={localSelectedMin}
             onChange={e => setLocalSelectedMin(Number(e.target.value))}
             onMouseUp={() => {
@@ -65,15 +68,18 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             }}
             className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
             style={{
-              zIndex: localSelectedMin > min + (max - min) * 0.5 ? 2 : 1,
+              zIndex:
+                localSelectedMin > roundedMin + (roundedMax - roundedMin) * 0.5
+                  ? 2
+                  : 1,
             }}
           />
 
           {/* Max Range Input */}
           <input
             type="range"
-            min={min}
-            max={max}
+            min={roundedMin}
+            max={roundedMax}
             value={localSelectedMax}
             onChange={e => setLocalSelectedMax(Number(e.target.value))}
             onMouseUp={() => {
@@ -84,7 +90,10 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             }}
             className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
             style={{
-              zIndex: localSelectedMax < min + (max - min) * 0.5 ? 2 : 1,
+              zIndex:
+                localSelectedMax < roundedMin + (roundedMax - roundedMin) * 0.5
+                  ? 2
+                  : 1,
             }}
           />
         </div>
@@ -95,14 +104,14 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             <label className="block text-xs text-content-muted mb-1">Min</label>
             <input
               type="number"
-              value={roundMinValue(localSelectedMin)}
+              value={localSelectedMin}
               onChange={e => {
-                const value = Number(e.target.value) || min;
+                const value = Number(e.target.value) || roundedMin;
                 setLocalSelectedMin(value);
                 setSelectedMin(value);
               }}
-              min={min}
-              max={max}
+              min={roundedMin}
+              max={roundedMax}
               className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
@@ -110,14 +119,14 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             <label className="block text-xs text-content-muted mb-1">Max</label>
             <input
               type="number"
-              value={roundMaxValue(localSelectedMax)}
+              value={localSelectedMax}
               onChange={e => {
-                const value = Number(e.target.value) || max;
+                const value = Number(e.target.value) || roundedMax;
                 setLocalSelectedMax(value);
                 setSelectedMax(value);
               }}
-              min={min}
-              max={max}
+              min={roundedMin}
+              max={roundedMax}
               className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
