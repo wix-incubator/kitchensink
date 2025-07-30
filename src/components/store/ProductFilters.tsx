@@ -8,12 +8,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
 interface ProductFiltersProps {
-  className?: string;
+  
 }
 
-export const ProductFilters: React.FC<ProductFiltersProps> = ({
-  className = '',
-}) => {
+export const ProductFilters: React.FC<ProductFiltersProps> = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Helper function to format choice display names
