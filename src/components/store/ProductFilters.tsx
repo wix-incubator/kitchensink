@@ -7,9 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
-interface ProductFiltersProps {
-  
-}
+interface ProductFiltersProps {}
 
 export const ProductFilters: React.FC<ProductFiltersProps> = () => {
   const [isExpanded, setIsExpanded] = useState(false);
