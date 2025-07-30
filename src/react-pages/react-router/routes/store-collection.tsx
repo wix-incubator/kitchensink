@@ -80,7 +80,6 @@ export async function storeCollectionRouteLoader({
     throw new Response('Not Found', { status: 404 });
   }
 
-  // Start collection data load but don't await it (deferred)
   const searchOptions = {
     cursorPaging: {
       limit: 20,
@@ -92,6 +91,8 @@ export async function storeCollectionRouteLoader({
     },
   };
 
+  // Start collection data load but don't await it,
+  // It will be awaited in the route component for the skeleton to be rendered
   const notAwaiatedData = Promise.all([
     loadProductsListServiceConfig(searchOptions),
     loadProductsListFiltersServiceConfig(),
