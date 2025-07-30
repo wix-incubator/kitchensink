@@ -52,9 +52,6 @@
     "@radix-ui/react-toggle": "^1.1.8",
     "@radix-ui/react-toggle-group": "^1.1.9",
     "@radix-ui/react-tooltip": "^1.2.6",
-    "@radix-ui/react-toggle-group": "^1.1.9",
-    "@radix-ui/react-tooltip": "^1.2.6",
-
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@types/react-router-dom": "^5.3.3",
@@ -67,7 +64,7 @@
     "@wix/headless-ecom": "^0.0.13",
     "@wix/headless-media": "^0.0.9",
     "@wix/headless-seo": "^0.0.10",
-    "@wix/headless-stores": "^0.0.42",
+    "@wix/headless-stores": "^0.0.44",
     "@wix/image": "^1.392.0",
     "@wix/media": "^1.0.170",
     "@wix/members": "^1.0.298",

@@ -5,6 +5,7 @@ import PriceRangeSelector from './PriceRangeSelector';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
 
 interface ProductFiltersProps {
   className?: string;
@@ -53,12 +54,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             <ProductListFilters.ResetTrigger>
               {({ resetFilters, isFiltered }) =>
                 isFiltered && (
-                  <button
+                  <Button
+                    variant="link"
+                    size="sm"
                     onClick={resetFilters}
-                    className="text-sm text-content-muted hover:text-content-primary transition-colors"
+                    className="text-content-muted"
                   >
                     Clear All
-                  </button>
+                  </Button>
                 )
               }
             </ProductListFilters.ResetTrigger>
@@ -152,13 +155,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                   /* Regular Text Options */
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {option.choices.map(choice => (
-                      <div key={choice.id} className="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        key={choice.id}
+                        className="flex items-center gap-3 cursor-pointer group"
+                      >
                         <Checkbox
                           id={`choice-${choice.id}`}
                           checked={selectedChoices.includes(choice.id)}
                           onCheckedChange={() => toggleChoice(choice.id)}
                         />
-                        <Label htmlFor={`choice-${choice.id}`} className="text-content-secondary">
+                        <Label
+                          htmlFor={`choice-${choice.id}`}
+                          className="text-content-secondary"
+                        >
                           {formatChoiceName(choice, option.id)}
                         </Label>
                       </div>
@@ -181,13 +190,19 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                 </h4>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {availableInventoryStatuses.map(status => (
-                    <div key={status} className="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      key={status}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
                       <Checkbox
                         id={`status-${status}`}
                         checked={selectedInventoryStatuses.includes(status)}
                         onCheckedChange={() => toggleInventoryStatus(status)}
                       />
-                      <Label htmlFor={`status-${status}`} className="text-content-secondary">
+                      <Label
+                        htmlFor={`status-${status}`}
+                        className="text-content-secondary"
+                      >
                         {(() => {
                           switch (status) {
                             case 'IN_STOCK':

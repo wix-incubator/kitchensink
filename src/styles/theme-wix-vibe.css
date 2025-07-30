@@ -35,8 +35,16 @@
   --theme-amber-500: var(--color-amber);
   --theme-amber-600: var(--color-amber-dark);
 
-  --theme-bg-primary-10: var(--wix-theme-primary);
-  --theme-bg-primary-20: var(--wix-theme-primary);
+  --theme-bg-primary-10: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 10%,
+    transparent 90%
+  );
+  --theme-bg-primary-20: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 20%,
+    transparent 80%
+  );
   --theme-bg-options: var(--color-overlay);
   --theme-bg-modal: var(--color-modal-bg);
   --theme-bg-loading: var(--color-overlay);

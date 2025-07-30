@@ -40,7 +40,12 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
     <div>
       <div className="space-y-4">
         <div className="mb-4">
-          <Label htmlFor="price-range" className="text-content-primary font-medium text-md">Price Range</Label>
+          <Label
+            htmlFor="price-range"
+            className="text-content-primary font-medium text-md"
+          >
+            Price Range
+          </Label>
         </div>
         {/* Price Range Display */}
         <div className="flex items-center justify-between text-sm text-content-light mb-6">
@@ -62,7 +67,12 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
         {/* Manual Price Input */}
         <div className="flex items-center gap-4 mt-4">
           <div className="flex-1">
-            <Label htmlFor="min-price" className="block text-xs text-content-muted">Min</Label>
+            <Label
+              htmlFor="min-price"
+              className="block text-xs text-content-muted"
+            >
+              Min
+            </Label>
             <Input
               id="min-price"
               type="number"
@@ -78,7 +88,12 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
             />
           </div>
           <div className="flex-1">
-            <Label htmlFor="max-price" className="block text-xs text-content-muted mb-1">Max</Label>
+            <Label
+              htmlFor="max-price"
+              className="block text-xs text-content-muted mb-1"
+            >
+              Max
+            </Label>
             <Input
               id="max-price"
               type="number"
