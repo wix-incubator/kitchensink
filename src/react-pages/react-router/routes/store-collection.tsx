@@ -92,15 +92,14 @@ export async function storeCollectionRouteLoader({
     },
   };
 
-  const [productsListConfig, productsListFiltersConfig] = await Promise.all([
+  const notAwaiatedData = Promise.all([
     loadProductsListServiceConfig(searchOptions),
     loadProductsListFiltersServiceConfig(),
   ]);
 
   return {
     categoriesConfig,
-    productsListConfig,
-    productsListFiltersConfig,
+    notAwaiatedData,
     currentCategorySlug: params.categorySlug,
   };
 }
@@ -113,26 +112,27 @@ export function StoreCollectionRoute({
   storeRoute: string;
 }) {
   const basename = useHref('/');
-  const {
-    categoriesConfig,
-    productsListConfig,
-    productsListFiltersConfig,
-    currentCategorySlug,
-  } = useLoaderData<typeof storeCollectionRouteLoader>();
+  const { categoriesConfig, notAwaiatedData, currentCategorySlug } =
+    useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
     <div className="wix-verticals-container">
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await resolve={productsListConfig} errorElement={<CollectionError />}>
-          <CategoryPage
-            categoriesListConfig={categoriesConfig}
-            productsListConfig={productsListConfig}
-            productsListFiltersConfig={productsListFiltersConfig}
-            currentCategorySlug={currentCategorySlug}
-            productPageRoute={productPageRoute}
-            basePath={`${basename}${storeRoute}`}
-          />
+        <Await resolve={notAwaiatedData} errorElement={<CollectionError />}>
+          {data => {
+            const [productsListConfig, productsListFiltersConfig] = data;
+            return (
+              <CategoryPage
+                categoriesListConfig={categoriesConfig}
+                productsListConfig={productsListConfig}
+                productsListFiltersConfig={productsListFiltersConfig}
+                currentCategorySlug={currentCategorySlug}
+                productPageRoute={productPageRoute}
+                basePath={`${basename}${storeRoute}`}
+              />
+            );
+          }}
         </Await>
       </React.Suspense>
     </div>
