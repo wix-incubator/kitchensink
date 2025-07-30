@@ -1,445 +1,334 @@
 :root {
-  /* Primary Theme Colors - Core brand colors for consistent theming */
-  --theme-primary-500: rgb(
-    var(--color-primary)
-  ); /* Primary brand color used for main UI elements like filter status bars and icons */
-  --theme-primary-600: rgb(
-    var(--color-primary-dark)
-  ); /* Darker variant of primary color used for hover states and emphasis */
-  --theme-secondary-500: rgb(
-    var(--color-secondary)
-  ); /* Secondary accent color used for complementary UI elements and secondary actions */
-  --theme-secondary-600: rgb(
-    var(--color-secondary-dark)
-  ); /* Darker variant of secondary color used for hover state on secondary elements */
-  --theme-secondary-700: rgb(
-    var(--color-secondary-darker)
-  ); /* Darkest variant of secondary color used for pressed states and high emphasis */
+  /* Base color variables that reference wix-theme variables */
+  --color-primary: var(--wix-theme-primary);
+  --color-primary-dark: var(--wix-theme-primary-dark);
+  --color-secondary: var(--wix-theme-secondary);
+  --color-secondary-dark: var(--wix-theme-secondary-dark);
+  --color-secondary-darker: var(--wix-theme-secondary-darker);
 
-  /* Status Colors - Semantic colors for system feedback and user communication */
-  --theme-warning-500: rgb(
-    var(--color-warning)
-  ); /* Warning color for caution messages, non-critical alerts, and attention-needed states */
-  --theme-warning-600: rgb(
-    var(--color-warning-dark)
-  ); /* Darker warning color for hover states on warning buttons and interactive elements */
-  --theme-warning-400: rgb(
-    var(--color-warning-light)
-  ); /* Lighter warning color for warning text and subtle warning indicators */
-  --theme-warning-300: rgb(
-    var(--color-warning-lighter)
-  ); /* Lightest warning color for very subtle warning backgrounds and borders */
+  --color-primary-info: var(--wix-theme-primary-foreground);
+  --color-secondary-info: var(--wix-theme-secondary-foreground);
 
-  --theme-info-500: rgb(
-    var(--color-info)
-  ); /* Information color for neutral notifications, helpful tips, and informational content */
-  --theme-info-600: rgb(
-    var(--color-info-dark)
-  ); /* Darker info color for hover states on informational buttons and interactive elements */
-  --theme-info-400: rgb(
-    var(--color-info-light)
-  ); /* Lighter info color for informational text and subtle info indicators */
+  --theme-primary-500: var(--wix-theme-primary);
+  --theme-primary-600: var(--wix-theme-primary-dark);
+  --theme-secondary-500: var(--wix-theme-secondary);
+  --theme-secondary-600: var(--wix-theme-secondary-dark);
+  --theme-secondary-700: var(--wix-theme-secondary-darker);
 
-  --theme-danger-500: rgb(
-    var(--color-danger)
-  ); /* Danger color for error messages, destructive actions, and critical system alerts */
-  --theme-danger-600: rgb(
-    var(--color-danger-dark)
-  ); /* Darker danger color for hover states on destructive buttons and critical actions */
-  --theme-danger-400: rgb(
-    var(--color-danger-light)
-  ); /* Lighter danger color for error text and danger status indicators */
-  --theme-danger-300: rgb(
-    var(--color-danger-lighter)
-  ); /* Lightest danger color for subtle error backgrounds and borders */
+  --theme-warning-500: var(--color-warning);
+  --theme-warning-600: var(--color-warning-dark);
+  --theme-warning-400: var(--color-warning-light);
+  --theme-warning-300: var(--color-warning-lighter);
 
-  --theme-success-500: rgb(
-    var(--color-success)
-  ); /* Success color for positive feedback, completion messages, and successful operations */
-  --theme-success-600: rgb(
-    var(--color-success-dark)
-  ); /* Darker success color for hover states on success buttons and positive actions */
-  --theme-success-400: rgb(
-    var(--color-success-light)
-  ); /* Lighter success color for success text and positive status indicators */
+  --theme-info-500: var(--color-info);
+  --theme-info-600: var(--color-info-dark);
+  --theme-info-400: var(--color-info-light);
 
-  --theme-accent-500: rgb(
-    var(--color-accent)
-  ); /* Accent color for highlights, special features, and prominent call-to-action elements */
-  --theme-accent-600: rgb(
-    var(--color-accent-dark)
-  ); /* Darker accent color for hover states on accent buttons and highlighted elements */
-  --theme-accent-400: rgb(
-    var(--color-accent-light)
-  ); /* Lighter accent color for accent text and subtle highlight indicators */
+  --theme-danger-500: var(--color-danger);
+  --theme-danger-600: var(--color-danger-dark);
+  --theme-danger-400: var(--color-danger-light);
+  --theme-danger-300: var(--color-danger-lighter);
 
-  --theme-amber-500: rgb(
-    var(--color-amber)
-  ); /* Amber color for special highlights, premium features, and attention-grabbing elements */
-  --theme-amber-600: rgb(
-    var(--color-amber-dark)
-  ); /* Darker amber color for hover states on premium buttons and special features */
+  --theme-success-500: var(--color-success);
+  --theme-success-600: var(--color-success-dark);
+  --theme-success-400: var(--color-success-light);
+  --theme-amber-500: var(--color-amber);
+  --theme-amber-600: var(--color-amber-dark);
 
-  /* Background Colors - Surface colors with transparency for layering and depth */
-  --theme-bg-primary-10: rgba(
-    var(--color-primary),
-    0.1
-  ); /* Semi-transparent primary background for filter status bars and primary-themed surfaces */
-  --theme-bg-primary-20: rgba(
-    var(--color-primary),
-    0.2
-  ); /* More opaque primary background for emphasized primary-themed elements */
-  --theme-bg-options: rgba(
-    var(--color-overlay),
-    0.025
-  ); /* Very subtle background for product option tags and choice buttons on light surfaces */
-  --theme-bg-modal: rgba(
-    var(--color-modal-bg),
-    0.95
-  ); /* Semi-transparent white background for modal dialogs and overlay content */
-  --theme-bg-loading: rgba(
-    var(--color-overlay),
-    0.08
-  ); /* Subtle background for loading skeleton elements and placeholder content */
-  --theme-bg-card: rgba(
-    var(--color-overlay),
-    0.02
-  ); /* Very light background for cards, product items, and content containers */
-  --theme-bg-error: rgba(
-    var(--color-danger),
-    0.1
-  ); /* Light red background for error message containers and alert backgrounds */
-  --theme-bg-tooltip: rgba(
-    var(--color-overlay),
-    0.75
-  ); /* Semi-transparent dark background for tooltips, overlays, and floating elements */
+  --theme-bg-primary-10: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 10%,
+    transparent 90%
+  );
+  --theme-bg-primary-20: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 20%,
+    transparent 80%
+  );
+  --theme-bg-options: var(--color-overlay);
+  --theme-bg-modal: var(--color-modal-bg);
+  --theme-bg-loading: var(--color-overlay);
+  --theme-bg-card: var(--color-overlay);
+  --theme-bg-error: var(--color-danger);
+  --theme-bg-tooltip: var(--color-overlay);
 
-  /* Status Background Colors - Themed backgrounds for different system states */
-  --theme-bg-warning-10: rgba(
-    var(--color-warning),
-    0.1
-  ); /* Light warning background for warning message containers and caution areas */
-  --theme-bg-warning-20: rgba(
-    var(--color-warning),
-    0.2
-  ); /* Medium warning background for emphasized warning elements and alert boxes */
-  --theme-bg-info-10: rgba(
-    var(--color-info),
-    0.1
-  ); /* Light info background for informational message containers and helpful content */
-  --theme-bg-info-20: rgba(
-    var(--color-info),
-    0.2
-  ); /* Medium info background for emphasized informational elements and notice boxes */
-  --theme-bg-success-10: rgba(
-    var(--color-success),
-    0.1
-  ); /* Light success background for success message containers and positive feedback */
-  --theme-bg-success-20: rgba(
-    var(--color-success),
-    0.2
-  ); /* Medium success background for emphasized success elements and completion states */
-  --theme-bg-danger-10: rgba(
-    var(--color-danger),
-    0.1
-  ); /* Light danger background for error message containers and warning areas */
-  --theme-bg-danger-20: rgba(
-    var(--color-danger),
-    0.2
-  ); /* Medium danger background for emphasized error elements and critical alerts */
-  --theme-bg-accent-10: rgba(
-    var(--color-accent),
-    0.1
-  ); /* Light accent background for highlighted content and special feature areas */
-  --theme-bg-accent-20: rgba(
-    var(--color-accent),
-    0.2
-  ); /* Medium accent background for emphasized accent elements and call-to-action areas */
+  --theme-bg-warning-10: var(--color-warning);
+  --theme-bg-warning-20: var(--color-warning);
+  --theme-bg-info-10: var(--color-info);
+  --theme-bg-info-20: var(--color-info);
+  --theme-bg-success-10: color-mix(
+    in srgb,
+    var(--color-success) 10%,
+    transparent 90%
+  );
+  --theme-bg-success-20: color-mix(
+    in srgb,
+    var(--color-success) 20%,
+    transparent 80%
+  );
+  --theme-bg-danger-10: color-mix(
+    in srgb,
+    var(--color-danger) 10%,
+    transparent 90%
+  );
+  --theme-bg-danger-20: color-mix(
+    in srgb,
+    var(--color-danger) 20%,
+    transparent 80%
+  );
 
-  /* Social Sharing Background Colors */
-  --theme-bg-social-button: rgba(
-    0,
-    0,
-    0,
-    0.05
-  ); /* Social button background for light theme */
-  --theme-bg-social-x: rgba(
-    var(--color-social-x),
-    0.1
-  ); /* X hover background */
-  --theme-bg-social-facebook: rgba(
-    var(--color-social-facebook),
-    0.2
-  ); /* Facebook hover background */
-  --theme-bg-social-linkedin: rgba(
-    var(--color-social-linkedin),
-    0.2
-  ); /* LinkedIn hover background */
-  --theme-bg-social-link: rgba(
-    var(--color-social-link),
-    0.2
-  ); /* Link/copy hover background */
+  --theme-bg-social-button: color-mix(in srgb, #000000 5%, transparent 95%);
 
-  /* Border Colors - Outline colors for visual separation and component definition */
-  --theme-border-primary-10: rgba(
-    var(--color-primary),
-    0.1
-  ); /* Very subtle primary border for filter status bars and primary-themed outlines */
-  --theme-border-primary-20: rgba(
-    var(--color-primary),
-    0.2
-  ); /* More visible primary border for emphasized elements and interactive components */
-  --theme-border-primary-30: rgba(
-    var(--color-primary),
-    0.3
-  ); /* Strong primary border for product option tags and selected states */
-  --theme-border-card: rgba(
-    var(--color-overlay),
-    0.12
-  ); /* Light neutral border for cards, product items, and content containers */
-  --theme-border-card-hover: rgba(
-    var(--color-overlay),
-    0.2
-  ); /* Medium neutral border for card hover states and interactive containers */
-  --theme-border-error: rgba(
-    var(--color-danger),
-    0.2
-  ); /* Red border for error message containers and form validation errors */
+  --theme-bg-social-link: color-mix(
+    in srgb,
+    var(--color-social-link) 20%,
+    transparent 80%
+  );
 
-  /* Status Border Colors - Themed borders for different system states */
-  --theme-border-warning-20: rgba(
-    var(--color-warning),
-    0.2
-  ); /* Warning border for caution message containers and warning form fields */
-  --theme-border-warning-30: rgba(
-    var(--color-warning),
-    0.3
-  ); /* Stronger warning border for emphasized warning elements and alert boxes */
-  --theme-border-info-20: rgba(
-    var(--color-info),
-    0.2
-  ); /* Info border for informational message containers and helpful content areas */
-  --theme-border-info-30: rgba(
-    var(--color-info),
-    0.3
-  ); /* Stronger info border for emphasized informational elements and notice boxes */
-  --theme-border-success-20: rgba(
-    var(--color-success),
-    0.2
-  ); /* Success border for positive message containers and success form fields */
-  --theme-border-success-30: rgba(
-    var(--color-success),
-    0.3
-  ); /* Stronger success border for emphasized success elements and completion states */
-  --theme-border-danger-20: rgba(
-    var(--color-danger),
-    0.2
-  ); /* Danger border for error message containers and critical form fields */
-  --theme-border-danger-30: rgba(
-    var(--color-danger),
-    0.3
-  ); /* Stronger danger border for emphasized error elements and critical alerts */
+  --theme-border-primary-10: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 10%,
+    transparent 90%
+  );
+  --theme-border-primary-20: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 20%,
+    transparent 80%
+  );
+  --theme-border-primary-30: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 30%,
+    transparent 70%
+  );
+  --theme-border-card: color-mix(
+    in srgb,
+    var(--color-overlay) 12%,
+    transparent 88%
+  );
+  --theme-border-card-hover: color-mix(
+    in srgb,
+    var(--color-overlay) 20%,
+    transparent 80%
+  );
+  --theme-border-error: color-mix(
+    in srgb,
+    var(--color-danger) 20%,
+    transparent 80%
+  );
 
-  /* Social Sharing Border Colors */
-  --theme-border-social-subtle: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Subtle border for social sharing container */
-  --theme-border-accent-20: rgba(
-    var(--color-accent),
-    0.2
-  ); /* Accent border for highlighted content areas and special features */
-  --theme-border-accent-30: rgba(
-    var(--color-accent),
-    0.3
-  ); /* Stronger accent border for emphasized accent elements and call-to-action areas */
+  --theme-border-warning-20: color-mix(
+    in srgb,
+    var(--color-warning) 20%,
+    transparent 80%
+  );
+  --theme-border-warning-30: color-mix(
+    in srgb,
+    var(--color-warning) 30%,
+    transparent 70%
+  );
+  --theme-border-info-20: color-mix(
+    in srgb,
+    var(--color-info) 20%,
+    transparent 80%
+  );
+  --theme-border-info-30: color-mix(
+    in srgb,
+    var(--color-info) 30%,
+    transparent 70%
+  );
+  --theme-border-success-20: color-mix(
+    in srgb,
+    var(--color-success) 20%,
+    transparent 80%
+  );
+  --theme-border-success-30: color-mix(
+    in srgb,
+    var(--color-success) 30%,
+    transparent 70%
+  );
+  --theme-border-danger-20: color-mix(
+    in srgb,
+    var(--color-danger) 20%,
+    transparent 80%
+  );
+  --theme-border-danger-30: color-mix(
+    in srgb,
+    var(--color-danger) 30%,
+    transparent 70%
+  );
 
-  /* Text Colors - Typography colors for content hierarchy and readability */
-  --theme-text-primary-300: rgb(
-    var(--color-primary)
-  ); /* Primary brand color for filter status text, active labels, and brand-colored text */
-  --theme-text-primary-400: rgb(
-    var(--color-primary-dark)
-  ); /* Darker primary color for filter icons, interactive text, and emphasized brand text */
-  --theme-text-content: rgb(
-    var(--color-content)
-  ); /* Main content text color for headings, product titles, body text, and readable content */
-  --theme-text-content-30: rgba(
-    var(--color-content),
-    0.3
-  ); /* Very faded content text for disabled elements and inactive text */
-  --theme-text-content-40: rgba(
-    var(--color-content),
-    0.4
-  ); /* Dim content text for placeholder icons, subtle elements, and muted content */
-  --theme-text-content-50: rgba(
-    var(--color-content),
-    0.5
-  ); /* Medium faded content text for strikethrough prices and deemphasized text */
-  --theme-text-content-60: rgba(
-    var(--color-content),
-    0.6
-  ); /* Muted content text for descriptions, counts, metadata, and secondary information */
-  --theme-text-content-70: rgba(
-    var(--color-content),
-    0.7
-  ); /* Semi-muted content text for subtitles, intro paragraphs, and supporting text */
-  --theme-text-content-80: rgba(
-    var(--color-content),
-    0.8
-  ); /* Clear content text for option labels, form text, and secondary headings */
-  --theme-text-content-90: rgba(
-    var(--color-content),
-    0.9
-  ); /* Almost full opacity content text for emphasized secondary text and important labels */
-  --theme-text-success: rgb(
-    var(--color-success)
-  ); /* Success text color for "In Stock" indicators, positive status, and success messages */
-  --theme-text-error: rgb(
-    var(--color-danger)
-  ); /* Error text color for "Out of Stock" status, error messages, and validation feedback */
+  --theme-border-social-subtle: color-mix(
+    in srgb,
+    #ffffff 10%,
+    transparent 90%
+  );
+  --theme-border-accent-20: color-mix(
+    in srgb,
+    var(--color-accent) 20%,
+    transparent 80%
+  );
+  --theme-border-accent-30: color-mix(
+    in srgb,
+    var(--color-accent) 30%,
+    transparent 70%
+  );
 
-  /* Status Text Colors - Semantic text colors for system feedback */
-  --theme-text-warning: rgb(
-    var(--color-warning-light)
-  ); /* Warning text color for caution messages and non-critical alerts */
-  --theme-text-info: rgb(
-    var(--color-info-light)
-  ); /* Info text color for informational messages and helpful content */
-  --theme-text-danger: rgb(
-    var(--color-danger-light)
-  ); /* Danger text color for error messages and critical alerts */
-  --theme-text-accent: rgb(
-    var(--color-accent-light)
-  ); /* Accent text color for highlighted content and special features */
+  --theme-bg-accent-20: color-mix(
+    in srgb,
+    var(--color-accent) 20%,
+    transparent 80%
+  );
 
-  /* Social Sharing Theme Variables */
-  --theme-text-social-muted: rgba(
-    var(--color-content),
-    0.6
-  ); /* Muted text for social sharing labels */
-  --theme-text-social-x: rgb(var(--color-social-x)); /* X text color */
-  --theme-text-social-facebook: rgb(
-    var(--color-social-facebook)
-  ); /* Facebook text color */
-  --theme-text-social-linkedin: rgb(
-    var(--color-social-linkedin)
-  ); /* LinkedIn text color */
-  --theme-text-social-link: rgb(
-    var(--color-social-link)
-  ); /* Link/copy text color */
+  --theme-text-primary-300: var(--wix-theme-primary);
+  --theme-text-primary-400: var(--wix-theme-primary-dark);
+  --theme-text-content: var(--color-content);
+  --theme-text-content-30: color-mix(
+    in srgb,
+    var(--color-content) 30%,
+    transparent 70%
+  );
+  --theme-text-content-40: color-mix(
+    in srgb,
+    var(--color-content) 40%,
+    transparent 60%
+  );
+  --theme-text-content-50: color-mix(
+    in srgb,
+    var(--color-content) 50%,
+    transparent 50%
+  );
+  --theme-text-content-60: color-mix(
+    in srgb,
+    var(--color-content) 60%,
+    transparent 40%
+  );
+  --theme-text-content-70: color-mix(
+    in srgb,
+    var(--color-content) 70%,
+    transparent 30%
+  );
+  --theme-text-content-80: color-mix(
+    in srgb,
+    var(--color-content) 80%,
+    transparent 20%
+  );
+  --theme-text-content-90: color-mix(
+    in srgb,
+    var(--color-content) 90%,
+    transparent 10%
+  );
+  --theme-text-success: var(--color-success);
+  --theme-text-error: var(--color-danger);
 
-  /* Interactive Element Colors - Colors for user interface controls and interactive components */
-  --theme-color-border-40: rgba(
-    var(--color-primary),
-    0.4
-  ); /* Default border color for product color option circles and interactive elements */
-  --theme-color-border-80: rgba(
-    var(--color-primary),
-    0.8
-  ); /* Hover border color for product color option circles and active interactive elements */
+  --theme-text-warning: var(--color-warning-light);
+  --theme-text-info: var(--color-info-light);
+  --theme-text-danger: var(--color-danger-light);
+  --theme-text-accent: var(--color-accent-light);
 
-  /* Utility Colors - Fallback and utility colors for edge cases and neutral elements */
-  --theme-fallback-color: rgb(
-    var(--color-grey-dark)
-  ); /* Fallback color for elements that need a default neutral color */
-  --theme-dropdown-arrow-color: rgb(
-    var(--color-grey-medium)
-  ); /* Color for dropdown arrows, chevrons, and navigational icons */
+  --theme-text-social-muted: color-mix(
+    in srgb,
+    var(--color-content) 60%,
+    transparent 40%
+  );
+  --theme-text-social-x: rgb(var(--color-social-x));
+  --theme-text-social-facebook: rgb(var(--color-social-facebook));
+  --theme-text-social-linkedin: rgb(var(--color-social-linkedin));
+  --theme-text-social-link: var(--color-social-link);
 
-  /* Gradient Colors - Decorative gradients for visual interest (not used for buttons) */
+  --theme-color-border-40: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 40%,
+    transparent 60%
+  );
+  --theme-color-border-80: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 80%,
+    transparent 20%
+  );
+
+  --theme-fallback-color: var(--color-grey-dark);
+  --theme-dropdown-arrow-color: var(--color-grey-medium);
+
   --theme-gradient-primary: linear-gradient(
     to right,
-    rgb(var(--color-primary)),
-    rgb(var(--color-primary-dark))
-  ); /* Primary brand gradient for hero sections and decorative elements */
+    var(--wix-theme-primary),
+    var(--wix-theme-primary-dark)
+  );
   --theme-gradient-ribbon: linear-gradient(
     to right,
-    rgb(var(--color-secondary)),
-    rgb(var(--color-secondary-dark))
-  ); /* Gradient for product ribbons, badges, and promotional elements */
+    var(--wix-theme-secondary),
+    var(--wix-theme-secondary-dark)
+  );
   --theme-gradient-warning: linear-gradient(
     to right,
-    rgb(var(--color-warning)),
-    rgb(var(--color-danger))
-  ); /* Warning gradient for alert banners and caution elements */
+    var(--color-warning),
+    var(--color-danger)
+  );
   --theme-gradient-warning-hover: linear-gradient(
     to right,
-    rgb(var(--color-warning-dark)),
-    rgb(var(--color-danger-dark))
-  ); /* Darker warning gradient for hover states on warning elements */
+    var(--color-warning-dark),
+    var(--color-danger-dark)
+  );
   --theme-gradient-success: linear-gradient(
     to right,
-    rgb(var(--color-success)),
-    rgb(var(--color-success-dark))
-  ); /* Success gradient for achievement banners and positive elements */
+    var(--color-success),
+    var(--color-success-dark)
+  );
   --theme-gradient-info: linear-gradient(
     to right,
-    rgb(var(--color-info)),
-    rgb(var(--color-info-dark))
-  ); /* Info gradient for informational banners and helpful elements */
+    var(--color-info),
+    var(--color-info-dark)
+  );
   --theme-gradient-accent: linear-gradient(
     to right,
-    rgb(var(--color-accent)),
-    rgb(var(--color-accent-dark))
-  ); /* Accent gradient for highlight banners and special features */
+    var(--color-accent),
+    var(--color-accent-dark)
+  );
 
-  /* Button Colors - Solid colors for consistent button styling (can be converted to gradients if desired) */
-  --theme-btn-primary: rgb(
-    var(--color-primary)
-  ); /* Primary button background for main actions and primary CTAs */
-  --theme-btn-primary-hover: rgb(
-    var(--color-primary-dark)
-  ); /* Primary button hover state for interactive feedback */
-  --theme-btn-primary-text: var(
-    --color-primary-info
-  ); /* Primary button text color */
-  --theme-btn-primary-border: transparent; /* Primary button border color */
-  --theme-btn-secondary: rgb(
-    var(--color-secondary)
-  ); /* Secondary button background for secondary actions and alternative CTAs */
-  --theme-btn-secondary-hover: rgb(
-    var(--color-secondary-dark)
-  ); /* Secondary button hover state for interactive feedback */
-  --theme-btn-secondary-text: var(
-    --color-secondary-info
-  ); /* Secondary button text color */
-  --theme-btn-secondary-border: transparent; /* Secondary button border color */
-  --theme-btn-warning: rgb(
-    var(--color-warning)
-  ); /* Warning button background for caution actions (can be gradient) */
-  --theme-btn-warning-hover: rgb(
-    var(--color-warning-dark)
-  ); /* Warning button hover state for interactive feedback */
-  --theme-btn-success: rgb(
-    var(--color-success)
-  ); /* Success button background for positive actions (can be gradient) */
-  --theme-btn-info: rgb(
-    var(--color-info)
-  ); /* Info button background for informational actions (can be gradient) */
-  --theme-btn-danger: rgb(
-    var(--color-danger)
-  ); /* Danger button background for destructive actions (can be gradient) */
-  --theme-btn-accent: rgb(
-    var(--color-accent)
-  ); /* Accent button background for highlighted actions (can be gradient) */
+  --theme-btn-primary: var(--wix-theme-primary);
+  --theme-btn-primary-hover: var(--wix-theme-primary-dark);
+  --theme-btn-primary-text: var(--color-primary-info);
+  --theme-btn-primary-border: transparent;
+  --theme-btn-secondary: var(--wix-theme-secondary);
+  --theme-btn-secondary-hover: var(--wix-theme-secondary-dark);
+  --theme-btn-secondary-text: var(--color-secondary-info);
+  --theme-btn-secondary-border: transparent;
+  --theme-btn-warning: var(--color-warning);
+  --theme-btn-warning-hover: var(--color-warning-dark);
+  --theme-btn-success: var(--color-success);
+  --theme-btn-info: var(--color-info);
+  --theme-btn-danger: var(--color-danger);
+  --theme-btn-accent: var(--color-accent);
 
-  /* Hero Section Colors - Special colors for landing page and hero sections */
   --theme-hero-text-gradient: linear-gradient(
     to right,
-    rgb(var(--color-primary)),
-    rgb(var(--color-secondary))
-  ); /* Text gradient for hero section headlines and prominent text */
+    var(--wix-theme-primary),
+    var(--wix-theme-secondary)
+  );
   --theme-hero-card-gradient: linear-gradient(
     to right,
-    rgba(var(--color-primary), 0.08),
-    rgba(var(--color-secondary), 0.08)
-  ); /* Background gradient for hero feature cards and promotional boxes */
+    color-mix(in srgb, var(--wix-theme-primary) 8%, transparent 92%),
+    color-mix(in srgb, var(--wix-theme-secondary) 8%, transparent 92%)
+  );
   --theme-hero-feature-gradient: linear-gradient(
     to bottom right,
-    rgb(var(--color-primary)),
-    rgb(var(--color-secondary))
-  ); /* Background gradient for hero feature icons and decorative elements */
+    var(--wix-theme-primary),
+    var(--wix-theme-secondary)
+  );
+
+  --color-info: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 70%,
+    var(--wix-theme-secondary) 30%
+  );
+  --color-info-dark: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 80%,
+    var(--wix-theme-background) 20%
+  );
+  --color-info-light: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 50%,
+    var(--primary-foreground) 50%
+  );
 }

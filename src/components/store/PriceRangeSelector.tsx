@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 interface PriceRangeSelectorProps {
   min: number;
@@ -20,6 +23,15 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
   // Local state for immediate UI updates while dragging
   const [localSelectedMin, setLocalSelectedMin] = useState(selectedMin);
   const [localSelectedMax, setLocalSelectedMax] = useState(selectedMax);
+  const onRangeChange = (value: number[]) => {
+    setLocalSelectedMin(value[0]);
+    setLocalSelectedMax(value[1]);
+  };
+
+  const onRangeCommit = (value: number[]) => {
+    setSelectedMin(value[0]);
+    setSelectedMax(value[1]);
+  };
 
   const roundedMin = Math.floor(min);
   const roundedMax = Math.ceil(max);
@@ -27,82 +39,42 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
   return (
     <div>
       <div className="space-y-4">
-        <h4 className="text-content-primary font-medium mb-4">Price Range</h4>
+        <div className="mb-4">
+          <Label
+            htmlFor="price-range"
+            className="text-content-primary font-medium text-md"
+          >
+            Price Range
+          </Label>
+        </div>
         {/* Price Range Display */}
-        <div className="flex items-center justify-between text-sm text-content-light">
+        <div className="flex items-center justify-between text-sm text-content-light mb-6">
           <span>${String(roundedMin)}</span>
           <span>${String(roundedMax)}</span>
         </div>
 
         {/* Dual Range Slider */}
-        <div className="relative h-6">
-          <div className="absolute top-2 left-0 right-0 h-2 bg-brand-medium rounded-full">
-            <div
-              className="absolute h-2 rounded-full bg-gradient-primary"
-              style={{
-                left: `${((localSelectedMin - roundedMin) / (roundedMax - roundedMin)) * 100}%`,
-                width: `${
-                  ((localSelectedMax - roundedMin) /
-                    (roundedMax - roundedMin)) *
-                    100 -
-                  ((localSelectedMin - roundedMin) /
-                    (roundedMax - roundedMin)) *
-                    100
-                }%`,
-              }}
-            />
-          </div>
-
-          {/* Min Range Input */}
-          <input
-            type="range"
-            min={roundedMin}
-            max={roundedMax}
-            value={localSelectedMin}
-            onChange={e => setLocalSelectedMin(Number(e.target.value))}
-            onMouseUp={() => {
-              setSelectedMin(localSelectedMin);
-            }}
-            onTouchEnd={() => {
-              setSelectedMin(localSelectedMin);
-            }}
-            className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-min"
-            style={{
-              zIndex:
-                localSelectedMin > roundedMin + (roundedMax - roundedMin) * 0.5
-                  ? 2
-                  : 1,
-            }}
-          />
-
-          {/* Max Range Input */}
-          <input
-            type="range"
-            min={roundedMin}
-            max={roundedMax}
-            value={localSelectedMax}
-            onChange={e => setLocalSelectedMax(Number(e.target.value))}
-            onMouseUp={() => {
-              setSelectedMax(localSelectedMax);
-            }}
-            onTouchEnd={() => {
-              setSelectedMax(localSelectedMax);
-            }}
-            className="absolute top-0 left-0 w-full h-6 bg-transparent appearance-none cursor-pointer range-slider range-slider-max"
-            style={{
-              zIndex:
-                localSelectedMax < roundedMin + (roundedMax - roundedMin) * 0.5
-                  ? 2
-                  : 1,
-            }}
-          />
-        </div>
+        <Slider
+          id="price-range"
+          min={roundedMin}
+          max={roundedMax}
+          step={1}
+          value={[localSelectedMin, localSelectedMax]}
+          onValueChange={onRangeChange}
+          onValueCommit={onRangeCommit}
+        />
 
         {/* Manual Price Input */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mt-4">
           <div className="flex-1">
-            <label className="block text-xs text-content-muted mb-1">Min</label>
-            <input
+            <Label
+              htmlFor="min-price"
+              className="block text-xs text-content-muted"
+            >
+              Min
+            </Label>
+            <Input
+              id="min-price"
               type="number"
               value={localSelectedMin}
               onChange={e => {
@@ -112,12 +84,18 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
               }}
               min={roundedMin}
               max={roundedMax}
-              className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              className="bg-surface-primary mt-1 text-content-primary"
             />
           </div>
           <div className="flex-1">
-            <label className="block text-xs text-content-muted mb-1">Max</label>
-            <input
+            <Label
+              htmlFor="max-price"
+              className="block text-xs text-content-muted mb-1"
+            >
+              Max
+            </Label>
+            <Input
+              id="max-price"
               type="number"
               value={localSelectedMax}
               onChange={e => {
@@ -127,7 +105,7 @@ export const PriceRangeSelector: React.FC<PriceRangeSelectorProps> = ({
               }}
               min={roundedMin}
               max={roundedMax}
-              className="w-full px-3 py-2 bg-surface-primary border border-brand-light rounded-lg text-content-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              className="bg-surface-primary mt-1 text-content-primary"
             />
           </div>
         </div>

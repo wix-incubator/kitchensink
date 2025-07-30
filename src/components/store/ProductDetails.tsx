@@ -14,6 +14,8 @@ import { productsV3 } from '@wix/stores';
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 // Reusable FreeText Input Component
 const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
@@ -27,7 +29,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
       maxChars,
     }) => (
       <div className="space-y-2">
-        <textarea
+        <Textarea
           data-testid="product-modifier-free-text-input"
           value={value}
           onChange={e => setText(e.target.value)}
@@ -35,7 +37,7 @@ const FreeTextInput = ({ modifier, name }: { modifier: any; name: string }) => (
             freeTextPlaceholder || `Enter custom ${name.toLowerCase()}...`
           }
           maxLength={maxChars}
-          className="w-full p-3 border border-brand-light rounded-lg bg-surface-primary text-content-primary placeholder-text-content-subtle focus:border-brand-medium focus:outline-none resize-none"
+          className="p-3 border-brand-light bg-surface-primary text-content-primary placeholder:text-content-subtle focus-visible:border-brand-medium resize-none"
           rows={3}
         />
         {maxChars && (
@@ -394,17 +396,26 @@ export default function ProductDetails({
                                                         isInStock) && (
                                                         // Regular Text Button
                                                         <div className="relative">
-                                                          <button
-                                                            data-testid="product-modifier-choice-button"
-                                                            onClick={select}
-                                                            className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                          <Button
+                                                            variant={
                                                               isSelected
-                                                                ? 'product-option-active'
-                                                                : 'product-option-inactive'
-                                                            }`}
+                                                                ? 'default'
+                                                                : 'outline'
+                                                            }
+                                                            onClick={select}
+                                                            className={
+                                                              isSelected
+                                                                ? ''
+                                                                : `text-content-primary border-surface-subtle hover:bg-primary/10`
+                                                            }
+                                                            disabled={
+                                                              !isInStock &&
+                                                              !isPreOrderEnabled
+                                                            }
                                                           >
-                                                            {value}
-                                                          </button>
+                                                            {String(value)}
+                                                          </Button>
+
                                                           {!isInStock &&
                                                             !isPreOrderEnabled &&
                                                             !isQuickView && (
@@ -544,17 +555,22 @@ export default function ProductDetails({
                                               isSelected,
                                               select,
                                             }) => (
-                                              <button
+                                              <Button
                                                 data-testid="product-modifier-choice-button"
-                                                onClick={select}
-                                                className={`px-4 py-2 border rounded-lg transition-all duration-200 ${
+                                                variant={
                                                   isSelected
-                                                    ? 'product-option-active'
-                                                    : 'product-option-inactive'
-                                                }`}
+                                                    ? 'default'
+                                                    : 'outline'
+                                                }
+                                                onClick={select}
+                                                className={
+                                                  isSelected
+                                                    ? ''
+                                                    : `text-content-primary border-surface-subtle hover:bg-primary/10`
+                                                }
                                               >
-                                                {value}
-                                              </button>
+                                                {String(value)}
+                                              </Button>
                                             )}
                                           </ProductModifiers.Choice>
                                         ))}
