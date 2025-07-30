@@ -108,9 +108,9 @@ export default function ProductDetails({
                             )}
 
                             <MediaGallery.Previous>
-                              {({ onPrevious, canGoPrevious }) => (
+                              {({ previous, canGoPrevious }) => (
                                 <button
-                                  onClick={onPrevious}
+                                  onClick={previous}
                                   disabled={!canGoPrevious}
                                   className="absolute left-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full transition-all"
                                 >
@@ -132,9 +132,9 @@ export default function ProductDetails({
                             </MediaGallery.Previous>
 
                             <MediaGallery.Next>
-                              {({ onNext, canGoNext }) => (
+                              {({ next, canGoNext }) => (
                                 <button
-                                  onClick={onNext}
+                                  onClick={next}
                                   disabled={!canGoNext}
                                   className="absolute right-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full transition-all"
                                 >
@@ -176,9 +176,9 @@ export default function ProductDetails({
                         <div className="grid grid-cols-4 gap-4">
                           {items.map((_, i) => (
                             <MediaGallery.ThumbnailItem key={i} index={i}>
-                              {({ src, isActive, onSelect, alt }) => (
+                              {({ src, isActive, select, alt }) => (
                                 <div
-                                  onClick={onSelect}
+                                  onClick={select}
                                   className={`aspect-square bg-surface-primary rounded-lg border cursor-pointer transition-all ${
                                     isActive
                                       ? 'border-brand-medium ring-2 ring-brand-light'
