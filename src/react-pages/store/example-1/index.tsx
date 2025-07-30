@@ -4,11 +4,17 @@ import '../../../styles/theme-1.css';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import CategoryPage from '../main-components/categoryPage';
 
+import {
+  type ProductsListSearchServiceConfig,
+  type CategoriesListServiceConfig,
+  type ProductsListServiceConfig,
+} from '@wix/headless-stores/services';
+
 interface StoreCollectionPageProps {
+  productsListSearchConfig: ProductsListSearchServiceConfig;
+  categoriesListConfig: CategoriesListServiceConfig;
+  productsListConfig: ProductsListServiceConfig;
   currentCartServiceConfig: any;
-  categoriesListConfig: any;
-  productsListConfig: any;
-  productsListFiltersConfig: any;
   currentCategorySlug: string;
 }
 
@@ -16,7 +22,7 @@ export default function StoreCollectionPage({
   currentCartServiceConfig,
   categoriesListConfig,
   productsListConfig,
-  productsListFiltersConfig,
+  productsListSearchConfig,
   currentCategorySlug,
 }: StoreCollectionPageProps) {
   return (
@@ -41,7 +47,7 @@ export default function StoreCollectionPage({
           <CategoryPage
             categoriesListConfig={categoriesListConfig}
             productsListConfig={productsListConfig}
-            productsListFiltersConfig={productsListFiltersConfig}
+            productsListSearchConfig={productsListSearchConfig}
             currentCategorySlug={currentCategorySlug}
             productPageRoute="/store/example-1"
             basePath="/store/example-1/category"

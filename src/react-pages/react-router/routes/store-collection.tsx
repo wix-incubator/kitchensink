@@ -1,9 +1,12 @@
 import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
 import React from 'react';
-import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
+import {
+  loadCategoriesListServiceConfig,
+  parseUrlForProductsListSearch,
+} from '@wix/headless-stores/services';
 import {
   loadProductsListServiceConfig,
-  loadProductsListFiltersServiceConfig,
+  loadProductsListSearchServiceConfig,
 } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 
@@ -80,27 +83,30 @@ export async function storeCollectionRouteLoader({
     throw new Response('Not Found', { status: 404 });
   }
 
-  const searchOptions = {
-    cursorPaging: {
-      limit: 20,
-    },
-    filter: {
-      'allCategoriesInfo.categories': {
-        $matchItems: [{ _id: selectedCategory._id! }],
+  const { searchOptions } = await parseUrlForProductsListSearch(
+    window.location.href,
+    {
+      cursorPaging: {
+        limit: 20,
       },
-    },
-  };
+      filter: {
+        'allCategoriesInfo.categories': {
+          $matchItems: [{ _id: selectedCategory._id! }],
+        },
+      },
+    }
+  );
 
   // Start collection data load but don't await it,
   // It will be awaited in the route component for the skeleton to be rendered
-  const notAwaiatedData = Promise.all([
+  const notAwaitedData = Promise.all([
     loadProductsListServiceConfig(searchOptions),
-    loadProductsListFiltersServiceConfig(),
+    loadProductsListSearchServiceConfig(window.location.href),
   ]);
 
   return {
     categoriesConfig,
-    notAwaiatedData,
+    notAwaitedData,
     currentCategorySlug: params.categorySlug,
   };
 }
@@ -113,21 +119,22 @@ export function StoreCollectionRoute({
   storeRoute: string;
 }) {
   const basename = useHref('/');
-  const { categoriesConfig, notAwaiatedData, currentCategorySlug } =
+  const { categoriesConfig, notAwaitedData, currentCategorySlug } =
     useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
     <div className="wix-verticals-container">
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await resolve={notAwaiatedData} errorElement={<CollectionError />}>
+        <Await resolve={notAwaitedData} errorElement={<CollectionError />}>
           {data => {
-            const [productsListConfig, productsListFiltersConfig] = data;
+            const [productsListConfig, productsListSearchConfig] = data;
+
             return (
               <CategoryPage
                 categoriesListConfig={categoriesConfig}
                 productsListConfig={productsListConfig}
-                productsListFiltersConfig={productsListFiltersConfig}
+                productsListSearchConfig={productsListSearchConfig}
                 currentCategorySlug={currentCategorySlug}
                 productPageRoute={productPageRoute}
                 basePath={`${basename}${storeRoute}`}
