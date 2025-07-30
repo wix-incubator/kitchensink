@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReactRouterApp from '../../react-pages/react-router/[...path]';
+import '../../styles/theme-wix-vibe-config.css';
 import '../../styles/theme-wix-vibe-vars.css';
 ---
 
@@ -10,7 +11,7 @@ import '../../styles/theme-wix-vibe-vars.css';
     name="description"
     content="A single-page store application with client-side routing"
   />
-  <div class="mx-auto max-w-7xl">
+  <div class="mx-auto max-w-7xl react-router">
     <ReactRouterApp client:only="react" slot="body">
       <!-- Loading fallback -->
       <div class="min-h-screen bg-gray-50 flex items-center justify-center">

@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+/* This is the equivalent of tailwind.config.js */
+@theme {
+  --color-primary: #161616;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #6d14eb;
+  --color-secondary-foreground: #ffffff;
+  --color-background: #ffffff;
+}

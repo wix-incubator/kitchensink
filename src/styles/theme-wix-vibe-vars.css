@@ -1,93 +1,133 @@
 :root {
-  --color-primary:
-    66, 165, 245; /* Primary brand color - used for key UI elements, buttons, and interactive components */
-  --color-primary-dark:
-    21, 101, 192; /* Darker variant of primary color - used for button hover states and emphasis */
-  --color-secondary:
-    3, 218, 198; /* Secondary brand color - complementary teal used for accents and secondary actions */
-  --color-secondary-dark:
-    0, 188, 212; /* Darker variant of secondary color - used for hover states on secondary elements */
-  --color-secondary-darker:
-    9, 151, 167; /* Darkest variant of secondary color - used for pressed states and high emphasis */
+  --wix-theme-primary: theme(colors.primary, rgb(66, 165, 245));
+  --wix-theme-primary-foreground: theme(colors.primary-foreground, #ffffff);
+  --wix-theme-secondary: theme(colors.secondary, rgb(3, 218, 198));
+  --wix-theme-secondary-foreground: theme(colors.secondary-foreground, #ffffff);
+  --wix-theme-background: theme(colors.background, #ffffff);
 
-  --color-primary-info: #ffffff; /* Color for elements that are on top of the primary color, like text on primary buttons, should have good contrast with --color-primary and --color-primary-dark */
-  --color-secondary-info: #ffffff; /* Color for elements that are on top of the secondary color, like text on secondary buttons, should have good contrast with --color-secondary and --color-secondary-dark */
+  --color-content: #000; /* this is the color of text elements, there is no good definiton ATM */
 
-  /* Status Colors - Semantic colors for communicating system states and user feedback */
-  --color-warning:
-    255, 152, 0; /* Warning color - orange used for caution messages and non-critical alerts */
-  --color-warning-dark:
-    245, 124, 0; /* Darker warning color - used for hover states on warning elements */
-  --color-warning-light:
-    255, 183, 77; /* Lighter warning color - used for warning text and subtle warning indicators */
-  --color-warning-lighter:
-    255, 204, 128; /* Lightest warning color - used for very subtle warning backgrounds */
+  /* Darker tone variants using color-mix */
+  --wix-theme-primary-dark: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 80%,
+    #000000 20%
+  );
+  --wix-theme-secondary-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 80%,
+    #000000 20%
+  );
+  --wix-theme-secondary-darker: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 60%,
+    #000000 40%
+  );
 
-  --color-info:
-    25, 118, 210; /* Information color - used for informational messages and neutral notifications */
-  --color-info-dark:
-    21, 101, 192; /* Darker info color - used for hover states on informational elements */
-  --color-info-light:
-    66, 165, 245; /* Lighter info color - used for info text and subtle informational indicators */
+  --color-warning: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 30%,
+    #ffaa00 70%
+  );
+  --color-warning-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 40%,
+    #ff8800 60%
+  );
+  --color-warning-light: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 20%,
+    #ffcc66 80%
+  );
+  --color-warning-lighter: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 10%,
+    #ffddaa 90%
+  );
 
-  --color-danger:
-    244, 67, 54; /* Danger/error color - red used for error messages, destructive actions, and critical alerts */
-  --color-danger-dark:
-    211, 47, 47; /* Darker danger color - used for hover states on destructive elements */
-  --color-danger-light:
-    239, 83, 80; /* Lighter danger color - used for error text and danger indicators */
-  --color-danger-lighter:
-    229, 115, 115; /* Lightest danger color - used for subtle error backgrounds */
+  --color-danger: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 20%,
+    #ff4444 80%
+  );
+  --color-danger-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 30%,
+    #cc2222 70%
+  );
+  --color-danger-light: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 15%,
+    #ff6666 85%
+  );
+  --color-danger-lighter: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 10%,
+    #ffaaaa 90%
+  );
 
-  --color-success:
-    76, 175, 80; /* Success color - green used for success messages, positive feedback, and completion states */
-  --color-success-dark:
-    56, 142, 60; /* Darker success color - used for hover states on success elements */
-  --color-success-light:
-    102, 187, 106; /* Lighter success color - used for success text and positive indicators */
+  --color-success: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 40%,
+    #44cc44 60%
+  );
+  --color-success-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 50%,
+    #228822 50%
+  );
+  --color-success-light: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 30%,
+    #66dd66 70%
+  );
 
-  /* Social Sharing Colors */
-  --color-social-x: 33, 33, 33; /* X dark grey for light backgrounds */
-  --color-social-x-hover: 17, 24, 39; /* X darker grey hover */
-  --color-social-facebook: 24, 119, 242; /* Facebook blue */
-  --color-social-facebook-hover: 22, 111, 229; /* Facebook blue hover */
-  --color-social-linkedin: 0, 119, 181; /* LinkedIn blue */
-  --color-social-linkedin-hover: 0, 88, 133; /* LinkedIn blue hover */
-  --color-social-link:
-    3, 218, 198; /* Link/copy teal to match Material Design */
-  --color-social-link-hover: 0, 188, 212; /* Link/copy teal hover */
+  --color-social-link: var(--wix-theme-secondary);
+  --color-social-link-hover: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 80%,
+    var(--wix-theme-background) 20%
+  );
 
-  --color-accent:
-    3, 218, 198; /* Accent color - bright teal used for highlights, special features, and call-to-action elements */
-  --color-accent-dark:
-    0, 188, 212; /* Darker accent color - used for hover states on accent elements */
-  --color-accent-light:
-    38, 198, 218; /* Lighter accent color - used for accent text and subtle accent indicators */
+  --color-accent: var(--wix-theme-secondary);
+  --color-accent-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 80%,
+    var(--wix-theme-background) 20%
+  );
+  --color-accent-light: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 70%,
+    var(--primary-foreground) 30%
+  );
 
-  --color-amber:
-    255, 193, 7; /* Special highlights, premium features, and attention-grabbing elements */
-  --color-amber-dark:
-    255, 160, 0; /* Darker special highlights - used for hover states on amber elements */
+  --color-amber: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 30%,
+    #ffcc00 70%
+  );
+  --color-amber-dark: color-mix(
+    in srgb,
+    var(--wix-theme-secondary) 40%,
+    #ff9900 60%
+  );
 
-  /* Content Colors - Typography and content-related colors */
-  --color-content:
-    33, 33, 33; /* Primary content color - dark grey used for main text, headings, and readable content */
-  --color-content-light:
-    255, 255, 255; /* Light content color - white used for text on dark backgrounds */
+  --color-overlay: var(--wix-theme-background);
+  --color-modal-bg: var(--wix-theme-primary-foreground);
+  --color-grey-dark: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 80%,
+    var(--primary-foreground) 20%
+  );
+  --color-grey-medium: color-mix(
+    in srgb,
+    var(--wix-theme-primary) 60%,
+    var(--primary-foreground) 40%
+  );
 
-  /* Neutral Colors - Basic colors for backgrounds, borders, and neutral elements */
-  --color-overlay:
-    0, 0, 0; /* used for overlays, skeleton loading, and other semi-transparent elements */
-  --color-modal-bg:
-    255, 255, 255; /* used for modal backgrounds and other elements which are popping up on top of the page */
-  --color-grey-dark:
-    66, 66, 66; /* used for secondary text and subtle elements */
-  --color-grey-medium:
-    117, 117, 117; /* Medium grey - used for muted text, borders, and inactive elements */
-
-  --theme-font-family: inherit; /* Primary font family for all text elements */
-  --theme-font-weight-normal: 400; /* Normal font weight for body text and regular content */
-  --theme-font-weight-medium: 500; /* Medium font weight for emphasized text and semi-bold content */
-  --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings, labels, and important text */
-  --theme-font-weight-bold: 700; /* Bold font weight for titles, strong emphasis, and prominent headings */
+  --theme-font-family: theme(fonts.paragraph, inherit);
+  --theme-font-weight-normal: 400;
+  --theme-font-weight-medium: 500;
+  --theme-font-weight-semibold: 600;
+  --theme-font-weight-bold: 700;
 }

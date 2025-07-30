@@ -1,11 +1,11 @@
 import React from 'react';
 import { SelectedVariant } from '@wix/headless-stores/react';
+import { Button } from '@/components/ui/button';
 
 interface BaseButtonProps {
   disabled: boolean;
   isLoading: boolean;
   onClick: () => Promise<void>;
-  className?: string;
 }
 
 interface AddToCartButtonProps extends BaseButtonProps {
@@ -26,26 +26,25 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   onClick,
   isPreOrderEnabled,
   inStock,
-  className = '',
 }) => {
   const buttonText =
     !inStock && isPreOrderEnabled ? 'Pre Order' : 'Add to Cart';
 
   return (
-    <button
+    <Button
       data-testid="add-to-cart-button"
+      variant="default"
+      size="lg"
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 relative ${
-        disabled ? 'bg-surface-primary cursor-not-allowed' : 'btn-primary'
-      } ${className}`}
+      className="flex-1"
     >
       {isLoading ? (
         <>
           <span className="opacity-0">{buttonText}</span>
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
-              className="animate-spin w-5 h-5 text-[var(--theme-text-content)]"
+              className="animate-spin w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -68,7 +67,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       ) : (
         buttonText
       )}
-    </button>
+    </Button>
   );
 };
 
@@ -77,13 +76,14 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
   disabled,
   isLoading,
   onClick,
-  className = '',
 }) => {
   return (
-    <button
+    <Button
+      variant="secondary"
+      size="lg"
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 btn-warning disabled:opacity-50 disabled:cursor-not-allowed text-[var(--theme-text-content)] font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 ${className}`}
+      className="flex-1 transform hover:scale-105 disabled:hover:scale-100"
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">
@@ -107,7 +107,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
       ) : (
         'Buy Now'
       )}
-    </button>
+    </Button>
   );
 };
 
@@ -143,7 +143,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
         };
 
         return (
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             {/* Error Display */}
             {error && (
               <div className="bg-status-danger-light border border-status-danger rounded-lg p-3">

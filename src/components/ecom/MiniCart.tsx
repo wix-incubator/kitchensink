@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import { WixMediaImage } from '../../headless/media/components';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
@@ -23,47 +28,53 @@ const CouponFormMini = ({
 
   if (!isExpanded) {
     return (
-      <button
+      <Button
         onClick={() => setIsExpanded(true)}
-        className="text-accent hover:text-brand-light text-xs font-medium"
+        variant="link"
+        size="sm"
+        className="text-accent hover:text-brand-light text-xs font-medium h-auto p-0"
       >
         Have a promo code?
-      </button>
+      </Button>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2">
-      <div className="flex gap-1">
-        <input
+      <div className="flex gap-1 pt-4">
+        <Input
           type="text"
           value={code}
           onChange={e => setCode(e.target.value)}
           placeholder="Promo code"
-          className="flex-1 px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none"
+          className="h-7 bg-surface-interactive border border-surface-interactive text-content-primary placeholder:text-content-muted focus:border-brand-primary"
           disabled={isLoading}
         />
-        <button
+        <Button
           type="submit"
           disabled={!code.trim() || isLoading}
-          className="btn-accent px-2 py-1 disabled:opacity-50 text-content-primary text-xs font-medium rounded"
+          className="px-2 py-1 text-xs font-medium h-auto"
+          size="sm"
+          variant="secondary"
         >
           {isLoading ? '...' : 'Apply'}
-        </button>
+        </Button>
       </div>
-      <button
+      <Button
         type="button"
         onClick={() => setIsExpanded(false)}
-        className="text-content-muted hover:text-content-secondary text-xs"
+        variant="link"
+        size="sm"
+        className="text-content-muted hover:text-content-secondary"
       >
         Cancel
-      </button>
+      </Button>
     </form>
   );
 };
 
 const DefaultMiniCartIcon = () => (
-  <div className="p-2">
+  <div className="p-2 text-content-primary ">
     <svg
       className="w-6 h-6"
       fill="none"
@@ -93,9 +104,11 @@ export function MiniCartIcon({
       <div className={className}>
         <CurrentCart.OpenTrigger>
           {({ open, totalItems }) => (
-            <button
+            <Button
               onClick={open}
-              className="relative text-content-primary hover:text-brand-light transition-colors"
+              variant="link"
+              size="icon"
+              className="relative [&_svg]:pointer-events-none [&_svg]:size-6"
             >
               <Icon />
               {totalItems > 0 && (
@@ -103,7 +116,7 @@ export function MiniCartIcon({
                   {totalItems}
                 </span>
               )}
-            </button>
+            </Button>
           )}
         </CurrentCart.OpenTrigger>
       </div>
@@ -143,9 +156,11 @@ export function MiniCartContent() {
                           <h2 className="text-xl font-bold text-content-primary">
                             Shopping Cart ({totalItems})
                           </h2>
-                          <button
+                          <Button
                             onClick={close}
-                            className="p-2 text-content-primary hover:text-brand-light transition-colors"
+                            variant="link"
+                            size="icon"
+                            className="text-content-primary [&_svg]:size-6"
                           >
                             <svg
                               className="w-6 h-6"
@@ -160,7 +175,7 @@ export function MiniCartContent() {
                                 d="M6 18L18 6M6 6l12 12"
                               />
                             </svg>
-                          </button>
+                          </Button>
                         </div>
                       )}
                     </CurrentCart.Summary>
@@ -204,105 +219,115 @@ export function MiniCartContent() {
                                     decreaseQuantity,
                                     remove,
                                   }) => (
-                                    <div className="flex gap-4 p-4 bg-surface-card rounded-xl border border-surface-subtle">
-                                      <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
-                                        {image && (
-                                          <WixMediaImage
-                                            media={{ image: image }}
-                                            width={64}
-                                            height={64}
-                                          />
-                                        )}
-                                      </div>
-
-                                      <div className="flex-1 min-w-0">
-                                        <h3 className="text-content-primary font-medium text-sm truncate">
-                                          {title}
-                                        </h3>
-                                        {selectedOptions.length > 0 && (
-                                          <div className="mt-1 mb-2">
-                                            <div className="flex flex-wrap gap-1">
-                                              {selectedOptions.map(
-                                                (option, index) => {
-                                                  const isColor =
-                                                    typeof option.value ===
-                                                    'object';
-                                                  const text = isColor
-                                                    ? (option.value as any).name
-                                                    : option.value;
-                                                  const color = isColor
-                                                    ? (option.value as any).code
-                                                    : null;
-
-                                                  return (
-                                                    <div
-                                                      key={index}
-                                                      className="flex items-center gap-1 text-xs text-content-light"
-                                                    >
-                                                      <span>
-                                                        {option.name}:
-                                                      </span>
-                                                      <div className="flex items-center gap-1">
-                                                        {color && (
-                                                          <div
-                                                            className="w-3 h-3 rounded-full border border-surface-strong"
-                                                            style={{
-                                                              backgroundColor:
-                                                                color,
-                                                            }}
-                                                            title={text}
-                                                          />
-                                                        )}
-                                                        <span className="font-medium">
-                                                          {text}
-                                                        </span>
-                                                      </div>
-                                                      {index <
-                                                        selectedOptions.length -
-                                                          1 && (
-                                                        <span className="text-content-subtle">
-                                                          ,
-                                                        </span>
-                                                      )}
-                                                    </div>
-                                                  );
-                                                }
-                                              )}
-                                            </div>
-                                          </div>
-                                        )}
-                                        <p className="text-accent font-semibold text-sm mt-1">
-                                          {price}
-                                        </p>
-
-                                        <div className="flex items-center justify-between mt-3">
-                                          <div className="flex items-center gap-2">
-                                            <button
-                                              onClick={decreaseQuantity}
-                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
-                                            >
-                                              -
-                                            </button>
-                                            <span className="text-content-primary text-sm w-6 text-center">
-                                              {quantity}
-                                            </span>
-                                            <button
-                                              onClick={increaseQuantity}
-                                              className="w-6 h-6 rounded bg-surface-interactive text-content-primary text-sm hover:bg-surface-interactive-hover transition-colors"
-                                            >
-                                              +
-                                            </button>
-                                          </div>
-
-                                          <button
-                                            onClick={remove}
-                                            className="text-status-danger hover:text-status-error text-xs transition-colors"
-                                          >
-                                            Remove
-                                          </button>
+                                    <Card className="bg-surface-card border-surface-subtle">
+                                      <CardContent className="flex gap-4 pt-6">
+                                        <div className="w-16 h-16 bg-surface-interactive rounded-lg overflow-hidden flex-shrink-0">
+                                          {image && (
+                                            <WixMediaImage
+                                              media={{ image: image }}
+                                              width={64}
+                                              height={64}
+                                            />
+                                          )}
                                         </div>
-                                      </div>
-                                    </div>
+
+                                        <div className="flex-1 min-w-0">
+                                          <h3 className="text-content-primary font-medium text-sm truncate">
+                                            {title}
+                                          </h3>
+                                          {selectedOptions.length > 0 && (
+                                            <div className="mt-1 mb-2">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedOptions.map(
+                                                  (option, index) => {
+                                                    const isColor =
+                                                      typeof option.value ===
+                                                      'object';
+                                                    const text = isColor
+                                                      ? (option.value as any)
+                                                          .name
+                                                      : option.value;
+                                                    const color = isColor
+                                                      ? (option.value as any)
+                                                          .code
+                                                      : null;
+
+                                                    return (
+                                                      <div
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-xs text-content-light"
+                                                      >
+                                                        <span>
+                                                          {option.name}:
+                                                        </span>
+                                                        <div className="flex items-center gap-1">
+                                                          {color && (
+                                                            <div
+                                                              className="w-3 h-3 rounded-full border border-surface-strong"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  color,
+                                                              }}
+                                                              title={text}
+                                                            />
+                                                          )}
+                                                          <span className="font-medium">
+                                                            {text}
+                                                          </span>
+                                                        </div>
+                                                        {index <
+                                                          selectedOptions.length -
+                                                            1 && (
+                                                          <span className="text-content-subtle">
+                                                            ,
+                                                          </span>
+                                                        )}
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
+                                          <p className="text-accent font-semibold text-sm mt-1">
+                                            {price}
+                                          </p>
+
+                                          <div className="flex items-center justify-between mt-3">
+                                            <div className="flex items-center gap-2">
+                                              <Button
+                                                onClick={decreaseQuantity}
+                                                variant="outline"
+                                                size="icon"
+                                                className="bg-surface-card border-surface-subtle text-content-primary w-7 h-7"
+                                              >
+                                                -
+                                              </Button>
+                                              <span className="text-content-primary text-sm w-6 text-center">
+                                                {quantity}
+                                              </span>
+                                              <Button
+                                                onClick={increaseQuantity}
+                                                variant="outline"
+                                                size="icon"
+                                                className="bg-surface-card border-surface-subtle text-content-primary w-7 h-7"
+                                              >
+                                                +
+                                              </Button>
+                                            </div>
+
+                                            <Button
+                                              onClick={remove}
+                                              variant="link"
+                                              size="sm"
+                                              className="text-status-danger hover:text-status-error"
+                                            >
+                                              Remove
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
                                   )}
                                 </CurrentCart.Item>
                               ))}
@@ -315,16 +340,16 @@ export function MiniCartContent() {
                     <div className="border-t border-surface-subtle p-6 flex-shrink-0">
                       <CurrentCart.Notes>
                         {({ notes, updateNotes }) => (
-                          <div>
-                            <label className="block text-xs font-medium text-content-secondary mb-2">
+                          <div className="mb-2">
+                            <Label className="text-content-secondary text-sm">
                               Notes:
-                            </label>
-                            <textarea
+                            </Label>
+                            <Textarea
                               value={notes}
                               onChange={e => updateNotes(e.target.value)}
                               placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
                               rows={2}
-                              className="w-full px-2 py-1 text-xs bg-surface-interactive border border-surface-interactive rounded text-content-primary placeholder:text-content-muted focus:border-brand-light focus:outline-none transition-colors duration-200 resize-vertical mb-4"
+                              className="resize-vertical bg-surface-interactive border border-surface-interactive text-content-primary placeholder:text-content-muted focus:border-brand-primary mt-2"
                             />
                           </div>
                         )}
@@ -342,16 +367,18 @@ export function MiniCartContent() {
                           <div className="mb-4">
                             {appliedCoupon ? (
                               <div className="flex items-center justify-between p-2 bg-status-success-light border border-status-success rounded">
-                                <span className="text-status-success text-xs font-medium">
+                                <Label className="text-status-success text-sm font-medium">
                                   Coupon: {appliedCoupon}
-                                </span>
-                                <button
+                                </Label>
+                                <Button
                                   onClick={remove}
                                   disabled={isLoading}
-                                  className="text-status-danger hover:text-status-error text-xs disabled:opacity-50"
+                                  variant="link"
+                                  size="sm"
+                                  className="text-status-danger hover:text-status-error text-xs h-auto p-0"
                                 >
                                   {isLoading ? 'Removing...' : 'Remove'}
-                                </button>
+                                </Button>
                               </div>
                             ) : (
                               <CouponFormMini
@@ -451,13 +478,14 @@ export function MiniCartContent() {
 
                               <CurrentCart.Checkout>
                                 {({ proceedToCheckout, canCheckout }) => (
-                                  <button
+                                  <Button
                                     onClick={proceedToCheckout}
                                     disabled={!canCheckout}
-                                    className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-content-primary font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                                    className="w-full font-semibold py-3 px-6"
+                                    size="lg"
                                   >
                                     Proceed to Checkout
-                                  </button>
+                                  </Button>
                                 )}
                               </CurrentCart.Checkout>
                             </div>

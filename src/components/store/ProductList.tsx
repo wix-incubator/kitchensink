@@ -23,6 +23,15 @@ import { productsV3 } from '@wix/stores';
 import SortDropdown from './SortDropdown';
 import CategoryPicker from './CategoryPicker';
 import ProductFilters from './ProductFilters';
+import { Button } from '@/components/ui/button';
+import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -56,93 +65,97 @@ export const ProductList: React.FC<ProductListProps> = ({
   };
 
   return (
-    <HeadlessProductList.Root
-      productsListConfig={productsListConfig}
-      productsListSearchConfig={productsListSearchConfig}
-    >
-      <div className="min-h-screen">
-        {/* Error State */}
-        <HeadlessProductList.Error>
-          {({ error }) => (
-            <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                <svg
-                  className="w-5 h-5 text-status-error flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    <TooltipProvider>
+      <HeadlessProductList.Root
+        productsListConfig={productsListConfig}
+        productsListSearchConfig={productsListSearchConfig}
+      >
+        <div className="min-h-screen">
+          {/* Error State */}
+          <HeadlessProductList.Error>
+            {({ error }) => (
+              <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <svg
+                    className="w-5 h-5 text-status-error flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p className="text-status-error text-sm sm:text-base font-medium">
+                    {error}
+                  </p>
+                </div>
+              </div>
+            )}
+          </HeadlessProductList.Error>
+
+          {/* Header Controls */}
+          <Card className="border-surface-subtle mb-6 bg-surface-card">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <CategoryPicker
+                    categoriesListConfig={categoriesListConfig}
+                    currentCategorySlug={currentCategorySlug}
+                    onCategorySelect={onCategorySelect}
                   />
-                </svg>
-                <p className="text-status-error text-sm sm:text-base font-medium">
-                  {error}
-                </p>
+                </div>
+                <SortDropdown />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Filters Section */}
+          {productsListSearchConfig && (
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+              {/* Filters Sidebar */}
+              <div className="w-full lg:w-80 lg:flex-shrink-0">
+                <div className="lg:sticky lg:top-6">
+                  <ProductFilters />
+                </div>
+              </div>
+
+              {/* Main Content Area */}
+              <div className="flex-1 min-w-0">
+                <ProductGrid
+                  productPageRoute={productPageRoute}
+                  openQuickView={openQuickView}
+                />
               </div>
             </div>
           )}
-        </HeadlessProductList.Error>
 
-        {/* Header Controls */}
-        <div className="bg-surface-primary backdrop-blur-sm rounded-xl border border-surface-subtle p-4 mb-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <CategoryPicker
-                categoriesListConfig={categoriesListConfig}
-                currentCategorySlug={currentCategorySlug}
-                onCategorySelect={onCategorySelect}
-              />
-            </div>
-            <SortDropdown />
-          </div>
+          {/* Products Grid (when no filters config provided) */}
+          {!productsListSearchConfig && (
+            <ProductGrid
+              productPageRoute={productPageRoute}
+              openQuickView={openQuickView}
+            />
+          )}
+
+          {/* Load More Section */}
+          <LoadMoreSection />
         </div>
 
-        {/* Filters Section */}
-        {productsListSearchConfig && (
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Filters Sidebar */}
-            <div className="w-full lg:w-80 lg:flex-shrink-0">
-              <div className="lg:sticky lg:top-6">
-                <ProductFilters />
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="flex-1 min-w-0">
-              <ProductGrid
-                productPageRoute={productPageRoute}
-                openQuickView={openQuickView}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Products Grid (when no filters config provided) */}
-        {!productsListSearchConfig && (
-          <ProductGrid
+        {/* Quick View Modal */}
+        {quickViewProduct && (
+          <QuickViewModal
+            product={quickViewProduct}
+            isOpen={isQuickViewOpen}
+            onClose={closeQuickView}
             productPageRoute={productPageRoute}
-            openQuickView={openQuickView}
           />
         )}
-
-        {/* Load More Section */}
-        <LoadMoreSection />
-      </div>
-
-      {/* Quick View Modal */}
-      {quickViewProduct && (
-        <QuickViewModal
-          product={quickViewProduct}
-          isOpen={isQuickViewOpen}
-          onClose={closeQuickView}
-          productPageRoute={productPageRoute}
-        />
-      )}
-    </HeadlessProductList.Root>
+      </HeadlessProductList.Root>
+    </TooltipProvider>
   );
 };
 
@@ -162,15 +175,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       <HeadlessProductList.Loading>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div
+            <Card
               key={i}
-              className="bg-surface-card rounded-xl p-4 border border-surface-subtle shadow-sm overflow-hidden relative"
+              className="overflow-hidden relative bg-surface-card border-surface-subtle"
             >
               {/* Shimmer Effect */}
               <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface-loading/30 to-transparent"></div>
 
               {/* Content Skeleton */}
-              <div className="relative">
+              <CardContent className="p-4">
                 <div className="aspect-square bg-surface-loading rounded-lg mb-4 animate-pulse"></div>
                 <div className="space-y-3">
                   <div className="h-4 bg-surface-loading rounded animate-pulse"></div>
@@ -184,13 +197,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                     <div className="h-6 bg-surface-loading rounded w-16 animate-pulse"></div>
                     <div className="h-4 bg-surface-loading rounded w-20 animate-pulse"></div>
                   </div>
-                  <div className="space-y-2 mt-4">
-                    <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
-                    <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
-                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+              <CardFooter className="p-4 pt-0">
+                <div className="space-y-2 w-full">
+                  <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+                  <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+                </div>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </HeadlessProductList.Loading>
@@ -261,12 +276,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                   </HeadlessProductList.Items>
                 </span>
               </div>
-              <button
+              <Button
+                variant="link"
+                size="sm"
                 onClick={resetFilters}
-                className="text-brand-primary hover:text-brand-light transition-colors text-sm self-start sm:self-auto"
+                className="self-start sm:self-auto"
               >
                 Clear Filters
-              </button>
+              </Button>
             </div>
           )
         }
@@ -312,11 +329,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
   return (
     <Product.Root productServiceConfig={{ product }}>
       <SelectedVariant.Root>
-        <div
+        <Card
           data-testid="product-item"
           data-product-id={product._id}
           data-product-available={available}
-          className="relative bg-surface-card backdrop-blur-sm rounded-xl p-4 border border-surface-primary hover:border-surface-hover transition-all duration-200 hover:scale-105 group h-full flex flex-col shadow-sm hover:shadow-md"
+          className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle"
         >
           {/* Enhanced Success Message */}
           {showSuccessMessage && (
@@ -365,256 +382,287 @@ const ProductItem: React.FC<ProductItemProps> = ({
             }}
           </CurrentCart.LineItemAdded>
 
-          {/* Product Image */}
-          <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
-            {product.media?.main?.image ? (
-              <WixMediaImage
-                media={{ image: product.media.main.image }}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                alt={product.media.main.altText || ''}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <svg
-                  className="w-12 h-12 text-content-subtle"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          <CardContent className="p-4 pb-0">
+            {/* Product Image */}
+            <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
+              {product.media?.main?.image ? (
+                <WixMediaImage
+                  media={{ image: product.media.main.image }}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  alt={product.media.main.altText || ''}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg
+                    className="w-12 h-12 text-content-subtle"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+              )}
+
+              {/* Enhanced Quick View Button */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
+                <Button
+                  variant="secondary"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openQuickView(product);
+                  }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  Quick View
+                </Button>
+              </div>
+            </div>
+
+            {/* Product Ribbon */}
+            {product.ribbon?.name && (
+              <div className="absolute top-2 left-2 z-10">
+                <Badge variant="secondary" className="hover:bg-secondary">
+                  {product.ribbon.name}
+                </Badge>
               </div>
             )}
 
-            {/* Enhanced Quick View Button */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
-              <button
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  openQuickView(product);
-                }}
-                className="btn-secondary px-4 py-2 rounded-lg border border-surface-primary shadow-lg flex items-center gap-2 font-medium transition-all duration-200 whitespace-nowrap backdrop-blur-sm hover:scale-105"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                Quick View
-              </button>
-            </div>
-          </div>
+            {/* Product Title */}
+            <Navigation
+              data-testid="title-navigation"
+              route={`${productPageRoute}/${product.slug}`}
+            >
+              <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
+                {product.name}
+              </CardTitle>
+            </Navigation>
 
-          {/* Product Ribbon */}
-          {product.ribbon?.name && (
-            <div className="absolute top-2 left-2 z-10">
-              <span className="btn-ribbon text-xs px-2 py-1 rounded-full font-medium shadow-sm">
-                {product.ribbon.name}
-              </span>
-            </div>
-          )}
+            {/* Enhanced Product Variants */}
+            <ProductVariantSelector.Options>
+              {({ options, hasOptions }) => (
+                <>
+                  {hasOptions && (
+                    <div className="mb-3 space-y-2">
+                      {options.map((option: any) => (
+                        <ProductVariantSelector.Option
+                          key={option._id}
+                          option={option}
+                        >
+                          {({ name, choices }) => (
+                            <div className="space-y-2">
+                              <span className="text-content-secondary text-xs font-medium uppercase tracking-wide">
+                                {String(name)}:
+                              </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {choices?.slice(0, 3).map((choice: any) => (
+                                  <ProductVariantSelector.Choice
+                                    key={choice.choiceId}
+                                    option={option}
+                                    choice={choice}
+                                  >
+                                    {({
+                                      value,
+                                      isSelected,
+                                      isVisible,
+                                      isInStock,
+                                      isPreOrderEnabled,
+                                      select,
+                                    }) => {
+                                      if (!isVisible) return null;
+                                      const nonSelectable =
+                                        !isInStock && !isPreOrderEnabled;
 
-          {/* Product Title */}
-          <Navigation
-            data-testid="title-navigation"
-            route={`${productPageRoute}/${product.slug}`}
-          >
-            <h3 className="text-content-primary font-semibold mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
-              {product.name}
-            </h3>
-          </Navigation>
+                                      const isColorOption = String(name)
+                                        .toLowerCase()
+                                        .includes('color');
+                                      const hasColorCode =
+                                        choice.colorCode || choice.media?.image;
 
-          {/* Enhanced Product Variants */}
-          <ProductVariantSelector.Options>
-            {({ options, hasOptions }) => (
-              <>
-                {hasOptions && (
-                  <div className="mb-3 space-y-2">
-                    {options.map((option: any) => (
-                      <ProductVariantSelector.Option
-                        key={option._id}
-                        option={option}
-                      >
-                        {({ name, choices }) => (
-                          <div className="space-y-2">
-                            <span className="text-content-secondary text-xs font-medium uppercase tracking-wide">
-                              {String(name)}:
-                            </span>
-                            <div className="flex flex-wrap gap-1.5">
-                              {choices?.slice(0, 3).map((choice: any) => (
-                                <ProductVariantSelector.Choice
-                                  key={choice.choiceId}
-                                  option={option}
-                                  choice={choice}
-                                >
-                                  {({
-                                    value,
-                                    isSelected,
-                                    isVisible,
-                                    isInStock,
-                                    isPreOrderEnabled,
-                                    select,
-                                  }) => {
-                                    if (!isVisible) return null;
-
-                                    const isColorOption = String(name)
-                                      .toLowerCase()
-                                      .includes('color');
-                                    const hasColorCode =
-                                      choice.colorCode || choice.media?.image;
-
-                                    if (
-                                      isColorOption &&
-                                      (choice.colorCode || hasColorCode)
-                                    ) {
-                                      return (
-                                        <div className="relative group/color">
-                                          <div
-                                            className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${
-                                              isSelected
-                                                ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
-                                                : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
-                                            } ${
-                                              !isInStock && !isPreOrderEnabled
-                                                ? 'grayscale opacity-50'
-                                                : ''
-                                            }`}
-                                            style={{
-                                              backgroundColor:
-                                                choice.colorCode ||
-                                                'var(--theme-fallback-color)',
-                                            }}
-                                            onClick={select}
-                                          />
-                                          {!isInStock && !isPreOrderEnabled && (
-                                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                              <svg
-                                                className="w-3 h-3 text-status-error drop-shadow-sm"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                              >
-                                                <path
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                  strokeWidth="2"
-                                                  d="M6 18L18 6M6 6l12 12"
+                                      if (
+                                        isColorOption &&
+                                        (choice.colorCode || hasColorCode)
+                                      ) {
+                                        return (
+                                          <Tooltip delayDuration={0}>
+                                            <TooltipTrigger asChild>
+                                              <div className="relative">
+                                                <div
+                                                  className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${
+                                                    isSelected
+                                                      ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
+                                                      : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
+                                                  } ${
+                                                    nonSelectable
+                                                      ? 'grayscale opacity-50'
+                                                      : ''
+                                                  }`}
+                                                  style={{
+                                                    backgroundColor:
+                                                      choice.colorCode ||
+                                                      'var(--theme-fallback-color)',
+                                                  }}
+                                                  onClick={select}
                                                 />
-                                              </svg>
-                                            </div>
-                                          )}
-                                          <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 bg-surface-tooltip text-content-primary text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover/color:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                                {nonSelectable && (
+                                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <svg
+                                                      className="w-3 h-3 text-status-error drop-shadow-sm"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      stroke="currentColor"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                      />
+                                                    </svg>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                              <p>
+                                                {String(value)}
+                                                {nonSelectable &&
+                                                  ' (Out of Stock)'}
+                                              </p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        );
+                                      } else {
+                                        return (
+                                          <Button
+                                            variant={
+                                              isSelected ? 'default' : 'outline'
+                                            }
+                                            onClick={select}
+                                            className={
+                                              isSelected
+                                                ? ''
+                                                : `text-content-primary border-surface-subtle hover:bg-primary/10 ${
+                                                    nonSelectable
+                                                      ? 'opacity-50 line-through'
+                                                      : ''
+                                                  }`
+                                            }
+                                            disabled={nonSelectable}
+                                          >
                                             {String(value)}
-                                            {!isInStock &&
-                                              !isPreOrderEnabled &&
-                                              ' (Out of Stock)'}
-                                          </div>
-                                        </div>
-                                      );
-                                    } else {
-                                      return (
-                                        <span
-                                          className={`inline-flex items-center px-3 py-1.5 text-xs rounded-lg border transition-all cursor-pointer transform hover:scale-105 ${
-                                            isSelected
-                                              ? 'bg-brand-primary text-content-primary border-brand-primary shadow-sm scale-105'
-                                              : 'bg-surface-primary text-content-secondary border-brand-medium hover:border-brand-primary hover:shadow-sm'
-                                          } ${
-                                            !isInStock && !isPreOrderEnabled
-                                              ? 'opacity-50 line-through'
-                                              : ''
-                                          }`}
-                                          onClick={select}
-                                        >
-                                          {String(value)}
-                                        </span>
-                                      );
-                                    }
-                                  }}
-                                </ProductVariantSelector.Choice>
-                              ))}
-                              {choices?.length > 3 && (
-                                <span className="text-content-muted text-xs self-center bg-surface-subtle px-2 py-1 rounded-full">
-                                  +{choices.length - 3} more
-                                </span>
-                              )}
+                                          </Button>
+                                        );
+                                      }
+                                    }}
+                                  </ProductVariantSelector.Choice>
+                                ))}
+                                {choices?.length > 3 && (
+                                  <span className="text-content-muted text-xs self-center bg-surface-subtle px-2 py-1 rounded-full">
+                                    +{choices.length - 3} more
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </ProductVariantSelector.Option>
-                    ))}
+                          )}
+                        </ProductVariantSelector.Option>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </ProductVariantSelector.Options>
+
+            {/* Reset Selections */}
+            <ProductVariantSelector.Reset>
+              {({ reset, hasSelections }) =>
+                hasSelections && (
+                  <div className="pt-2 pb-2">
+                    <Button
+                      variant="link"
+                      size="sm"
+                      onClick={reset}
+                      className="text-xs underline p-0"
+                    >
+                      Reset Selections
+                    </Button>
                   </div>
-                )}
-              </>
-            )}
-          </ProductVariantSelector.Options>
+                )
+              }
+            </ProductVariantSelector.Reset>
 
-          {/* Reset Selections */}
-          <ProductVariantSelector.Reset>
-            {({ reset, hasSelections }) =>
-              hasSelections && (
-                <div className="pt-2 pb-2">
-                  <button
-                    onClick={reset}
-                    className="text-xs text-brand-primary hover:text-brand-light transition-colors underline"
-                  >
-                    Reset Selections
-                  </button>
-                </div>
-              )
-            }
-          </ProductVariantSelector.Reset>
+            {/* Product Description */}
+            <Product.Description>
+              {({ plainDescription }) => (
+                <>
+                  {plainDescription && (
+                    <p
+                      className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: plainDescription }}
+                    />
+                  )}
+                </>
+              )}
+            </Product.Description>
 
-          {/* Product Description */}
-          <Product.Description>
-            {({ plainDescription }) => (
-              <>
-                {plainDescription && (
-                  <p
-                    className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: plainDescription }}
-                  />
-                )}
-              </>
-            )}
-          </Product.Description>
-
-          {/* Enhanced Price and Stock */}
-          <div className="mt-auto mb-3">
-            <div className="space-y-2">
-              <SelectedVariant.Price>
-                {({ price, compareAtPrice }) => {
-                  return compareAtPrice &&
-                    parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 ? (
-                    <>
-                      <div className="flex items-center gap-2">
+            {/* Enhanced Price and Stock */}
+            <div className="mt-auto mb-3">
+              <div className="space-y-2">
+                <SelectedVariant.Price>
+                  {({ price, compareAtPrice }) => {
+                    return compareAtPrice &&
+                      parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) > 0 ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <div className="text-xl font-bold text-content-primary">
+                            {price}
+                          </div>
+                          <div className="text-sm font-medium text-content-faded line-through">
+                            {compareAtPrice}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-end">
+                          <div className="flex items-center gap-1">
+                            <div
+                              className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
+                            ></div>
+                            <span
+                              className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
+                            >
+                              {available ? 'In Stock' : 'Out of Stock'}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center justify-between">
                         <div className="text-xl font-bold text-content-primary">
                           {price}
                         </div>
-                        <div className="text-sm font-medium text-content-faded line-through">
-                          {compareAtPrice}
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-end">
                         <div className="flex items-center gap-1">
                           <div
                             className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
@@ -626,55 +674,41 @@ const ProductItem: React.FC<ProductItemProps> = ({
                           </span>
                         </div>
                       </div>
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-between">
-                      <div className="text-xl font-bold text-content-primary">
-                        {price}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div
-                          className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
-                        ></div>
-                        <span
-                          className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
-                        >
-                          {available ? 'In Stock' : 'Out of Stock'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }}
-              </SelectedVariant.Price>
+                    );
+                  }}
+                </SelectedVariant.Price>
+              </div>
             </div>
-          </div>
+          </CardContent>
 
-          {/* Enhanced Action Buttons */}
-          <div className="space-y-2">
+          <CardFooter className="p-4 pt-0 flex-col space-y-2">
+            {/* Enhanced Action Buttons */}
             <ProductActionButtons isQuickView={true} />
 
             <Navigation
               data-testid="view-product-button"
               route={`${productPageRoute}/${product.slug}`}
-              className="w-full text-content-primary font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 btn-secondary hover:scale-105 hover:shadow-sm"
+              className="w-full"
             >
-              View Product
-              <svg
-                className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <Button variant="secondary" size="lg" className="w-full">
+                View Product
+                <svg
+                  className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Button>
             </Navigation>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </SelectedVariant.Root>
     </Product.Root>
   );
@@ -693,13 +727,15 @@ const LoadMoreSection: React.FC = () => {
                   <div className="text-center mt-12 mb-8">
                     <div className="flex flex-col items-center gap-4">
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button
+                        <Button
+                          variant="default"
+                          size="lg"
                           onClick={() => loadMore(10)}
                           disabled={isLoading}
-                          className={`text-content-primary font-semibold py-3 px-8 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transform hover:scale-105 ${
+                          className={`font-semibold transform hover:scale-105 ${
                             isLoading
                               ? 'bg-surface-loading animate-pulse'
-                              : 'btn-primary shadow-md hover:shadow-lg'
+                              : 'shadow-md hover:shadow-lg'
                           }`}
                         >
                           {isLoading ? (
@@ -728,7 +764,7 @@ const LoadMoreSection: React.FC = () => {
                           ) : (
                             'Load More Products'
                           )}
-                        </button>
+                        </Button>
                       </div>
                       <p className="text-content-muted text-sm mt-4">
                         {products.length} products loaded

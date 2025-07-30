@@ -2,6 +2,8 @@ import React from 'react';
 import { categories } from '@wix/categories';
 import { CategoryList, Category } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 interface CategoryPickerProps {
   onCategorySelect: (category: categories.Category) => void;
@@ -18,9 +20,9 @@ export function CategoryPicker({
     <CategoryList.Root categoriesListConfig={categoriesListConfig}>
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-content-primary font-semibold text-sm uppercase tracking-wide">
+          <Label className="text-content-primary font-semibold text-sm uppercase tracking-wide">
             Shop by Category
-          </h3>
+          </Label>
         </div>
 
         {/* Category Navigation - Horizontal scrollable for mobile */}
@@ -55,16 +57,17 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({
 }) => {
   return (
     <Category.Root categoryServiceConfig={{ category }}>
-      <button
+      <Button
+        variant={isSelected ? 'default' : 'outline'}
         onClick={onSelect}
-        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+        className={
           isSelected
-            ? 'text-content-primary shadow-lg transform scale-105 btn-primary'
-            : 'bg-surface-primary text-content-secondary hover:bg-brand-light hover:text-content-primary'
-        }`}
+            ? ''
+            : 'text-content-primary border-surface-subtle hover:bg-primary/10'
+        }
       >
         <Category.Name>{({ name }) => name}</Category.Name>
-      </button>
+      </Button>
     </Category.Root>
   );
 };

@@ -187,18 +187,6 @@ button:not(:disabled) {
   background-color: var(--theme-bg-social-button);
 }
 
-.bg-social-x-hover {
-  background-color: var(--theme-bg-social-twitter);
-}
-
-.bg-social-facebook-hover {
-  background-color: var(--theme-bg-social-facebook);
-}
-
-.bg-social-linkedin-hover {
-  background-color: var(--theme-bg-social-linkedin);
-}
-
 .bg-social-link-hover {
   background-color: var(--theme-bg-social-link);
 }
@@ -292,7 +280,11 @@ button:not(:disabled) {
 }
 
 .bg-surface-overlay {
-  background-color: var(--theme-bg-tooltip);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-bg-overlay) 80%,
+    transparent 20%
+  );
 }
 
 .bg-surface-modal {
@@ -339,11 +331,6 @@ button:not(:disabled) {
 .bg-status-info-medium {
   background-color: var(--theme-bg-info-20);
 }
-
-.bg-accent-light {
-  background-color: var(--theme-bg-accent-10);
-}
-
 .bg-accent-medium {
   background-color: var(--theme-bg-accent-20);
 }
@@ -729,4 +716,18 @@ button:not(:disabled) {
 .product-card-quick-view:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Slider Styles */
+.slider-track {
+  background-color: var(--theme-slider-track-bg);
+}
+
+.slider-range {
+  background-color: var(--theme-slider-range-bg);
+}
+
+.slider-thumb {
+  background-color: var(--theme-slider-thumb-bg);
+  border-color: var(--theme-slider-thumb-border);
 }
