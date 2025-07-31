@@ -1,4 +1,3 @@
-import type { Category } from '@wix/headless-stores/services';
 import ProductList from '../../../components/store/ProductList';
 
 import {
