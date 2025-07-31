@@ -333,7 +333,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           data-testid="product-item"
           data-product-id={product._id}
           data-product-available={available}
-          className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle"
+          className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
         >
           {/* Enhanced Success Message */}
           {showSuccessMessage && (
@@ -628,10 +628,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 </>
               )}
             </Product.Description>
+          </CardContent>
 
+          <CardFooter className="p-4 pt-0 flex-col space-y-2">
             {/* Enhanced Price and Stock */}
-            <div className="mt-auto mb-3">
-              <div className="space-y-2">
+            <div className="mt-auto w-full py-2">
+              <div className="items-center flex justify-between">
                 <SelectedVariant.Price>
                   {({ price, compareAtPrice }) => {
                     return compareAtPrice &&
@@ -659,7 +661,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                         </div>
                       </>
                     ) : (
-                      <div className="flex items-center justify-between">
+                      <div className="w-full flex items-center justify-between">
                         <div className="text-xl font-bold text-content-primary">
                           {price}
                         </div>
@@ -679,9 +681,6 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 </SelectedVariant.Price>
               </div>
             </div>
-          </CardContent>
-
-          <CardFooter className="p-4 pt-0 flex-col space-y-2">
             {/* Enhanced Action Buttons */}
             <ProductActionButtons isQuickView={true} />
 
