@@ -1,13 +1,16 @@
 import { useLoaderData, redirect, Await } from 'react-router-dom';
 import React from 'react';
-import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
+import {
+  loadCategoriesListServiceConfig,
+  parseUrlToSearchOptions,
+} from '@wix/headless-stores/services';
 import {
   loadProductsListServiceConfig,
   loadProductsListSearchServiceConfig,
 } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '../../../components/store/ProductList';
-import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
