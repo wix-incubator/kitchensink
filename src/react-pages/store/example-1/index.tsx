@@ -50,7 +50,6 @@ export default function StoreCollectionPage({
             productsListSearchConfig={productsListSearchConfig}
             currentCategorySlug={currentCategorySlug}
             productPageRoute="/store/example-1"
-            basePath="/store/example-1/category"
           />
         </div>
       </StoreLayout>

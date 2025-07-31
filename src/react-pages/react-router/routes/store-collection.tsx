@@ -138,7 +138,6 @@ export function StoreCollectionRoute({
                 productsListSearchConfig={productsListSearchConfig}
                 currentCategorySlug={currentCategorySlug}
                 productPageRoute={productPageRoute}
-                basePath={`${basename}${storeRoute}`}
               />
             );
           }}

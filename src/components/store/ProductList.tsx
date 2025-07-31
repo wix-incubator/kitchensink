@@ -39,7 +39,6 @@ interface ProductListProps {
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
   currentCategorySlug: string;
-  onCategorySelect: (category: Category) => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
@@ -47,7 +46,6 @@ export const ProductList: React.FC<ProductListProps> = ({
   productsListSearchConfig,
   productPageRoute,
   categoriesListConfig,
-  onCategorySelect,
   currentCategorySlug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
@@ -102,11 +100,19 @@ export const ProductList: React.FC<ProductListProps> = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <CategoryPicker
-                    categoriesListConfig={categoriesListConfig}
-                    currentCategorySlug={currentCategorySlug}
-                    onCategorySelect={onCategorySelect}
-                  />
+                  <ProductListFilters.CategoryFilter>
+                    {({ selectedCategory, setSelectedCategory }) => {
+                      return (
+                        <CategoryPicker
+                          categoriesListConfig={categoriesListConfig}
+                          currentCategorySlug={
+                            selectedCategory?.slug || currentCategorySlug
+                          }
+                          onCategorySelect={setSelectedCategory}
+                        />
+                      );
+                    }}
+                  </ProductListFilters.CategoryFilter>
                 </div>
                 <SortDropdown />
               </div>
