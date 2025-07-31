@@ -10,6 +10,7 @@ import type { LineItem } from '@wix/headless-ecom/services';
 interface QuickViewModalProps {
   product: productsV3.V3Product;
   isOpen: boolean;
+  isLoading: boolean;
   onClose: () => void;
   productPageRoute: string;
 }
@@ -17,14 +18,12 @@ interface QuickViewModalProps {
 export default function QuickViewModal({
   product,
   isOpen,
+  isLoading,
   onClose,
   productPageRoute,
 }: QuickViewModalProps) {
   const Navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [fullProduct, setFullProduct] = useState<productsV3.V3Product | null>(
-    product
-  );
+
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Handle escape key to close modal
@@ -43,29 +42,6 @@ export default function QuickViewModal({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
-
-  // Load full product data when modal opens
-  useEffect(() => {
-    if (isOpen && product.slug) {
-      setIsLoading(true);
-      // Use Wix API to load full product data
-      const loadFullProduct = async () => {
-        try {
-          // For now, use the existing product data since it should contain all necessary information
-          // If more detailed product data is needed, this would require a Wix client instance
-          setFullProduct(product);
-        } catch (error) {
-          console.error('Failed to load full product data:', error);
-          // Fallback to original product data
-          setFullProduct(product);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      loadFullProduct();
-    }
-  }, [isOpen, product.slug]);
 
   if (!isOpen) return null;
 
@@ -160,7 +136,7 @@ export default function QuickViewModal({
             </div>
           ) : (
             <>
-              <ProductDetails isQuickView={true} product={fullProduct!} />
+              <ProductDetails isQuickView={true} product={product!} />
 
               {/* View Full Product Page Link */}
               <div className="mt-6 pt-6 border-t border-brand-subtle">

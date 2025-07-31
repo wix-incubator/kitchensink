@@ -147,12 +147,25 @@ export const ProductList: React.FC<ProductListProps> = ({
 
         {/* Quick View Modal */}
         {quickViewProduct && (
-          <QuickViewModal
-            product={quickViewProduct}
-            isOpen={isQuickViewOpen}
-            onClose={closeQuickView}
-            productPageRoute={productPageRoute}
-          />
+          <Product.Root
+            productServiceConfig={{ productSlug: quickViewProduct.slug! }}
+          >
+            <Product.Loading>
+              {({ isLoading }) => (
+                <Product.Content>
+                  {({ product }) => (
+                    <QuickViewModal
+                      product={product}
+                      isLoading={isLoading}
+                      isOpen={isQuickViewOpen}
+                      onClose={closeQuickView}
+                      productPageRoute={productPageRoute}
+                    />
+                  )}
+                </Product.Content>
+              )}
+            </Product.Loading>
+          </Product.Root>
         )}
       </HeadlessProductList.Root>
     </TooltipProvider>
