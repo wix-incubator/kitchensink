@@ -1,8 +1,8 @@
-import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
+import { useLoaderData, redirect, Await } from 'react-router-dom';
 import React from 'react';
 import {
   loadCategoriesListServiceConfig,
-  parseUrlForProductsListSearch,
+  parseUrlToSearchOptions,
 } from '@wix/headless-stores/services';
 import {
   loadProductsListServiceConfig,
@@ -83,7 +83,7 @@ export async function storeCollectionRouteLoader({
     throw new Response('Not Found', { status: 404 });
   }
 
-  const { searchOptions } = await parseUrlForProductsListSearch(
+  const parsedSearchOptions = await parseUrlToSearchOptions(
     window.location.href,
     categoriesListConfig.categories,
     {
@@ -101,8 +101,8 @@ export async function storeCollectionRouteLoader({
   // Start collection data load but don't await it,
   // It will be awaited in the route component for the skeleton to be rendered
   const notAwaitedData = Promise.all([
-    loadProductsListServiceConfig(searchOptions),
-    loadProductsListSearchServiceConfig(window.location.href),
+    loadProductsListServiceConfig(parsedSearchOptions),
+    loadProductsListSearchServiceConfig(parsedSearchOptions),
   ]);
 
   return {
@@ -114,12 +114,9 @@ export async function storeCollectionRouteLoader({
 
 export function StoreCollectionRoute({
   productPageRoute,
-  storeRoute,
 }: {
   productPageRoute: string;
-  storeRoute: string;
 }) {
-  const basename = useHref('/');
   const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
     useLoaderData<typeof storeCollectionRouteLoader>();
 

@@ -12,7 +12,6 @@ import {
   type ProductsListServiceConfig,
   type ProductsListSearchServiceConfig,
   type CategoriesListServiceConfig,
-  type Category,
 } from '@wix/headless-stores/services';
 import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';

@@ -49,12 +49,7 @@ const router = createBrowserRouter(
         },
         {
           path: '/store/:categorySlug',
-          element: (
-            <StoreCollectionRoute
-              productPageRoute="/products"
-              storeRoute="/store"
-            />
-          ),
+          element: <StoreCollectionRoute productPageRoute="/products" />,
           loader: storeCollectionRouteLoader,
         },
         {
