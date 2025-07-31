@@ -37,7 +37,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       size="lg"
       onClick={onClick}
       disabled={disabled}
-      className="flex-1"
+      className="flex-1 relative"
     >
       {isLoading ? (
         <>
