@@ -177,6 +177,46 @@ export const ProductList: React.FC<ProductListProps> = ({
   );
 };
 
+export const ProductListSkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Card
+          key={i}
+          className="overflow-hidden relative bg-surface-card border-surface-subtle"
+        >
+          {/* Shimmer Effect */}
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface-loading/30 to-transparent"></div>
+
+          {/* Content Skeleton */}
+          <CardContent className="p-4">
+            <div className="aspect-square bg-surface-loading rounded-lg mb-4 animate-pulse"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-surface-loading rounded animate-pulse"></div>
+              <div className="h-3 bg-surface-loading rounded w-2/3 animate-pulse"></div>
+              <div className="flex gap-2 mt-3">
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+              </div>
+              <div className="flex justify-between items-center mt-4">
+                <div className="h-6 bg-surface-loading rounded w-16 animate-pulse"></div>
+                <div className="h-4 bg-surface-loading rounded w-20 animate-pulse"></div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 pt-0">
+            <div className="space-y-2 w-full">
+              <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+              <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
 // Product Grid Component
 interface ProductGridProps {
   productPageRoute: string;
@@ -191,41 +231,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     <>
       {/* Enhanced Loading State */}
       <HeadlessProductList.Loading>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Card
-              key={i}
-              className="overflow-hidden relative bg-surface-card border-surface-subtle"
-            >
-              {/* Shimmer Effect */}
-              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface-loading/30 to-transparent"></div>
-
-              {/* Content Skeleton */}
-              <CardContent className="p-4">
-                <div className="aspect-square bg-surface-loading rounded-lg mb-4 animate-pulse"></div>
-                <div className="space-y-3">
-                  <div className="h-4 bg-surface-loading rounded animate-pulse"></div>
-                  <div className="h-3 bg-surface-loading rounded w-2/3 animate-pulse"></div>
-                  <div className="flex gap-2 mt-3">
-                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
-                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
-                    <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
-                  </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <div className="h-6 bg-surface-loading rounded w-16 animate-pulse"></div>
-                    <div className="h-4 bg-surface-loading rounded w-20 animate-pulse"></div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <div className="space-y-2 w-full">
-                  <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
-                  <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <ProductListSkeleton />
       </HeadlessProductList.Loading>
 
       {/* Enhanced Empty State */}

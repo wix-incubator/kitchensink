@@ -9,36 +9,80 @@ import {
   loadProductsListSearchServiceConfig,
 } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
-
+import { ProductListSkeleton } from '../../../components/store/ProductList';
+import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <div className="h-10 w-64 bg-surface-loading rounded animate-pulse mb-4"></div>
-        <div className="h-6 w-96 bg-surface-loading rounded animate-pulse"></div>
-      </div>
-
-      {/* Filters skeleton */}
-      <div className="mb-6">
-        <div className="h-10 w-32 bg-surface-loading rounded animate-pulse mb-4"></div>
-        <div className="flex gap-4 mb-4">
-          <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
-          <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
-          <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
-        </div>
-      </div>
-
-      {/* Product grid skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="bg-surface-card rounded-lg p-4">
-            <div className="h-48 bg-surface-loading rounded animate-pulse mb-4"></div>
-            <div className="h-6 w-3/4 bg-surface-loading rounded animate-pulse mb-2"></div>
-            <div className="h-4 w-1/2 bg-surface-loading rounded animate-pulse mb-4"></div>
-            <div className="h-10 w-full bg-surface-loading rounded animate-pulse"></div>
+      {/* Category skeleton */}
+      <Card className="overflow-hidden relative bg-surface-card border-surface-subtle mb-6 p-4">
+        <CardContent className='p-0'>
+          <div className="h-6 w-24 bg-surface-loading rounded animate-pulse mb-4"></div>
+          <div className="flex gap-4">
+            <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
+            <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
           </div>
-        ))}
+        </CardContent>
+      </Card>
+
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div className="w-full lg:w-80 lg:flex-shrink-0 lg:self-stretch">
+          <div className="lg:sticky lg:top-6">
+            {/* Filters skeleton */}
+            <Card className="overflow-hidden relative bg-surface-card border-surface-subtle p-4 lg:h-full h-32">
+              <CardContent className="p-0">
+                {/* Filters Header */}
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-4 h-4 bg-surface-loading rounded animate-pulse"></div>
+                  <div className="h-6 w-16 bg-surface-loading rounded animate-pulse"></div>
+                </div>
+
+                {/* Price Range Section */}
+                <div className="mb-6">
+                  <div className="h-5 w-20 bg-surface-loading rounded animate-pulse mb-4"></div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <div className="h-4 w-6 bg-surface-loading rounded animate-pulse"></div>
+                    <div className="h-4 w-8 bg-surface-loading rounded animate-pulse"></div>
+                  </div>
+                  <div className="h-2 bg-surface-loading rounded-full animate-pulse mb-4"></div>
+                  <div className="flex gap-4">
+                    <div className="h-10 flex-1 bg-surface-loading rounded animate-pulse"></div>
+                    <div className="h-10 flex-1 bg-surface-loading rounded animate-pulse"></div>
+                  </div>
+                </div>
+
+                {/* Color Section */}
+                <div className="mb-6">
+                  <div className="h-5 w-10 bg-surface-loading rounded animate-pulse mb-4"></div>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="w-8 h-8 bg-surface-loading rounded-full animate-pulse"></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <div className="h-5 w-20 bg-surface-loading rounded animate-pulse mb-4"></div>
+                  <div className="space-y-3">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-surface-loading rounded animate-pulse"></div>
+                        <div className="h-4 w-24 bg-surface-loading rounded animate-pulse"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        {/* Product grid skeleton */}
+        <div className="flex-1 min-w-0">
+          <ProductListSkeleton />
+        </div>
       </div>
     </div>
   );
@@ -117,7 +161,12 @@ export function StoreCollectionRoute({
 }: {
   productPageRoute: string;
 }) {
+<<<<<<< Updated upstream
   const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
+=======
+  const basename = useHref('/');
+  const { categoriesConfig, notAwaitedData, currentCategorySlug } = 
+>>>>>>> Stashed changes
     useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
@@ -125,6 +174,7 @@ export function StoreCollectionRoute({
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
         <Await resolve={notAwaitedData} errorElement={<CollectionError />}>
+<<<<<<< Updated upstream
           {data => {
             const [productsListConfig, productsListSearchConfig] = data;
 
@@ -138,6 +188,9 @@ export function StoreCollectionRoute({
               />
             );
           }}
+=======
+          <CollectionSkeleton />
+>>>>>>> Stashed changes
         </Await>
       </React.Suspense>
     </div>
