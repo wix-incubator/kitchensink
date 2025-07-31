@@ -64,17 +64,17 @@ export async function storeCollectionRouteLoader({
 }: {
   params: { categorySlug?: string };
 }) {
-  // Load categories config immediately (blocks the transition - this is fast)
-  const categoriesConfig = await loadCategoriesListServiceConfig();
+  // Load categories first so we can pass them to parseUrlForProductsListSearch
+  const categoriesListConfig = await loadCategoriesListServiceConfig();
 
   // Find category by its real slug
   let selectedCategory = null;
   if (params.categorySlug) {
-    selectedCategory = categoriesConfig.categories.find(
+    selectedCategory = categoriesListConfig.categories.find(
       (cat: any) => cat.slug === params.categorySlug
     );
   } else {
-    selectedCategory = categoriesConfig.categories[0];
+    selectedCategory = categoriesListConfig.categories[0];
     return redirect(`/store/${selectedCategory.slug}`);
   }
 
@@ -85,6 +85,7 @@ export async function storeCollectionRouteLoader({
 
   const { searchOptions } = await parseUrlForProductsListSearch(
     window.location.href,
+    categoriesListConfig.categories,
     {
       cursorPaging: {
         limit: 20,
@@ -105,7 +106,7 @@ export async function storeCollectionRouteLoader({
   ]);
 
   return {
-    categoriesConfig,
+    categoriesListConfig,
     notAwaitedData,
     currentCategorySlug: params.categorySlug,
   };
@@ -119,7 +120,7 @@ export function StoreCollectionRoute({
   storeRoute: string;
 }) {
   const basename = useHref('/');
-  const { categoriesConfig, notAwaitedData, currentCategorySlug } =
+  const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
     useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
@@ -132,12 +133,11 @@ export function StoreCollectionRoute({
 
             return (
               <CategoryPage
-                categoriesListConfig={categoriesConfig}
+                categoriesListConfig={categoriesListConfig}
                 productsListConfig={productsListConfig}
                 productsListSearchConfig={productsListSearchConfig}
                 currentCategorySlug={currentCategorySlug}
                 productPageRoute={productPageRoute}
-                basePath={`${basename}${storeRoute}`}
               />
             );
           }}

@@ -8,7 +8,6 @@ import {
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   loadCategoriesListServiceConfig,
-  loadCategoryServiceConfig,
   loadProductsListSearchServiceConfig,
 } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
@@ -18,35 +17,40 @@ import { seoTags } from '@wix/seo';
 // Get category slug from URL params
 const { categorySlug = '' } = Astro.params;
 
-const categoryLoadResult = await loadCategoryServiceConfig(categorySlug);
+// Load categories first so we can pass them to parseUrlForProductsListSearch
+const categoriesListConfig = await loadCategoriesListServiceConfig();
+const category = categoriesListConfig.categories.find(
+  category => category.slug === categorySlug
+);
 
-if (categoryLoadResult.type === 'not-found') {
+if (!category) {
   return Astro.rewrite('/404');
 }
 
-const category = categoryLoadResult.config.category;
 const categoryName = category?.name || '';
 
-const { searchOptions } = await parseUrlForProductsListSearch(Astro.url.href, {
-  cursorPaging: {
-    limit: 10,
-  },
-  filter: {
-    'allCategoriesInfo.categories': {
-      $matchItems: [{ _id: category._id! }],
+const { searchOptions } = await parseUrlForProductsListSearch(
+  Astro.url.href,
+  categoriesListConfig.categories,
+  {
+    cursorPaging: {
+      limit: 10,
     },
-  },
-});
+    filter: {
+      'allCategoriesInfo.categories': {
+        $matchItems: [{ _id: category!._id! }],
+      },
+    },
+  }
+);
 
 const [
   productsListConfig,
-  categoriesListConfig,
   currentCartServiceConfig,
   productsListSearchConfig,
   seoTagsServiceConfig,
 ] = await Promise.all([
   loadProductsListServiceConfig(searchOptions),
-  loadCategoriesListServiceConfig(),
   loadCurrentCartServiceConfig(),
   loadProductsListSearchServiceConfig(Astro.url.href),
   loadSEOTagsServiceConfig({
