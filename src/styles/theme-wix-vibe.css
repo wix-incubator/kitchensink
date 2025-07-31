@@ -47,7 +47,11 @@
   );
   --theme-bg-options: var(--color-overlay);
   --theme-bg-modal: var(--color-modal-bg);
-  --theme-bg-loading: var(--color-overlay);
+  --theme-bg-loading: color-mix(
+    in srgb,
+    var(--color-overlay) 80%,
+    var(--theme-text-content-30) 20%
+  );
   --theme-bg-card: var(--color-overlay);
   --theme-bg-error: var(--color-danger);
   --theme-bg-tooltip: var(--color-overlay);

@@ -717,17 +717,3 @@ button:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
-
-/* Slider Styles */
-.slider-track {
-  background-color: var(--theme-slider-track-bg);
-}
-
-.slider-range {
-  background-color: var(--theme-slider-range-bg);
-}
-
-.slider-thumb {
-  background-color: var(--theme-slider-thumb-bg);
-  border-color: var(--theme-slider-thumb-border);
-}
