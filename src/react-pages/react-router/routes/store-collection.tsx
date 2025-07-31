@@ -1,4 +1,4 @@
-import { useLoaderData, redirect, Await, useHref } from 'react-router-dom';
+import { useLoaderData, redirect, Await } from 'react-router-dom';
 import React from 'react';
 import {
   loadCategoriesListServiceConfig,
@@ -114,12 +114,9 @@ export async function storeCollectionRouteLoader({
 
 export function StoreCollectionRoute({
   productPageRoute,
-  storeRoute,
 }: {
   productPageRoute: string;
-  storeRoute: string;
 }) {
-  const basename = useHref('/');
   const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
     useLoaderData<typeof storeCollectionRouteLoader>();
 
