@@ -113,7 +113,7 @@
   );
 
   --color-overlay: var(--wix-theme-background);
-  --color-modal-bg: var(--wix-theme-primary-foreground);
+  --color-modal-bg: var(--wix-theme-background);
   --color-grey-dark: color-mix(
     in srgb,
     var(--wix-theme-primary) 80%,
