@@ -147,7 +147,7 @@ export function MiniCartContent() {
                   onClick={close}
                 >
                   <div
-                    className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col"
+                    className="fixed right-0 top-0 bottom-0 w-full h-screen max-w-md bg-surface-modal shadow-xl flex flex-col"
                     onClick={e => e.stopPropagation()}
                   >
                     <CurrentCart.Summary>
