@@ -10,22 +10,14 @@ import {
 } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '../../../components/store/ProductList';
-<<<<<<< Updated upstream
 import { Card, CardContent } from '@/components/ui/card';
-=======
-import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
->>>>>>> Stashed changes
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Category skeleton */}
       <Card className="overflow-hidden relative bg-surface-card border-surface-subtle mb-6 p-4">
-<<<<<<< Updated upstream
         <CardContent className="p-0">
-=======
-        <CardContent className='p-0'>
->>>>>>> Stashed changes
           <div className="h-6 w-24 bg-surface-loading rounded animate-pulse mb-4"></div>
           <div className="flex gap-4">
             <div className="h-10 w-24 bg-surface-loading rounded animate-pulse"></div>
@@ -66,14 +58,10 @@ function CollectionSkeleton() {
                   <div className="space-y-3">
                     <div className="flex gap-3">
                       {Array.from({ length: 3 }).map((_, i) => (
-<<<<<<< Updated upstream
                         <div
                           key={i}
                           className="w-8 h-8 bg-surface-loading rounded-full animate-pulse"
                         ></div>
-=======
-                        <div key={i} className="w-8 h-8 bg-surface-loading rounded-full animate-pulse"></div>
->>>>>>> Stashed changes
                       ))}
                     </div>
                   </div>
@@ -176,12 +164,7 @@ export function StoreCollectionRoute({
 }: {
   productPageRoute: string;
 }) {
-<<<<<<< Updated upstream
   const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
-=======
-  const basename = useHref('/');
-  const { categoriesConfig, notAwaitedData, currentCategorySlug } = 
->>>>>>> Stashed changes
     useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
@@ -189,7 +172,6 @@ export function StoreCollectionRoute({
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
         <Await resolve={notAwaitedData} errorElement={<CollectionError />}>
-<<<<<<< Updated upstream
           {data => {
             const [productsListConfig, productsListSearchConfig] = data;
 
@@ -203,9 +185,6 @@ export function StoreCollectionRoute({
               />
             );
           }}
-=======
-          <CollectionSkeleton />
->>>>>>> Stashed changes
         </Await>
       </React.Suspense>
     </div>
