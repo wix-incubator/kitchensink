@@ -3,6 +3,9 @@
 ## Basic Rule of Thumbs
 Inspire by the [Radix UI](https://www.radix-ui.com/primitives/docs/components/accordion) and [Shadcn UI](https://ui.shadcn.com/docs/components/accordion) components, each component is built with composable primitives, similar to Radix UI architecture.
 
+Headless components should include no styling and preferably no dom elements, they should be used to compose the UI of the ecommerce app.
+The actual implementation of the UI should be in a components/ui/ folder, as shadcn/ui components.
+
 Each entity component is of few types:
 
 Say that our entity is `A`
@@ -65,9 +68,22 @@ State of the entity will be provided to the child component as a data attribute,
 You should not rely on isSelected, isDisabled, etc. properties.
 
 
-### Product
+## Product
 See the [Product](./PRODUCT_INTERFACE.md) API
 
+## Cart
+See the [Cart](./CART_INTERFACE.md) API
+
+## Product List
+See the [Product List](./PRODUCT_LIST_INTERFACE.md) API
+
+## Platform
+See the [Platform](./PLATFORM_INTERFACE.md) API
+
+## General
+
+### Notes
+- The main root element should support getting the routes of the sites, so when redirecting to checkout, it will use the correct route to return, including other verticals.
 
 ### Open issues:
 - Should The component also check if the entity is still loading, and if so, render a loading state (skeleton), by doing so, skeletons will be rendered natively by elements and would be pefectly aligned with the loaded state.

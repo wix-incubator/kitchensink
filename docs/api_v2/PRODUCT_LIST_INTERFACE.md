@@ -53,6 +53,8 @@ interface ProductListSortingProps {
   }>;
   asChild?: boolean;
   className?: string;
+  valueFormatter?: ({sortBy, sortDirection}) => string; // used in order to format the value for the select, i.e. to translate the values, mandatory when rendering as select
+  as: 'select' | 'list'; // default is 'select'
 }
 
 interface SortingOptionTrigger {
@@ -66,11 +68,15 @@ interface SortingOptionTrigger {
 }
 ```
 
+**Important**
+The implentation should generate a plain Sort object
+
 **Example**
 ```tsx
+<ProductList.Sorting as="select" valueFormatter={({sortBy, sortDirection}) => `... map to human readable value`} />
 
 // Default usage one list with sort direction indicators
-<ProductList.Sorting className="flex gap-2 data-[sort-direction='asc']:arrow-up data-[sort-direction='desc']:arrow-down">
+<ProductList.Sorting className="flex gap-2 data-[sort-direction='asc']:arrow-up data-[sort-direction='desc']:arrow-down" as="list">
   <ProductList.SortingTrigger sortBy="name" sortDirection="asc" >By Name (A-Z)</ProductList.SortingTrigger>
   <ProductList.SortingTrigger sortBy="name" sortDirection="desc" >By Name (Z-A)</ProductList.SortingTrigger>
   <ProductList.SortingTrigger sortBy="price" sortDirection="asc" >Price (Low to High)</ProductList.SortingTrigger>
@@ -80,7 +86,7 @@ interface SortingOptionTrigger {
 </ProductList.Sorting>
 
 // Default usage two lists
-<ProductList.Sorting>
+<ProductList.Sorting as="list">
   // one list for sort options
   <ProductList.SortingTrigger sortBy="name" >By Name</ProductList.SortingTrigger>
   <ProductList.SortingTrigger sortBy="price" >Price</ProductList.SortingTrigger>
@@ -103,12 +109,11 @@ interface SortingOptionTrigger {
       const [by, direction] = e.target.value.split('_');
       onSortChange({by, direction});
     }}>
+      <option value="date_asc">Newest</option>
       <option value="name_asc">By Name (A-Z)</option>
       <option value="name_desc">By Name (Z-A)</option>
       <option value="price_asc">Price (Low to High)</option>
       <option value="price_desc">Price (High to Low)</option>
-      <option value="date_asc">Newest</option>
-      <option value="date_desc">Oldest</option>
     </select>
   ))}
 </ProductList.Sorting>
@@ -128,7 +133,7 @@ Container for product list filters and controls.
 
 **Props**
 ```tsx
-interface ProductListFiltersProps {
+interface ProductListFilterProps {
   children?: React.ReactNode;
   asChild?: boolean;
   className?: string;
@@ -137,12 +142,18 @@ interface ProductListFiltersProps {
 
 **Example**
 ```tsx
-<ProductList.Filters className="flex gap-4">
-  <SortDropdown />
-  <CategoryFilter />
-  <ProductFilters />
-</ProductList.Filters>
+<ProductList.Filter className="flex gap-4"> // defines the <Filter.Root value={filter} onChange={setFilter}>
+  <Filter.FilterOptions>
+    <Filter.FilterOptionRepeater>
+      <Filter.SingleFilter/> // define how to render a single filter (i.e. radio button)
+      <Filter.MultiFilter/> // define how to render a multi filter (i.e. checkbox)
+      <Filter.RangeFilter/> // define how to render a range filter (i.e. slider)
+    </Filter.FilterOptionRepeater>
+  </Filter.FilterOptions>
+</ProductList.Filter>
 ```
+
+refere to [Filter.Root](./PLATFORM_INTERFACE.md#filterroot) for more details.
 
 **Data Attributes**
 - `data-testid="product-list-filters"` - Applied to filters container
@@ -243,13 +254,31 @@ function BasicProductList() {
   return (
     <ProductList.Root products={products}>
       <div className="space-y-6">
-        {/* Header with Info and Filters */}
+        {/* Header with Sorting and Filters */}
         <div className="flex justify-between items-center bg-surface-card p-4 rounded-lg">
-          <ProductList.Info className="text-content-muted" />
-          <ProductList.Filters className="flex gap-4">
-            <SortDropdown />
-            <CategoryFilter />
-          </ProductList.Filters>
+          <ProductList.Root asChild>
+            {React.forwardRef(({totalProducts, displayedProducts, isFiltered, ...props}, ref) => (
+              <div ref={ref} {...props} className="text-content-muted">
+                Showing {displayedProducts} of {totalProducts} products
+                {isFiltered && <span className="ml-2 text-brand-primary">(Filtered)</span>}
+              </div>
+            ))}
+          </ProductList.Root>
+          
+          <div className="flex gap-4">
+            <ProductList.Sorting as="select" valueFormatter={({sortBy, sortDirection}) => 
+              `${sortBy === 'name' ? 'Name' : sortBy === 'price' ? 'Price' : 'Date'} (${sortDirection === 'asc' ? 'A-Z' : 'Z-A'})`
+            } />
+            <ProductList.Filters>
+              <Filter.FilterOptions>
+                <Filter.FilterOptionRepeater>
+                  <Filter.SingleFilter />
+                  <Filter.MultiFilter />
+                  <Filter.RangeFilter />
+                </Filter.FilterOptionRepeater>
+              </Filter.FilterOptions>
+            </ProductList.Filters>
+          </div>
         </div>
 
         {/* Product Grid */}
@@ -257,7 +286,7 @@ function BasicProductList() {
           emptyState={<div className="text-center py-12">No products found</div>}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <ProductList.ProductRepeater className="bg-surface-card p-4 rounded-lg border border-surface-subtle hover:shadow-lg transition-shadow">
+          <ProductList.ProductRepeter className="bg-surface-card p-4 rounded-lg border border-surface-subtle hover:shadow-lg transition-shadow">
             <Product.MediaGallery className="mb-4">
               <MediaGallery.Viewport className="aspect-square rounded-lg" />
             </Product.MediaGallery>
@@ -270,13 +299,8 @@ function BasicProductList() {
               <Product.Action.AddToCart label="Add to Cart" className="w-full btn-primary" />
               <Product.Action.QuickView label="Quick View" className="w-full btn-secondary" />
             </div>
-          </ProductList.ProductRepeater>
+          </ProductList.ProductRepeter>
         </ProductList.Products>
-
-        {/* Load More */}
-        <div className="flex justify-center">
-          <ProductList.LoadMoreTrigger className="btn-secondary px-8" />
-        </div>
       </div>
     </ProductList.Root>
   );
@@ -295,7 +319,7 @@ function AdvancedProductList() {
         <Card className="bg-surface-card border-surface-subtle">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <ProductList.Info asChild>
+              <ProductList.Root asChild>
                 {React.forwardRef(({totalProducts, displayedProducts, isFiltered, ...props}, ref) => (
                   <div ref={ref} {...props} className="flex items-center gap-4">
                     <h2 className="text-2xl font-bold text-content-primary">
@@ -308,71 +332,55 @@ function AdvancedProductList() {
                     )}
                   </div>
                 ))}
-              </ProductList.Info>
+              </ProductList.Root>
               
-              <ProductList.Filters className="flex flex-wrap gap-3">
-                <SortDropdown />
-                <CategoryFilter />
-                <PriceRangeFilter />
-              </ProductList.Filters>
+              <div className="flex flex-wrap gap-3">
+                <ProductList.Sorting as="list" className="flex gap-2">
+                  <ProductList.SortingTrigger sortBy="name" sortDirection="asc">
+                    Name (A-Z)
+                  </ProductList.SortingTrigger>
+                  <ProductList.SortingTrigger sortBy="price" sortDirection="asc">
+                    Price (Low-High)
+                  </ProductList.SortingTrigger>
+                  <ProductList.SortingTrigger sortBy="date" sortDirection="desc">
+                    Newest
+                  </ProductList.SortingTrigger>
+                </ProductList.Sorting>
+                
+                <ProductList.Filters>
+                  <Filter.FilterOptions>
+                    <Filter.FilterOptionRepeater>
+                      <Filter.SingleFilter />
+                      <Filter.MultiFilter />
+                      <Filter.RangeFilter />
+                    </Filter.FilterOptionRepeater>
+                  </Filter.FilterOptions>
+                </ProductList.Filters>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Filter Status Bar */}
-        <ProductList.FilterStatus>
-          {React.forwardRef(({activeFilters, resetFilters, isFiltered, ...props}, ref) => 
-            isFiltered && (
-              <Card ref={ref} {...props} className="bg-brand-light/10 border-brand-light">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FilterIcon className="w-4 h-4 text-brand-primary" />
-                      <span className="text-brand-primary font-medium">
-                        {activeFilters.length} filter{activeFilters.length === 1 ? '' : 's'} applied
-                      </span>
-                    </div>
-                    <Button variant="link" onClick={resetFilters} className="text-brand-primary">
-                      Clear All Filters
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          )}
-        </ProductList.FilterStatus>
-
         {/* Products with Enhanced Layout */}
         <ProductList.Products 
           emptyState={
-            <ProductList.EmptyState>
-              {React.forwardRef(({isFiltered, resetFilters, ...props}, ref) => (
-                <Card ref={ref} {...props} className="text-center py-16">
-                  <CardContent>
-                    <div className="w-24 h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                      <PackageIcon className="w-12 h-12 text-content-muted" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-content-primary mb-4">
-                      {isFiltered ? 'No Products Match Your Filters' : 'No Products Available'}
-                    </h3>
-                    <p className="text-content-muted mb-6 max-w-md mx-auto">
-                      {isFiltered 
-                        ? 'Try adjusting your filters to see more products.'
-                        : 'Check back later for new products.'}
-                    </p>
-                    {isFiltered && (
-                      <Button onClick={resetFilters} className="btn-primary">
-                        Clear Filters
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </ProductList.EmptyState>
+            <Card className="text-center py-16">
+              <CardContent>
+                <div className="w-24 h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <PackageIcon className="w-12 h-12 text-content-muted" />
+                </div>
+                <h3 className="text-2xl font-bold text-content-primary mb-4">
+                  No Products Available
+                </h3>
+                <p className="text-content-muted mb-6 max-w-md mx-auto">
+                  Check back later for new products.
+                </p>
+              </CardContent>
+            </Card>
           }
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <ProductList.ProductRepeater className="group">
+            <ProductList.ProductRepeter className="group">
               <Card className="h-full bg-surface-card border-surface-subtle hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-0">
                   {/* Product Image with Quick Actions */}
@@ -429,24 +437,24 @@ function AdvancedProductList() {
                         <Product.Price className="text-lg font-bold text-brand-primary" />
                         <Product.CompareAtPrice className="text-sm text-content-muted line-through" />
                       </div>
-                      <ProductAvailabilityBadge />
+                      <div className="text-xs text-status-success">In Stock</div>
                     </div>
 
                     {/* Variants Preview */}
                     <Product.Variants>
                       <Product.VariantOptions>
                         <div className="flex gap-1">
-                          <Product.VariantOptionRepeater>
+                          <Product.VariantOptionRepeter>
                             <Option.Root>
                               <Option.Choices>
                                 <div className="flex gap-1">
-                                  <Option.ChoiceRepeater>
+                                  <Option.ChoiceRepeter>
                                     <Choice.Color className="w-6 h-6 rounded-full border-2 cursor-pointer hover:scale-110 transition-transform" />
-                                  </Option.ChoiceRepeater>
+                                  </Option.ChoiceRepeter>
                                 </div>
                               </Option.Choices>
                             </Option.Root>
-                          </Product.VariantOptionRepeater>
+                          </Product.VariantOptionRepeter>
                         </div>
                       </Product.VariantOptions>
                     </Product.Variants>
@@ -469,46 +477,9 @@ function AdvancedProductList() {
                   </div>
                 </CardFooter>
               </Card>
-            </ProductList.ProductRepeater>
+            </ProductList.ProductRepeter>
           </div>
         </ProductList.Products>
-
-        {/* Enhanced Pagination */}
-        <ProductList.Pagination>
-          <div className="flex flex-col items-center gap-4">
-            <ProductList.LoadMoreTrigger asChild>
-              {React.forwardRef(({loadMore, hasMoreProducts, isLoading, loadedCount, ...props}, ref) => 
-                hasMoreProducts && (
-                  <Button 
-                    ref={ref} 
-                    {...props}
-                    size="lg"
-                    onClick={() => loadMore(12)}
-                    disabled={isLoading}
-                    className="px-8 py-3 font-semibold"
-                  >
-                    {isLoading ? (
-                      <>
-                        <LoadingSpinner className="w-4 h-4 mr-2" />
-                        Loading...
-                      </>
-                    ) : (
-                      `Load More Products`
-                    )}
-                  </Button>
-                )
-              )}
-            </ProductList.LoadMoreTrigger>
-            
-            <ProductList.Info asChild>
-              {React.forwardRef(({displayedProducts, totalProducts, ...props}, ref) => (
-                <p ref={ref} {...props} className="text-sm text-content-muted">
-                  {displayedProducts} of {totalProducts} products shown
-                </p>
-              ))}
-            </ProductList.Info>
-          </div>
-        </ProductList.Pagination>
       </div>
     </ProductList.Root>
   );
@@ -523,20 +494,24 @@ function MinimalProductList() {
   return (
     <ProductList.Root products={products}>
       <div className="space-y-4">
-        <ProductList.Info className="text-sm text-content-muted" />
+        <ProductList.Root asChild>
+          {React.forwardRef(({displayedProducts, ...props}, ref) => (
+            <div ref={ref} {...props} className="text-sm text-content-muted">
+              {displayedProducts} products
+            </div>
+          ))}
+        </ProductList.Root>
         
         <ProductList.Products 
           emptyState={<p className="text-center py-8">No products found</p>}
           className="grid grid-cols-2 gap-4"
         >
-          <ProductList.ProductRepeater className="border rounded p-4">
+          <ProductList.ProductRepeter className="border rounded p-4">
             <Product.Name className="font-medium mb-2" />
             <Product.Price className="text-lg font-bold text-brand-primary" />
             <Product.Action.AddToCart label="Add" className="w-full mt-2 btn-primary btn-sm" />
-          </ProductList.ProductRepeater>
+          </ProductList.ProductRepeter>
         </ProductList.Products>
-        
-        <ProductList.LoadMoreTrigger className="w-full btn-secondary" />
       </div>
     </ProductList.Root>
   );
@@ -557,20 +532,32 @@ function SearchableProductList() {
         {/* Search Header */}
         <div className="flex flex-col gap-4">
           <SearchInput />
-          <ProductList.FilterStatus />
+          <ProductList.Sorting as="select" valueFormatter={({sortBy, sortDirection}) => 
+            `Sort by ${sortBy} (${sortDirection})`
+          } />
         </div>
 
         {/* Filters Sidebar + Products */}
         <div className="flex gap-8">
           <aside className="w-64 space-y-6">
-            <ProductFilters />
+            <ProductList.Filters>
+              <Filter.FilterOptions>
+                <Filter.FilterOptionRepeater>
+                  <Filter.SingleFilter />
+                  <Filter.MultiFilter />
+                  <Filter.RangeFilter />
+                </Filter.FilterOptionRepeater>
+              </Filter.FilterOptions>
+            </ProductList.Filters>
           </aside>
           
           <main className="flex-1">
             <ProductList.Products>
-              <ProductList.ProductRepeater>
-                {/* Product content */}
-              </ProductList.ProductRepeater>
+              <ProductList.ProductRepeter>
+                <Product.Name className="font-semibold mb-2" />
+                <Product.Price className="text-brand-primary font-bold" />
+                <Product.Action.AddToCart label="Add to Cart" className="w-full mt-2 btn-primary" />
+              </ProductList.ProductRepeter>
             </ProductList.Products>
           </main>
         </div>

@@ -922,7 +922,7 @@ interface ProductUrlProps {
 </Product.Url>
 
 // Custom rendering with forwardRef
-<Product.Url>
+<Product.Url asChild>
   {React.forwardRef(({url, ...props}, ref) => (
     <div ref={ref} {...props}>
      // if the rendered component does not support url plain prop
@@ -944,7 +944,11 @@ Add to cart action button.
 interface ProductActionProps {
   asChild?: boolean;
   label: string;
-  children?: React.ForwardRefRenderFunction<HTMLButtonElement, {}>;
+  children?: React.ForwardRefRenderFunction<HTMLButtonElement, {
+    disabled: boolean;
+    isLoading: boolean;
+    onClick: () => Promise<void>;
+  }>;
 }
 ```
 
@@ -954,12 +958,16 @@ interface ProductActionProps {
 <Product.Action.AddToCart label="add to cart" className="w-full btn-primary" />
 
 // Custom rendering with forwardRef
-<Product.Action.PreOrder asChild>
-  <button>Pre Order</button>
+<Product.Action.PreOrder asChild label="Pre Order">
+  <button/>
 </Product.Action.PreOrder>
 ```
 
+**Important**
+The implentation of these buttons should be done by rendering Cart.Actions.AddToCart and Cart.Actions.BuyNow which are ecommerce headless components.
+
 - `disabled` - can't perform action. i.e. - add to cart (missing values, out of stock, etc)
+- `data-in-progress` - the action is in progress. i.e. - add to cart (loading, etc)
 
 ---
 
@@ -1091,7 +1099,6 @@ function BasicProduct() {
           <Product.Variants>
             <Product.VariantOptions>
               <Product.VariantOptionRepeter>
-                <Option.Root>
                   <Option.Name className="text-lg font-medium mb-3" />
                   <Option.Choices>
                     <Option.ChoiceRepeter>
@@ -1100,7 +1107,6 @@ function BasicProduct() {
                       <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
                     </Option.ChoiceRepeter>
                   </Option.Choices>
-                </Option.Root>
               </Product.VariantOptionRepeter>
             </Product.VariantOptions>
           </Product.Variants>
@@ -1109,7 +1115,6 @@ function BasicProduct() {
           <Product.Modifiers>
             <Product.ModifierOptions>
               <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
-                <Option.Root>
                   <Option.Name className="text-lg font-medium mb-3" />
                   <Option.Choices>
                     <Option.ChoiceRepeter>
@@ -1118,7 +1123,6 @@ function BasicProduct() {
                       <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
                     </Option.ChoiceRepeter>
                   </Option.Choices>
-                </Option.Root>
               </Product.ModifierOptionRepeter>
             </Product.ModifierOptions>
           </Product.Modifiers>
@@ -1277,7 +1281,6 @@ function CustomizedProduct() {
           <Product.Variants>
             <Product.VariantOptions>
               <Product.VariantOptionRepeter>
-                <Option.Root>
                   <Option.Name asChild>
                     {React.forwardRef(({option, ...props}, ref) => (
                       <div ref={ref} {...props} className="mb-4">
@@ -1322,7 +1325,6 @@ function CustomizedProduct() {
                       </Option.ChoiceRepeter>
                     </div>
                   </Option.Choices>
-                </Option.Root>
               </Product.VariantOptionRepeter>
             </Product.VariantOptions>
           </Product.Variants>
@@ -1331,7 +1333,6 @@ function CustomizedProduct() {
           <Product.Modifiers>
             <Product.ModifierOptions>
               <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
-                <Option.Root>
                   <Option.Name asChild>
                     {React.forwardRef(({option, ...props}, ref) => (
                       <div ref={ref} {...props} className="mb-4">
@@ -1391,13 +1392,12 @@ function CustomizedProduct() {
                       </Choice.Color>
                     </Option.ChoiceRepeter>
                   </Option.Choices>
-                </Option.Root>
               </Product.ModifierOptionRepeter>
             </Product.ModifierOptions>
           </Product.Modifiers>
 
           {/* Custom Quantity with Stock Info */}
-          <Quantity.Root steps={1} onValueChange={(value) => console.log('Quantity:', value)}>
+          <Product.Quantity steps={1}>
             <div className="space-y-3">
               <h4 className="text-lg font-semibold text-content-primary">Quantity</h4>
               <div className="flex items-center gap-4">
@@ -1437,7 +1437,7 @@ function CustomizedProduct() {
                 <span className="text-sm text-content-muted">12 in stock</span>
               </div>
             </div>
-          </Quantity.Root>
+          </Product.Quantity>
 
           {/* Enhanced Subscriptions */}
           <Product.Subscriptions emptyState={<div className="text-center py-8 text-content-muted">No subscription options available for this product</div>}>
@@ -1570,15 +1570,13 @@ function MinimalProduct() {
         <Product.Variants>
           <Product.VariantOptions>
             <Product.VariantOptionRepeter>
-              <Option.Root>
-                <Option.Name className="font-medium mb-2" />
-                <Option.Choices>
-                  <Option.ChoiceRepeter>
-                    <Choice.Text className="px-3 py-1 border rounded text-sm" />
-                    <Choice.Color className="w-8 h-8 rounded-full border-2" />
-                  </Option.ChoiceRepeter>
-                </Option.Choices>
-              </Option.Root>
+              <Option.Name className="font-medium mb-2" />
+              <Option.Choices>
+                <Option.ChoiceRepeter>
+                  <Choice.Text className="px-3 py-1 border rounded text-sm" />
+                  <Choice.Color className="w-8 h-8 rounded-full border-2" />
+                </Option.ChoiceRepeter>
+              </Option.Choices>
             </Product.VariantOptionRepeter>
           </Product.VariantOptions>
         </Product.Variants>
