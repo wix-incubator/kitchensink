@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PlaygroundPage from '../react-pages/playground';
+
+---
+
+<BaseLayout>
+  <title>Playground</title>
+  <meta
+    name="description"
+    content="Playground"
+  />
+
+  <PlaygroundPage
+    client:load
+    slot="body"
+  />
+</BaseLayout>
