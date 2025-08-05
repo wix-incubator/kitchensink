@@ -127,7 +127,11 @@ const ProductListProducts = ({
   emptyState?: React.ReactNode;
 }) => {
   const { products } = useProductListContext();
-  return <div className={className}>{products.length > 0 ? children : emptyState}</div>;
+  return (
+    <div className={className}>
+      {products.length > 0 ? children : emptyState}
+    </div>
+  );
 };
 
 const ProductListProduct = ({
@@ -253,7 +257,10 @@ export default function App() {
           <ProductList.Filters />
         </div>
 
-        <ProductList.Products className="pt-4" emptyState={<p>No products found.</p>}>
+        <ProductList.Products
+          className="pt-4"
+          emptyState={<p>No products found.</p>}
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <ProductList.ProductRepeter className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
               <Product.Name asChild>
