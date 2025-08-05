@@ -120,11 +120,14 @@ export const Product = {
 const ProductListProducts = ({
   className,
   children,
+  emptyState,
 }: {
   className?: string;
   children: React.ReactNode;
+  emptyState?: React.ReactNode;
 }) => {
-  return <div className={className}>{children}</div>;
+  const { products } = useProductListContext();
+  return <div className={className}>{products.length > 0 ? children : emptyState}</div>;
 };
 
 const ProductListProduct = ({
@@ -231,7 +234,7 @@ export const ProductList = {
   },
 
   Products: ProductListProducts,
-  Product: ProductListProduct,
+  ProductRepeter: ProductListProduct,
   EmptyState: ProductListEmptyState,
 };
 
@@ -250,22 +253,18 @@ export default function App() {
           <ProductList.Filters />
         </div>
 
-        <ProductList.Products className="pt-4">
+        <ProductList.Products className="pt-4" emptyState={<p>No products found.</p>}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <ProductList.Product className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <ProductList.ProductRepeter className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
               <Product.Name asChild>
                 <h2 className="text-xl font-semibold text-gray-800" />
               </Product.Name>
               <Product.Price asChild>
                 <span className="text-lg font-bold text-green-600 mt-1 block" />
               </Product.Price>
-            </ProductList.Product>
+            </ProductList.ProductRepeter>
           </div>
         </ProductList.Products>
-
-        <ProductList.EmptyState className="text-center bg-white p-8 rounded-lg text-gray-500 shadow-md">
-          <p className="text-lg">No products found.</p>
-        </ProductList.EmptyState>
       </ProductList.Root>
     </div>
   );

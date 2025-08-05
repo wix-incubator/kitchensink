@@ -35,6 +35,7 @@ interface ProductRootProps {
 ---
 
 ### Product.Loading
+// OPEN ISSUE: how do we define the loading state?
 
 Displays loading state while product data is being fetched.
 
@@ -64,7 +65,11 @@ Provides direct access to product context data. Should be used only in rare case
 **Props**
 ```tsx
 interface ProductRawProps {
-  children: React.ForwardRefRenderFunction<HTMLElement, ProductContextData>;
+  children: React.ForwardRefRenderFunction<HTMLElement, {
+    isLoading: boolean;
+    product: Product;
+    selectedVariant: SelectedVariant;
+  }>;
   asChild?: boolean;
 }
 ```
@@ -72,7 +77,7 @@ interface ProductRawProps {
 **Example**
 ```tsx
 <Product.Raw>
-  {React.forwardRef(({product, selectedVariant, ...props}, ref) => (
+  {React.forwardRef(({product, selectedVariant, isLoading, ...props}, ref) => (
     <div ref={ref} {...props}>
       Custom product implementation
     </div>
@@ -245,6 +250,7 @@ interface ProductVariantOptionsProps {
   children?: React.ForwardRefRenderFunction<HTMLElement, {
     options: Option[];
   }>;
+  emptyState?: React.ReactNode;
 }
 ```
 **Example**
@@ -294,13 +300,26 @@ interface ProductModifierOptionsProps {
   children?: React.ForwardRefRenderFunction<HTMLElement, {
     options: Option[];
   }>;
+  emptyState?: React.ReactNode;
+}
+interface ProductModifierOptionRepeterProps {
+  children?: React.ForwardRefRenderFunction<HTMLElement, Omit<Option, 'option'>>;
 }
 ```
 **Example**
 ```tsx
 <Product.Modifiers>
   <Product.ModifierOptions>
-    <Product.ModifierOption {/* option={option} */}  />
+    <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']} {/* array of<Option.Root option={option} /> */} >
+      <Option.Name/>
+      <Option.Choices>
+        <Option.ChoiceRepeter>
+          <Choice.Text/>
+          <Choice.Color/>
+          <Choice.FreeText/>
+        </Option.ChoiceRepeter>
+      </Option.Choices>
+    </Product.ModifierOptionRepeter>
   </Product.ModifierOptions>
 </Product.Modifiers>
 ```
@@ -344,6 +363,7 @@ interface OptionProps {
   option: Option;
   children: React.ReactNode;
   onValueChange?: (value: string) => void;
+  allowedTypes?: ('color' | 'text' | 'free-text')[]; // default - ['color', 'text', 'free-text'] - the types of the options to render
 }
 
 interface Option {
@@ -354,7 +374,7 @@ interface Option {
 
 **Example**
 ```tsx
-<Option.Root option={option} onValueChange={() => {}}>
+<Option.Root option={option} onValueChange={() => {}} allowedTypes={['color', 'text']}>
   <Option.Raw asChild>
     {React.forwardRef(({option, onValueChange, ...props}, ref) => (
       <div ref={ref} {...props}>
@@ -365,7 +385,9 @@ interface Option {
 </Option.Root>
 ```
 
----
+**Data Attributes**
+- `data-testid="option"` - Applied to choice buttons
+- `data-type` - The type of the option 'color' | 'text' | 'free-text'
 
 ---
 
@@ -390,7 +412,65 @@ interface OptionNameProps {
 
 ---
 
-### Option.FreeText
+
+### Option.Choices
+
+A container for rendering the available choices for a given option (e.g., the set of color swatches, text buttons, or free text input for a variant or modifier option).
+It does not render any UI by itself, but is used to group the available choices for an option.
+
+It is used to render the choices for an option, and is used to render the choices for an option.
+
+**Props**
+```tsx
+interface OptionChoicesProps {
+  children: React.ReactNode;
+}
+```
+**Data Attributes**
+- `data-testid="option-choices"` - Applied to choices container
+- `data-type` - The type of the option 'color' | 'text' | 'free-text'
+
+---
+
+### Choice.Root/Option.ChoiceRepeter
+
+A container for a single choice (e.g., a color swatch, text button, or free text input for a variant or modifier option).
+The Choice.Root acts as a trigger for the choice (selecting it).
+
+**Props**
+```tsx
+interface Choice {
+  colorCode?: string;
+  choiceId?: string | null;
+  linkedMedia?: ProductMedia[];
+  type?: 'color' | 'text' | 'free-text';
+  key?: string;
+  name?: string | null;
+  addedPrice?: string | null;
+}
+interface ChoiceRootProps {
+  children: React.ForwardRefRenderFunction<HTMLElement, {
+    choice: Choice;
+    onValueChange: (value: string) => void;
+  }>;
+  asChild?: boolean;
+}
+```
+
+**Example**
+```tsx
+<Choice.Root>
+  <Choice.FreeText />
+</Choice.Root>
+```
+
+**Data Attributes**
+- `data-testid="choice"` - Applied to choice container
+- `data-type` - The type of the option 'color' | 'text' | 'free-text'
+
+---
+
+### Choice.FreeText
 
 Provides a free text input for variant selection.
 
@@ -406,7 +486,7 @@ interface FreeTextSettings {
     title?: string;
 }
 
-interface OptionFreeTextProps {
+interface ChoiceFreeTextProps {
   asChild?: boolean;
   children?: React.ForwardRefRenderFunction<HTMLTextAreaElement, FreeTextSettings>;
 }
@@ -415,10 +495,10 @@ interface OptionFreeTextProps {
 **Example**
 ```tsx
 // Default usage
-<Option.FreeText className="p-3 border rounded-lg" />
+<Choice.FreeText className="p-3 border rounded-lg" />
 
 // Custom rendering with forwardRef
-<Option.FreeText asChild>
+<Choice.FreeText asChild>
   {React.forwardRef(({value, minCharCount, maxCharCount, ...props}, ref) => (
     <textarea 
       ref={ref}
@@ -427,18 +507,23 @@ interface OptionFreeTextProps {
       rows={3}
     />
   ))}
-</Option.FreeText>
+</Choice.FreeText>
 ```
+
+**Data Attributes**
+- `data-testid="choice-free-text"` - Applied to free text input
+- `data-selected` - Is Choice selected
+- `disabled` - Is Choice disabled (not in stock)
 
 ---
 
-### Option.Text
+### Choice.Text
 
-Text-based option choice button.
+Text-based choice button.
 
 **Props**
 ```tsx
-interface OptionTextProps {
+interface ChoiceTextProps {
   asChild?: boolean;
   children?: React.ForwardRefRenderFunction<HTMLButtonElement, {
     id: string;
@@ -447,26 +532,27 @@ interface OptionTextProps {
 }
 ```
 
-**Data Attributes**
-- `data-testid="product-modifier-choice-button"` - Applied to choice buttons
-- `data-selected` - Is option selected
-- `disabled` - Is option disabled (not in stock)
-
 **Example**
 ```tsx
 // Default usage
-<Option.Text className="px-4 py-2 border rounded-lg" />
+<Choice.Text className="px-4 py-2 border rounded-lg" />
 ```
+
+**Data Attributes**
+- `data-testid="choice-text"` - Applied to choice buttons
+- `data-selected` - Is Choice selected
+- `disabled` - Is Choice disabled (not in stock)
+
 
 ---
 
-### Option.Color
+### Choice.Color
 
-Color swatch option choice.
+Color swatch choice.
 
 **Props**
 ```tsx
-interface OptionColorProps {
+interface ChoiceColorProps {
   asChild?: boolean;
   children?: React.ForwardRefRenderFunction<HTMLButtonElement, {
     colorCode: string;
@@ -477,17 +563,17 @@ interface OptionColorProps {
 ```
 
 **Data Attributes**
-- `data-testid="product-modifier-choice-button"` - Applied to color swatches
-- `data-selected` - Is option selected
-- `disabled` - Is option disabled (not in stock)
+- `data-testid="choice-color"` - Applied to color swatches
+- `data-selected` - Is Choice selected
+- `disabled` - Is Choice disabled (not in stock)
 
 **Example**
 ```tsx
 // Default usage
-<Option.Color className="w-10 h-10 rounded-full border-4" />
+<Choice.Color className="w-10 h-10 rounded-full border-4" />
 
 // Custom rendering with forwardRef
-<Option.Color asChild>
+<Choice.Color asChild>
   {React.forwardRef(({colorCode, name, ...props}, ref) => (
     <button 
       ref={ref}
@@ -495,10 +581,9 @@ interface OptionColorProps {
       style={{backgroundColor: colorCode}}
       className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg scale-110"
       title={name}
-      data-testid="product-modifier-choice-button"
     />
   ))}
-</Option.Color>
+</Choice.Color>
 ```
 
 ---
@@ -651,7 +736,7 @@ interface ProductMediaGalleryProps extends Omit<MediaGalleryRootProps, 'items'> 
   <MediaGallery.Previous />
   <MediaGallery.Next />
   <MediaGallery.Thumbnails>
-    <MediaGallery.Thumbnail />
+    <MediaGallery.ThumbnailRepeter />
   </MediaGallery.Thumbnails>
 </Product.MediaGallery>
 ```
@@ -769,7 +854,7 @@ interface MediaGalleryThumbnailsProps {
 **Example**
 ```tsx
 <MediaGallery.Thumbnails>
-  <MediaGallery.Thumbnail />
+  <MediaGallery.ThumbnailRepeter />
 </MediaGallery.Thumbnails>
 ```
 
@@ -778,7 +863,8 @@ interface MediaGalleryThumbnailsProps {
 
 ---
 
-### MediaGallery.Thumbnail
+### MediaGallery.ThumbnailRepeter
+Renders a list of thumbnails. (list of <MediaGallery.Thumbnail />)
 
 Media gallery thumbnail.
 
@@ -876,28 +962,78 @@ interface ProductActionProps {
 - `disabled` - can't perform action. i.e. - add to cart (missing values, out of stock, etc)
 
 ---
-**Open issue** - do we need something for selected variant? or should we mask from user
 
-### Product.SelectedVariant
+### Product.InfoSections/InfoSection.Root/InfoSection.Title/InfoSection.Content
 
-Provides context for the currently selected product variant.
-
-**Props**
 ```tsx
-interface ProductSelectedVariantProps {
-  asChild?: boolean;
+interface ProductInfoSectionsProps {
   children: React.ReactNode;
+}
+interface ProductInfoSectionRootProps {
+  children: React.ReactNode;
+  infoSection: InfoSection;
 }
 ```
 
-**Contains:**
-- SelectedVariant.Price
-- SelectedVariant.SKU
-- SelectedVariant.Details
+**Example**
+```tsx
+<Product.InfoSections>
+  <Product.InfoSectionRepeter> // renders InfoSection.Root
+    <InfoSection.Title />
+    <InfoSection.Content /> // renders the content of the info section using Ricos
+  </Product.InfoSectionRepeter>
+</Product.InfoSections>
+
+// with Accordion
+<Product.InfoSections>
+  <Accordion.Root>
+    <Product.InfoSectionRepeter>
+       <Accordion.Item>
+        <Accordion.Trigger>
+          <InfoSection.Title />
+        </Accordion.Trigger>
+        <Accordion.Content>
+          <InfoSection.Content /> // renders the content of the info section using Ricos
+        </Accordion.Content>
+      </Accordion.Item>
+    </Product.InfoSectionRepeter>
+  </Accordion.Root>
+</Product.InfoSections>
+```
+
+**Data Attributes**
+- `data-testid="info-section"` - Applied to info section container
+- `data-testid="info-section-title"` - Applied to info section title
+- `data-testid="info-section-content"` - Applied to info section content
 
 ---
 
-## Data Attributes Reference
+### Product.Subscriptions/Subscription.Root/Subscription.Title/Subscription.Root
+
+```tsx
+interface ProductSubscriptionsProps {
+  children: React.ReactNode;
+}
+interface SubscriptionRootProps {
+  children: React.ReactNode;
+  subscription: Subscription;
+}
+```
+**Example**
+```tsx
+<Product.Subscriptions emptyState={<p>No subscriptions available</p>}>
+  <Product.SubscriptionRepeter>
+    <Subscription.Title/>
+  </Product.SubscriptionRepeter>
+</Product.Subscriptions>
+```
+
+**Data Attributes**
+- `data-testid="subscription"` - Applied to subscription container
+- `data-testid="subscription-title"` - Applied to subscription title
+
+---
+
 
 | Attribute | Applied To | Purpose |
 |-----------|------------|---------|
@@ -915,7 +1051,7 @@ interface ProductSelectedVariantProps {
 
 ## Usage Examples
 
-### Basic Usage (Default Components)
+### Basic Usage (Default Components) - how should Kitchensink look like
 ```tsx
 function BasicProduct() {
   const product = useProduct();
@@ -924,7 +1060,7 @@ function BasicProduct() {
     <Product.Root product={product}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Media Gallery */}
-        <Product.MediaGallery 
+        <Product.MediaGallery
           infinite={true}
           autoPlay={false}
           direction="forward"
@@ -933,7 +1069,9 @@ function BasicProduct() {
           <MediaGallery.Previous className="absolute left-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full" />
           <MediaGallery.Next className="absolute right-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full" />
           <MediaGallery.Thumbnails>
-            <MediaGallery.Thumbnail className="w-16 h-16 rounded-lg border-2 cursor-pointer" />
+            <MediaGallery.ThumbnailRepeter>
+              <MediaGallery.Thumbnail className="w-16 h-16 rounded-lg border-2 cursor-pointer" />
+            </MediaGallery.ThumbnailRepeter>
           </MediaGallery.Thumbnails>
         </Product.MediaGallery>
 
@@ -950,27 +1088,40 @@ function BasicProduct() {
           <Product.Description as="html" className="text-content-secondary prose max-w-none" />
           
           {/* Product Variants */}
-          <Product.VariantOptions>
-            <Product.VariantOption>
-              <Option.Root>
-                <Option.Name className="text-lg font-medium mb-3" />
-                <div className="flex flex-wrap gap-2">
-                  <Option.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
-                  <Option.Text className="px-4 py-2 border rounded-lg transition-colors data-[selected]:bg-brand-primary data-[selected]:text-white" />
-                </div>
-              </Option.Root>
-            </Product.VariantOption>
-          </Product.VariantOptions>
+          <Product.Variants>
+            <Product.VariantOptions>
+              <Product.VariantOptionRepeter>
+                <Option.Root>
+                  <Option.Name className="text-lg font-medium mb-3" />
+                  <Option.Choices>
+                    <Option.ChoiceRepeter>
+                      <Choice.FreeText className="w-full p-3 border rounded-lg resize-none" rows={3} />
+                      <Choice.Text className="px-4 py-2 border rounded-lg transition-colors data-[selected]:bg-brand-primary data-[selected]:text-white" />
+                      <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
+                    </Option.ChoiceRepeter>
+                  </Option.Choices>
+                </Option.Root>
+              </Product.VariantOptionRepeter>
+            </Product.VariantOptions>
+          </Product.Variants>
 
           {/* Product Modifiers */}
-          <Product.ModifierOptions>
-            <Product.ModifierOption>
-              <Option.Root>
-                <Option.Name className="text-lg font-medium mb-3" />
-                <Option.FreeText className="w-full p-3 border rounded-lg resize-none" rows={3} />
-              </Option.Root>
-            </Product.ModifierOption>
-          </Product.ModifierOptions>
+          <Product.Modifiers>
+            <Product.ModifierOptions>
+              <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
+                <Option.Root>
+                  <Option.Name className="text-lg font-medium mb-3" />
+                  <Option.Choices>
+                    <Option.ChoiceRepeter>
+                      <Choice.FreeText className="w-full p-3 border rounded-lg resize-none" rows={3} />
+                      <Choice.Text className="px-4 py-2 border rounded-lg transition-colors data-[selected]:bg-brand-primary data-[selected]:text-white" />
+                      <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
+                    </Option.ChoiceRepeter>
+                  </Option.Choices>
+                </Option.Root>
+              </Product.ModifierOptionRepeter>
+            </Product.ModifierOptions>
+          </Product.Modifiers>
 
           {/* Quantity Selection */}
           <Product.Quantity steps={1}>
@@ -980,6 +1131,18 @@ function BasicProduct() {
               <Quantity.Increment className="px-4 py-2 hover:bg-surface-primary transition-colors" />
             </div>
           </Product.Quantity>
+
+          {/* Product Subscriptions */}
+          <Product.Subscriptions emptyState={<p className="text-content-muted">No subscriptions available</p>}>
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-content-primary">Available Subscriptions</h3>
+              <Product.SubscriptionRepeter>
+                <div className="p-3 border border-brand-light rounded-lg">
+                  <Subscription.Title className="font-medium text-content-primary" />
+                </div>
+              </Product.SubscriptionRepeter>
+            </div>
+          </Product.Subscriptions>
 
           {/* Product Actions */}
           <div className="space-y-3">
@@ -992,6 +1155,19 @@ function BasicProduct() {
               className="w-full btn-secondary py-3 text-lg font-semibold" 
             />
           </div>
+
+          {/* Product Info Sections */}
+          <Product.InfoSections>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-content-primary">Product Information</h3>
+              <Product.InfoSectionRepeter>
+                <div className="border-b border-brand-subtle pb-4">
+                  <InfoSection.Title className="text-base font-medium text-content-primary mb-2" />
+                  <InfoSection.Content className="text-content-secondary prose prose-sm max-w-none" />
+                </div>
+              </Product.InfoSectionRepeter>
+            </div>
+          </Product.InfoSections>
 
           {/* Social Sharing */}
           <div className="flex gap-2">
@@ -1098,40 +1274,127 @@ function CustomizedProduct() {
           </Product.Description>
 
           {/* Enhanced Variants with Labels */}
-          <Product.VariantOptions>
-            <Product.VariantOption>
-              <Option.Root>
-                <Option.Name asChild>
-                  {React.forwardRef(({option, ...props}, ref) => (
-                    <div ref={ref} {...props} className="mb-4">
-                      <h4 className="text-lg font-semibold text-content-primary">
-                        Choose {option.name}
-                      </h4>
-                      <p className="text-sm text-content-muted">Select your preferred {option.name.toLowerCase()}</p>
-                    </div>
-                  ))}
-                </Option.Name>
-                
-                <div className="grid grid-cols-4 gap-3">
-                  <Option.Color asChild>
-                    {React.forwardRef(({colorCode, name, id, ...props}, ref) => (
-                      <div className="text-center">
-                        <button
-                          ref={ref}
-                          {...props}
-                          style={{ backgroundColor: colorCode }}
-                          className="w-12 h-12 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:scale-110 data-[selected]:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                          title={name}
-                          data-testid="product-modifier-choice-button"
-                        />
-                        <span className="text-xs text-content-secondary mt-1 block">{name}</span>
+          <Product.Variants>
+            <Product.VariantOptions>
+              <Product.VariantOptionRepeter>
+                <Option.Root>
+                  <Option.Name asChild>
+                    {React.forwardRef(({option, ...props}, ref) => (
+                      <div ref={ref} {...props} className="mb-4">
+                        <h4 className="text-lg font-semibold text-content-primary">
+                          Choose {option.name}
+                        </h4>
+                        <p className="text-sm text-content-muted">Select your preferred {option.name.toLowerCase()}</p>
                       </div>
                     ))}
-                  </Option.Color>
-                </div>
-              </Option.Root>
-            </Product.VariantOption>
-          </Product.VariantOptions>
+                  </Option.Name>
+                  
+                  <Option.Choices>
+                    <div className="grid grid-cols-4 gap-3">
+                      <Option.ChoiceRepeter>
+                        <Choice.Color asChild>
+                          {React.forwardRef(({colorCode, name, id, ...props}, ref) => (
+                            <div className="text-center">
+                              <button
+                                ref={ref}
+                                {...props}
+                                style={{ backgroundColor: colorCode }}
+                                className="w-12 h-12 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:scale-110 data-[selected]:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title={name}
+                                data-testid="product-modifier-choice-button"
+                              />
+                              <span className="text-xs text-content-secondary mt-1 block">{name}</span>
+                            </div>
+                          ))}
+                        </Choice.Color>
+                        <Choice.Text asChild>
+                          {React.forwardRef(({name, ...props}, ref) => (
+                            <Button
+                              ref={ref}
+                              {...props}
+                              variant="outline"
+                              className="data-[selected]:bg-brand-primary data-[selected]:text-white data-[selected]:border-brand-primary"
+                            >
+                              {name}
+                            </Button>
+                          ))}
+                        </Choice.Text>
+                      </Option.ChoiceRepeter>
+                    </div>
+                  </Option.Choices>
+                </Option.Root>
+              </Product.VariantOptionRepeter>
+            </Product.VariantOptions>
+          </Product.Variants>
+          
+          {/* Enhanced Modifiers */}
+          <Product.Modifiers>
+            <Product.ModifierOptions>
+              <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
+                <Option.Root>
+                  <Option.Name asChild>
+                    {React.forwardRef(({option, ...props}, ref) => (
+                      <div ref={ref} {...props} className="mb-4">
+                        <h4 className="text-lg font-semibold text-content-primary">
+                          {option.name}
+                        </h4>
+                        <p className="text-sm text-content-muted">Customize your {option.name.toLowerCase()}</p>
+                      </div>
+                    ))}
+                  </Option.Name>
+                  
+                  <Option.Choices>
+                    <Option.ChoiceRepeter>
+                      <Choice.FreeText asChild>
+                        {React.forwardRef(({minCharCount, maxCharCount, title, ...props}, ref) => (
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-content-primary">{title}</label>
+                            <textarea
+                              ref={ref}
+                              {...props}
+                              className="w-full p-3 border border-brand-light rounded-lg resize-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                              rows={3}
+                              placeholder={`Enter your custom text (${minCharCount}-${maxCharCount} characters)`}
+                            />
+                          </div>
+                        ))}
+                      </Choice.FreeText>
+                      <Choice.Text asChild>
+                        {React.forwardRef(({name, addedPrice, ...props}, ref) => (
+                          <Button
+                            ref={ref}
+                            {...props}
+                            variant="outline"
+                            className="flex justify-between items-center data-[selected]:bg-brand-primary data-[selected]:text-white data-[selected]:border-brand-primary"
+                          >
+                            <span>{name}</span>
+                            {addedPrice && <span className="text-xs">{addedPrice}</span>}
+                          </Button>
+                        ))}
+                      </Choice.Text>
+                      <Choice.Color asChild>
+                        {React.forwardRef(({colorCode, name, addedPrice, ...props}, ref) => (
+                          <div className="text-center">
+                            <button
+                              ref={ref}
+                              {...props}
+                              style={{ backgroundColor: colorCode }}
+                              className="w-12 h-12 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:scale-110 data-[selected]:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                              title={name}
+                            />
+                            <div className="mt-1">
+                              <span className="text-xs text-content-secondary block">{name}</span>
+                              {addedPrice && <span className="text-xs text-brand-primary">{addedPrice}</span>}
+                            </div>
+                          </div>
+                        ))}
+                      </Choice.Color>
+                    </Option.ChoiceRepeter>
+                  </Option.Choices>
+                </Option.Root>
+              </Product.ModifierOptionRepeter>
+            </Product.ModifierOptions>
+          </Product.Modifiers>
 
           {/* Custom Quantity with Stock Info */}
           <Quantity.Root steps={1} onValueChange={(value) => console.log('Quantity:', value)}>
@@ -1176,6 +1439,28 @@ function CustomizedProduct() {
             </div>
           </Quantity.Root>
 
+          {/* Enhanced Subscriptions */}
+          <Product.Subscriptions emptyState={<div className="text-center py-8 text-content-muted">No subscription options available for this product</div>}>
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-content-primary">Subscription Options</h4>
+              <Product.SubscriptionRepeter>
+                <div className="p-4 border-2 border-brand-light rounded-lg hover:border-brand-primary transition-colors cursor-pointer data-[selected]:border-brand-primary data-[selected]:bg-brand-light/5">
+                  <Subscription.Title asChild>
+                    {React.forwardRef(({subscription, ...props}, ref) => (
+                      <div ref={ref} {...props} className="flex justify-between items-center">
+                        <div>
+                          <h5 className="font-semibold text-content-primary">{subscription.title}</h5>
+                          <p className="text-sm text-content-secondary">{subscription.description}</p>
+                        </div>
+                        <Badge variant="secondary">Save {subscription.discount}%</Badge>
+                      </div>
+                    ))}
+                  </Subscription.Title>
+                </div>
+              </Product.SubscriptionRepeter>
+            </div>
+          </Product.Subscriptions>
+
           {/* Enhanced Action Buttons */}
           <div className="space-y-3">
             <Product.Action.AddToCart asChild>
@@ -1192,6 +1477,35 @@ function CustomizedProduct() {
               </Button>
             </Product.Action.BuyNow>
           </div>
+
+          {/* Enhanced Product Info Sections with Accordion */}
+          <Product.InfoSections>
+            <div className="space-y-6">
+              <h4 className="text-lg font-semibold text-content-primary">Detailed Information</h4>
+              <Accordion type="multiple" className="w-full">
+                <Product.InfoSectionRepeter>
+                  <Accordion.Item value="info-section" className="border-b">
+                    <Accordion.Trigger className="flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180">
+                      <InfoSection.Title className="text-left font-medium text-content-primary" />
+                      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                    </Accordion.Trigger>
+                    <Accordion.Content className="pb-4 pt-0">
+                      <InfoSection.Content asChild>
+                        {React.forwardRef(({content, ...props}, ref) => (
+                          <div 
+                            ref={ref} 
+                            {...props} 
+                            className="prose prose-sm max-w-none text-content-secondary"
+                            dangerouslySetInnerHTML={{ __html: content }}
+                          />
+                        ))}
+                      </InfoSection.Content>
+                    </Accordion.Content>
+                  </Accordion.Item>
+                </Product.InfoSectionRepeter>
+              </Accordion>
+            </div>
+          </Product.InfoSections>
 
           {/* Custom Social Sharing */}
           <div className="border-t border-brand-subtle pt-6">
@@ -1242,18 +1556,63 @@ function MinimalProduct() {
       <div className="max-w-md mx-auto space-y-4 p-6 border rounded-lg">
         <Product.MediaGallery>
           <MediaGallery.Viewport className="aspect-square rounded-lg" />
+          <MediaGallery.Thumbnails>
+            <MediaGallery.ThumbnailRepeter>
+              <MediaGallery.Thumbnail as="div" className="w-2 h-2 rounded-full cursor-pointer" />
+            </MediaGallery.ThumbnailRepeter>
+          </MediaGallery.Thumbnails>
         </Product.MediaGallery>
         
-        <Product.Name className="text-2xl font-bold" />
+        <Product.Name className="text-2xl font-bold text-content-primary" />
         <Product.Price className="text-xl font-semibold text-brand-primary" />
         
-        <Product.Quantity>
-          <Quantity.Decrement />
-          <Quantity.Input className="w-16 text-center" />
-          <Quantity.Increment />
+        {/* Basic Variants */}
+        <Product.Variants>
+          <Product.VariantOptions>
+            <Product.VariantOptionRepeter>
+              <Option.Root>
+                <Option.Name className="font-medium mb-2" />
+                <Option.Choices>
+                  <Option.ChoiceRepeter>
+                    <Choice.Text className="px-3 py-1 border rounded text-sm" />
+                    <Choice.Color className="w-8 h-8 rounded-full border-2" />
+                  </Option.ChoiceRepeter>
+                </Option.Choices>
+              </Option.Root>
+            </Product.VariantOptionRepeter>
+          </Product.VariantOptions>
+        </Product.Variants>
+        
+        <Product.Quantity steps={1}>
+          <div className="flex items-center border rounded">
+            <Quantity.Decrement className="px-3 py-2" />
+            <Quantity.Input className="w-16 text-center border-x" />
+            <Quantity.Increment className="px-3 py-2" />
+          </div>
         </Product.Quantity>
         
-        <Product.Action.AddToCart label="Add to Cart" className="w-full" />
+        {/* Simple Subscriptions */}
+        <Product.Subscriptions>
+          <Product.SubscriptionRepeter>
+            <div className="p-2 border rounded text-sm">
+              <Subscription.Title className="font-medium" />
+            </div>
+          </Product.SubscriptionRepeter>
+        </Product.Subscriptions>
+        
+        <Product.Action.AddToCart label="Add to Cart" className="w-full btn-primary" />
+        
+        {/* Basic Info Sections */}
+        <Product.InfoSections>
+          <Product.InfoSectionRepeter>
+            <details className="border rounded p-2">
+              <summary className="cursor-pointer font-medium">
+                <InfoSection.Title />
+              </summary>
+              <InfoSection.Content className="mt-2 text-sm text-content-secondary" />
+            </details>
+          </Product.InfoSectionRepeter>
+        </Product.InfoSections>
       </div>
     </Product.Root>
   );
