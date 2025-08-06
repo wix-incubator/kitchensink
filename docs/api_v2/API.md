@@ -114,5 +114,8 @@ See the [Platform](./PLATFORM_INTERFACE.md) API
   ```
   The current is more oppinionated, and also involves both dom and headless logic, which is not ideal.
   The alternative is more flexible but requires more code
-  
+
 - There is no Button in radix-ui, it is shadcn/ui only, which comps should not be implemented as headless, but only in components/ui/ folder.
+
+- Empty state - I chose <Comp.Items emptyState={<div>No products found.</div>} />, should we use Comp.EmptyState?
+ - I am afraid that the discovery of the second option is not as good, I also think that .Empty is more suitable for when there list is not empty but showing some empty results, such as in [radix-ui/command](https://ui.shadcn.com/docs/components/command)
