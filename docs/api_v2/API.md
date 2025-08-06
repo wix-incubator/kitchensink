@@ -71,8 +71,8 @@ You should not rely on isSelected, isDisabled, etc. properties.
 ## Product
 See the [Product](./PRODUCT_INTERFACE.md) API
 
-## Cart
-See the [Cart](./CART_INTERFACE.md) API
+## Commerce
+See the [Commerce](./ECOM_INTERFACE.md) API
 
 ## Product List
 See the [Product List](./PRODUCT_LIST_INTERFACE.md) API
@@ -101,21 +101,3 @@ See the [Platform](./PLATFORM_INTERFACE.md) API
 - Do we need a ProductVariant component? or is everying we need is already covered by the Product.Root (it is implicit)?
 
 - Texts - for example "showing {count} products" how do we handle it (these would require probably label props and render props)? is filtered (we can use Filter.Filtered component)?
-
-- Actions - for example, add to cart, buy now, checkout, etc.
-  - Currently are defined as complete component with UI and label, maybe we should use a trigger pattern (no dom so no need for asChild):
-  ```tsx
-  // current
-  <Cart.Action.AddToCart label="Add to Cart">
-  // alternative
-  <Cart.Action.AddToCart loading={<button>Loading...</button>}>
-    <button>Add to Cart</button>
-  </Cart.Action.AddToCart>
-  ```
-  The current is more oppinionated, and also involves both dom and headless logic, which is not ideal.
-  The alternative is more flexible but requires more code
-
-- There is no Button in radix-ui, it is shadcn/ui only, which comps should not be implemented as headless, but only in components/ui/ folder.
-
-- Empty state - I chose <Comp.Items emptyState={<div>No products found.</div>} />, should we use Comp.EmptyState?
- - I am afraid that the discovery of the second option is not as good, I also think that .Empty is more suitable for when there list is not empty but showing some empty results, such as in [radix-ui/command](https://ui.shadcn.com/docs/components/command)

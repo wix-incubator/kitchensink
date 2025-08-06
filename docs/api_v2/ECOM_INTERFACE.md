@@ -296,9 +296,9 @@ interface CartSummaryProps {
 **Example**
 ```tsx
 <Cart.Summary className="border-t pt-4 space-y-2">
-  <Cart.Price label="Total" />
-  <Cart.Tax label="Tax" />
-  <Cart.Discount label="Discount" />
+  <Cart.Totals.Price label="Total" />
+  <Cart.Totals.Tax label="Tax" />
+  <Cart.Totals.Discount label="Discount" />
 </Cart.Summary>
 ```
 
@@ -530,7 +530,7 @@ interface CartErrorsProps {
 
 ---
 
-### Cart.Price/Cart.Tax/Cart.Discount
+### Cart.Totals.Price/Cart.Totals.Tax/Cart.Totals.Discount
 
 Displays the cart total price.
 
@@ -552,17 +552,17 @@ interface CartPriceProps {
 **Example**
 ```tsx
 // Default usage
-<Cart.Price className="text-xl font-bold text-content-primary" label="Total" />
+<Cart.Totals.Price className="text-xl font-bold text-content-primary" label="Total" />
 
 // Custom rendering with forwardRef
-<Cart.Price asChild>
+<Cart.Totals.Price asChild>
   {React.forwardRef(({formattedPrice, label, ...props}, ref) => (
     <div ref={ref} {...props} className="flex justify-between items-center">
       <span className="text-lg font-semibold">{label}:</span>
       <span className="text-xl font-bold text-content-primary">{formattedPrice}</span>
     </div>
   ))}
-</Cart.Price>
+</Cart.Totals.Price>
 ```
 
 ---
@@ -596,7 +596,7 @@ See [Quantity.Root](./PLATFORM_INTERFACE.md#quantityroot) for more details.
 
 ---
 
-### Cart.Actions.AddToCart/Cart.Actions.BuyNow
+### Commerce.Actions.AddToCart/Commerce.Actions.BuyNow
 
 Add to cart and buy now action buttons.
 
@@ -624,16 +624,16 @@ interface CartActionsProps {
 **Example**
 ```tsx
 // Default usage
-<Cart.Actions.AddToCart label="add to cart" className="w-full btn-primary" />
+<Commerce.Actions.AddToCart label="add to cart" className="w-full btn-primary" />
 
 // Custom rendering with forwardRef
-<Cart.Actions.BuyNow asChild label="Buy Now">
+<Commerce.Actions.BuyNow asChild label="Buy Now">
   <button/>
-</Cart.Actions.BuyNow>
+</Commerce.Actions.BuyNow>
 ```
 
 **Important**
-The implementation of these buttons should be done by rendering Cart.Actions.AddToCart and Cart.Actions.BuyNow which are ecommerce headless components.
+The implementation of these buttons should be done by rendering Commerce.Actions.AddToCart and Commerce.Actions.BuyNow which are ecommerce headless components.
 
 **Data Attributes**
 - `disabled` - can't perform action. i.e. - add to cart (missing values, out of stock, etc)
@@ -641,7 +641,7 @@ The implementation of these buttons should be done by rendering Cart.Actions.Add
 
 ---
 
-### Cart.Actions.Checkout
+### Commerce.Actions.Checkout
 
 Checkout action button.
 
@@ -661,14 +661,14 @@ interface CartActionsCheckoutProps {
 **Example**
 ```tsx
 // Default usage
-<Cart.Actions.Checkout label="Checkout" className="w-full btn-primary" />
+<Commerce.Actions.Checkout label="Checkout" className="w-full btn-primary" />
 
 // Custom rendering with forwardRef
-<Cart.Actions.Checkout asChild label="Checkout">
+<Commerce.Actions.Checkout asChild label="Checkout">
   <button/>
-</Cart.Actions.Checkout>
+</Commerce.Actions.Checkout>
 
-<Cart.Actions.Checkout asChild label="Checkout">
+<Commerce.Actions.Checkout asChild label="Checkout">
   {React.forwardRef(({disabled, isLoading, onClick, ...props}, ref) => (
     <button
       ref={ref}
@@ -680,7 +680,7 @@ interface CartActionsCheckoutProps {
       {isLoading ? 'Checking out...' : 'Checkout'}
     </button>
   ))}
-</Cart.Actions.Checkout>
+</Commerce.Actions.Checkout>
 ```
 
 **Data Attributes**
@@ -779,17 +779,17 @@ function BasicCart() {
         <Cart.Summary className="border border-brand-light rounded-lg p-4 space-y-3">
           <h3 className="text-lg font-semibold text-content-primary">Order Summary</h3>
           <div className="space-y-2">
-            <Cart.Tax className="flex justify-between text-sm text-content-secondary" label="Tax" />
-            <Cart.Discount className="flex justify-between text-sm text-status-success" label="Discount" />
+            <Cart.Totals.Tax className="flex justify-between text-sm text-content-secondary" label="Tax" />
+            <Cart.Totals.Discount className="flex justify-between text-sm text-status-success" label="Discount" />
             <div className="border-t border-brand-light pt-2">
-              <Cart.Price className="flex justify-between text-xl font-bold text-content-primary" label="Total" />
+              <Cart.Totals.Price className="flex justify-between text-xl font-bold text-content-primary" label="Total" />
             </div>
           </div>
         </Cart.Summary>
 
         {/* Checkout Actions */}
         <div className="space-y-3">
-          <Cart.Actions.Checkout label="Checkout" className="w-full btn-primary" />
+          <Commerce.Actions.Checkout label="Checkout" className="w-full btn-primary" />
         </div>
       </div>
     </Cart.Root>
@@ -1098,23 +1098,23 @@ function AdvancedCart() {
                   <span>{cart?.formattedSubtotal}</span>
                 </div>
                 
-                <Cart.Tax asChild>
+                <Cart.Totals.Tax asChild>
                   {React.forwardRef(({formattedTax, ...props}, ref) => (
                     <div ref={ref} {...props} className="flex justify-between text-content-secondary">
                       <span>Estimated Tax</span>
                       <span>{formattedTax}</span>
                     </div>
                   ))}
-                </Cart.Tax>
+                </Cart.Totals.Tax>
                 
-                <Cart.Discount asChild>
+                <Cart.Totals.Discount asChild>
                   {React.forwardRef(({formattedDiscount, ...props}, ref) => (
                     <div ref={ref} {...props} className="flex justify-between text-status-success">
                       <span>Discount</span>
                       <span>-{formattedDiscount}</span>
                     </div>
                   ))}
-                </Cart.Discount>
+                </Cart.Totals.Discount>
                 
                 <div className="flex justify-between text-content-secondary">
                   <span>Shipping</span>
@@ -1123,18 +1123,18 @@ function AdvancedCart() {
                 
                 <Separator />
                 
-                <Cart.Price asChild>
+                <Cart.Totals.Price asChild>
                   {React.forwardRef(({formattedPrice, ...props}, ref) => (
                     <div ref={ref} {...props} className="flex justify-between text-xl font-bold text-content-primary">
                       <span>Total</span>
                       <span>{formattedPrice}</span>
                     </div>
                   ))}
-                </Cart.Price>
+                </Cart.Totals.Price>
               </div>
               
               <div className="mt-6 space-y-3">
-                <Cart.Actions.Checkout label="Checkout" className="w-full btn-primary" />
+                <Commerce.Actions.Checkout label="Checkout" className="w-full btn-primary" />
                 
                 <Button variant="outline" size="lg" className="w-full">
                   <ArrowLeft className="mr-2 h-4 w-4" />

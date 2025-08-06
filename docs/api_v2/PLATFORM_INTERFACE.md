@@ -1,3 +1,74 @@
+# Platform Interfaces
+Components which are not specific to a single vertical, serves as utilities for the verticals.
+
+### Sort.Root
+
+Container for sort controls.
+
+**Props**
+```tsx
+interface Sort {
+  fieldName: string;
+  order: 'asc' | 'desc';
+}
+
+interface SortRootProps {
+  sortOptions: Array<{
+    label: string;
+    fieldName: string;
+  }>;
+  children?: React.ReactNode;
+  value: Sort; // platform sort object, same one sent as query.sort
+  onChange: (value: Sort) => void;
+  children?: React.ForwardRefRenderFunction<HTMLElement, {
+    sortingOptions: Array<SortOptionProps>;
+    onChange: (value: Sort) => void;
+    value: Sort;
+  }>;
+  as: 'select' | 'list'; // default is 'select'
+}
+
+interface SortOptionProps {
+  fieldName?: string;
+  order?: 'asc' | 'desc';
+  label?: string;
+}
+```
+
+#### Sort.Option
+
+Single sort option, sets the sort field and/or order
+
+**Example**
+```tsx
+const sortOptions = [
+  { fieldName: 'price', label: 'Price: Low to High', order: 'asc' },
+  { fieldName: 'price', label: 'Price: High to Low', order: 'desc' },
+];
+
+<Sort.Root value={sort} onChange={setSort} sortOptions={sortOptions} as='select' className="w-full" />
+
+// set the options programmatically
+<Sort.Root value={sort} onChange={setSort} className="w-full">
+  <Sort.Option fieldName="price" order="asc" label="Price: Low to High" />
+  <Sort.Option fieldName="price" order="desc" label="Price: High to Low" />
+</Sort.Root>
+
+// set the options programmatically, using asChild
+<Sort.Root value={sort} onChange={setSort} className="w-full">
+  <Sort.Option fieldName="price" label="Price" />
+  <Sort.Option fieldName="name" label="Name" />
+  <Sort.Option order="asc" asChild>
+    <button>Ascending</button>
+  </Sort.Option>
+  <Sort.Option order="desc" asChild>
+    <button>Descending</button>
+  </Sort.Option>
+</Sort.Root>
+```
+
+---
+
 ### Filter.Root
 
 Container for filter controls.
@@ -92,6 +163,9 @@ interface RangeFilterProps {
 **Example**
 ```tsx
 <Filter.Root value={filter} onChange={setFilter}>
+  <Filter.Filtered>
+    <Filter.Action.Clear label="Clear Filters" />
+  </Filter.Filtered>
   <Filter.FilterOptions>
     <Filter.FilterOptionRepeater>
       <FilterOption.Label>
@@ -117,6 +191,80 @@ The function to update the filter is a function that takes a filter object and r
 When presenting the values for example in a range filter, it can use the value formatter in order to convert 10 to 10$
 The allowed types/display types are used in order to be able to set different styles for different types of filters, so the label can be rendered differently.
 the headless components can include just the renderprops mode for each filter type, but using shadcn we should provide basic implementations for each filter type. for example for a single filter we can have a radio button group, for a multi filter we can have a checkbox group, and for a range filter we can have a slider.
+
+---
+
+### Filter.Filtered
+
+Container that conditionally renders its children when filters are active.
+
+**Props**
+```tsx
+interface FilterFilteredProps {
+  children: React.ReactNode;
+}
+```
+
+**Data Attributes**
+- `data-testid="filter-filtered"` - Applied to filtered container
+- `data-has-filters` - Boolean indicating if any filters are active
+
+**Example**
+```tsx
+// Default usage - only shows when filters are active
+<Filter.Filtered>
+  <div className="bg-surface-card border-surface-primary p-4 rounded">
+    <p className="text-content-secondary">Active filters:</p>
+    <Filter.Action.Clear label="Clear All" />
+  </div>
+</Filter.Filtered>
+```
+
+---
+
+### Filter.Action.Clear
+
+Button to clear all active filters.
+
+**Props**
+```tsx
+interface FilterActionClearProps {
+  label: string;
+  asChild?: boolean;
+  children?: React.ForwardRefRenderFunction<HTMLButtonElement, {
+    onClick: () => void;
+    disabled: boolean;
+  }>;
+}
+```
+
+**Data Attributes**
+- `data-testid="filter-action-clear"` - Applied to clear button
+- `disabled` - Boolean indicating if button is disabled (when no filters are active)
+
+**Example**
+```tsx
+// Default usage
+<Filter.Action.Clear 
+  label="Clear Filters" 
+  className="btn-secondary text-sm px-3 py-1"
+/>
+
+// Custom rendering with forwardRef
+<Filter.Action.Clear label="Reset All" asChild>
+  {React.forwardRef(({onClick, disabled, ...props}, ref) => (
+    <button 
+      ref={ref}
+      {...props}
+      onClick={onClick}
+      disabled={disabled}
+      className="text-status-danger hover:text-status-danger-hover underline disabled:text-content-muted disabled:no-underline"
+    >
+      ✕ Reset All Filters
+    </button>
+  ))}
+</Filter.Action.Clear>
+```
 
 ---
 

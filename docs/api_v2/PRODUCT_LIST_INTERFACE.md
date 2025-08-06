@@ -39,75 +39,55 @@ interface ProductListRootProps {
 
 ---
 
-### ProductList.Sorting/ProductList.SortingTrigger
+### ProductList.Sort/ProductList.SortOption
 
 Displays information about the current product list (count, filtering status, etc.).
+plain wrappers for Sort.Root and Sort.Option
 
 **Props**
 ```tsx
-interface ProductListSortingProps {
+interface ProductListSortProps {
   children?: React.ForwardRefRenderFunction<HTMLElement, {
-    sortedBy: 'name' | 'price' | 'date';
-    sortDirection: 'asc' | 'desc';
-    onSortChange: ({by, direction}: {by?: string, direction?: 'asc' | 'desc'}) => void;
+    sortingOptions: Array<SortOptionProps>;
+    onChange: (value: Sort) => void;
+    value: Sort;
   }>;
   asChild?: boolean;
-  className?: string;
   valueFormatter?: ({sortBy, sortDirection}) => string; // used in order to format the value for the select, i.e. to translate the values, mandatory when rendering as select
   as: 'select' | 'list'; // default is 'select'
 }
 
-interface SortingOptionTrigger {
-  children?: React.ForwardRefRenderFunction<HTMLElement, {
-    onSortChange: ({by, direction}: {by?: string, direction?: 'asc' | 'desc'}) => void;
-    sortBy: 'name' | 'price' | 'date'; // default is 'date'
-    sortDirection: 'asc' | 'desc'; // default is 'desc'
-  }>;
-  sortBy: 'name' | 'price' | 'date';
-  sortDirection: 'asc' | 'desc';
+interface ProductSortOptionProps = SortOptionProps & {
+  fieldName?: 'name' | 'price' | 'date'; // just define the field names as more strict
 }
 ```
 
 **Important**
 The implentation should generate a plain Sort object
 
+See [Sort.Root](./PLATFORM_INTERFACE.md#sortroot) and [Sort.Option](./PLATFORM_INTERFACE.md#sortoption) for more details.
+
 **Example**
 ```tsx
-<ProductList.Sorting as="select" valueFormatter={({sortBy, sortDirection}) => `... map to human readable value`} />
+<ProductList.Sort as="select" valueFormatter={({sortBy, sortDirection}) => `... map to human readable value`} />
 
-// Default usage one list with sort direction indicators
-<ProductList.Sorting className="flex gap-2 data-[sort-direction='asc']:arrow-up data-[sort-direction='desc']:arrow-down" as="list">
-  <ProductList.SortingTrigger sortBy="name" sortDirection="asc" >By Name (A-Z)</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="name" sortDirection="desc" >By Name (Z-A)</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="price" sortDirection="asc" >Price (Low to High)</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="price" sortDirection="desc" >Price (High to Low)</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="date" sortDirection="asc" >Newest</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="date" sortDirection="desc" >Oldest</ProductList.SortingTrigger>
-</ProductList.Sorting>
+<ProductList.Sort className="w-full">
+  <ProductList.SortOption fieldName="price" label="Price" />
+  <ProductList.SortOption fieldName="name" label="Name" />
+  <ProductList.SortOption order="asc" asChild>
+    <button>Ascending</button>
+  </ProductList.SortOption>
+  <ProductList.SortOption order="desc" asChild>
+    <button>Descending</button>
+  </ProductList.SortOption>
+</ProductList.Sort>
 
-// Default usage two lists
-<ProductList.Sorting as="list">
-  // one list for sort options
-  <ProductList.SortingTrigger sortBy="name" >By Name</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="price" >Price</ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortBy="date" >Date</ProductList.SortingTrigger>
-  
-  // one list for sort direction
-  <ProductList.SortingTrigger sortDirection="asc" label="Ascending" asChild>
-    <Button>Ascending</Button>
-  </ProductList.SortingTrigger>
-  <ProductList.SortingTrigger sortDirection="desc" label="Descending" asChild>
-    <Button>Descending</Button>
-  </ProductList.SortingTrigger>
-</ProductList.Sorting>
-
-// using plain select
 // we should probably implement this as a separate component in components/ui but not in headless components
-<ProductList.Sorting asChild>
-  {React.forwardRef(({sortedBy, sortDirection, onSortChange, ...props}, ref) => (
+<ProductList.Sort asChild>
+  {React.forwardRef(({value, onChange, sortingOptions, ...props}, ref) => (
     <select defaultValue={`${sortedBy}_${sortDirection}`} ref={ref} {...props} onChange={(e) => {
       const [by, direction] = e.target.value.split('_');
-      onSortChange({by, direction});
+      onChange({fieldName: by, order: direction});
     }}>
       <option value="date_asc">Newest</option>
       <option value="name_asc">By Name (A-Z)</option>
@@ -172,14 +152,30 @@ interface ProductListProductsProps {
   emptyState?: React.ReactNode;
   asChild?: boolean;
   className?: string;
+  infiniteScroll?: boolean; // default is true
+  pageSize?: number; // 0 means no limit, max is 100
 }
 ```
 
 **Example**
 ```tsx
+// show just 3 products
+<ProductList.Products
+  emptyState={<div>No products found</div>}
+  className="grid grid-cols-1 md:grid-cols-3 gap-4"
+  infiniteScroll={false}
+  pageSize={3}
+>
+  <ProductList.ProductRepeater>
+    {/* Product template */}
+  </ProductList.ProductRepeater>
+</ProductList.Products>
+
+// show all (max 100) products with infinite scroll
 <ProductList.Products 
   emptyState={<div>No products found</div>}
   className="grid grid-cols-1 md:grid-cols-3 gap-4"
+  infiniteScroll
 >
   <ProductList.ProductRepeater>
     {/* Product template */}
@@ -223,6 +219,60 @@ interface ProductListProductRepeaterProps {
 
 ---
 
+### ProductList.LoadMoreTrigger
+
+Displays a button to load more products. Not rendered if infiniteScroll is false or no products are left to load.
+
+**Props**
+```tsx
+interface ProductListLoadMoreTriggerProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+  className?: string;
+}
+```
+
+**Example**
+```tsx
+<ProductList.LoadMoreTrigger asChild>
+  <button>Load More</button>
+</ProductList.LoadMoreTrigger>
+```
+
+**Data Attributes**
+- `data-testid="product-list-load-more"` - Applied to load more button
+
+---
+
+### ProductList.Totals.Count/ProductList.Totals.Displayed
+
+Displays the total number of products and the number of products displayed.
+
+**Props**
+```tsx
+interface ProductListTotalsCountProps {
+  children: React.ForwardRefRenderFunction<HTMLElement, {
+    total: number;
+  }>;
+  asChild?: boolean;
+  className?: string;
+}
+
+const ProductListTotalsDisplayedProps = ProductListTotalsCountProps;
+```
+
+**Example**
+```tsx
+<span>Showing <ProductList.Totals.Displayed /> of <ProductList.Totals.Count /> products</span>
+```
+
+**Data Attributes**
+- `data-testid="product-list-totals"` - Applied to totals container
+- `data-total` - Total number of products
+- `data-displayed` - Number of products displayed
+---
+
+### ProductList.Info
 
 ## Data Attributes Summary
 
@@ -256,20 +306,29 @@ function BasicProductList() {
       <div className="space-y-6">
         {/* Header with Sorting and Filters */}
         <div className="flex justify-between items-center bg-surface-card p-4 rounded-lg">
-          <ProductList.Root asChild>
+          <ProductList.Filters>
+            <Filter.Filtered>
+              <span>Showing <ProductList.Totals.Displayed /> of <ProductList.Totals.Count /> products</span>
+              <Filter.Action.Clear label="Clear Filters" />
+            </Filter.Filtered>
+          </ProductList.Filters>
+          <ProductList.Raw asChild>
             {React.forwardRef(({totalProducts, displayedProducts, isFiltered, ...props}, ref) => (
               <div ref={ref} {...props} className="text-content-muted">
                 Showing {displayedProducts} of {totalProducts} products
                 {isFiltered && <span className="ml-2 text-brand-primary">(Filtered)</span>}
               </div>
             ))}
-          </ProductList.Root>
+          </ProductList.Raw>
           
           <div className="flex gap-4">
             <ProductList.Sorting as="select" valueFormatter={({sortBy, sortDirection}) => 
               `${sortBy === 'name' ? 'Name' : sortBy === 'price' ? 'Price' : 'Date'} (${sortDirection === 'asc' ? 'A-Z' : 'Z-A'})`
             } />
             <ProductList.Filters>
+              <Filter.Filtered>
+                <Filter.Action.Clear label="Clear Filters" />
+              </Filter.Filtered>
               <Filter.FilterOptions>
                 <Filter.FilterOptionRepeater>
                   <Filter.SingleFilter />
@@ -319,7 +378,7 @@ function AdvancedProductList() {
         <Card className="bg-surface-card border-surface-subtle">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <ProductList.Root asChild>
+              <ProductList.Raw asChild>
                 {React.forwardRef(({totalProducts, displayedProducts, isFiltered, ...props}, ref) => (
                   <div ref={ref} {...props} className="flex items-center gap-4">
                     <h2 className="text-2xl font-bold text-content-primary">
@@ -332,7 +391,7 @@ function AdvancedProductList() {
                     )}
                   </div>
                 ))}
-              </ProductList.Root>
+              </ProductList.Raw>
               
               <div className="flex flex-wrap gap-3">
                 <ProductList.Sorting as="list" className="flex gap-2">
@@ -348,6 +407,12 @@ function AdvancedProductList() {
                 </ProductList.Sorting>
                 
                 <ProductList.Filters>
+                  <Filter.Filtered>
+                    <div className="bg-surface-card border-surface-primary p-4 rounded">
+                      <p className="text-content-secondary">Active filters:</p>
+                      <Filter.Action.Clear label="Clear All" />
+                    </div>
+                  </Filter.Filtered>
                   <Filter.FilterOptions>
                     <Filter.FilterOptionRepeater>
                       <Filter.SingleFilter />
