@@ -43,20 +43,20 @@ Say that our entity is `A`
   - `A.ListSection` - list container, not rendered if the list is empty
   - `A.ListSection.Bs` - Container for the list of `B` entities.
    - in many cases it would just be a plain div but we would like to keep it as a practice to allow handling container level behavior, for example, infinite scroll, pagination, etc. It can also contain an `emptyState` attribute, which will be rendered if the list is empty (null by default).
-  - `A.ListSection.BRepeter` - The `B` entity component itself, which in reality is just rendering a `B.Root` component with the `B` entity data.
+  - `A.ListSection.BRepeater` - The `B` entity component itself, which in reality is just rendering a `B.Root` component with the `B` entity data.
 
   For example, if we have a `Product` entity, and we want to render a list of `Product.VariantOptions`, we would do the following:
   ```tsx
   <Product.Modifiers>
     <Product.ModifierOptions>
-      <Product.ModifierOptionRepeter {/* array of<Option.Root option={option} /> */} >
+      <Product.ModifierOptionRepeater {/* array of<Option.Root option={option} /> */} >
         <Option.Name/>
         <Option.Choices>
-          <Option.ChoiceRepeter>
+          <Option.ChoiceRepeater>
             <Choice.Text/>
-          </Option.ChoiceRepeter>
+          </Option.ChoiceRepeater>
         </Option.Choices>
-      </Product.ModifierOptionRepeter>
+      </Product.ModifierOptionRepeater>
     </Product.ModifierOptions>
   </Product.Modifiers>
   ```

@@ -193,7 +193,7 @@ interface ProductListProductsProps {
 
 ---
 
-### ProductList.ProductRepeter
+### ProductList.ProductRepeater
 
 Repeats for each product in the list, providing individual product context.
 
@@ -232,13 +232,13 @@ interface ProductListProductRepeaterProps {
 | `data-testid="product-list-info"` | ProductList.Info | List info display |
 | `data-testid="product-list-filters"` | ProductList.Filters | Filters container |
 | `data-testid="product-list-products"` | ProductList.Products | Products container |
-| `data-testid="product-list-item"` | ProductList.ProductRepeter | Individual product item |
+| `data-testid="product-list-item"` | ProductList.ProductRepeater | Individual product item |
 | `data-testid="product-list-empty-state"` | ProductList.EmptyState | Empty state container |
 | `data-testid="product-list-load-more"` | ProductList.LoadMoreTrigger | Load more button |
 | `data-testid="product-list-error"` | ProductList.Error | Error state container |
 | `data-testid="product-list-filter-status"` | ProductList.FilterStatus | Filter status display |
-| `data-product-id` | ProductList.ProductRepeter | Product ID |
-| `data-product-available` | ProductList.ProductRepeter | Product availability |
+| `data-product-id` | ProductList.ProductRepeater | Product ID |
+| `data-product-available` | ProductList.ProductRepeater | Product availability |
 | `data-filtered` | Various components | Filtering status |
 | `data-empty` | ProductList.Products | Empty list status |
 
@@ -286,7 +286,7 @@ function BasicProductList() {
           emptyState={<div className="text-center py-12">No products found</div>}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <ProductList.ProductRepeter className="bg-surface-card p-4 rounded-lg border border-surface-subtle hover:shadow-lg transition-shadow">
+          <ProductList.ProductRepeater className="bg-surface-card p-4 rounded-lg border border-surface-subtle hover:shadow-lg transition-shadow">
             <Product.MediaGallery className="mb-4">
               <MediaGallery.Viewport className="aspect-square rounded-lg" />
             </Product.MediaGallery>
@@ -299,7 +299,7 @@ function BasicProductList() {
               <Product.Action.AddToCart label="Add to Cart" className="w-full btn-primary" />
               <Product.Action.QuickView label="Quick View" className="w-full btn-secondary" />
             </div>
-          </ProductList.ProductRepeter>
+          </ProductList.ProductRepeater>
         </ProductList.Products>
       </div>
     </ProductList.Root>
@@ -380,7 +380,7 @@ function AdvancedProductList() {
           }
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <ProductList.ProductRepeter className="group">
+            <ProductList.ProductRepeater className="group">
               <Card className="h-full bg-surface-card border-surface-subtle hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-0">
                   {/* Product Image with Quick Actions */}
@@ -444,17 +444,17 @@ function AdvancedProductList() {
                     <Product.Variants>
                       <Product.VariantOptions>
                         <div className="flex gap-1">
-                          <Product.VariantOptionRepeter>
+                          <Product.VariantOptionRepeater>
                             <Option.Root>
                               <Option.Choices>
                                 <div className="flex gap-1">
-                                  <Option.ChoiceRepeter>
+                                  <Option.ChoiceRepeater>
                                     <Choice.Color className="w-6 h-6 rounded-full border-2 cursor-pointer hover:scale-110 transition-transform" />
-                                  </Option.ChoiceRepeter>
+                                  </Option.ChoiceRepeater>
                                 </div>
                               </Option.Choices>
                             </Option.Root>
-                          </Product.VariantOptionRepeter>
+                          </Product.VariantOptionRepeater>
                         </div>
                       </Product.VariantOptions>
                     </Product.Variants>
@@ -477,7 +477,7 @@ function AdvancedProductList() {
                   </div>
                 </CardFooter>
               </Card>
-            </ProductList.ProductRepeter>
+            </ProductList.ProductRepeater>
           </div>
         </ProductList.Products>
       </div>
@@ -506,11 +506,11 @@ function MinimalProductList() {
           emptyState={<p className="text-center py-8">No products found</p>}
           className="grid grid-cols-2 gap-4"
         >
-          <ProductList.ProductRepeter className="border rounded p-4">
+          <ProductList.ProductRepeater className="border rounded p-4">
             <Product.Name className="font-medium mb-2" />
             <Product.Price className="text-lg font-bold text-brand-primary" />
             <Product.Action.AddToCart label="Add" className="w-full mt-2 btn-primary btn-sm" />
-          </ProductList.ProductRepeter>
+          </ProductList.ProductRepeater>
         </ProductList.Products>
       </div>
     </ProductList.Root>
@@ -553,11 +553,11 @@ function SearchableProductList() {
           
           <main className="flex-1">
             <ProductList.Products>
-              <ProductList.ProductRepeter>
+              <ProductList.ProductRepeater>
                 <Product.Name className="font-semibold mb-2" />
                 <Product.Price className="text-brand-primary font-bold" />
                 <Product.Action.AddToCart label="Add to Cart" className="w-full mt-2 btn-primary" />
-              </ProductList.ProductRepeter>
+              </ProductList.ProductRepeater>
             </ProductList.Products>
           </main>
         </div>

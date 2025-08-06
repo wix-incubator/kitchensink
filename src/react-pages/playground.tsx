@@ -238,7 +238,7 @@ export const ProductList = {
   },
 
   Products: ProductListProducts,
-  ProductRepeter: ProductListProduct,
+  ProductRepeater: ProductListProduct,
   EmptyState: ProductListEmptyState,
 };
 
@@ -262,14 +262,14 @@ export default function App() {
           emptyState={<p>No products found.</p>}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <ProductList.ProductRepeter className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <ProductList.ProductRepeater className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
               <Product.Name asChild>
                 <h2 className="text-xl font-semibold text-gray-800" />
               </Product.Name>
               <Product.Price asChild>
                 <span className="text-lg font-bold text-green-600 mt-1 block" />
               </Product.Price>
-            </ProductList.ProductRepeter>
+            </ProductList.ProductRepeater>
           </div>
         </ProductList.Products>
       </ProductList.Root>

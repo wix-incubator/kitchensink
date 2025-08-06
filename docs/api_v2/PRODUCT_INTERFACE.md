@@ -302,7 +302,7 @@ interface ProductModifierOptionsProps {
   }>;
   emptyState?: React.ReactNode;
 }
-interface ProductModifierOptionRepeterProps {
+interface ProductModifierOptionRepeaterProps {
   children?: React.ForwardRefRenderFunction<HTMLElement, Omit<Option, 'option'>>;
 }
 ```
@@ -310,16 +310,16 @@ interface ProductModifierOptionRepeterProps {
 ```tsx
 <Product.Modifiers>
   <Product.ModifierOptions>
-    <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']} {/* array of<Option.Root option={option} /> */} >
+    <Product.ModifierOptionRepeater allowedTypes={['color', 'text', 'free-text']} {/* array of<Option.Root option={option} /> */} >
       <Option.Name/>
       <Option.Choices>
-        <Option.ChoiceRepeter>
+        <Option.ChoiceRepeater>
           <Choice.Text/>
           <Choice.Color/>
           <Choice.FreeText/>
-        </Option.ChoiceRepeter>
+        </Option.ChoiceRepeater>
       </Option.Choices>
-    </Product.ModifierOptionRepeter>
+    </Product.ModifierOptionRepeater>
   </Product.ModifierOptions>
 </Product.Modifiers>
 ```
@@ -432,7 +432,7 @@ interface OptionChoicesProps {
 
 ---
 
-### Choice.Root/Option.ChoiceRepeter
+### Choice.Root/Option.ChoiceRepeater
 
 A container for a single choice (e.g., a color swatch, text button, or free text input for a variant or modifier option).
 The Choice.Root acts as a trigger for the choice (selecting it).
@@ -736,7 +736,7 @@ interface ProductMediaGalleryProps extends Omit<MediaGalleryRootProps, 'items'> 
   <MediaGallery.Previous />
   <MediaGallery.Next />
   <MediaGallery.Thumbnails>
-    <MediaGallery.ThumbnailRepeter />
+    <MediaGallery.ThumbnailRepeater />
   </MediaGallery.Thumbnails>
 </Product.MediaGallery>
 ```
@@ -854,7 +854,7 @@ interface MediaGalleryThumbnailsProps {
 **Example**
 ```tsx
 <MediaGallery.Thumbnails>
-  <MediaGallery.ThumbnailRepeter />
+  <MediaGallery.ThumbnailRepeater />
 </MediaGallery.Thumbnails>
 ```
 
@@ -863,7 +863,7 @@ interface MediaGalleryThumbnailsProps {
 
 ---
 
-### MediaGallery.ThumbnailRepeter
+### MediaGallery.ThumbnailRepeater
 Renders a list of thumbnails. (list of <MediaGallery.Thumbnail />)
 
 Media gallery thumbnail.
@@ -986,16 +986,16 @@ interface ProductInfoSectionRootProps {
 **Example**
 ```tsx
 <Product.InfoSections>
-  <Product.InfoSectionRepeter> // renders InfoSection.Root
+  <Product.InfoSectionRepeater> // renders InfoSection.Root
     <InfoSection.Title />
     <InfoSection.Content /> // renders the content of the info section using Ricos
-  </Product.InfoSectionRepeter>
+  </Product.InfoSectionRepeater>
 </Product.InfoSections>
 
 // with Accordion
 <Product.InfoSections>
   <Accordion.Root>
-    <Product.InfoSectionRepeter>
+    <Product.InfoSectionRepeater>
        <Accordion.Item>
         <Accordion.Trigger>
           <InfoSection.Title />
@@ -1004,7 +1004,7 @@ interface ProductInfoSectionRootProps {
           <InfoSection.Content /> // renders the content of the info section using Ricos
         </Accordion.Content>
       </Accordion.Item>
-    </Product.InfoSectionRepeter>
+    </Product.InfoSectionRepeater>
   </Accordion.Root>
 </Product.InfoSections>
 ```
@@ -1030,9 +1030,9 @@ interface SubscriptionRootProps {
 **Example**
 ```tsx
 <Product.Subscriptions emptyState={<p>No subscriptions available</p>}>
-  <Product.SubscriptionRepeter>
+  <Product.SubscriptionRepeater>
     <Subscription.Title/>
-  </Product.SubscriptionRepeter>
+  </Product.SubscriptionRepeater>
 </Product.Subscriptions>
 ```
 
@@ -1077,9 +1077,9 @@ function BasicProduct() {
           <MediaGallery.Previous className="absolute left-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full" />
           <MediaGallery.Next className="absolute right-4 top-1/2 -translate-y-1/2 btn-nav p-2 rounded-full" />
           <MediaGallery.Thumbnails>
-            <MediaGallery.ThumbnailRepeter>
+            <MediaGallery.ThumbnailRepeater>
               <MediaGallery.Thumbnail className="w-16 h-16 rounded-lg border-2 cursor-pointer" />
-            </MediaGallery.ThumbnailRepeter>
+            </MediaGallery.ThumbnailRepeater>
           </MediaGallery.Thumbnails>
         </Product.MediaGallery>
 
@@ -1098,32 +1098,32 @@ function BasicProduct() {
           {/* Product Variants */}
           <Product.Variants>
             <Product.VariantOptions>
-              <Product.VariantOptionRepeter>
+              <Product.VariantOptionRepeater>
                   <Option.Name className="text-lg font-medium mb-3" />
                   <Option.Choices>
-                    <Option.ChoiceRepeter>
+                    <Option.ChoiceRepeater>
                       <Choice.FreeText className="w-full p-3 border rounded-lg resize-none" rows={3} />
                       <Choice.Text className="px-4 py-2 border rounded-lg transition-colors data-[selected]:bg-brand-primary data-[selected]:text-white" />
                       <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
-                    </Option.ChoiceRepeter>
+                    </Option.ChoiceRepeater>
                   </Option.Choices>
-              </Product.VariantOptionRepeter>
+              </Product.VariantOptionRepeater>
             </Product.VariantOptions>
           </Product.Variants>
 
           {/* Product Modifiers */}
           <Product.Modifiers>
             <Product.ModifierOptions>
-              <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
+              <Product.ModifierOptionRepeater allowedTypes={['color', 'text', 'free-text']}>
                   <Option.Name className="text-lg font-medium mb-3" />
                   <Option.Choices>
-                    <Option.ChoiceRepeter>
+                    <Option.ChoiceRepeater>
                       <Choice.FreeText className="w-full p-3 border rounded-lg resize-none" rows={3} />
                       <Choice.Text className="px-4 py-2 border rounded-lg transition-colors data-[selected]:bg-brand-primary data-[selected]:text-white" />
                       <Choice.Color className="w-10 h-10 rounded-full border-4 transition-all data-[selected]:border-brand-primary data-[selected]:shadow-lg" />
-                    </Option.ChoiceRepeter>
+                    </Option.ChoiceRepeater>
                   </Option.Choices>
-              </Product.ModifierOptionRepeter>
+              </Product.ModifierOptionRepeater>
             </Product.ModifierOptions>
           </Product.Modifiers>
 
@@ -1140,11 +1140,11 @@ function BasicProduct() {
           <Product.Subscriptions emptyState={<p className="text-content-muted">No subscriptions available</p>}>
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-content-primary">Available Subscriptions</h3>
-              <Product.SubscriptionRepeter>
+              <Product.SubscriptionRepeater>
                 <div className="p-3 border border-brand-light rounded-lg">
                   <Subscription.Title className="font-medium text-content-primary" />
                 </div>
-              </Product.SubscriptionRepeter>
+              </Product.SubscriptionRepeater>
             </div>
           </Product.Subscriptions>
 
@@ -1164,12 +1164,12 @@ function BasicProduct() {
           <Product.InfoSections>
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-content-primary">Product Information</h3>
-              <Product.InfoSectionRepeter>
+              <Product.InfoSectionRepeater>
                 <div className="border-b border-brand-subtle pb-4">
                   <InfoSection.Title className="text-base font-medium text-content-primary mb-2" />
                   <InfoSection.Content className="text-content-secondary prose prose-sm max-w-none" />
                 </div>
-              </Product.InfoSectionRepeter>
+              </Product.InfoSectionRepeater>
             </div>
           </Product.InfoSections>
 
@@ -1280,7 +1280,7 @@ function CustomizedProduct() {
           {/* Enhanced Variants with Labels */}
           <Product.Variants>
             <Product.VariantOptions>
-              <Product.VariantOptionRepeter>
+              <Product.VariantOptionRepeater>
                   <Option.Name asChild>
                     {React.forwardRef(({option, ...props}, ref) => (
                       <div ref={ref} {...props} className="mb-4">
@@ -1294,7 +1294,7 @@ function CustomizedProduct() {
                   
                   <Option.Choices>
                     <div className="grid grid-cols-4 gap-3">
-                      <Option.ChoiceRepeter>
+                      <Option.ChoiceRepeater>
                         <Choice.Color asChild>
                           {React.forwardRef(({colorCode, name, id, ...props}, ref) => (
                             <div className="text-center">
@@ -1322,17 +1322,17 @@ function CustomizedProduct() {
                             </Button>
                           ))}
                         </Choice.Text>
-                      </Option.ChoiceRepeter>
+                      </Option.ChoiceRepeater>
                     </div>
                   </Option.Choices>
-              </Product.VariantOptionRepeter>
+              </Product.VariantOptionRepeater>
             </Product.VariantOptions>
           </Product.Variants>
           
           {/* Enhanced Modifiers */}
           <Product.Modifiers>
             <Product.ModifierOptions>
-              <Product.ModifierOptionRepeter allowedTypes={['color', 'text', 'free-text']}>
+              <Product.ModifierOptionRepeater allowedTypes={['color', 'text', 'free-text']}>
                   <Option.Name asChild>
                     {React.forwardRef(({option, ...props}, ref) => (
                       <div ref={ref} {...props} className="mb-4">
@@ -1345,7 +1345,7 @@ function CustomizedProduct() {
                   </Option.Name>
                   
                   <Option.Choices>
-                    <Option.ChoiceRepeter>
+                    <Option.ChoiceRepeater>
                       <Choice.FreeText asChild>
                         {React.forwardRef(({minCharCount, maxCharCount, title, ...props}, ref) => (
                           <div className="space-y-2">
@@ -1390,9 +1390,9 @@ function CustomizedProduct() {
                           </div>
                         ))}
                       </Choice.Color>
-                    </Option.ChoiceRepeter>
+                    </Option.ChoiceRepeater>
                   </Option.Choices>
-              </Product.ModifierOptionRepeter>
+              </Product.ModifierOptionRepeater>
             </Product.ModifierOptions>
           </Product.Modifiers>
 
@@ -1443,7 +1443,7 @@ function CustomizedProduct() {
           <Product.Subscriptions emptyState={<div className="text-center py-8 text-content-muted">No subscription options available for this product</div>}>
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-content-primary">Subscription Options</h4>
-              <Product.SubscriptionRepeter>
+              <Product.SubscriptionRepeater>
                 <div className="p-4 border-2 border-brand-light rounded-lg hover:border-brand-primary transition-colors cursor-pointer data-[selected]:border-brand-primary data-[selected]:bg-brand-light/5">
                   <Subscription.Title asChild>
                     {React.forwardRef(({subscription, ...props}, ref) => (
@@ -1457,7 +1457,7 @@ function CustomizedProduct() {
                     ))}
                   </Subscription.Title>
                 </div>
-              </Product.SubscriptionRepeter>
+              </Product.SubscriptionRepeater>
             </div>
           </Product.Subscriptions>
 
@@ -1483,7 +1483,7 @@ function CustomizedProduct() {
             <div className="space-y-6">
               <h4 className="text-lg font-semibold text-content-primary">Detailed Information</h4>
               <Accordion type="multiple" className="w-full">
-                <Product.InfoSectionRepeter>
+                <Product.InfoSectionRepeater>
                   <Accordion.Item value="info-section" className="border-b">
                     <Accordion.Trigger className="flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180">
                       <InfoSection.Title className="text-left font-medium text-content-primary" />
@@ -1502,7 +1502,7 @@ function CustomizedProduct() {
                       </InfoSection.Content>
                     </Accordion.Content>
                   </Accordion.Item>
-                </Product.InfoSectionRepeter>
+                </Product.InfoSectionRepeater>
               </Accordion>
             </div>
           </Product.InfoSections>
@@ -1557,9 +1557,9 @@ function MinimalProduct() {
         <Product.MediaGallery>
           <MediaGallery.Viewport className="aspect-square rounded-lg" />
           <MediaGallery.Thumbnails>
-            <MediaGallery.ThumbnailRepeter>
+            <MediaGallery.ThumbnailRepeater>
               <MediaGallery.Thumbnail as="div" className="w-2 h-2 rounded-full cursor-pointer" />
-            </MediaGallery.ThumbnailRepeter>
+            </MediaGallery.ThumbnailRepeater>
           </MediaGallery.Thumbnails>
         </Product.MediaGallery>
         
@@ -1569,15 +1569,15 @@ function MinimalProduct() {
         {/* Basic Variants */}
         <Product.Variants>
           <Product.VariantOptions>
-            <Product.VariantOptionRepeter>
+            <Product.VariantOptionRepeater>
               <Option.Name className="font-medium mb-2" />
               <Option.Choices>
-                <Option.ChoiceRepeter>
+                <Option.ChoiceRepeater>
                   <Choice.Text className="px-3 py-1 border rounded text-sm" />
                   <Choice.Color className="w-8 h-8 rounded-full border-2" />
-                </Option.ChoiceRepeter>
+                </Option.ChoiceRepeater>
               </Option.Choices>
-            </Product.VariantOptionRepeter>
+            </Product.VariantOptionRepeater>
           </Product.VariantOptions>
         </Product.Variants>
         
@@ -1591,25 +1591,25 @@ function MinimalProduct() {
         
         {/* Simple Subscriptions */}
         <Product.Subscriptions>
-          <Product.SubscriptionRepeter>
+          <Product.SubscriptionRepeater>
             <div className="p-2 border rounded text-sm">
               <Subscription.Title className="font-medium" />
             </div>
-          </Product.SubscriptionRepeter>
+          </Product.SubscriptionRepeater>
         </Product.Subscriptions>
         
         <Product.Action.AddToCart label="Add to Cart" className="w-full btn-primary" />
         
         {/* Basic Info Sections */}
         <Product.InfoSections>
-          <Product.InfoSectionRepeter>
+          <Product.InfoSectionRepeater>
             <details className="border rounded p-2">
               <summary className="cursor-pointer font-medium">
                 <InfoSection.Title />
               </summary>
               <InfoSection.Content className="mt-2 text-sm text-content-secondary" />
             </details>
-          </Product.InfoSectionRepeter>
+          </Product.InfoSectionRepeater>
         </Product.InfoSections>
       </div>
     </Product.Root>
