@@ -98,6 +98,21 @@ See the [Platform](./PLATFORM_INTERFACE.md) API
     }
   }
   ```
-  - Do we need a ProductVariant component? or is everying we need is already covered by the Product.Root (it is implicit)?
+- Do we need a ProductVariant component? or is everying we need is already covered by the Product.Root (it is implicit)?
 
-  - Texts - for example "showing {count} products" how do we handle it? is filtered?
+- Texts - for example "showing {count} products" how do we handle it (these would require probably label props and render props)? is filtered (we can use Filter.Filtered component)?
+
+- Actions - for example, add to cart, buy now, checkout, etc.
+  - Currently are defined as complete component with UI and label, maybe we should use a trigger pattern (no dom so no need for asChild):
+  ```tsx
+  // current
+  <Cart.Action.AddToCart label="Add to Cart">
+  // alternative
+  <Cart.Action.AddToCart loading={<button>Loading...</button>}>
+    <button>Add to Cart</button>
+  </Cart.Action.AddToCart>
+  ```
+  The current is more oppinionated, and also involves both dom and headless logic, which is not ideal.
+  The alternative is more flexible but requires more code
+  
+- There is no Button in radix-ui, it is shadcn/ui only, which comps should not be implemented as headless, but only in components/ui/ folder.
