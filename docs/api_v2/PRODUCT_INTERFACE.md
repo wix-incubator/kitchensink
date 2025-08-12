@@ -750,9 +750,10 @@ interface MediaGalleryRootProps {
   items: MediaItem[];
   children: React.ReactNode;
   infinite?: boolean; // default - false - if true, the gallery will loop back to the first item when the user reaches the end
-  autoPlay?: boolean; // default - false - if true, the gallery will automatically advance to the next item every 5 seconds
-  direction?: 'forward' | 'backward' | 'top' | 'bottom'; // default - 'forward' - the direction of the gallery
-  autoPlayInterval?: number; // default - 5000 - the interval in milliseconds between auto-advances
+  autoPlay: {
+     direction?: 'forward' | 'backward'; // default - 'forward' - the direction of the gallery (removed top/bottom, has no meaning, we call next/prev, the actual advancement is a style issue.)
+     intervalMs?: number; // default - 5000 - the interval in milliseconds between auto-advances
+  } // if falsy, no autplay
 }
 ```
 
@@ -890,7 +891,7 @@ interface MediaGalleryThumbnailProps {
 - `data-selected` - Is thumbnail selected
 - `data-index` - thumbnail index
 - `data-direction` - thumbnail direction
-- `disabled` - Is thumbnail disabled
+- `availible` - Is thumbnail availible (meaning to indicate for example if product is availible for purchase)
 
 ---
 
