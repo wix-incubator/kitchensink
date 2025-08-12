@@ -891,7 +891,7 @@ interface MediaGalleryThumbnailProps {
 - `data-selected` - Is thumbnail selected
 - `data-index` - thumbnail index
 - `data-direction` - thumbnail direction
-- `availible` - Is thumbnail availible (meaning to indicate for example if product is availible for purchase)
+- `data-available` - Is thumbnail availible (meaning to indicate for example if product is available for purchase)
 
 ---
 
