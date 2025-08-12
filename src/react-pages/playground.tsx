@@ -98,7 +98,7 @@ export const Product = {
   }),
   Price: forwardRef<
     HTMLElement,
-    { asChild?: boolean; className?: string; children: React.ReactNode }
+    { asChild?: boolean; className?: string; children?: React.ReactNode }
   >(({ asChild, children, ...props }, ref) => {
     const product = useProductContext();
     if (asChild) {

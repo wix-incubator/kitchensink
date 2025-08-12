@@ -281,9 +281,6 @@ interface QuantityRootProps {
 }
 ```
 
-**Data Attributes**
-- `data-testid="quantity-root"` - Applied to quantity root container
-
 **Example**
 ```tsx
 // Default usage

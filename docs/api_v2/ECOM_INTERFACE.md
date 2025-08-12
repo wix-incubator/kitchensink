@@ -17,12 +17,8 @@ The root container that provides cart context to all child components.
 interface CartRootProps {
   cart: CartData;
   children: React.ReactNode;
-  asChild?: boolean;
 }
 ```
-
-**Data Attributes**
-- `data-testid="cart"` - Applied to root container
 
 **Example**
 ```tsx

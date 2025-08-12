@@ -27,9 +27,6 @@ interface ProductListRootProps {
 }
 ```
 
-**Data Attributes**
-- `data-testid="product-list"` - Applied to root container
-
 **Example**
 ```tsx
 <ProductList.Root products={products}>
@@ -133,11 +130,7 @@ interface ProductListFilterProps {
 </ProductList.Filter>
 ```
 
-refere to [Filter.Root](./PLATFORM_INTERFACE.md#filterroot) for more details.
-
-**Data Attributes**
-- `data-testid="product-list-filters"` - Applied to filters container
-
+refer to [Filter.Root](./PLATFORM_INTERFACE.md#filterroot) for more details.
 ---
 
 ### ProductList.Products
@@ -278,7 +271,6 @@ const ProductListTotalsDisplayedProps = ProductListTotalsCountProps;
 
 | Attribute | Applied To | Purpose |
 |-----------|------------|---------|
-| `data-testid="product-list"` | ProductList.Root | Root container identification |
 | `data-testid="product-list-info"` | ProductList.Info | List info display |
 | `data-testid="product-list-filters"` | ProductList.Filters | Filters container |
 | `data-testid="product-list-products"` | ProductList.Products | Products container |

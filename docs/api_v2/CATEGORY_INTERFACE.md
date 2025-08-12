@@ -22,9 +22,6 @@ interface CategoryListRootProps {
 }
 ```
 
-**Data Attributes**
-- `data-testid="category-list"` - Applied to root container
-
 **Example**
 ```tsx
 <CategoryList.Root categoriesListConfig={categoriesListConfig}>
@@ -85,7 +82,6 @@ interface CategoryRootProps {
   category?: Category;
   categoryServiceConfig?: CategoryServiceConfig;
   children: React.ReactNode;
-  asChild?: boolean;
 }
 ```
 
@@ -99,7 +95,6 @@ interface CategoryRootProps {
 ```
 
 **Data Attributes**
-- `data-testid="category-item"` - Applied to category container
 - `data-category-id` - Category ID
 - `data-selected` - Is category selected
 - `data-has-children` - Category has subcategories

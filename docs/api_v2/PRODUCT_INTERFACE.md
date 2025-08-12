@@ -18,12 +18,8 @@ interface ProductRootProps {
   product: ProductData;
   selectedVariant?: SelectedVariant;
   children: React.ReactNode;
-  asChild?: boolean;
 }
 ```
-
-**Data Attributes**
-- `data-testid="product-details"` - Applied to root container
 
 **Example**
 ```tsx
@@ -436,6 +432,7 @@ interface OptionChoicesProps {
 
 A container for a single choice (e.g., a color swatch, text button, or free text input for a variant or modifier option).
 The Choice.Root acts as a trigger for the choice (selecting it).
+(renders a button)
 
 **Props**
 ```tsx
@@ -1045,7 +1042,6 @@ interface SubscriptionRootProps {
 
 | Attribute | Applied To | Purpose |
 |-----------|------------|---------|
-| `data-testid="product-details"` | Product.Root | Root container identification |
 | `data-testid="product-name"` | Product.Name | Product name element |
 | `data-testid="product-options"` | Product.Variants | Variant options container |
 | `data-testid="product-option"` | Product.Variants.Option | Individual option container |
@@ -1150,13 +1146,13 @@ function BasicProduct() {
 
           {/* Product Actions */}
           <div className="space-y-3">
-            <Product.Action.AddToCart 
+            <Product.Action.AddToCart
               label="Add to Cart" 
-              className="w-full btn-primary py-3 text-lg font-semibold" 
+              className="w-full btn-primary py-3 text-lg font-semibold"
             />
-            <Product.Action.BuyNow 
+            <Product.Action.BuyNow
               label="Buy Now" 
-              className="w-full btn-secondary py-3 text-lg font-semibold" 
+              className="w-full btn-secondary py-3 text-lg font-semibold"
             />
           </div>
 
