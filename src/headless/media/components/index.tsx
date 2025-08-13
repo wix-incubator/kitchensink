@@ -1,1 +1,1 @@
-export { WixMediaImage } from './Image';
+export { WixMediaImage } from '@wix/headless-media/react';

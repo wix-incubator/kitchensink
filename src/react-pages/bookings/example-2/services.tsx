@@ -9,7 +9,7 @@ import {
   BookingServicesServiceDefinition,
 } from '../../../headless/bookings/services/booking-services-service';
 import { BookingServices } from '../../../headless/bookings/components';
-import { WixMediaImage } from '../../../headless/media/components/Image';
+import { WixMediaImage } from '@wix/headless-media/react';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { PageDocsRegistration } from '../../../components/DocsMode';
 
@@ -143,7 +143,6 @@ const ServicesListSection = () => {
                             media={image}
                             width={640}
                             height={320}
-                            displayMode="fill"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         ) : (
