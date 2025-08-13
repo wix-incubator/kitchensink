@@ -138,7 +138,6 @@ const ServiceDetailSection = () => {
                             media={image}
                             width={640}
                             height={480}
-                            displayMode="fill"
                             className="w-full h-64 object-cover"
                           />
                         </div>

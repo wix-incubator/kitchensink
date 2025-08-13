@@ -180,7 +180,6 @@ export default function BookingsPage({
                             <div className="h-48 bg-white/10 rounded-t-xl overflow-hidden">
                               <WixMediaImage
                                 media={image}
-                                displayMode="fit"
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                             </div>

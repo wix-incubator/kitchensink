@@ -143,7 +143,6 @@ const ServicesListSection = () => {
                             media={image}
                             width={640}
                             height={320}
-                            displayMode="fill"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         ) : (
