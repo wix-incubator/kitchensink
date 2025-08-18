@@ -487,7 +487,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 data-testid="title-navigation"
                 route={`${productPageRoute}/${product.slug}`}
               >
-                <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
+                <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors font-theme-heading">
                   {product.name}
                 </CardTitle>
               </Navigation>

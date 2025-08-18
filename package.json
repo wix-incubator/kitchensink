@@ -75,6 +75,7 @@
     "@wix/services-manager": "^0.2.21",
     "@wix/services-manager-react": "^0.1.27",
     "@wix/stores": "^1.0.498",
+    "@wix/wix-vibe-plugins": "https://github.com/wix-incubator/spartans-cdn/raw/refs/heads/master/47c08705f17e518c2bef5d546e2a411750af9e8da5bc5d3dfb7ed2fc.tar.gz",
     "astro": "^5.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

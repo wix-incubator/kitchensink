@@ -54,7 +54,7 @@ export default function PageComponent({ data }: Props) {
     * `layouts/BaseLayout.astro` - Handles HTML structure and accepts head content in default slot and body content in named "body" slot:
 ```astro
 ---
-import "../styles/global.css";
+import "../styles/global-loader.css";
 ---
 <html lang="en">
   <head>
@@ -67,7 +67,7 @@ import "../styles/global.css";
   </body>
 </html>
 ```
-* `styles/global.css` - The global css that also imports tailwind.
+* `styles/global-loader.css` - The global css that also imports tailwind.
 
 # Astro actions
 <important>

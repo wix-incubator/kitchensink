@@ -1,9 +1,12 @@
 @import 'tailwindcss';
 /* This is the equivalent of tailwind.config.js */
 @theme {
-  --color-primary: #161616;
+  --color-primary: rgb(66, 165, 245);
   --color-primary-foreground: #ffffff;
-  --color-secondary: #6d14eb;
+  --color-secondary: rgb(3, 218, 198);
   --color-secondary-foreground: #ffffff;
   --color-background: #ffffff;
+  --color-foreground: #000000;
+  --font-heading: 'Inter', sans-serif;
+  --font-paragraph: 'Inter', sans-serif;
 }

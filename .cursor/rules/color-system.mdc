@@ -30,15 +30,15 @@ const color = "#ff0000";
 
 ## ✅ MANDATORY APPROACH
 
-### 1. Define colors ONLY in theme files
-**Location**: `src/styles/theme-1.css` (or theme-N.css for additional themes)
+### 1. Use CSS variables for colors defined in theme files in the wix-vibe-plugins module
+**Location**: `node_modules/@wix/wix-vibe-plugins/plugins-theme.css` and `node_modules/@wix/wix-vibe-plugins/plugins-vars.css`
+If you must add a new color, add it to the `:root` section of the theme file - `theme-1.css`
 
 ```css
 /* ✅ REQUIRED - Define semantic color variables */
 :root {
   /* Status Colors */
   --theme-status-success: #10b981;
-  --theme-status-warning: #f59e0b;
   --theme-status-danger: #ef4444;
   --theme-status-info: #3b82f6;
   
@@ -51,8 +51,9 @@ const color = "#ff0000";
 }
 ```
 
-### 2. Create semantic CSS classes in global.css
-**Location**: `src/styles/global.css`
+### 2. Use semantic CSS classes defined in @wix/wix-vibe-plugins/plugins-theme.css
+**Location**: `node_modules/@wix/wix-vibe-plugins/plugins-theme.css`
+If you must define a new class - add it to `src/styles/global-loader.css`
 
 ```css
 /* ✅ REQUIRED - Create semantic classes that use theme variables */
@@ -64,7 +65,6 @@ const color = "#ff0000";
 
 /* Status Colors */
 .text-status-success { color: var(--theme-status-success); }
-.text-status-warning { color: var(--theme-status-warning); }
 .text-status-danger { color: var(--theme-status-danger); }
 .text-status-info { color: var(--theme-status-info); }
 
@@ -117,7 +117,7 @@ function ProductCard() {
 #### Variant Examples:
 - `content-` (primary, secondary, muted, subtle)
 - `brand-` (primary, secondary, light, dark)
-- `status-` (success, warning, danger, info)
+- `status-` (success, danger, info)
 - `surface-` (primary, secondary, card, overlay)
 
 #### Modifier Examples:
@@ -127,40 +127,19 @@ function ProductCard() {
 
 ## 🔧 IMPLEMENTATION WORKFLOW
 
-### When adding new colors:
+### Do not add new colors. All the colors should be a variation of the colors defined in `@wix/wix-vibe-plugins/plugins-vars.css` and `@wix/wix-vibe-plugins/plugins-theme.css`:
 
-1. **First**: Add CSS variable to ALL theme files with colors suited to each palette
-```css
-/* src/styles/theme-1.css */
---theme-status-accent: #06b6d4;
---theme-status-accent-bg-light: rgba(6, 182, 212, 0.1);
+1. **First**: Choose the best semantic class name for the color you want to use.
 
-/* src/styles/theme-2.css */
---theme-status-accent: #0891b2; /* Matches theme-2's teal/cyan palette */
---theme-status-accent-bg-light: rgba(8, 145, 178, 0.1);
-
-/* src/styles/theme-wix-vibe.css */
---theme-status-accent: #03dac6; /* Matches Wix Vibe's Material Design palette */
---theme-status-accent-bg-light: rgba(3, 218, 198, 0.1);
-```
-
-2. **Second**: Create semantic class in global.css
-```css
-/* src/styles/global.css */
-.text-status-accent { color: var(--theme-status-accent); }
-.bg-status-accent-light { background-color: var(--theme-status-accent-bg-light); }
-```
-
-3. **Third**: Use class in component
+2. **Second**: Use class in component
 ```tsx
 <span className="text-status-accent bg-status-accent-light">Accent Text</span>
 ```
+If you must add a new class, add it to `src/styles/global-loader.css`
 
 ### 🎨 Multi-Theme Color Coordination:
 **CRITICAL**: When adding new color variables, you MUST add them to ALL theme files:
 - `theme-1.css` - Default theme
-- `theme-2.css` - Teal/Cyan focused theme  
-- `theme-wix-vibe.css` - Material Design blue theme
 
 Each theme should use colors that harmonize with its existing palette while maintaining the same semantic meaning across all themes.
 
@@ -191,7 +170,7 @@ grep -r "bg-red-\|bg-blue-\|bg-green-\|bg-yellow-\|bg-orange-" src/
 // --theme-product-price: #1f2937;
 // --theme-product-sale-price: #ef4444;
 
-// Semantic class in global.css
+// Semantic class in @wix/wix-vibe-plugins/plugins-theme.css or @wix/wix-vibe-plugins/plugins-vars.css
 // .text-product-price { color: var(--theme-product-price); }
 // .text-product-sale-price { color: var(--theme-product-sale-price); }
 
@@ -223,8 +202,8 @@ function ProductPrice({ price, salePrice }) {
 ## 🎯 ENFORCEMENT
 
 **This rule is NON-NEGOTIABLE.** All color-related code must follow this system:
-1. Colors defined in theme files as CSS variables
-2. Semantic classes created in global.css
+1. Colors defined in `@wix/wix-vibe-plugins/plugins-vars.css` and `@wix/wix-vibe-plugins/plugins-theme.css` as CSS variables
+2. Semantic classes created in `src/styles/global-loader.css`, they should be later merged into `@wix/wix-vibe-plugins/plugins-theme.css`
 3. Components use only semantic class names
 4. Zero tolerance for hardcoded colors or direct CSS variable usage
 
