@@ -110,7 +110,7 @@ export default function CartContent() {
                       <Card className="bg-surface-card border-surface-subtle">
                         <CardHeader>
                           <div className="flex items-center justify-between">
-                            <CardTitle className="text-2xl text-content-primary">
+                            <CardTitle className="text-2xl text-content-primary font-theme-heading">
                               Cart Items
                             </CardTitle>
                             <CurrentCart.Clear>
@@ -326,7 +326,7 @@ export default function CartContent() {
                     <div className="lg:col-span-1">
                       <Card className="bg-surface-card border-surface-subtle">
                         <CardHeader>
-                          <CardTitle className="text-2xl text-content-primary">
+                          <CardTitle className="text-2xl text-content-primary font-theme-heading">
                             Order Summary
                           </CardTitle>
                         </CardHeader>

@@ -100,18 +100,18 @@ export default function ProductDetails({
                     <div>
                       <Product.Name>
                         {({ name }) => (
-                          <h1
-                            className="text-4xl font-bold text-content-primary mb-4"
+                          <h2
+                            className="text-4xl font-bold text-content-primary mb-4 font-theme-heading"
                             data-testid="product-name"
                           >
                             {name}
-                          </h1>
+                          </h2>
                         )}
                       </Product.Name>
                       <SelectedVariant.Price>
                         {({ price, compareAtPrice }) => (
                           <div className="space-y-1">
-                            <div className="text-3xl font-bold text-content-primary">
+                            <div className="text-3xl font-bold text-content-primary font-theme-heading">
                               {price}
                             </div>
                             {compareAtPrice &&
