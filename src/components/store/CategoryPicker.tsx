@@ -27,7 +27,8 @@ export function CategoryPicker({
 
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-          <CategoryList.ItemContent>
+          <CategoryList.CategoryRepeater>
+          <Category.Trigger asChild onSelect={(category) => onCategorySelect(category)}>
             {({ category }) => (
               <CategoryButton
                 key={category._id}
@@ -36,7 +37,8 @@ export function CategoryPicker({
                 onSelect={() => onCategorySelect(category)}
               />
             )}
-          </CategoryList.ItemContent>
+            </Category.Trigger>
+          </CategoryList.CategoryRepeater>
         </div>
       </div>
     </CategoryList.Root>
@@ -66,7 +68,7 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({
             : 'text-content-primary border-surface-subtle hover:bg-primary/10'
         }
       >
-        <Category.Name>{({ name }) => name}</Category.Name>
+        <Category.Label></Category.Label>
       </Button>
     </Category.Root>
   );
