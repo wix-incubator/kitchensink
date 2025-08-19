@@ -28,15 +28,18 @@ export function CategoryPicker({
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
           <CategoryList.CategoryRepeater>
-          <Category.Trigger asChild onSelect={(category) => onCategorySelect(category)}>
-            {({ category }) => (
-              <CategoryButton
-                key={category._id}
-                category={category}
-                isSelected={currentCategorySlug === category.slug}
-                onSelect={() => onCategorySelect(category)}
-              />
-            )}
+            <Category.Trigger
+              asChild
+              onSelect={category => onCategorySelect(category)}
+            >
+              {({ category }) => (
+                <CategoryButton
+                  key={category._id}
+                  category={category}
+                  isSelected={currentCategorySlug === category.slug}
+                  onSelect={() => onCategorySelect(category)}
+                />
+              )}
             </Category.Trigger>
           </CategoryList.CategoryRepeater>
         </div>
