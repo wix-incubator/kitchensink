@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { WixMediaImage } from '../../headless/media/components';
 import {
-  ProductList as HeadlessProductList,
-  Product,
+  ProductListCore as HeadlessProductList,
   ProductVariantSelector,
   SelectedVariant,
   ProductListFilters,
   ProductListPagination,
+  ProductCore,
 } from '@wix/headless-stores/react';
+import { Product, ProductDescription } from '../ui/store/Product';
 import {
   type ProductsListServiceConfig,
   type ProductsListSearchServiceConfig,
@@ -153,12 +154,12 @@ export const ProductList: React.FC<ProductListProps> = ({
 
         {/* Quick View Modal */}
         {quickViewProduct && (
-          <Product.Root
+          <ProductCore.Root
             productServiceConfig={{ productSlug: quickViewProduct.slug! }}
           >
-            <Product.Loading>
+            <ProductCore.Loading>
               {({ isLoading }) => (
-                <Product.Content>
+                <ProductCore.Content>
                   {({ product }) => (
                     <QuickViewModal
                       product={product}
@@ -168,10 +169,10 @@ export const ProductList: React.FC<ProductListProps> = ({
                       productPageRoute={productPageRoute}
                     />
                   )}
-                </Product.Content>
+                </ProductCore.Content>
               )}
-            </Product.Loading>
-          </Product.Root>
+            </ProductCore.Loading>
+          </ProductCore.Root>
         )}
       </HeadlessProductList.Root>
     </TooltipProvider>
@@ -352,7 +353,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
       productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
 
   return (
-    <Product.Root productServiceConfig={{ product }}>
+    <Product product={product}>
       <MediaGallery.Root
         mediaGalleryServiceConfig={{
           media: product.media?.itemsInfo?.items ?? [],
@@ -649,18 +650,18 @@ const ProductItem: React.FC<ProductItemProps> = ({
               </ProductVariantSelector.Reset>
 
               {/* Product Description */}
-              <Product.Description>
-                {({ plainDescription }) => (
+              <ProductDescription>
+                {({ description }) => (
                   <>
-                    {plainDescription && (
+                    {description && (
                       <p
                         className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: plainDescription }}
+                        dangerouslySetInnerHTML={{ __html: description }}
                       />
                     )}
                   </>
                 )}
-              </Product.Description>
+              </ProductDescription>
             </CardContent>
 
             <CardFooter className="p-4 pt-0 flex-col space-y-2">
@@ -744,7 +745,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </Card>
         </SelectedVariant.Root>
       </MediaGallery.Root>
-    </Product.Root>
+    </Product>
   );
 };
 

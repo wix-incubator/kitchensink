@@ -1,11 +1,11 @@
 import {
-  Product,
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
+import { Product, ProductName, ProductDescription } from '../ui/store/Product';
 
 import { productsV3 } from '@wix/stores';
 
@@ -63,7 +63,7 @@ export default function ProductDetails({
   const Navigation = useNavigation();
 
   return (
-    <Product.Root productServiceConfig={{ product }}>
+    <Product product={product}>
       <StyledMediaGallery.Root
         mediaGalleryServiceConfig={{
           media: product.media?.itemsInfo?.items ?? [],
@@ -98,16 +98,9 @@ export default function ProductDetails({
                   <div className="space-y-8 px-3">
                     {/* Product Name & Price */}
                     <div>
-                      <Product.Name>
-                        {({ name }) => (
-                          <h2
-                            className="text-4xl font-bold text-content-primary mb-4 font-theme-heading"
-                            data-testid="product-name"
-                          >
-                            {name}
-                          </h2>
-                        )}
-                      </Product.Name>
+                      <ProductName asChild>
+                        <h2 />
+                      </ProductName>
                       <SelectedVariant.Price>
                         {({ price, compareAtPrice }) => (
                           <div className="space-y-1">
@@ -142,10 +135,10 @@ export default function ProductDetails({
                     </div>
 
                     {/* Product Description */}
-                    <Product.Description>
-                      {({ plainDescription }) => (
+                    <ProductDescription as="html" asChild>
+                      {({ description }) => (
                         <>
-                          {plainDescription && !isQuickView && (
+                          {description && !isQuickView && (
                             <div>
                               <h3 className="text-xl font-semibold text-content-primary mb-3">
                                 Description
@@ -154,7 +147,7 @@ export default function ProductDetails({
                                 <p
                                   className="text-content-secondary leading-relaxed"
                                   dangerouslySetInnerHTML={{
-                                    __html: plainDescription,
+                                    __html: description,
                                   }}
                                 />
                               }
@@ -162,7 +155,7 @@ export default function ProductDetails({
                           )}
                         </>
                       )}
-                    </Product.Description>
+                    </ProductDescription>
 
                     {/* Product Options (if any) */}
                     <ProductVariantSelector.Options>
@@ -706,6 +699,6 @@ export default function ProductDetails({
           </ProductVariantSelector.Root>
         </ProductModifiers.Root>
       </StyledMediaGallery.Root>
-    </Product.Root>
+    </Product>
   );
 }
