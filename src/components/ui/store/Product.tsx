@@ -33,7 +33,7 @@ export const ProductDescription = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'text-content-secondary text-base leading-relaxed mb-6',
+        'text-content-secondary leading-relaxed',
         props.className
       )}
     >
@@ -198,15 +198,6 @@ export const ProductModifierOptions = React.forwardRef<
 
 ProductModifierOptions.displayName = 'ProductModifierOptions';
 
-export const ProductModifierOptionRepeater = React.forwardRef<
-  React.ElementRef<typeof ProductPrimitive.ModifierOptionRepeater>,
-  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ModifierOptionRepeater>
->((props, ref) => {
-  return (
-    <ProductPrimitive.ModifierOptionRepeater {...props} ref={ref}>
-      {props.children}
-    </ProductPrimitive.ModifierOptionRepeater>
-  );
-});
+export const ProductModifierOptionRepeater = ProductPrimitive.ModifierOptionRepeater;
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';

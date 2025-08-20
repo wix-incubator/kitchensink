@@ -8,7 +8,7 @@ import {
   ProductListPagination,
   ProductCore,
 } from '@wix/headless-stores/react';
-import { Product, ProductDescription } from './ui/Product';
+import { Product, ProductDescription } from '../ui/store/Product';
 import {
   type ProductsListServiceConfig,
   type ProductsListSearchServiceConfig,

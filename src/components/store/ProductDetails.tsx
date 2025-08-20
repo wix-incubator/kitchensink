@@ -5,7 +5,7 @@ import {
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import { Product, ProductName, ProductDescription } from './ui/Product';
+import { Product, ProductName, ProductDescription } from '../ui/store/Product';
 
 import { productsV3 } from '@wix/stores';
 
@@ -99,7 +99,7 @@ export default function ProductDetails({
                     {/* Product Name & Price */}
                     <div>
                       <ProductName asChild>
-                        <h2></h2>
+                        <h2 />
                       </ProductName>
                       <SelectedVariant.Price>
                         {({ price, compareAtPrice }) => (
