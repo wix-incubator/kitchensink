@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { WixMediaImage } from '../../headless/media/components';
 import {
   ProductListCore as HeadlessProductList,
-  Product,
   ProductVariantSelector,
   SelectedVariant,
   ProductListFilters,
   ProductListPagination,
   ProductCore,
 } from '@wix/headless-stores/react';
+import { Product, ProductDescription } from './ui/Product';
 import {
   type ProductsListServiceConfig,
   type ProductsListSearchServiceConfig,
@@ -353,7 +353,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
       productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
 
   return (
-    <Product.Root product={product}>
+    <Product product={product}>
       <MediaGallery.Root
         mediaGalleryServiceConfig={{
           media: product.media?.itemsInfo?.items ?? [],
@@ -650,7 +650,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               </ProductVariantSelector.Reset>
 
               {/* Product Description */}
-              <Product.Description>
+              <ProductDescription>
                 {({ description }) => (
                   <>
                     {description && (
@@ -661,7 +661,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                     )}
                   </>
                 )}
-              </Product.Description>
+              </ProductDescription>
             </CardContent>
 
             <CardFooter className="p-4 pt-0 flex-col space-y-2">
@@ -745,7 +745,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </Card>
         </SelectedVariant.Root>
       </MediaGallery.Root>
-    </Product.Root>
+    </Product>
   );
 };
 

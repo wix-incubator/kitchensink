@@ -1,12 +1,11 @@
 import {
-  Product,
   ProductModifiers,
   ProductVariantSelector,
   SelectedVariant,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import { ProductName } from './ui/Product';
+import { Product, ProductName, ProductDescription } from './ui/Product';
 
 import { productsV3 } from '@wix/stores';
 
@@ -64,7 +63,7 @@ export default function ProductDetails({
   const Navigation = useNavigation();
 
   return (
-    <Product.Root product={product}>
+    <Product product={product}>
       <StyledMediaGallery.Root
         mediaGalleryServiceConfig={{
           media: product.media?.itemsInfo?.items ?? [],
@@ -136,7 +135,7 @@ export default function ProductDetails({
                     </div>
 
                     {/* Product Description */}
-                    <Product.Description as="html" asChild>
+                    <ProductDescription as="html" asChild>
                       {({ description }) => (
                         <>
                           {description && !isQuickView && (
@@ -156,7 +155,7 @@ export default function ProductDetails({
                           )}
                         </>
                       )}
-                    </Product.Description>
+                    </ProductDescription>
 
                     {/* Product Options (if any) */}
                     <ProductVariantSelector.Options>
@@ -700,6 +699,6 @@ export default function ProductDetails({
           </ProductVariantSelector.Root>
         </ProductModifiers.Root>
       </StyledMediaGallery.Root>
-    </Product.Root>
+    </Product>
   );
 }
