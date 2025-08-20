@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WixMediaImage } from '../../headless/media/components';
 import {
-  ProductListCore as HeadlessProductList,
+  ProductListCore as PrimitiveProductList,
   ProductVariantSelector,
   SelectedVariant,
   ProductListFilters,
@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/tooltip';
 import { MediaGallery } from '@wix/headless-media/react';
 import ProductFiltersSidebar from './ProductFiltersSidebar';
+import * as ProductListUI from './ui/ProductList';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -61,10 +62,10 @@ export const ProductList: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <HeadlessProductList.Root productsListConfig={productsListConfig}>
+      <ProductListUI.ProductList productsListConfig={productsListConfig}>
         <div className="min-h-screen">
           {/* Error State */}
-          <HeadlessProductList.Error>
+          <PrimitiveProductList.Error>
             {({ error }) => (
               <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
                 <div className="flex items-center gap-3">
@@ -87,7 +88,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 </div>
               </div>
             )}
-          </HeadlessProductList.Error>
+          </PrimitiveProductList.Error>
 
           {/* Header Controls */}
           <Card className="border-surface-subtle mb-6 bg-surface-card">
@@ -141,7 +142,7 @@ export const ProductList: React.FC<ProductListProps> = ({
             </ProductCore.Loading>
           </ProductCore.Root>
         )}
-      </HeadlessProductList.Root>
+      </ProductListUI.ProductList>
     </TooltipProvider>
   );
 };
@@ -199,12 +200,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   return (
     <>
       {/* Enhanced Loading State */}
-      <HeadlessProductList.Loading>
+      <PrimitiveProductList.Loading>
         <ProductListSkeleton />
-      </HeadlessProductList.Loading>
+      </PrimitiveProductList.Loading>
 
       {/* Enhanced Empty State */}
-      <HeadlessProductList.EmptyState>
+      <PrimitiveProductList.EmptyState>
         <div className="text-center py-12 sm:py-16">
           <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
             <svg
@@ -238,7 +239,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             )}
           </ProductListFilters.ResetTrigger>
         </div>
-      </HeadlessProductList.EmptyState>
+      </PrimitiveProductList.EmptyState>
 
       {/* Filter Status Bar */}
       <ProductListFilters.ResetTrigger>
@@ -260,13 +261,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                   />
                 </svg>
                 <span className="text-brand-light text-sm sm:text-base">
-                  <HeadlessProductList.Items>
+                  <PrimitiveProductList.Items>
                     {({ products }) =>
                       `Showing ${String(products.length)} product${
                         products.length === 1 ? '' : 's'
                       }`
                     }
-                  </HeadlessProductList.Items>
+                  </PrimitiveProductList.Items>
                 </span>
               </div>
               <Button
@@ -283,8 +284,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       </ProductListFilters.ResetTrigger>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-        <HeadlessProductList.ItemContent>
+      <ProductListUI.ProductListProducts>
+        <PrimitiveProductList.ItemContent>
           {({ product }) => (
             <ProductItem
               product={product}
@@ -292,8 +293,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
               openQuickView={openQuickView}
             />
           )}
-        </HeadlessProductList.ItemContent>
-      </div>
+        </PrimitiveProductList.ItemContent>
+      </ProductListUI.ProductListProducts>
     </>
   );
 };
@@ -721,7 +722,7 @@ const LoadMoreSection: React.FC = () => {
   return (
     <ProductListPagination.LoadMoreTrigger>
       {({ loadMore, hasMoreProducts, isLoading }) => (
-        <HeadlessProductList.Items>
+        <PrimitiveProductList.Items>
           {({ products }) =>
             hasMoreProducts ? (
               <>
@@ -777,7 +778,7 @@ const LoadMoreSection: React.FC = () => {
               </>
             ) : null
           }
-        </HeadlessProductList.Items>
+        </PrimitiveProductList.Items>
       )}
     </ProductListPagination.LoadMoreTrigger>
   );
