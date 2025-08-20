@@ -181,16 +181,7 @@ export const ProductVariantOptions = React.forwardRef<
 
 ProductVariantOptions.displayName = 'ProductVariantOptions';
 
-export const ProductVariantOptionRepeater = React.forwardRef<
-  React.ElementRef<typeof ProductPrimitive.VariantOptionRepeater>,
-  React.ComponentPropsWithoutRef<typeof ProductPrimitive.VariantOptionRepeater>
->((props, ref) => {
-  return (
-    <ProductPrimitive.VariantOptionRepeater {...props} ref={ref}>
-      {props.children}
-    </ProductPrimitive.VariantOptionRepeater>
-  );
-});
+export const ProductVariantOptionRepeater = ProductPrimitive.VariantOptionRepeater;
 
 ProductVariantOptionRepeater.displayName = 'ProductVariantOptionRepeater';
 
