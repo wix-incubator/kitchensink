@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { WixMediaImage } from '../../headless/media/components';
 import {
-  ProductList as HeadlessProductList,
+  ProductListCore as HeadlessProductList,
   Product,
   ProductVariantSelector,
   SelectedVariant,
   ProductListFilters,
   ProductListPagination,
+  ProductCore,
 } from '@wix/headless-stores/react';
 import {
   type ProductsListServiceConfig,
@@ -153,12 +154,12 @@ export const ProductList: React.FC<ProductListProps> = ({
 
         {/* Quick View Modal */}
         {quickViewProduct && (
-          <Product.Root
+          <ProductCore.Root
             productServiceConfig={{ productSlug: quickViewProduct.slug! }}
           >
-            <Product.Loading>
+            <ProductCore.Loading>
               {({ isLoading }) => (
-                <Product.Content>
+                <ProductCore.Content>
                   {({ product }) => (
                     <QuickViewModal
                       product={product}
@@ -168,10 +169,10 @@ export const ProductList: React.FC<ProductListProps> = ({
                       productPageRoute={productPageRoute}
                     />
                   )}
-                </Product.Content>
+                </ProductCore.Content>
               )}
-            </Product.Loading>
-          </Product.Root>
+            </ProductCore.Loading>
+          </ProductCore.Root>
         )}
       </HeadlessProductList.Root>
     </TooltipProvider>
@@ -352,7 +353,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
       productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
 
   return (
-    <Product.Root productServiceConfig={{ product }}>
+    <Product.Root product={product}>
       <MediaGallery.Root
         mediaGalleryServiceConfig={{
           media: product.media?.itemsInfo?.items ?? [],
@@ -650,12 +651,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
               {/* Product Description */}
               <Product.Description>
-                {({ plainDescription }) => (
+                {({ description }) => (
                   <>
-                    {plainDescription && (
+                    {description && (
                       <p
                         className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: plainDescription }}
+                        dangerouslySetInnerHTML={{ __html: description }}
                       />
                     )}
                   </>
