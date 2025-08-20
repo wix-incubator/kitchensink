@@ -6,7 +6,6 @@ import {
   SelectedVariant,
   ProductListFilters,
   ProductListPagination,
-  ProductCore,
 } from '@wix/headless-stores/react';
 import { Product, ProductDescription } from '../ui/store/Product';
 import {
@@ -15,7 +14,6 @@ import {
   type CategoriesListServiceConfig,
 } from '@wix/headless-stores/services';
 import { useNavigation } from '../NavigationContext';
-import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
@@ -49,20 +47,6 @@ export const ProductList: React.FC<ProductListProps> = ({
   categoriesListConfig,
   currentCategorySlug,
 }) => {
-  const [quickViewProduct, setQuickViewProduct] =
-    useState<productsV3.V3Product | null>(null);
-  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-
-  const openQuickView = (product: productsV3.V3Product) => {
-    setQuickViewProduct(product);
-    setIsQuickViewOpen(true);
-  };
-
-  const closeQuickView = () => {
-    setIsQuickViewOpen(false);
-    setTimeout(() => setQuickViewProduct(null), 300);
-  };
-
   return (
     <TooltipProvider>
       <HeadlessProductList.Root
@@ -132,48 +116,19 @@ export const ProductList: React.FC<ProductListProps> = ({
 
               {/* Main Content Area */}
               <div className="flex-1 min-w-0">
-                <ProductGrid
-                  productPageRoute={productPageRoute}
-                  openQuickView={openQuickView}
-                />
+                <ProductGrid productPageRoute={productPageRoute} />
               </div>
             </div>
           )}
 
           {/* Products Grid (when no filters config provided) */}
           {!productsListSearchConfig && (
-            <ProductGrid
-              productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
-            />
+            <ProductGrid productPageRoute={productPageRoute} />
           )}
 
           {/* Load More Section */}
           <LoadMoreSection />
         </div>
-
-        {/* Quick View Modal */}
-        {quickViewProduct && (
-          <ProductCore.Root
-            productServiceConfig={{ productSlug: quickViewProduct.slug! }}
-          >
-            <ProductCore.Loading>
-              {({ isLoading }) => (
-                <ProductCore.Content>
-                  {({ product }) => (
-                    <QuickViewModal
-                      product={product}
-                      isLoading={isLoading}
-                      isOpen={isQuickViewOpen}
-                      onClose={closeQuickView}
-                      productPageRoute={productPageRoute}
-                    />
-                  )}
-                </ProductCore.Content>
-              )}
-            </ProductCore.Loading>
-          </ProductCore.Root>
-        )}
       </HeadlessProductList.Root>
     </TooltipProvider>
   );
@@ -222,13 +177,9 @@ export const ProductListSkeleton = () => {
 // Product Grid Component
 interface ProductGridProps {
   productPageRoute: string;
-  openQuickView: (product: productsV3.V3Product) => void;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({
-  productPageRoute,
-  openQuickView,
-}) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ productPageRoute }) => {
   return (
     <>
       {/* Enhanced Loading State */}
@@ -322,7 +273,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             <ProductItem
               product={product}
               productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
             />
           )}
         </HeadlessProductList.ItemContent>
@@ -335,13 +285,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 interface ProductItemProps {
   product: productsV3.V3Product;
   productPageRoute: string;
-  openQuickView: (product: productsV3.V3Product) => void;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({
   product,
   productPageRoute,
-  openQuickView,
 }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const Navigation = useNavigation();
@@ -439,39 +387,6 @@ const ProductItem: React.FC<ProductItemProps> = ({
                     </svg>
                   </div>
                 )}
-
-                {/* Enhanced Quick View Button */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
-                  <Button
-                    variant="secondary"
-                    onClick={e => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      openQuickView(product);
-                    }}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    Quick View
-                  </Button>
-                </div>
               </div>
 
               {/* Product Ribbon */}
@@ -717,7 +632,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 </div>
               </div>
               {/* Enhanced Action Buttons */}
-              <ProductActionButtons isQuickView={true} />
+              <ProductActionButtons />
 
               <Navigation
                 data-testid="view-product-button"
