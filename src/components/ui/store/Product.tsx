@@ -32,10 +32,7 @@ export const ProductDescription = React.forwardRef<
     <ProductPrimitive.Description
       {...props}
       ref={ref}
-      className={cn(
-        'text-content-secondary leading-relaxed',
-        props.className
-      )}
+      className={cn('text-content-secondary leading-relaxed', props.className)}
     >
       {props.children}
     </ProductPrimitive.Description>
@@ -181,7 +178,8 @@ export const ProductVariantOptions = React.forwardRef<
 
 ProductVariantOptions.displayName = 'ProductVariantOptions';
 
-export const ProductVariantOptionRepeater = ProductPrimitive.VariantOptionRepeater;
+export const ProductVariantOptionRepeater =
+  ProductPrimitive.VariantOptionRepeater;
 
 ProductVariantOptionRepeater.displayName = 'ProductVariantOptionRepeater';
 
@@ -198,6 +196,7 @@ export const ProductModifierOptions = React.forwardRef<
 
 ProductModifierOptions.displayName = 'ProductModifierOptions';
 
-export const ProductModifierOptionRepeater = ProductPrimitive.ModifierOptionRepeater;
+export const ProductModifierOptionRepeater =
+  ProductPrimitive.ModifierOptionRepeater;
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';
