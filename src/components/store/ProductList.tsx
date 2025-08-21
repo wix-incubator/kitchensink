@@ -54,21 +54,8 @@ export const ProductList: React.FC<ProductListProps> = ({
   productPageRoute,
   categoriesListConfig,
 }) => {
-  const [quickViewProduct, setQuickViewProduct] =
-    useState<productsV3.V3Product | null>(null);
-  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const Navigation = useNavigation();
-
-  const openQuickView = (product: productsV3.V3Product) => {
-    setQuickViewProduct(product);
-    setIsQuickViewOpen(true);
-  };
-
-  const closeQuickView = () => {
-    setIsQuickViewOpen(false);
-    setTimeout(() => setQuickViewProduct(null), 300);
-  };
 
   return (
     <TooltipProvider>
@@ -589,29 +576,6 @@ export const ProductList: React.FC<ProductListProps> = ({
             )}
           </ProductListPagination.LoadMoreTrigger>
         </div>
-
-        {/* Quick View Modal */}
-        {quickViewProduct && (
-          <ProductCore.Root
-            productServiceConfig={{ productSlug: quickViewProduct.slug! }}
-          >
-            <ProductCore.Loading>
-              {({ isLoading }) => (
-                <ProductCore.Content>
-                  {({ product }) => (
-                    <QuickViewModal
-                      product={product}
-                      isLoading={isLoading}
-                      isOpen={isQuickViewOpen}
-                      onClose={closeQuickView}
-                      productPageRoute={productPageRoute}
-                    />
-                  )}
-                </ProductCore.Content>
-              )}
-            </ProductCore.Loading>
-          </ProductCore.Root>
-        )}
       </ProductListUI.ProductList>
     </TooltipProvider>
   );
