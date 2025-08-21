@@ -185,10 +185,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                   {/* Products Grid */}
                   <Products>
                     <ProductRepeater>
-                      <Card
-                        data-testid="product-item"
-                        className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
-                      >
+                      <Card className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between">
                         {/* Enhanced Success Message */}
                         {showSuccessMessage && (
                           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">

@@ -12,12 +12,6 @@ export const Products = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <ProductListPrimitive.Products
-      {...props}
-      ref={ref}
-      className={cn(
-        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
-        className
-      )}
       emptyState={
         <div className="text-center py-12 sm:py-16">
           <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
@@ -37,6 +31,12 @@ export const Products = React.forwardRef<
           </div>
         </div>
       }
+      {...props}
+      ref={ref}
+      className={cn(
+        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
+        className
+      )}
     >
       {props.children}
     </ProductListPrimitive.Products>
