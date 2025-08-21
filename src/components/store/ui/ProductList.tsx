@@ -22,3 +22,34 @@ export const Products = React.forwardRef<
 Products.displayName = 'Products';
 
 export const ProductRepeater = ProductListPrimitive.ProductRepeater;
+
+export const LoadMoreTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, ...props }, ref) => (
+  <ProductListPrimitive.LoadMoreTrigger
+    {...props}
+    ref={ref}
+    className={cn('font-semibold transform hover:scale-105', className)}
+    asChild
+  >
+    {props.children}
+  </ProductListPrimitive.LoadMoreTrigger>
+));
+
+LoadMoreTrigger.displayName = 'LoadMoreTrigger';
+
+export const TotalsDisplayed = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <ProductListPrimitive.TotalsDisplayed ref={ref} asChild {...props}>
+    {({ displayedProducts }) => (
+      <p className={cn('text-content-muted text-sm mt-4', className)}>
+        {displayedProducts} products loaded
+      </p>
+    )}
+  </ProductListPrimitive.TotalsDisplayed>
+));
+
+TotalsDisplayed.displayName = 'TotalsDisplayed';
