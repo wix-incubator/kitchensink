@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { WixMediaImage } from '../../headless/media/components';
 import {
-  ProductListCore as PrimitiveProductList,
+  ProductListCore as ProductListPrimitive,
   ProductVariantSelector,
-  SelectedVariant,
+  SelectedVariant as SelectedVariantPrimitive,
   ProductListFilters,
   ProductListPagination,
   ProductCore,
 } from '@wix/headless-stores/react';
-import { Product, ProductDescription } from '../ui/store/Product';
+import {
+  Product,
+  ProductDescription,
+  ProductMediaGallery,
+  ProductRaw,
+  ProductPrice,
+  ProductCompareAtPrice,
+} from '../ui/store/Product';
+import * as StyledMediaGallery from '@/components/media/MediaGallery';
 import {
   type ProductsListServiceConfig,
   type CategoriesListServiceConfig,
@@ -33,6 +41,7 @@ import {
 import { MediaGallery } from '@wix/headless-media/react';
 import ProductFiltersSidebar from './ProductFiltersSidebar';
 import * as ProductListUI from './ui/ProductList';
+import { ProductName, ProductSlug } from '../ui/store/Product';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -65,7 +74,7 @@ export const ProductList: React.FC<ProductListProps> = ({
       <ProductListUI.ProductList productsListConfig={productsListConfig}>
         <div className="min-h-screen">
           {/* Error State */}
-          <PrimitiveProductList.Error>
+          <ProductListPrimitive.Error>
             {({ error }) => (
               <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
                 <div className="flex items-center gap-3">
@@ -88,7 +97,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 </div>
               </div>
             )}
-          </PrimitiveProductList.Error>
+          </ProductListPrimitive.Error>
 
           {/* Header Controls */}
           <Card className="border-surface-subtle mb-6 bg-surface-card">
@@ -197,15 +206,18 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   productPageRoute,
   openQuickView,
 }) => {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const Navigation = useNavigation();
+
   return (
     <>
       {/* Enhanced Loading State */}
-      <PrimitiveProductList.Loading>
+      <ProductListPrimitive.Loading>
         <ProductListSkeleton />
-      </PrimitiveProductList.Loading>
+      </ProductListPrimitive.Loading>
 
       {/* Enhanced Empty State */}
-      <PrimitiveProductList.EmptyState>
+      <ProductListPrimitive.EmptyState>
         <div className="text-center py-12 sm:py-16">
           <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
             <svg
@@ -239,7 +251,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             )}
           </ProductListFilters.ResetTrigger>
         </div>
-      </PrimitiveProductList.EmptyState>
+      </ProductListPrimitive.EmptyState>
 
       {/* Filter Status Bar */}
       <ProductListFilters.ResetTrigger>
@@ -261,13 +273,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                   />
                 </svg>
                 <span className="text-brand-light text-sm sm:text-base">
-                  <PrimitiveProductList.Items>
+                  <ProductListPrimitive.Items>
                     {({ products }) =>
                       `Showing ${String(products.length)} product${
                         products.length === 1 ? '' : 's'
                       }`
                     }
-                  </PrimitiveProductList.Items>
+                  </ProductListPrimitive.Items>
                 </span>
               </div>
               <Button
@@ -286,54 +298,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       {/* Products Grid */}
       <ProductListUI.Products>
         <ProductListUI.ProductRepeater>
-          {/* <PrimitiveProductList.ItemContent>
-            {({ product }) => (
-              <ProductItem
-                product={product}
-                productPageRoute={productPageRoute}
-                openQuickView={openQuickView}
-              />
-            )}
-          </PrimitiveProductList.ItemContent> */}
-        </ProductListUI.ProductRepeater>
-      </ProductListUI.Products>
-    </>
-  );
-};
-
-// Individual Product Item Component
-interface ProductItemProps {
-  product: productsV3.V3Product;
-  productPageRoute: string;
-  openQuickView: (product: productsV3.V3Product) => void;
-}
-
-const ProductItem: React.FC<ProductItemProps> = ({
-  product,
-  productPageRoute,
-  openQuickView,
-}) => {
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const Navigation = useNavigation();
-
-  const availabilityStatus = product.inventory?.availabilityStatus;
-  const available =
-    availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
-    availabilityStatus ===
-      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
-
-  return (
-    <Product product={product}>
-      <MediaGallery.Root
-        mediaGalleryServiceConfig={{
-          media: product.media?.itemsInfo?.items ?? [],
-        }}
-      >
-        <SelectedVariant.Root>
           <Card
             data-testid="product-item"
-            data-product-id={product._id}
-            data-product-available={available}
             className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
           >
             {/* Enhanced Success Message */}
@@ -361,107 +327,69 @@ const ProductItem: React.FC<ProductItemProps> = ({
             )}
 
             {/* Cart Success Handler */}
-            <CurrentCart.LineItemAdded>
-              {({ onAddedToCart }) => {
-                React.useEffect(() => {
-                  return onAddedToCart((lineItems: LineItem[] | undefined) => {
-                    if (!lineItems) return;
-                    const myLineItemIsThere = lineItems.some(
-                      lineItem =>
-                        lineItem.catalogReference?.catalogItemId === product._id
-                    );
-                    if (!myLineItemIsThere) return;
+            <ProductRaw asChild>
+              {({ product }) => (
+                <CurrentCart.LineItemAdded>
+                  {({ onAddedToCart }) => {
+                    React.useEffect(() => {
+                      return onAddedToCart(
+                        (lineItems: LineItem[] | undefined) => {
+                          if (!lineItems) return;
+                          const myLineItemIsThere = lineItems.some(
+                            lineItem =>
+                              lineItem.catalogReference?.catalogItemId ===
+                              product._id
+                          );
+                          if (!myLineItemIsThere) return;
 
-                    setShowSuccessMessage(true);
-                    setTimeout(() => {
-                      setShowSuccessMessage(false);
-                    }, 3000);
-                  });
-                }, [onAddedToCart]);
+                          setShowSuccessMessage(true);
+                          setTimeout(() => {
+                            setShowSuccessMessage(false);
+                          }, 3000);
+                        }
+                      );
+                    }, [onAddedToCart]);
 
-                return null;
-              }}
-            </CurrentCart.LineItemAdded>
+                    return null;
+                  }}
+                </CurrentCart.LineItemAdded>
+              )}
+            </ProductRaw>
 
             <CardContent className="p-4 pb-0">
               {/* Product Image */}
               <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
-                {product.media?.main?.image ? (
-                  <WixMediaImage
-                    media={{ image: product.media.main.image }}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    alt={product.media.main.altText || ''}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <svg
-                      className="w-12 h-12 text-content-subtle"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                )}
-
-                {/* Enhanced Quick View Button */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out translate-y-2 group-hover:translate-y-0">
-                  <Button
-                    variant="secondary"
-                    onClick={e => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      openQuickView(product);
-                    }}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    Quick View
-                  </Button>
-                </div>
+                <ProductMediaGallery>
+                  <StyledMediaGallery.Viewport className="object-cover group-hover:scale-110 transition-transform duration-300" />
+                </ProductMediaGallery>
               </div>
 
               {/* Product Ribbon */}
-              {product.ribbon?.name && (
-                <div className="absolute top-2 left-2 z-10">
-                  <Badge variant="secondary" className="hover:bg-secondary">
-                    {product.ribbon.name}
-                  </Badge>
-                </div>
-              )}
+              <ProductRaw asChild>
+                {({ product }) =>
+                  product.ribbon?.name && (
+                    <div className="absolute top-2 left-2 z-10">
+                      <Badge variant="secondary" className="hover:bg-secondary">
+                        {product.ribbon.name}
+                      </Badge>
+                    </div>
+                  )
+                }
+              </ProductRaw>
 
               {/* Product Title */}
-              <Navigation
-                data-testid="title-navigation"
-                route={`${productPageRoute}/${product.slug}`}
-              >
-                <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors font-theme-heading">
-                  {product.name}
-                </CardTitle>
-              </Navigation>
+              <ProductSlug asChild>
+                {({ slug }) => (
+                  <Navigation
+                    data-testid="title-navigation"
+                    route={`${productPageRoute}/${slug}`}
+                  >
+                    <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
+                      <ProductName variant="paragraph" />
+                    </CardTitle>
+                  </Navigation>
+                )}
+              </ProductSlug>
 
               {/* Enhanced Product Variants */}
               <ProductVariantSelector.Options>
@@ -620,102 +548,107 @@ const ProductItem: React.FC<ProductItemProps> = ({
               </ProductVariantSelector.Reset>
 
               {/* Product Description */}
-              <ProductDescription>
-                {({ description }) => (
-                  <>
-                    {description && (
-                      <p
-                        className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: description }}
-                      />
-                    )}
-                  </>
-                )}
-              </ProductDescription>
+              <ProductDescription
+                as="html"
+                className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
+              />
             </CardContent>
 
             <CardFooter className="p-4 pt-0 flex-col space-y-2">
               {/* Enhanced Price and Stock */}
               <div className="mt-auto w-full py-2">
                 <div className="items-center flex justify-between">
-                  <SelectedVariant.Price>
-                    {({ price, compareAtPrice }) => {
-                      return compareAtPrice &&
-                        parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) >
-                          0 ? (
-                        <>
-                          <div className="flex items-center gap-2">
-                            <div className="text-xl font-bold text-content-primary">
-                              {price}
-                            </div>
-                            <div className="text-sm font-medium text-content-faded line-through">
-                              {compareAtPrice}
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-end">
-                            <div className="flex items-center gap-1">
-                              <div
-                                className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
-                              ></div>
-                              <span
-                                className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
-                              >
-                                {available ? 'In Stock' : 'Out of Stock'}
-                              </span>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="w-full flex items-center justify-between">
-                          <div className="text-xl font-bold text-content-primary">
-                            {price}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <div
-                              className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
-                            ></div>
-                            <span
-                              className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
-                            >
-                              {available ? 'In Stock' : 'Out of Stock'}
-                            </span>
-                          </div>
-                        </div>
+                  <SelectedVariantPrimitive.Price>
+                    {({ compareAtPrice }) => {
+                      return (
+                        <ProductRaw asChild>
+                          {({ product }) => {
+                            const available =
+                              product.inventory?.availabilityStatus ===
+                                productsV3.InventoryAvailabilityStatus
+                                  .IN_STOCK ||
+                              product.inventory?.availabilityStatus ===
+                                productsV3.InventoryAvailabilityStatus
+                                  .PARTIALLY_OUT_OF_STOCK;
+
+                            return compareAtPrice &&
+                              parseFloat(
+                                compareAtPrice.replace(/[^\d.]/g, '')
+                              ) > 0 ? (
+                              <>
+                                <div className="flex items-center gap-2">
+                                  <ProductPrice className="text-xl font-bold text-content-primary" />
+                                  <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
+                                </div>
+                                <div className="flex items-center justify-end">
+                                  <div className="flex items-center gap-1">
+                                    <div
+                                      className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
+                                    ></div>
+                                    <span
+                                      className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
+                                    >
+                                      {available ? 'In Stock' : 'Out of Stock'}
+                                    </span>
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="w-full flex items-center justify-between">
+                                <ProductPrice className="text-xl font-bold text-content-primary" />
+                                <div className="flex items-center gap-1">
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
+                                  ></div>
+                                  <span
+                                    className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
+                                  >
+                                    {available ? 'In Stock' : 'Out of Stock'}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          }}
+                        </ProductRaw>
                       );
                     }}
-                  </SelectedVariant.Price>
+                  </SelectedVariantPrimitive.Price>
                 </div>
               </div>
               {/* Enhanced Action Buttons */}
               <ProductActionButtons isQuickView={true} />
 
-              <Navigation
-                data-testid="view-product-button"
-                route={`${productPageRoute}/${product.slug}`}
-                className="w-full"
-              >
-                <Button variant="secondary" size="lg" className="w-full">
-                  View Product
-                  <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              <ProductSlug asChild>
+                {({ slug }) => (
+                  <Navigation
+                    data-testid="view-product-button"
+                    route={`${productPageRoute}/${slug}`}
+                    className="w-full"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Button>
-              </Navigation>
+                    <Button variant="secondary" size="lg" className="w-full">
+                      View Product
+                      <svg
+                        className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </Button>
+                  </Navigation>
+                )}
+              </ProductSlug>
             </CardFooter>
           </Card>
-        </SelectedVariant.Root>
-      </MediaGallery.Root>
-    </Product>
+        </ProductListUI.ProductRepeater>
+      </ProductListUI.Products>
+    </>
   );
 };
 
@@ -724,7 +657,7 @@ const LoadMoreSection: React.FC = () => {
   return (
     <ProductListPagination.LoadMoreTrigger>
       {({ loadMore, hasMoreProducts, isLoading }) => (
-        <PrimitiveProductList.Items>
+        <ProductListPrimitive.Items>
           {({ products }) =>
             hasMoreProducts ? (
               <>
@@ -780,7 +713,7 @@ const LoadMoreSection: React.FC = () => {
               </>
             ) : null
           }
-        </PrimitiveProductList.Items>
+        </ProductListPrimitive.Items>
       )}
     </ProductListPagination.LoadMoreTrigger>
   );

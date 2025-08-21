@@ -1,21 +1,35 @@
 import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
 
 export const Product = ProductPrimitive.Root;
 
+const productNameVariants = cva('font-theme-heading', {
+  variants: {
+    variant: {
+      heading: 'text-4xl font-bold text-content-primary mb-4',
+      paragraph: '',
+    },
+  },
+  defaultVariants: {
+    variant: 'heading',
+  },
+});
+
+export interface ProductNameProps
+  extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>,
+    VariantProps<typeof productNameVariants> {}
+
 export const ProductName = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Name>,
-  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>
->((props, ref) => {
+  ProductNameProps
+>(({ variant, className, ...props }, ref) => {
   return (
     <ProductPrimitive.Name
       {...props}
       ref={ref}
-      className={cn(
-        'text-4xl font-bold text-content-primary mb-4 font-theme-heading',
-        props.className
-      )}
+      className={cn(productNameVariants({ variant }), className)}
     >
       {props.children}
     </ProductPrimitive.Name>
