@@ -1,5 +1,4 @@
 import * as StyledMediaGallery from '@/components/media/MediaGallery';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import {
@@ -11,11 +10,10 @@ import {
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 import {
-  ProductCore,
-  ProductListFilters,
-  ProductListPagination,
+  ProductListFilters as ProductListFiltersPrimitive,
+  ProductListPagination as ProductListPaginationPrimitive,
   ProductListCore as ProductListPrimitive,
-  ProductVariantSelector,
+  ProductVariantSelector as ProductVariantSelectorPrimitive,
   SelectedVariant as SelectedVariantPrimitive,
 } from '@wix/headless-stores/react';
 import {
@@ -38,9 +36,15 @@ import {
 import CategoryPicker from './CategoryPicker';
 import { ProductActionButtons } from './ProductActionButtons';
 import ProductFilters from './ProductFilters';
-import QuickViewModal from './QuickViewModal';
 import SortDropdown from './SortDropdown';
-import * as ProductListUI from './ui/ProductList';
+import {
+  LoadMoreTrigger,
+  ProductList,
+  ProductRepeater,
+  Products,
+  TotalsDisplayed,
+} from './ui/ProductList';
+import { Badge } from '../ui/badge';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -49,7 +53,47 @@ interface ProductListProps {
   currentCategorySlug: string;
 }
 
-export const ProductList: React.FC<ProductListProps> = ({
+export const ProductListSkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Card
+          key={i}
+          className="overflow-hidden relative bg-surface-card border-surface-subtle"
+        >
+          {/* Shimmer Effect */}
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-surface-loading/30 to-transparent"></div>
+
+          {/* Content Skeleton */}
+          <CardContent className="p-4">
+            <div className="aspect-square bg-surface-loading rounded-lg mb-4 animate-pulse"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-surface-loading rounded animate-pulse"></div>
+              <div className="h-3 bg-surface-loading rounded w-2/3 animate-pulse"></div>
+              <div className="flex gap-2 mt-3">
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+                <div className="w-6 h-6 bg-surface-loading rounded-full animate-pulse"></div>
+              </div>
+              <div className="flex justify-between items-center mt-4">
+                <div className="h-6 bg-surface-loading rounded w-16 animate-pulse"></div>
+                <div className="h-4 bg-surface-loading rounded w-20 animate-pulse"></div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 pt-0">
+            <div className="space-y-2 w-full">
+              <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+              <div className="h-10 bg-surface-loading rounded animate-pulse"></div>
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+export const ProductListWrapper: React.FC<ProductListProps> = ({
   productsListConfig,
   productPageRoute,
   categoriesListConfig,
@@ -59,14 +103,29 @@ export const ProductList: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <ProductListUI.ProductList productsListConfig={productsListConfig}>
+      <ProductList
+        productsListConfig={productsListConfig}
+        productsListSearchConfig={productsListSearchConfig}
+      >
         <div className="min-h-screen">
           {/* Header Controls */}
           <Card className="border-surface-subtle mb-6 bg-surface-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <CategoryPicker categoriesListConfig={categoriesListConfig} />
+                  <ProductListFiltersPrimitive.CategoryFilter>
+                    {({ selectedCategory, setSelectedCategory }) => {
+                      return (
+                        <CategoryPicker
+                          categoriesListConfig={categoriesListConfig}
+                          currentCategorySlug={
+                            selectedCategory?.slug || currentCategorySlug
+                          }
+                          onCategorySelect={setSelectedCategory}
+                        />
+                      );
+                    }}
+                  </ProductListFiltersPrimitive.CategoryFilter>
                 </div>
                 <SortDropdown />
               </div>
@@ -82,7 +141,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               <div className="flex-1 min-w-0">
                 <>
                   {/* Filter Status Bar */}
-                  <ProductListFilters.ResetTrigger>
+                  <ProductListFiltersPrimitive.ResetTrigger>
                     {({ resetFilters, isFiltered }) =>
                       isFiltered && (
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 filter-status-bar border rounded-xl p-4 mb-6">
@@ -121,11 +180,11 @@ export const ProductList: React.FC<ProductListProps> = ({
                         </div>
                       )
                     }
-                  </ProductListFilters.ResetTrigger>
+                  </ProductListFiltersPrimitive.ResetTrigger>
 
                   {/* Products Grid */}
-                  <ProductListUI.Products>
-                    <ProductListUI.ProductRepeater>
+                  <Products>
+                    <ProductRepeater>
                       <Card
                         data-testid="product-item"
                         className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
@@ -223,13 +282,13 @@ export const ProductList: React.FC<ProductListProps> = ({
                           </ProductSlug>
 
                           {/* Enhanced Product Variants */}
-                          <ProductVariantSelector.Options>
+                          <ProductVariantSelectorPrimitive.Options>
                             {({ options, hasOptions }) => (
                               <>
                                 {hasOptions && (
                                   <div className="mb-3 space-y-2">
                                     {options.map((option: any) => (
-                                      <ProductVariantSelector.Option
+                                      <ProductVariantSelectorPrimitive.Option
                                         key={option._id}
                                         option={option}
                                       >
@@ -242,7 +301,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                                               {choices
                                                 ?.slice(0, 3)
                                                 .map((choice: any) => (
-                                                  <ProductVariantSelector.Choice
+                                                  <ProductVariantSelectorPrimitive.Choice
                                                     key={choice.choiceId}
                                                     option={option}
                                                     choice={choice}
@@ -356,7 +415,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                                                         );
                                                       }
                                                     }}
-                                                  </ProductVariantSelector.Choice>
+                                                  </ProductVariantSelectorPrimitive.Choice>
                                                 ))}
                                               {choices?.length > 3 && (
                                                 <span className="text-content-muted text-xs self-center bg-surface-subtle px-2 py-1 rounded-full">
@@ -366,16 +425,16 @@ export const ProductList: React.FC<ProductListProps> = ({
                                             </div>
                                           </div>
                                         )}
-                                      </ProductVariantSelector.Option>
+                                      </ProductVariantSelectorPrimitive.Option>
                                     ))}
                                   </div>
                                 )}
                               </>
                             )}
-                          </ProductVariantSelector.Options>
+                          </ProductVariantSelectorPrimitive.Options>
 
                           {/* Reset Selections */}
-                          <ProductVariantSelector.Reset>
+                          <ProductVariantSelectorPrimitive.Reset>
                             {({ reset, hasSelections }) =>
                               hasSelections && (
                                 <div className="pt-2 pb-2">
@@ -390,7 +449,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                                 </div>
                               )
                             }
-                          </ProductVariantSelector.Reset>
+                          </ProductVariantSelectorPrimitive.Reset>
 
                           {/* Product Description */}
                           <ProductDescription
@@ -506,15 +565,15 @@ export const ProductList: React.FC<ProductListProps> = ({
                           </ProductSlug>
                         </CardFooter>
                       </Card>
-                    </ProductListUI.ProductRepeater>
-                  </ProductListUI.Products>
+                    </ProductRepeater>
+                  </Products>
                 </>
               </div>
             </div>
           )}
 
           {/* Load More Section */}
-          <ProductListPagination.LoadMoreTrigger>
+          <ProductListPaginationPrimitive.LoadMoreTrigger>
             {({ loadMore, hasMoreProducts, isLoading }) => (
               <ProductListPrimitive.Items>
                 {({ products }) =>
@@ -524,7 +583,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                         <div className="text-center mt-12 mb-8">
                           <div className="flex flex-col items-center gap-4">
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                              <ProductListUI.LoadMoreTrigger>
+                              <LoadMoreTrigger>
                                 <Button
                                   variant="default"
                                   size="lg"
@@ -563,9 +622,9 @@ export const ProductList: React.FC<ProductListProps> = ({
                                     'Load More Products'
                                   )}
                                 </Button>
-                              </ProductListUI.LoadMoreTrigger>
+                              </LoadMoreTrigger>
                             </div>
-                            <ProductListUI.TotalsDisplayed />
+                            <TotalsDisplayed />
                           </div>
                         </div>
                       )}
@@ -574,11 +633,11 @@ export const ProductList: React.FC<ProductListProps> = ({
                 }
               </ProductListPrimitive.Items>
             )}
-          </ProductListPagination.LoadMoreTrigger>
+          </ProductListPaginationPrimitive.LoadMoreTrigger>
         </div>
-      </ProductListUI.ProductList>
+      </ProductList>
     </TooltipProvider>
   );
 };
 
-export default ProductList;
+export default ProductListWrapper;
