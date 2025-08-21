@@ -1,12 +1,12 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ProductList as HeadlessProductList } from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
 
 // Root wrapper for the ProductList
-export const ProductList = HeadlessProductList.Root;
+export const ProductList = ProductListPrimitive.Root;
 
 // Products wrapper component
-export const ProductListProducts = React.forwardRef<
+export const Products = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -19,4 +19,6 @@ export const ProductListProducts = React.forwardRef<
     {...props}
   />
 ));
-ProductListProducts.displayName = 'ProductListProducts';
+Products.displayName = 'Products';
+
+export const ProductRepeater = ProductListPrimitive.ProductRepeater;

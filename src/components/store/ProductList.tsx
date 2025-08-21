@@ -284,17 +284,19 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       </ProductListFilters.ResetTrigger>
 
       {/* Products Grid */}
-      <ProductListUI.ProductListProducts>
-        <PrimitiveProductList.ItemContent>
-          {({ product }) => (
-            <ProductItem
-              product={product}
-              productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
-            />
-          )}
-        </PrimitiveProductList.ItemContent>
-      </ProductListUI.ProductListProducts>
+      <ProductListUI.Products>
+        <ProductListUI.ProductRepeater>
+          {/* <PrimitiveProductList.ItemContent>
+            {({ product }) => (
+              <ProductItem
+                product={product}
+                productPageRoute={productPageRoute}
+                openQuickView={openQuickView}
+              />
+            )}
+          </PrimitiveProductList.ItemContent> */}
+        </ProductListUI.ProductRepeater>
+      </ProductListUI.Products>
     </>
   );
 };
