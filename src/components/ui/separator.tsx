@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 const separatorVariants = cva('shrink-0', {
   variants: {
     variant: {
-      default: 'bg-border',
-      primary: 'bg-primary/50',
-      secondary: 'bg-secondary/50',
+      default: 'bg-foreground/15',
+      primary: 'bg-primary/30',
+      secondary: 'bg-secondary/15',
     },
   },
   defaultVariants: {
