@@ -99,7 +99,7 @@ async function navigateToFirstAvailableProduct(
 
   const selectedProductItem = page
     .locator(
-      `[data-testid="product-item"][data-product-available="${available}"]`
+      `[data-testid="product-list-item"][data-product-available="${available}"]`
     )
     .filter({
       has: page.locator('[data-testid="add-to-cart-button"]:not([disabled])'),
