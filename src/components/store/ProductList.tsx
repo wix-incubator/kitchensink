@@ -11,7 +11,6 @@ import {
 import { Product, ProductDescription } from '../ui/store/Product';
 import {
   type ProductsListServiceConfig,
-  type ProductsListSearchServiceConfig,
   type CategoriesListServiceConfig,
 } from '@wix/headless-stores/services';
 import { useNavigation } from '../NavigationContext';
@@ -20,9 +19,8 @@ import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 import { productsV3 } from '@wix/stores';
-import SortDropdown from './SortDropdown';
+import { SortDropdown } from './SortDropdown';
 import CategoryPicker from './CategoryPicker';
-import ProductFilters from './ProductFilters';
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,10 +31,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { MediaGallery } from '@wix/headless-media/react';
+import ProductFiltersSidebar from './ProductFiltersSidebar';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
-  productsListSearchConfig: ProductsListSearchServiceConfig;
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
   currentCategorySlug: string;
@@ -44,10 +42,8 @@ interface ProductListProps {
 
 export const ProductList: React.FC<ProductListProps> = ({
   productsListConfig,
-  productsListSearchConfig,
   productPageRoute,
   categoriesListConfig,
-  currentCategorySlug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
     useState<productsV3.V3Product | null>(null);
@@ -65,10 +61,7 @@ export const ProductList: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <HeadlessProductList.Root
-        productsListConfig={productsListConfig}
-        productsListSearchConfig={productsListSearchConfig}
-      >
+      <HeadlessProductList.Root productsListConfig={productsListConfig}>
         <div className="min-h-screen">
           {/* Error State */}
           <HeadlessProductList.Error>
@@ -101,19 +94,7 @@ export const ProductList: React.FC<ProductListProps> = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <ProductListFilters.CategoryFilter>
-                    {({ selectedCategory, setSelectedCategory }) => {
-                      return (
-                        <CategoryPicker
-                          categoriesListConfig={categoriesListConfig}
-                          currentCategorySlug={
-                            selectedCategory?.slug || currentCategorySlug
-                          }
-                          onCategorySelect={setSelectedCategory}
-                        />
-                      );
-                    }}
-                  </ProductListFilters.CategoryFilter>
+                  <CategoryPicker categoriesListConfig={categoriesListConfig} />
                 </div>
                 <SortDropdown />
               </div>
@@ -121,32 +102,18 @@ export const ProductList: React.FC<ProductListProps> = ({
           </Card>
 
           {/* Filters Section */}
-          {productsListSearchConfig && (
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              {/* Filters Sidebar */}
-              <div className="w-full lg:w-80 lg:flex-shrink-0">
-                <div className="lg:sticky lg:top-6">
-                  <ProductFilters />
-                </div>
-              </div>
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Filters Sidebar */}
+            <ProductFiltersSidebar />
 
-              {/* Main Content Area */}
-              <div className="flex-1 min-w-0">
-                <ProductGrid
-                  productPageRoute={productPageRoute}
-                  openQuickView={openQuickView}
-                />
-              </div>
+            {/* Main Content Area */}
+            <div className="flex-1 min-w-0">
+              <ProductGrid
+                productPageRoute={productPageRoute}
+                openQuickView={openQuickView}
+              />
             </div>
-          )}
-
-          {/* Products Grid (when no filters config provided) */}
-          {!productsListSearchConfig && (
-            <ProductGrid
-              productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
-            />
-          )}
+          </div>
 
           {/* Load More Section */}
           <LoadMoreSection />

@@ -4,13 +4,11 @@ import {
   loadCategoriesListServiceConfig,
   parseUrlToSearchOptions,
 } from '@wix/headless-stores/services';
-import {
-  loadProductsListServiceConfig,
-  loadProductsListSearchServiceConfig,
-} from '@wix/headless-stores/services';
+import { loadProductsListServiceConfig } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '../../../components/store/ProductList';
 import { Card, CardContent } from '@/components/ui/card';
+import { customizationsV3 } from '@wix/stores';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
@@ -130,9 +128,14 @@ export async function storeCollectionRouteLoader({
     throw new Response('Not Found', { status: 404 });
   }
 
+  const { items: customizations = [] } = await customizationsV3
+    .queryCustomizations()
+    .find();
+
   const parsedSearchOptions = await parseUrlToSearchOptions(
     window.location.href,
     categoriesListConfig.categories,
+    customizations,
     {
       cursorPaging: {
         limit: 20,
@@ -149,7 +152,6 @@ export async function storeCollectionRouteLoader({
   // It will be awaited in the route component for the skeleton to be rendered
   const notAwaitedData = Promise.all([
     loadProductsListServiceConfig(parsedSearchOptions),
-    loadProductsListSearchServiceConfig(parsedSearchOptions),
   ]);
 
   return {
@@ -173,13 +175,12 @@ export function StoreCollectionRoute({
       <React.Suspense fallback={<CollectionSkeleton />}>
         <Await resolve={notAwaitedData} errorElement={<CollectionError />}>
           {data => {
-            const [productsListConfig, productsListSearchConfig] = data;
+            const [productsListConfig] = data;
 
             return (
               <CategoryPage
                 categoriesListConfig={categoriesListConfig}
                 productsListConfig={productsListConfig}
-                productsListSearchConfig={productsListSearchConfig}
                 currentCategorySlug={currentCategorySlug}
                 productPageRoute={productPageRoute}
               />
