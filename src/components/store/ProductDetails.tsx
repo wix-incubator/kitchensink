@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   ProductModifiers,
   ProductVariantSelector,
@@ -5,7 +6,13 @@ import {
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import { Product, ProductName, ProductDescription } from '../ui/store/Product';
+import {
+  Product,
+  ProductName,
+  ProductDescription,
+  ProductPrice,
+  ProductCompareAtPrice,
+} from '../ui/store/Product';
 
 import { productsV3 } from '@wix/stores';
 
@@ -101,7 +108,13 @@ export default function ProductDetails({
                       <ProductName asChild>
                         <h2 />
                       </ProductName>
-                      <SelectedVariant.Price>
+                      <div className="space-y-1">
+                        <ProductPrice />
+                        <ProductCompareAtPrice asChild>
+                          <div></div>
+                        </ProductCompareAtPrice>
+                      </div>
+                      {/* <SelectedVariant.Price>
                         {({ price, compareAtPrice }) => (
                           <div className="space-y-1">
                             <div className="text-3xl font-bold text-content-primary font-theme-heading">
@@ -117,7 +130,7 @@ export default function ProductDetails({
                               )}
                           </div>
                         )}
-                      </SelectedVariant.Price>
+                      </SelectedVariant.Price> */}
                       {isQuickView && (
                         <SelectedVariant.SKU>
                           {({ sku }) =>

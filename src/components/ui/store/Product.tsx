@@ -50,7 +50,7 @@ export const ProductPrice = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'text-3xl font-bold text-content-primary data-[discounted]:text-status-success',
+        'text-3xl font-bold text-content-primary font-theme-heading',
         props.className
       )}
     >
@@ -70,7 +70,7 @@ export const ProductCompareAtPrice = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'text-lg text-content-muted line-through hidden data-[discounted]:inline',
+        'text-lg font-medium text-content-faded line-through',
         props.className
       )}
     >
