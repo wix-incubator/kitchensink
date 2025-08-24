@@ -61,9 +61,7 @@ export const ProductList: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <HeadlessProductList.Root
-        productsListConfig={productsListConfig}
-      >
+      <HeadlessProductList.Root productsListConfig={productsListConfig}>
         <div className="min-h-screen">
           {/* Error State */}
           <HeadlessProductList.Error>
@@ -96,9 +94,7 @@ export const ProductList: React.FC<ProductListProps> = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <CategoryPicker
-                    categoriesListConfig={categoriesListConfig}
-                  />
+                  <CategoryPicker categoriesListConfig={categoriesListConfig} />
                 </div>
                 <SortDropdown />
               </div>
@@ -266,7 +262,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                 <span className="text-brand-light text-sm sm:text-base">
                   <HeadlessProductList.Items>
                     {({ products }) =>
-                      `Showing ${String(products.length)} product${products.length === 1 ? '' : 's'
+                      `Showing ${String(products.length)} product${
+                        products.length === 1 ? '' : 's'
                       }`
                     }
                   </HeadlessProductList.Items>
@@ -320,7 +317,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const available =
     availabilityStatus === productsV3.InventoryAvailabilityStatus.IN_STOCK ||
     availabilityStatus ===
-    productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
+      productsV3.InventoryAvailabilityStatus.PARTIALLY_OUT_OF_STOCK;
 
   return (
     <Product product={product}>
@@ -514,13 +511,15 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                               <TooltipTrigger asChild>
                                                 <div className="relative">
                                                   <div
-                                                    className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${isSelected
-                                                      ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
-                                                      : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
-                                                      } ${nonSelectable
+                                                    className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${
+                                                      isSelected
+                                                        ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
+                                                        : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
+                                                    } ${
+                                                      nonSelectable
                                                         ? 'grayscale opacity-50'
                                                         : ''
-                                                      }`}
+                                                    }`}
                                                     style={{
                                                       backgroundColor:
                                                         choice.colorCode ||
@@ -568,10 +567,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
                                               className={
                                                 isSelected
                                                   ? ''
-                                                  : `text-content-primary border-surface-subtle hover:bg-primary/10 ${nonSelectable
-                                                    ? 'opacity-50 line-through'
-                                                    : ''
-                                                  }`
+                                                  : `text-content-primary border-surface-subtle hover:bg-primary/10 ${
+                                                      nonSelectable
+                                                        ? 'opacity-50 line-through'
+                                                        : ''
+                                                    }`
                                               }
                                               disabled={nonSelectable}
                                             >
@@ -639,7 +639,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                     {({ price, compareAtPrice }) => {
                       return compareAtPrice &&
                         parseFloat(compareAtPrice.replace(/[^\d.]/g, '')) >
-                        0 ? (
+                          0 ? (
                         <>
                           <div className="flex items-center gap-2">
                             <div className="text-xl font-bold text-content-primary">
@@ -734,10 +734,11 @@ const LoadMoreSection: React.FC = () => {
                           size="lg"
                           onClick={() => loadMore(10)}
                           disabled={isLoading}
-                          className={`font-semibold transform hover:scale-105 ${isLoading
-                            ? 'bg-surface-loading animate-pulse'
-                            : 'shadow-md hover:shadow-lg'
-                            }`}
+                          className={`font-semibold transform hover:scale-105 ${
+                            isLoading
+                              ? 'bg-surface-loading animate-pulse'
+                              : 'shadow-md hover:shadow-lg'
+                          }`}
                         >
                           {isLoading ? (
                             <span className="flex items-center gap-2">

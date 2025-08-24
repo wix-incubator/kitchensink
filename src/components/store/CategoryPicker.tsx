@@ -1,6 +1,10 @@
 import React from 'react';
 import { categories } from '@wix/categories';
-import { CategoryList, Category, ProductListFilters as ProductListFiltersPrimitive } from '@wix/headless-stores/react';
+import {
+  CategoryList,
+  Category,
+  ProductListFilters as ProductListFiltersPrimitive,
+} from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -9,9 +13,7 @@ interface CategoryPickerProps {
   categoriesListConfig: CategoriesListServiceConfig;
 }
 
-export function CategoryPicker({
-  categoriesListConfig,
-}: CategoryPickerProps) {
+export function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
   return (
     <CategoryList.Root categoriesListConfig={categoriesListConfig}>
       <div>

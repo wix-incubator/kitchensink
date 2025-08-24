@@ -6,9 +6,7 @@ import {
   parseUrlToSearchOptions,
 } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import {
-  loadCategoriesListServiceConfig,
-} from '@wix/headless-stores/services';
+import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
 import { seoTags } from '@wix/seo';
@@ -43,37 +41,34 @@ const parsedSearchOptions = await parseUrlToSearchOptions(
   }
 );
 
-const [
-  productsListConfig,
-  currentCartServiceConfig,
-  seoTagsServiceConfig,
-] = await Promise.all([
-  loadProductsListServiceConfig(parsedSearchOptions),
-  loadCurrentCartServiceConfig(),
-  loadSEOTagsServiceConfig({
-    pageUrl: Astro.url.href,
-    itemType: seoTags.ItemType.STORES_CATEGORY,
-    itemData: {
-      slug: categorySlug,
-      pageName: categoryName,
-      seoData: {
-        tags: [
-          {
-            type: 'title',
-            children: `${categoryName} - Store`,
-          },
-          {
-            type: 'meta',
-            props: {
-              content: `Browse our ${categoryName} products`,
-              name: 'description',
+const [productsListConfig, currentCartServiceConfig, seoTagsServiceConfig] =
+  await Promise.all([
+    loadProductsListServiceConfig(parsedSearchOptions),
+    loadCurrentCartServiceConfig(),
+    loadSEOTagsServiceConfig({
+      pageUrl: Astro.url.href,
+      itemType: seoTags.ItemType.STORES_CATEGORY,
+      itemData: {
+        slug: categorySlug,
+        pageName: categoryName,
+        seoData: {
+          tags: [
+            {
+              type: 'title',
+              children: `${categoryName} - Store`,
             },
-          },
-        ],
+            {
+              type: 'meta',
+              props: {
+                content: `Browse our ${categoryName} products`,
+                name: 'description',
+              },
+            },
+          ],
+        },
       },
-    },
-  }),
-]);
+    }),
+  ]);
 ---
 
 <BaseLayout>
