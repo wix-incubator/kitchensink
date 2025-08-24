@@ -64,7 +64,7 @@
     "@wix/headless-ecom": "^0.0.13",
     "@wix/headless-media": "^0.0.11",
     "@wix/headless-seo": "^0.0.10",
-    "@wix/headless-stores": "^0.0.60",
+    "@wix/headless-stores": "^0.0.61",
     "@wix/image": "^1.392.0",
     "@wix/media": "^1.0.170",
     "@wix/members": "^1.0.298",

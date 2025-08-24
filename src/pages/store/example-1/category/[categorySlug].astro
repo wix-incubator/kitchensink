@@ -6,13 +6,11 @@ import {
   parseUrlToSearchOptions,
 } from '@wix/headless-stores/services';
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import {
-  loadCategoriesListServiceConfig,
-  loadProductsListSearchServiceConfig,
-} from '@wix/headless-stores/services';
+import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
 import { seoTags } from '@wix/seo';
+import { customizationsV3 } from '@wix/stores';
 
 // Get category slug from URL params
 const { categorySlug = '' } = Astro.params;
@@ -28,10 +26,14 @@ if (!category) {
 }
 
 const categoryName = category?.name || '';
+const { items: customizations = [] } = await customizationsV3
+  .queryCustomizations()
+  .find();
 
 const parsedSearchOptions = await parseUrlToSearchOptions(
   Astro.url.href,
   categoriesListConfig.categories,
+  customizations,
   {
     cursorPaging: {
       limit: 10,
@@ -44,39 +46,34 @@ const parsedSearchOptions = await parseUrlToSearchOptions(
   }
 );
 
-const [
-  productsListConfig,
-  currentCartServiceConfig,
-  productsListSearchConfig,
-  seoTagsServiceConfig,
-] = await Promise.all([
-  loadProductsListServiceConfig(parsedSearchOptions),
-  loadCurrentCartServiceConfig(),
-  loadProductsListSearchServiceConfig(parsedSearchOptions),
-  loadSEOTagsServiceConfig({
-    pageUrl: Astro.url.href,
-    itemType: seoTags.ItemType.STORES_CATEGORY,
-    itemData: {
-      slug: categorySlug,
-      pageName: categoryName,
-      seoData: {
-        tags: [
-          {
-            type: 'title',
-            children: `${categoryName} - Store`,
-          },
-          {
-            type: 'meta',
-            props: {
-              content: `Browse our ${categoryName} products`,
-              name: 'description',
+const [productsListConfig, currentCartServiceConfig, seoTagsServiceConfig] =
+  await Promise.all([
+    loadProductsListServiceConfig(parsedSearchOptions),
+    loadCurrentCartServiceConfig(),
+    loadSEOTagsServiceConfig({
+      pageUrl: Astro.url.href,
+      itemType: seoTags.ItemType.STORES_CATEGORY,
+      itemData: {
+        slug: categorySlug,
+        pageName: categoryName,
+        seoData: {
+          tags: [
+            {
+              type: 'title',
+              children: `${categoryName} - Store`,
             },
-          },
-        ],
+            {
+              type: 'meta',
+              props: {
+                content: `Browse our ${categoryName} products`,
+                name: 'description',
+              },
+            },
+          ],
+        },
       },
-    },
-  }),
-]);
+    }),
+  ]);
 ---
 
 <BaseLayout>
@@ -86,7 +83,6 @@ const [
     currentCartServiceConfig={currentCartServiceConfig}
     categoriesListConfig={categoriesListConfig}
     productsListConfig={productsListConfig}
-    productsListSearchConfig={productsListSearchConfig}
     currentCategorySlug={categorySlug}
     slot="body"
   />
