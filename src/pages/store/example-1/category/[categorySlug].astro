@@ -10,6 +10,7 @@ import { loadCategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
 import { seoTags } from '@wix/seo';
+import { customizationsV3 } from '@wix/stores';
 
 // Get category slug from URL params
 const { categorySlug = '' } = Astro.params;
@@ -25,10 +26,14 @@ if (!category) {
 }
 
 const categoryName = category?.name || '';
+const { items: customizations = [] } = await customizationsV3
+  .queryCustomizations()
+  .find();
 
 const parsedSearchOptions = await parseUrlToSearchOptions(
   Astro.url.href,
   categoriesListConfig.categories,
+  customizations,
   {
     cursorPaging: {
       limit: 10,

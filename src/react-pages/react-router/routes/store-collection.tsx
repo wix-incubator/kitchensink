@@ -8,6 +8,7 @@ import { loadProductsListServiceConfig } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '../../../components/store/ProductList';
 import { Card, CardContent } from '@/components/ui/card';
+import { customizationsV3 } from '@wix/stores';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
@@ -127,9 +128,14 @@ export async function storeCollectionRouteLoader({
     throw new Response('Not Found', { status: 404 });
   }
 
+  const { items: customizations = [] } = await customizationsV3
+    .queryCustomizations()
+    .find();
+
   const parsedSearchOptions = await parseUrlToSearchOptions(
     window.location.href,
     categoriesListConfig.categories,
+    customizations,
     {
       cursorPaging: {
         limit: 20,
