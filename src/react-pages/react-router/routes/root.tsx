@@ -56,7 +56,7 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
   );
 }
 
-export function MiniCart({ children }: { children: ReactNode }) {
+export function MiniCart({ children }: { children?: ReactNode }) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 

@@ -4,7 +4,7 @@ import {
   SelectedVariant,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
-import { CurrentCart, Cart } from '@wix/headless-ecom/react';
+import { Cart } from '@wix/headless-ecom/react';
 import { Product, ProductName, ProductDescription } from '../ui/store/Product';
 
 import { productsV3 } from '@wix/stores';

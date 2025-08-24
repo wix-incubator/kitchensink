@@ -6,7 +6,6 @@ import {
   Quantity,
   Commerce,
 } from '@wix/headless-ecom/react';
-import { WixMediaImage } from '../../headless/media/components';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -299,7 +298,7 @@ export function MiniCartContent() {
           <div className="mb-4">
             <Cart.Coupon.Root>
               <Cart.Coupon.Raw asChild>
-                {({ apply, isLoading, appliedCoupon, remove, error }) => (
+                {({ apply, isLoading, appliedCoupon, remove }) => (
                   <CouponFormMini
                     apply={apply}
                     isLoading={isLoading}

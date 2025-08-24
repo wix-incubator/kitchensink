@@ -27,10 +27,7 @@ const router = createBrowserRouter(
     {
       element: (
         <WixServicesProvider>
-          <MiniCart
-            // cartIcon={... optionally use your own icon...}
-            cartIconClassName="fixed top-2 right-2 z-50"
-          />
+          <MiniCart />
           <Outlet />
         </WixServicesProvider>
       ),

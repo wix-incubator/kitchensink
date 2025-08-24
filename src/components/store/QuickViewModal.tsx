@@ -4,7 +4,7 @@ import { productsV3 } from '@wix/stores';
 import ProductDetails from './ProductDetails';
 import { useNavigation } from '../NavigationContext';
 
-import { CurrentCart, Cart } from '@wix/headless-ecom/react';
+import { Cart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 
 interface QuickViewModalProps {
