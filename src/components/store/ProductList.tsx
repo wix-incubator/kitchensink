@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { Cart } from '@wix/headless-ecom/react';
 import type { LineItem } from '@wix/headless-ecom/services';
 import {
   ProductListFilters as ProductListFiltersPrimitive,
@@ -202,7 +202,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                       {/* Cart Success Handler */}
                       <ProductRaw asChild>
                         {({ product }) => (
-                          <CurrentCart.LineItemAdded>
+                          <Cart.LineItemAdded>
                             {({ onAddedToCart }) => {
                               React.useEffect(() => {
                                 return onAddedToCart(
@@ -225,7 +225,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
 
                               return null;
                             }}
-                          </CurrentCart.LineItemAdded>
+                          </Cart.LineItemAdded>
                         )}
                       </ProductRaw>
 
