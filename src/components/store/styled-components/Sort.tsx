@@ -22,16 +22,16 @@ export interface SortOptionProps extends PrimitiveSortOptionProps {
   className?: string;
 }
 
-export interface StyledProductListSortProps
-  extends ProductListSortPrimitive.ProductListSortProps {
+export interface StyledProductListSortProps {
   /** Additional CSS classes */
   className?: string;
   as?: 'select' | 'list';
+  children?: React.ReactNode;
 }
 
 export const StyledProductListSort = (props: StyledProductListSortProps) => {
   return (
-    <ProductListSortPrimitive.ProductListSort asChild={true}>
+    <ProductListSortPrimitive.ProductListSort>
       {({ currentSort, sortOptions, setSort }) => (
         <Root
           value={currentSort}
