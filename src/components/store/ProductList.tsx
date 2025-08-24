@@ -31,6 +31,7 @@ import {
   ProductPrice,
   ProductRaw,
   ProductSlug,
+  ProductStock,
 } from '../ui/store/Product';
 import CategoryPicker from './CategoryPicker';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -443,68 +444,37 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                       <CardFooter className="p-4 pt-0 flex-col space-y-2">
                         {/* Enhanced Price and Stock */}
                         <div className="mt-auto w-full py-2">
-                          <div className="items-center flex justify-between">
-                            <SelectedVariantPrimitive.Price>
-                              {({ compareAtPrice }) => {
-                                return (
-                                  <ProductRaw asChild>
-                                    {({ product }) => {
-                                      const available =
-                                        product.inventory
-                                          ?.availabilityStatus ===
-                                          productsV3.InventoryAvailabilityStatus
-                                            .IN_STOCK ||
-                                        product.inventory
-                                          ?.availabilityStatus ===
-                                          productsV3.InventoryAvailabilityStatus
-                                            .PARTIALLY_OUT_OF_STOCK;
-
-                                      return compareAtPrice &&
-                                        parseFloat(
-                                          compareAtPrice.replace(/[^\d.]/g, '')
-                                        ) > 0 ? (
-                                        <>
-                                          <div className="flex items-center gap-2">
-                                            <ProductPrice className="text-xl font-bold text-content-primary" />
-                                            <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
-                                          </div>
-                                          <div className="flex items-center justify-end">
-                                            <div className="flex items-center gap-1">
-                                              <div
-                                                className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
-                                              ></div>
-                                              <span
-                                                className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
-                                              >
-                                                {available
-                                                  ? 'In Stock'
-                                                  : 'Out of Stock'}
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </>
-                                      ) : (
-                                        <div className="w-full flex items-center justify-between">
-                                          <ProductPrice className="text-xl font-bold text-content-primary" />
-                                          <div className="flex items-center gap-1">
-                                            <div
-                                              className={`w-2 h-2 rounded-full ${available ? 'bg-status-success' : 'bg-status-error'}`}
-                                            ></div>
-                                            <span
-                                              className={`text-xs font-medium ${available ? 'text-status-success' : 'text-status-error'}`}
-                                            >
-                                              {available
-                                                ? 'In Stock'
-                                                : 'Out of Stock'}
-                                            </span>
-                                          </div>
-                                        </div>
-                                      );
-                                    }}
-                                  </ProductRaw>
-                                );
+                          <div className="w-full flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <ProductPrice className="text-xl font-bold text-content-primary" />
+                              <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
+                            </div>
+                            <ProductStock
+                              labels={{
+                                inStock: 'In Stock',
+                                limitedStock: 'In Stock',
+                                outOfStock: 'Out of Stock',
                               }}
-                            </SelectedVariantPrimitive.Price>
+                              asChild
+                            >
+                              {React.forwardRef<
+                                HTMLDivElement,
+                                {
+                                  status:
+                                    | 'in-stock'
+                                    | 'limited-stock'
+                                    | 'out-of-stock';
+                                  label: string;
+                                }
+                              >(({ label }, ref) => (
+                                <div
+                                  ref={ref}
+                                  className="flex items-center gap-1 text-xs font-medium data-[state='out-of-stock']:text-status-error data-[state='in-stock']:text-status-success data-[state='limited-stock']:text-status-success"
+                                >
+                                  {label}
+                                </div>
+                              ))}
+                            </ProductStock>
                           </div>
                         </div>
                         {/* Enhanced Action Buttons */}

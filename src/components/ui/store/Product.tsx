@@ -214,3 +214,23 @@ export const ProductModifierOptionRepeater =
   ProductPrimitive.ModifierOptionRepeater;
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';
+
+export const ProductStock = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Stock>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Stock>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.Stock
+      {...props}
+      ref={ref}
+      className={cn(
+        'text-content-secondary font-mono text-sm',
+        props.className
+      )}
+    >
+      {props.children}
+    </ProductPrimitive.Stock>
+  );
+});
+
+ProductStock.displayName = 'ProductStock';
