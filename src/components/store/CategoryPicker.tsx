@@ -1,20 +1,16 @@
 import React from 'react';
 import { categories } from '@wix/categories';
-import { CategoryList, Category } from '@wix/headless-stores/react';
+import { CategoryList, Category, ProductListFilters as ProductListFiltersPrimitive } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
 interface CategoryPickerProps {
-  onCategorySelect: (category: categories.Category) => void;
   categoriesListConfig: CategoriesListServiceConfig;
-  currentCategorySlug?: string;
 }
 
 export function CategoryPicker({
-  onCategorySelect,
   categoriesListConfig,
-  currentCategorySlug,
 }: CategoryPickerProps) {
   return (
     <CategoryList.Root categoriesListConfig={categoriesListConfig}>
@@ -27,18 +23,22 @@ export function CategoryPicker({
 
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-          <CategoryList.CategoryRepeater>
-            <Category.Trigger asChild>
-              {({ category }) => (
-                <CategoryButton
-                  key={category._id}
-                  category={category}
-                  isSelected={currentCategorySlug === category.slug}
-                  onSelect={() => onCategorySelect(category)}
-                />
-              )}
-            </Category.Trigger>
-          </CategoryList.CategoryRepeater>
+          <ProductListFiltersPrimitive.CategoryFilter>
+            {({ selectedCategory, setSelectedCategory }) => (
+              <CategoryList.CategoryRepeater>
+                <Category.Trigger asChild>
+                  {({ category }) => (
+                    <CategoryButton
+                      key={category._id}
+                      category={category}
+                      isSelected={selectedCategory?.slug === category.slug}
+                      onSelect={() => setSelectedCategory(category)}
+                    />
+                  )}
+                </Category.Trigger>
+              </CategoryList.CategoryRepeater>
+            )}
+          </ProductListFiltersPrimitive.CategoryFilter>
         </div>
       </div>
     </CategoryList.Root>

@@ -8,7 +8,6 @@ import {
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   loadCategoriesListServiceConfig,
-  loadProductsListSearchServiceConfig,
 } from '@wix/headless-stores/services';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
@@ -47,12 +46,10 @@ const parsedSearchOptions = await parseUrlToSearchOptions(
 const [
   productsListConfig,
   currentCartServiceConfig,
-  productsListSearchConfig,
   seoTagsServiceConfig,
 ] = await Promise.all([
   loadProductsListServiceConfig(parsedSearchOptions),
   loadCurrentCartServiceConfig(),
-  loadProductsListSearchServiceConfig(parsedSearchOptions),
   loadSEOTagsServiceConfig({
     pageUrl: Astro.url.href,
     itemType: seoTags.ItemType.STORES_CATEGORY,
@@ -86,7 +83,6 @@ const [
     currentCartServiceConfig={currentCartServiceConfig}
     categoriesListConfig={categoriesListConfig}
     productsListConfig={productsListConfig}
-    productsListSearchConfig={productsListSearchConfig}
     currentCategorySlug={categorySlug}
     slot="body"
   />
