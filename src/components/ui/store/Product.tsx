@@ -223,10 +223,17 @@ export const ProductStock = React.forwardRef<
     <ProductPrimitive.Stock
       {...props}
       ref={ref}
+      labels={{
+        inStock: 'In Stock',
+        limitedStock: 'In Stock',
+        outOfStock: 'Out of Stock',
+        ...props.labels,
+      }}
       className={cn(
-        'text-content-secondary font-mono text-sm',
+        'data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success',
         props.className
       )}
+      asChild
     >
       {props.children}
     </ProductPrimitive.Stock>
