@@ -4,8 +4,8 @@ import {
   LineItem,
   SelectedOption,
   Quantity,
-  Commerce,
 } from '@wix/headless-ecom/react';
+import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -348,11 +348,11 @@ export function MiniCartContent() {
         </div>
 
         <div className="px-4 pb-4 space-y-2">
-          <Commerce.Actions.Checkout asChild>
+          <CommerceActionsCheckout asChild>
             <Button className="w-full font-semibold py-3 px-6" size="lg">
               Proceed to Checkout
             </Button>
-          </Commerce.Actions.Checkout>
+          </CommerceActionsCheckout>
         </div>
       </div>
     </div>

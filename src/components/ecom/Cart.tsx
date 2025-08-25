@@ -1,4 +1,4 @@
-import { Commerce, Quantity, SelectedOption } from '@wix/headless-ecom/react';
+import { Quantity, SelectedOption } from '@wix/headless-ecom/react';
 import {
   CartTotalsPrice,
   CartTotalsDiscount,
@@ -23,6 +23,7 @@ import {
   LineItemSelectedOptionRepeater,
   LineItemQuantity,
 } from '@/components/ui/ecom/LineItem';
+import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
 import { useNavigation } from '../NavigationContext';
 import { Button } from '@/components/ui/button';
 
@@ -147,8 +148,7 @@ export default function CartContent() {
                 </div>
                 <CartErrors />
 
-                <Commerce.Actions.Checkout
-                  className="btn-primary w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                <CommerceActionsCheckout
                   label="Proceed to Checkout"
                   loadingState="Processing..."
                 />
