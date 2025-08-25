@@ -225,7 +225,7 @@ export const ProductStock = React.forwardRef<
       ref={ref}
       labels={{
         inStock: 'In Stock',
-        limitedStock: 'In Stock',
+        limitedStock: 'Limited Stock',
         outOfStock: 'Out of Stock',
         ...props.labels,
       }}

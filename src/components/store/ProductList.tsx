@@ -449,7 +449,14 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                               <ProductPrice className="text-xl font-bold text-content-primary" />
                               <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
                             </div>
-                            <ProductStock className="flex items-center gap-1 text-xs font-medium" />
+                            <ProductStock
+                              className="flex items-center gap-1 text-xs font-medium"
+                              labels={{
+                                inStock: 'In Stock',
+                                limitedStock: 'In Stock',
+                                outOfStock: 'Out of Stock',
+                              }}
+                            />
                           </div>
                         </div>
                         {/* Enhanced Action Buttons */}
