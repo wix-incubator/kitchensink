@@ -243,16 +243,16 @@ export default function BlogPostPage({
                                           <path
                                             d="M3.3335 8H12.6668"
                                             stroke="currentColor"
-                                            stroke-width="1.33333"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeWidth="1.33333"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                           />
                                           <path
                                             d="M8 3.33301L12.6667 7.99967L8 12.6663"
                                             stroke="currentColor"
-                                            stroke-width="1.33333"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeWidth="1.33333"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                           />
                                         </svg>
                                       </a>
