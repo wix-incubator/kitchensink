@@ -504,7 +504,12 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
           <div className="text-center mt-12 mb-8">
             <div className="flex flex-col items-center gap-4">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LoadMoreTrigger />
+                <LoadMoreTrigger
+                  labels={{
+                    hasMoreProducts: 'Load More Products',
+                    loading: 'Loading...',
+                  }}
+                />
               </div>
               <TotalsDisplayed />
             </div>
