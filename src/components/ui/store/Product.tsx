@@ -1,21 +1,35 @@
 import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
 
 export const Product = ProductPrimitive.Root;
 
+const productNameVariants = cva('font-theme-heading', {
+  variants: {
+    variant: {
+      heading: 'text-4xl font-bold text-content-primary mb-4',
+      paragraph: '',
+    },
+  },
+  defaultVariants: {
+    variant: 'heading',
+  },
+});
+
+export interface ProductNameProps
+  extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>,
+    VariantProps<typeof productNameVariants> {}
+
 export const ProductName = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Name>,
-  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>
->((props, ref) => {
+  ProductNameProps
+>(({ variant, className, ...props }, ref) => {
   return (
     <ProductPrimitive.Name
       {...props}
       ref={ref}
-      className={cn(
-        'text-4xl font-bold text-content-primary mb-4 font-theme-heading',
-        props.className
-      )}
+      className={cn(productNameVariants({ variant }), className)}
     >
       {props.children}
     </ProductPrimitive.Name>
@@ -200,3 +214,30 @@ export const ProductModifierOptionRepeater =
   ProductPrimitive.ModifierOptionRepeater;
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';
+
+export const ProductStock = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Stock>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Stock>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.Stock
+      {...props}
+      ref={ref}
+      labels={{
+        inStock: 'In Stock',
+        limitedStock: 'Limited Stock',
+        outOfStock: 'Out of Stock',
+        ...props.labels,
+      }}
+      className={cn(
+        'data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success',
+        props.className
+      )}
+      asChild
+    >
+      {props.children}
+    </ProductPrimitive.Stock>
+  );
+});
+
+ProductStock.displayName = 'ProductStock';
