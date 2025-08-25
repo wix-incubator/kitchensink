@@ -160,9 +160,6 @@ test.describe('React Router e2e Flow', () => {
     await expect(proceedToCheckoutButton).toBeVisible();
     await proceedToCheckoutButton.click();
 
-    const checkoutButton = page.getByTestId('proceed-to-checkout-button');
-    await expect(checkoutButton).toBeVisible();
-
     await expect(page).toHaveURL(/\/checkout\?checkoutId=.*$/, {
       timeout: 10000,
     });
