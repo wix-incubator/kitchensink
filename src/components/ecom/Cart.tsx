@@ -1,10 +1,4 @@
-import {
-  LineItem,
-  Cart,
-  Commerce,
-  Quantity,
-  SelectedOption,
-} from '@wix/headless-ecom/react';
+import { Commerce, Quantity, SelectedOption } from '@wix/headless-ecom/react';
 import {
   CartTotalsPrice,
   CartTotalsDiscount,
@@ -22,6 +16,13 @@ import {
   CartCouponClear,
   CartErrors,
 } from '@/components/ui/ecom/Cart';
+import {
+  LineItemImage,
+  LineItemTitle,
+  LineItemSelectedOptions,
+  LineItemSelectedOptionRepeater,
+  LineItemQuantity,
+} from '@/components/ui/ecom/LineItem';
 import { useNavigation } from '../NavigationContext';
 import { Button } from '@/components/ui/button';
 
@@ -61,20 +62,20 @@ export default function CartContent() {
               <div className="space-y-6">
                 <CartLineItemRepeater>
                   <div className="flex gap-4 p-4 border border-brand-light rounded-lg">
-                    <LineItem.Image className="w-16 h-16 rounded-lg object-cover" />
+                    <LineItemImage />
                     <div className="flex-1 space-y-2">
-                      <LineItem.Title className="text-lg font-semibold text-content-primary" />
-                      <LineItem.SelectedOptions>
+                      <LineItemTitle />
+                      <LineItemSelectedOptions>
                         <div className="flex flex-wrap gap-2">
-                          <LineItem.SelectedOptionRepeater>
+                          <LineItemSelectedOptionRepeater>
                             <SelectedOption.Text className="text-sm text-content-secondary" />
                             <SelectedOption.Color className="flex items-center gap-2 text-sm text-content-secondary" />
-                          </LineItem.SelectedOptionRepeater>
+                          </LineItemSelectedOptionRepeater>
                         </div>
-                      </LineItem.SelectedOptions>
+                      </LineItemSelectedOptions>
 
                       {/* Quantity Controls */}
-                      <LineItem.Quantity steps={1}>
+                      <LineItemQuantity steps={1}>
                         <div className="flex items-center gap-2 mt-3">
                           <div className="flex items-center border border-brand-light rounded-lg">
                             <Quantity.Decrement className="px-3 py-1 hover:bg-surface-primary transition-colors" />
@@ -88,7 +89,7 @@ export default function CartContent() {
                             Remove
                           </Quantity.Reset>
                         </div>
-                      </LineItem.Quantity>
+                      </LineItemQuantity>
                     </div>
                   </div>
                 </CartLineItemRepeater>
