@@ -156,9 +156,7 @@ test.describe('React Router e2e Flow', () => {
     const cartSummary = page.getByTestId('cart-summary').first();
     await expect(cartSummary).toBeVisible();
 
-    const proceedToCheckoutButton = page.getByTestId(
-      'proceed-to-checkout-button'
-    );
+    const proceedToCheckoutButton = page.getByTestId('action-checkout');
     await expect(proceedToCheckoutButton).toBeVisible();
     await proceedToCheckoutButton.click();
 
