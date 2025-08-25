@@ -1,6 +1,11 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
+import {
+  ProductList as ProductListPrimitive,
+  ProductListCore as ProductListCorePrimitive,
+  ProductListPagination as ProductListPaginationPrimitive,
+} from '@wix/headless-stores/react';
+import { Button } from '@/components/ui/button';
 
 // Root wrapper for the ProductList
 export const ProductList = ProductListPrimitive.Root;
@@ -47,17 +52,58 @@ Products.displayName = 'Products';
 export const ProductRepeater = ProductListPrimitive.ProductRepeater;
 
 export const LoadMoreTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <ProductListPrimitive.LoadMoreTrigger
-    {...props}
-    ref={ref}
-    className={cn('font-semibold transform hover:scale-105', className)}
-    asChild
-  >
-    {props.children}
-  </ProductListPrimitive.LoadMoreTrigger>
+  <ProductListPaginationPrimitive.LoadMoreTrigger>
+    {({ loadMore, hasMoreProducts, isLoading }) =>
+      hasMoreProducts ? (
+        <ProductListPrimitive.LoadMoreTrigger
+          className={cn('font-semibold transform hover:scale-105', className)}
+          asChild
+        >
+          <Button
+            variant="default"
+            size="lg"
+            onClick={() => loadMore(10)}
+            disabled={isLoading}
+            className={`font-semibold transform hover:scale-105 ${
+              isLoading
+                ? 'bg-surface-loading animate-pulse'
+                : 'shadow-md hover:shadow-lg'
+            }`}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <svg
+                  className="animate-spin w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Loading...
+              </span>
+            ) : (
+              'Load More Products'
+            )}
+          </Button>
+        </ProductListPrimitive.LoadMoreTrigger>
+      ) : null
+    }
+  </ProductListPaginationPrimitive.LoadMoreTrigger>
 ));
 
 LoadMoreTrigger.displayName = 'LoadMoreTrigger';
