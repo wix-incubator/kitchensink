@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
-import { CurrentCart, Cart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
+import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   MiniCartModalProvider,
@@ -22,13 +23,13 @@ export function StoreLayout({
 
   return (
     <MiniCartModalProvider>
-      <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
+      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
         <StoreLayoutContent
           children={children}
           showSuccessMessage={showSuccessMessage}
           setShowSuccessMessage={setShowSuccessMessage}
         />
-      </CurrentCart.Root>
+      </CurrentCart>
     </MiniCartModalProvider>
   );
 }
@@ -45,7 +46,7 @@ function StoreLayoutContent({
   const { open } = useMiniCartModal();
   return (
     <>
-      <Cart.LineItemAdded>
+      <CartLineItemAdded>
         {({ onAddedToCart }) => {
           useEffect(
             () =>
@@ -61,7 +62,7 @@ function StoreLayoutContent({
 
           return null;
         }}
-      </Cart.LineItemAdded>
+      </CartLineItemAdded>
 
       {/* Success Message */}
       {showSuccessMessage && (

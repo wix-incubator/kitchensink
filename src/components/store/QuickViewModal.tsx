@@ -4,7 +4,7 @@ import { productsV3 } from '@wix/stores';
 import ProductDetails from './ProductDetails';
 import { useNavigation } from '../NavigationContext';
 
-import { Cart } from '@wix/headless-ecom/react';
+import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import type { LineItem } from '@wix/headless-ecom/services';
 
 interface QuickViewModalProps {
@@ -72,7 +72,7 @@ export default function QuickViewModal({
         </div>
       )}
 
-      <Cart.LineItemAdded>
+      <CartLineItemAdded>
         {({ onAddedToCart }) => {
           useEffect(() => {
             return onAddedToCart((lineItems: LineItem[] | undefined) => {
@@ -92,7 +92,7 @@ export default function QuickViewModal({
 
           return null;
         }}
-      </Cart.LineItemAdded>
+      </CartLineItemAdded>
 
       {/* Backdrop */}
       <div className="absolute inset-0 bg-surface-overlay backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]" />

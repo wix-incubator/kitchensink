@@ -6,7 +6,8 @@ import {
   MiniCartContent,
   MiniCartIcon,
 } from '../../../components/ecom/MiniCart';
-import { Cart, CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
+import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import {
   NavigationProvider,
   type NavigationComponent,
@@ -45,13 +46,13 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
 
   return (
     <div data-testid="main-container">
-      <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
+      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
         <NavigationProvider
           navigationComponent={ReactRouterNavigationComponent}
         >
           {props.children}
         </NavigationProvider>
-      </CurrentCart.Root>
+      </CurrentCart>
     </div>
   );
 }
@@ -65,13 +66,13 @@ export function MiniCart({ children }: { children?: ReactNode }) {
       <MiniCartModalProvider>
         <MiniCartIcon />
 
-        <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
           <StoreLayoutContent
             children={children}
             showSuccessMessage={showSuccessMessage}
             setShowSuccessMessage={setShowSuccessMessage}
           />
-        </CurrentCart.Root>
+        </CurrentCart>
         {showSuccessMessage && (
           <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
             Added to cart successfully!
@@ -95,7 +96,7 @@ function StoreLayoutContent({
   const { open } = useMiniCartModal();
   return (
     <>
-      <Cart.LineItemAdded>
+      <CartLineItemAdded>
         {({ onAddedToCart }) => {
           useEffect(
             () =>
@@ -111,7 +112,7 @@ function StoreLayoutContent({
 
           return null;
         }}
-      </Cart.LineItemAdded>
+      </CartLineItemAdded>
 
       {/* Success Message */}
       {showSuccessMessage && (

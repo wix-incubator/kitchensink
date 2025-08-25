@@ -4,7 +4,7 @@ import {
   SelectedVariant,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
-import { Cart } from '@wix/headless-ecom/react';
+import { CartSummary } from '@/components/ui/ecom/Cart';
 import { Product, ProductName, ProductDescription } from '../ui/store/Product';
 
 import { productsV3 } from '@wix/stores';
@@ -650,7 +650,7 @@ export default function ProductDetails({
                 {/* Current Cart Summary */}
                 {!isQuickView && (
                   <div className="mt-12 pt-8 border-t border-brand-subtle">
-                    <Cart.Summary>
+                    <CartSummary>
                       {({ subtotal, totalItems }) => (
                         <>
                           {totalItems > 0 && (
@@ -691,7 +691,7 @@ export default function ProductDetails({
                           )}
                         </>
                       )}
-                    </Cart.Summary>
+                    </CartSummary>
                   </div>
                 )}
               </>
