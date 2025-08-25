@@ -275,6 +275,9 @@ export const CartCouponClear = React.forwardRef<
 
 CartCouponClear.displayName = 'CartCouponClear';
 
+export const CartCouponRaw = CartPrimitive.Coupon.Raw;
+CartCouponRaw.displayName = 'CartCouponRaw';
+
 // Cart Errors Component
 export const CartErrors = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Errors>,
