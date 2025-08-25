@@ -1,10 +1,33 @@
+import { Quantity } from '@wix/headless-ecom/react';
 import {
-  LineItem,
-  Cart,
-  Commerce,
-  Quantity,
-  SelectedOption,
-} from '@wix/headless-ecom/react';
+  CartTotalsPrice,
+  CartTotalsDiscount,
+  CartTotalsShipping,
+  CartTotalsTax,
+  CartTotalsTotal,
+  CartSummary,
+  CartLineItems,
+  CartLineItemRepeater,
+  CartClear,
+  CartNotes,
+  CartCoupon,
+  CartCouponInput,
+  CartCouponTrigger,
+  CartCouponClear,
+  CartErrors,
+} from '@/components/ui/ecom/Cart';
+import {
+  LineItemImage,
+  LineItemTitle,
+  LineItemSelectedOptions,
+  LineItemSelectedOptionRepeater,
+  LineItemQuantity,
+} from '@/components/ui/ecom/LineItem';
+import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
+import {
+  SelectedOptionText,
+  SelectedOptionColor,
+} from '@/components/ui/ecom/SelectedOption';
 import { useNavigation } from '../NavigationContext';
 import { Button } from '@/components/ui/button';
 
@@ -16,7 +39,7 @@ export default function CartContent() {
         <h1 className="text-5xl font-bold text-content-primary mb-4">
           Shopping Cart
         </h1>
-        <Cart.Summary asChild>
+        <CartSummary asChild>
           {({ totalItems }, ref) => (
             <p
               ref={ref as React.Ref<HTMLParagraphElement>}
@@ -25,11 +48,11 @@ export default function CartContent() {
               {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
             </p>
           )}
-        </Cart.Summary>
+        </CartSummary>
       </div>
 
       {/* Cart with Items */}
-      <Cart.LineItems emptyState={emptyCartState}>
+      <CartLineItems emptyState={emptyCartState}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
@@ -38,28 +61,26 @@ export default function CartContent() {
                 <h2 className="text-2xl font-bold text-content-primary">
                   Cart Items
                 </h2>
-                <Cart.Clear className="text-status-error hover:text-status-error/80 text-sm font-medium transition-colors duration-200 disabled:opacity-50">
-                  Clear all items
-                </Cart.Clear>
+                <CartClear>Clear all items</CartClear>
               </div>
 
               <div className="space-y-6">
-                <Cart.LineItemRepeater>
+                <CartLineItemRepeater>
                   <div className="flex gap-4 p-4 border border-brand-light rounded-lg">
-                    <LineItem.Image className="w-16 h-16 rounded-lg object-cover" />
+                    <LineItemImage />
                     <div className="flex-1 space-y-2">
-                      <LineItem.Title className="text-lg font-semibold text-content-primary" />
-                      <LineItem.SelectedOptions>
+                      <LineItemTitle />
+                      <LineItemSelectedOptions>
                         <div className="flex flex-wrap gap-2">
-                          <LineItem.SelectedOptionRepeater>
-                            <SelectedOption.Text className="text-sm text-content-secondary" />
-                            <SelectedOption.Color className="flex items-center gap-2 text-sm text-content-secondary" />
-                          </LineItem.SelectedOptionRepeater>
+                          <LineItemSelectedOptionRepeater>
+                            <SelectedOptionText />
+                            <SelectedOptionColor />
+                          </LineItemSelectedOptionRepeater>
                         </div>
-                      </LineItem.SelectedOptions>
+                      </LineItemSelectedOptions>
 
                       {/* Quantity Controls */}
-                      <LineItem.Quantity steps={1}>
+                      <LineItemQuantity steps={1}>
                         <div className="flex items-center gap-2 mt-3">
                           <div className="flex items-center border border-brand-light rounded-lg">
                             <Quantity.Decrement className="px-3 py-1 hover:bg-surface-primary transition-colors" />
@@ -73,10 +94,10 @@ export default function CartContent() {
                             Remove
                           </Quantity.Reset>
                         </div>
-                      </LineItem.Quantity>
+                      </LineItemQuantity>
                     </div>
                   </div>
-                </Cart.LineItemRepeater>
+                </CartLineItemRepeater>
               </div>
             </div>
           </div>
@@ -90,7 +111,7 @@ export default function CartContent() {
 
               {/* Order Notes */}
               <div className="mb-6">
-                <Cart.Notes className="[&_textarea]:focus:border-surface-interactive [&_textarea]:focus:ring-0 [&_textarea]:focus:outline-none" />
+                <CartNotes />
               </div>
 
               {/* Coupon Section */}
@@ -98,58 +119,40 @@ export default function CartContent() {
                 <label className="block text-sm font-medium text-content-primary mb-2">
                   Coupon Code:
                 </label>
-                <Cart.Coupon.Root>
+                <CartCoupon>
                   <div className="space-y-2 mb-6">
-                    <Cart.Coupon.Input
-                      placeholder="Enter coupon code"
-                      className="w-full px-3 py-2 bg-surface-interactive border border-surface-interactive rounded-lg text-content-primary placeholder:text-content-muted focus:border-surface-interactive focus:ring-0 focus:outline-none transition-colors duration-200"
-                    />
-                    <Cart.Coupon.Trigger className="w-full text-content-primary font-medium py-2 px-6 rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-center text-sm btn-primary">
-                      Apply Coupon
-                    </Cart.Coupon.Trigger>
-                    <Cart.Coupon.Clear>Remove</Cart.Coupon.Clear>
+                    <CartCouponInput placeholder="Enter coupon code" />
+                    <CartCouponTrigger>Apply Coupon</CartCouponTrigger>
+                    <CartCouponClear>Remove</CartCouponClear>
                   </div>
-                </Cart.Coupon.Root>
+                </CartCoupon>
               </>
 
               <div className="w-full space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between text-lg text-content-primary">
-                    <Cart.Summary asChild>
+                    <CartSummary asChild>
                       {({ totalItems }) => (
                         <span>
                           Subtotal ({totalItems}{' '}
                           {totalItems === 1 ? 'item' : 'items'})
                         </span>
                       )}
-                    </Cart.Summary>
+                    </CartSummary>
 
-                    <Cart.Totals.Price className="font-semibold" />
+                    <CartTotalsPrice />
                   </div>
-                  <Cart.Totals.Discount
-                    className="flex justify-between text-lg text-status-success"
-                    label="Discount"
-                  />
-                  <Cart.Totals.Shipping
-                    className="flex justify-between text-lg text-content-primary"
-                    label="Shipping"
-                  />
-                  <Cart.Totals.Tax
-                    className="flex justify-between text-lg text-content-primary"
-                    label="Tax"
-                  />
+                  <CartTotalsDiscount label="Discount" />
+                  <CartTotalsShipping label="Shipping" />
+                  <CartTotalsTax label="Tax" />
                 </div>
 
                 <div className="border-t border-surface-interactive pt-4">
-                  <Cart.Totals.Total
-                    className="flex justify-between text-xl font-bold text-content-primary"
-                    label="Total"
-                  />
+                  <CartTotalsTotal label="Total" />
                 </div>
-                <Cart.Errors className="w-full bg-surface-error border border-status-error rounded-lg p-3 text-status-error text-xs" />
+                <CartErrors />
 
-                <Commerce.Actions.Checkout
-                  className="btn-primary w-full text-content-primary font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                <CommerceActionsCheckout
                   label="Proceed to Checkout"
                   loadingState="Processing..."
                 />
@@ -179,7 +182,7 @@ export default function CartContent() {
             </div>
           </div>
         </div>
-      </Cart.LineItems>
+      </CartLineItems>
     </>
   );
 }
