@@ -103,10 +103,7 @@ export const ProductSlug = React.forwardRef<
     <ProductPrimitive.Slug
       {...props}
       ref={ref}
-      className={cn(
-        'text-content-secondary font-mono text-sm',
-        props.className
-      )}
+      className={cn('text-content-secondary text-sm', props.className)}
     >
       {props.children}
     </ProductPrimitive.Slug>
