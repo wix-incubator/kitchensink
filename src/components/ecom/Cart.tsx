@@ -1,4 +1,4 @@
-import { Quantity, SelectedOption } from '@wix/headless-ecom/react';
+import { Quantity } from '@wix/headless-ecom/react';
 import {
   CartTotalsPrice,
   CartTotalsDiscount,
@@ -24,6 +24,10 @@ import {
   LineItemQuantity,
 } from '@/components/ui/ecom/LineItem';
 import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
+import {
+  SelectedOptionText,
+  SelectedOptionColor,
+} from '@/components/ui/ecom/SelectedOption';
 import { useNavigation } from '../NavigationContext';
 import { Button } from '@/components/ui/button';
 
@@ -69,8 +73,8 @@ export default function CartContent() {
                       <LineItemSelectedOptions>
                         <div className="flex flex-wrap gap-2">
                           <LineItemSelectedOptionRepeater>
-                            <SelectedOption.Text className="text-sm text-content-secondary" />
-                            <SelectedOption.Color className="flex items-center gap-2 text-sm text-content-secondary" />
+                            <SelectedOptionText />
+                            <SelectedOptionColor />
                           </LineItemSelectedOptionRepeater>
                         </div>
                       </LineItemSelectedOptions>

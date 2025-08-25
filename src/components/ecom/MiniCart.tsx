@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import {
-  Cart,
-  LineItem,
-  SelectedOption,
-  Quantity,
-} from '@wix/headless-ecom/react';
+import { Cart, LineItem, Quantity } from '@wix/headless-ecom/react';
 import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
+import {
+  SelectedOptionText,
+  SelectedOptionColor,
+} from '@/components/ui/ecom/SelectedOption';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -226,8 +225,8 @@ export function MiniCartContent() {
                     <LineItem.SelectedOptions>
                       <div className="flex flex-wrap gap-2">
                         <LineItem.SelectedOptionRepeater>
-                          <SelectedOption.Text className="text-sm text-content-secondary" />
-                          <SelectedOption.Color className="flex items-center gap-2 text-sm text-content-secondary" />
+                          <SelectedOptionText />
+                          <SelectedOptionColor />
                         </LineItem.SelectedOptionRepeater>
                       </div>
                     </LineItem.SelectedOptions>
