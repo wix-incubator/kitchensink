@@ -78,11 +78,13 @@ export const FilterOption = {
     />
   )),
 
-  MultiFilter: React.forwardRef<HTMLElement, React.ComponentProps<typeof FilterPrimitive.FilterOption.MultiFilter>>(
-    ({ className, ...props }, ref) => (
-      <FilterPrimitive.FilterOption.MultiFilter
-        ref={ref}
-        className={`/* --- Child Button Styling --- */
+  MultiFilter: React.forwardRef<
+    HTMLElement,
+    React.ComponentProps<typeof FilterPrimitive.FilterOption.MultiFilter>
+  >(({ className, ...props }, ref) => (
+    <FilterPrimitive.FilterOption.MultiFilter
+      ref={ref}
+      className={`/* --- Child Button Styling --- */
 flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:border-slate-300 [&_button]:bg-slate-50 [&_button]:text-slate-700 [&_button[data-state=on]]:bg-slate-900 [&_button[data-state=on]]:text-white [&_button[data-state=on]]:border-slate-900 [&_button[data-state=off]:hover]:bg-slate-100flex flex-wrap gap-2
     [&[data-display-type='color']_button]:relative
     [&[data-display-type='color']_button]:w-8
@@ -117,10 +119,9 @@ flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_butt
     /* --- Show Tooltip on Hover --- */
     [&[data-display-type='color']_button:hover:after]:opacity-100
     [&[data-display-type='color']_button:hover:after]:visible`}
-        {...props}
-      />
-    )
-  ),
+      {...props}
+    />
+  )),
 
   RangeFilter: React.forwardRef<
     HTMLElement,
