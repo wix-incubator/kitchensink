@@ -1,6 +1,27 @@
 import { useState } from 'react';
-import { Cart, LineItem, Quantity } from '@wix/headless-ecom/react';
+import { Quantity } from '@wix/headless-ecom/react';
 import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
+import {
+  CartSummary,
+  CartLineItems,
+  CartLineItemRepeater,
+  CartNotes,
+  CartCoupon,
+  CartCouponRaw,
+  CartErrors,
+  CartTotalsPrice,
+  CartTotalsDiscount,
+  CartTotalsShipping,
+  CartTotalsTax,
+  CartTotalsTotal,
+} from '@/components/ui/ecom/Cart';
+import {
+  LineItemImage,
+  LineItemTitle,
+  LineItemSelectedOptions,
+  LineItemSelectedOptionRepeater,
+  LineItemQuantity,
+} from '@/components/ui/ecom/LineItem';
 import {
   SelectedOptionText,
   SelectedOptionColor,
@@ -108,7 +129,7 @@ export function MiniCartIcon() {
     <>
       {/* Fixed Cart Icon */}
       <div className="fixed top-6 right-6 z-50 text-content-primary">
-        <Cart.Summary>
+        <CartSummary>
           {({ totalItems }) => (
             <Button
               data-testid="mini-cart-icon"
@@ -137,7 +158,7 @@ export function MiniCartIcon() {
               )}
             </Button>
           )}
-        </Cart.Summary>
+        </CartSummary>
       </div>
     </>
   );
@@ -163,13 +184,13 @@ export function MiniCartContent() {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-surface-subtle flex-shrink-0">
-          <Cart.Summary asChild>
+          <CartSummary asChild>
             {({ totalItems }) => (
               <h2 className="text-xl font-bold text-content-primary">
                 Shopping Cart ({totalItems})
               </h2>
             )}
-          </Cart.Summary>
+          </CartSummary>
 
           <Button
             onClick={close}
@@ -194,7 +215,7 @@ export function MiniCartContent() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 min-h-0">
-          <Cart.LineItems
+          <CartLineItems
             emptyState={
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-surface-interactive rounded-full flex items-center justify-center mx-auto mb-4">
@@ -216,23 +237,23 @@ export function MiniCartContent() {
               </div>
             }
           >
-            <Cart.LineItemRepeater>
+            <CartLineItemRepeater>
               <Card className="border-brand-light">
                 <CardContent className="flex gap-4 p-4">
-                  <LineItem.Image className="w-16 h-16 rounded-lg object-cover" />
+                  <LineItemImage />
                   <div className="flex-1 space-y-2">
-                    <LineItem.Title className="text-lg font-semibold text-content-primary" />
-                    <LineItem.SelectedOptions>
+                    <LineItemTitle />
+                    <LineItemSelectedOptions>
                       <div className="flex flex-wrap gap-2">
-                        <LineItem.SelectedOptionRepeater>
+                        <LineItemSelectedOptionRepeater>
                           <SelectedOptionText />
                           <SelectedOptionColor />
-                        </LineItem.SelectedOptionRepeater>
+                        </LineItemSelectedOptionRepeater>
                       </div>
-                    </LineItem.SelectedOptions>
+                    </LineItemSelectedOptions>
 
                     {/* Quantity Controls */}
-                    <LineItem.Quantity steps={1}>
+                    <LineItemQuantity steps={1}>
                       <div className="flex items-center gap-2 mt-3">
                         <Label className="text-sm text-content-secondary">
                           Qty:
@@ -271,12 +292,12 @@ export function MiniCartContent() {
                           </Button>
                         </Quantity.Reset>
                       </div>
-                    </LineItem.Quantity>
+                    </LineItemQuantity>
                   </div>
                 </CardContent>
               </Card>
-            </Cart.LineItemRepeater>
-          </Cart.LineItems>
+            </CartLineItemRepeater>
+          </CartLineItems>
         </div>
 
         <div className="border-t border-surface-subtle p-6 flex-shrink-0">
@@ -284,19 +305,19 @@ export function MiniCartContent() {
             <Label className="text-content-secondary text-sm mb-2 block">
               Notes:
             </Label>
-            <Cart.Notes asChild>
+            <CartNotes asChild>
               <Textarea
                 placeholder="Special instructions for your order (e.g., gift wrap, delivery notes)"
                 rows={2}
                 className="resize-vertical bg-surface-interactive border border-surface-interactive text-content-primary placeholder:text-content-muted focus:border-brand-primary"
               />
-            </Cart.Notes>
+            </CartNotes>
           </div>
 
           {/* Coupon Code */}
           <div className="mb-4">
-            <Cart.Coupon.Root>
-              <Cart.Coupon.Raw asChild>
+            <CartCoupon>
+              <CartCouponRaw asChild>
                 {({ apply, isLoading, appliedCoupon, remove }) => (
                   <CouponFormMini
                     apply={apply}
@@ -305,43 +326,31 @@ export function MiniCartContent() {
                     appliedCoupon={appliedCoupon}
                   />
                 )}
-              </Cart.Coupon.Raw>
-            </Cart.Coupon.Root>
+              </CartCouponRaw>
+            </CartCoupon>
           </div>
-          <Cart.Errors className="my-2 bg-status-danger-light border border-status-danger rounded p-2 mt-2 w-full text-status-danger text-xs" />
+          <CartErrors />
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between text-content-secondary">
-                <Cart.Summary asChild>
+                <CartSummary asChild>
                   {({ totalItems }) => (
                     <span>
                       Subtotal ({totalItems}{' '}
                       {totalItems === 1 ? 'item' : 'items'})
                     </span>
                   )}
-                </Cart.Summary>
+                </CartSummary>
 
-                <Cart.Totals.Price />
+                <CartTotalsPrice />
               </div>
-              <Cart.Totals.Discount
-                className="flex justify-between text-status-success"
-                label="Discount"
-              />
-              <Cart.Totals.Shipping
-                className="flex justify-between text-content-secondary"
-                label="Shipping"
-              />
-              <Cart.Totals.Tax
-                className="flex justify-between text-content-secondary"
-                label="Tax"
-              />
+              <CartTotalsDiscount label="Discount" />
+              <CartTotalsShipping label="Shipping" />
+              <CartTotalsTax label="Tax" />
             </div>
 
             <div className="border-t border-surface-interactive pt-2">
-              <Cart.Totals.Total
-                className="flex justify-between text-xl font-bold text-content-primary font-semibold"
-                label="Total"
-              />
+              <CartTotalsTotal label="Total" />
             </div>
           </div>
         </div>
