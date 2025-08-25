@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogPostPage, {
+  BlogPostPageMeta,
+} from '../../../react-pages/blog/post/[slug]';
+import { loadBlogPostServiceConfig } from '../../../headless/blog/services/blog-post-service';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/blog');
+}
+
+const postResult = await loadBlogPostServiceConfig(slug);
+
+if (postResult.type === 'notFound') {
+  return Astro.rewrite('/404');
+}
+
+const postConfig = postResult.config;
+---
+
+<BaseLayout>
+  <BlogPostPageMeta postConfig={postConfig} />
+
+  <BlogPostPage
+    client:load
+    postConfig={postConfig}
+    slot="body"
+    href={Astro.url.href}
+    backUrl="/blog"
+  />
+</BaseLayout>
