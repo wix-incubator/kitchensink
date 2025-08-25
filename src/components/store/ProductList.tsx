@@ -20,7 +20,7 @@ import {
   type CategoriesListServiceConfig,
   type ProductsListServiceConfig,
 } from '@wix/headless-stores/services';
-import { productsV3 } from '@wix/stores';
+
 import React, { useState } from 'react';
 import { useNavigation } from '../NavigationContext';
 import {
