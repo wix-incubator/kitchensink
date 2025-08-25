@@ -42,7 +42,7 @@ import {
   ProductRepeater,
   Products,
   TotalsDisplayed,
-} from './ui/ProductList';
+} from '../ui/store/ProductList';
 import { Badge } from '../ui/badge';
 import ProductFiltersSidebar from './ProductFiltersSidebar';
 
