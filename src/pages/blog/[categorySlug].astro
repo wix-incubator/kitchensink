@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogFeedPage from '../../react-pages/blog/index';
+import {
+  loadBlogFeedServiceConfig,
+  type BlogFeedServiceConfig,
+} from '../../headless/blog/services/blog-feed-service';
+import {
+  loadBlogCategoriesServiceConfig,
+  type BlogCategoriesServiceConfig,
+} from '@/headless/blog';
+
+const { categorySlug } = Astro.params;
+
+if (!categorySlug) {
+  return Astro.redirect('/blog');
+}
+
+let blogConfig: BlogFeedServiceConfig;
+let blogCategoriesConfig: BlogCategoriesServiceConfig;
+
+try {
+  [blogConfig, blogCategoriesConfig] = await Promise.all([
+    loadBlogFeedServiceConfig(categorySlug),
+    loadBlogCategoriesServiceConfig({
+      pathname: Astro.url.pathname,
+      allPostsConfig: {
+        label: 'All posts',
+        baseUrl: '/blog',
+        description: 'Explore our blog posts and articles',
+      },
+    }),
+  ]);
+} catch (error) {
+  console.error('Failed to load category:', error);
+  return Astro.rewrite('/404');
+}
+---
+
+<BaseLayout>
+  <title>Blog - {categorySlug} - Wix Kitchensink</title>
+
+  <BlogFeedPage
+    client:load
+    blogFeedConfig={blogConfig}
+    blogCategoriesConfig={blogCategoriesConfig}
+    slot="body"
+  />
+</BaseLayout>

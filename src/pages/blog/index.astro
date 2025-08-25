@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogFeedPage from '../../react-pages/blog/index';
+import { loadBlogFeedServiceConfig } from '../../headless/blog/services/blog-feed-service';
+import { loadBlogCategoriesServiceConfig } from '@/headless/blog';
+
+const [blogConfig, blogCategoriesConfig] = await Promise.all([
+  loadBlogFeedServiceConfig(),
+  loadBlogCategoriesServiceConfig({
+    pathname: Astro.url.pathname,
+    allPostsConfig: {
+      label: 'All posts',
+      baseUrl: '/blog',
+      description: 'Explore our blog posts and articles',
+    },
+  }),
+]);
+---
+
+<BaseLayout>
+  <title>Blog - Wix Kitchensink</title>
+  <meta name="description" content="Explore our blog posts and articles" />
+
+  <BlogFeedPage
+    client:load
+    blogFeedConfig={blogConfig}
+    blogCategoriesConfig={blogCategoriesConfig}
+    slot="body"
+  />
+</BaseLayout>
