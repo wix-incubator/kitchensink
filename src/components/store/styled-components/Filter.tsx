@@ -84,7 +84,41 @@ export const FilterOption = {
   >(({ className, ...props }, ref) => (
     <FilterPrimitive.FilterOption.MultiFilter
       ref={ref}
-      className={`flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:border-slate-300 [&_button]:bg-slate-50 [&_button]:text-slate-700 [&_button[data-state=on]]:bg-slate-900 [&_button[data-state=on]]:text-white [&_button[data-state=on]]:border-slate-900 [&_button[data-state=off]:hover]:bg-slate-100 ${className || ''}`}
+      className={`/* --- Child Button Styling --- */
+flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:border-slate-300 [&_button]:bg-slate-50 [&_button]:text-slate-700 [&_button[data-state=on]]:bg-slate-900 [&_button[data-state=on]]:text-white [&_button[data-state=on]]:border-slate-900 [&_button[data-state=off]:hover]:bg-slate-100flex flex-wrap gap-2
+    [&[data-display-type='color']_button]:relative
+    [&[data-display-type='color']_button]:w-8
+    [&[data-display-type='color']_button]:h-8
+    [&[data-display-type='color']_button]:rounded-full
+    [&[data-display-type='color']_button]:border
+    [&[data-display-type='color']_button]:border-gray-300
+    [&[data-display-type='color']_button]:text-transparent
+    [&[data-display-type='color']_button]:cursor-pointer
+    [&[data-display-type='color']_button[data-state='on']]:bg-slate-900
+    [&[data-display-type='color']_button[data-state='on']]:border-slate-900
+
+    /* --- Child Tooltip Styling --- */
+    [&[data-display-type='color']_button:after]:content-[attr(aria-label)]
+    [&[data-display-type='color']_button:after]:absolute
+    [&[data-display-type='color']_button:after]:top-full
+    [&[data-display-type='color']_button:after]:mt-2
+    [&[data-display-type='color']_button:after]:left-1/2
+    [&[data-display-type='color']_button:after]:-translate-x-1/2
+    [&[data-display-type='color']_button:after]:whitespace-nowrap
+    [&[data-display-type='color']_button:after]:rounded
+    [&[data-display-type='color']_button:after]:bg-gray-800
+    [&[data-display-type='color']_button:after]:px-2
+    [&[data-display-type='color']_button:after]:py-1
+    [&[data-display-type='color']_button:after]:text-sm
+    [&[data-display-type='color']_button:after]:text-white
+    [&[data-display-type='color']_button:after]:opacity-0
+    [&[data-display-type='color']_button:after]:invisible
+    [&[data-display-type='color']_button:after]:transition-opacity
+    [&[data-display-type='color']_button:after]:z-10
+
+    /* --- Show Tooltip on Hover --- */
+    [&[data-display-type='color']_button:hover:after]:opacity-100
+    [&[data-display-type='color']_button:hover:after]:visible`}
       {...props}
     />
   )),
