@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
 
-export const Cart = CartPrimitive;
+export const Cart = CartPrimitive.Root;
 
 // Cart Totals Components
 const cartTotalVariants = cva('flex justify-between', {
@@ -212,8 +212,8 @@ export const CartNotes = React.forwardRef<
 CartNotes.displayName = 'CartNotes';
 
 // Cart Coupon Components
-export const CartCouponRoot = CartPrimitive.Coupon.Root;
-CartCouponRoot.displayName = 'CartCouponRoot';
+export const CartCoupon = CartPrimitive.Coupon.Root;
+CartCoupon.displayName = 'CartCoupon';
 
 export const CartCouponInput = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Input>,

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SelectedOption as SelectedOptionPrimitive } from '@wix/headless-ecom/react';
 
-export const SelectedOption = SelectedOptionPrimitive;
+export const SelectedOption = SelectedOptionPrimitive.Root;
 
 // SelectedOption Text Component
 const selectedOptionTextVariants = cva('text-content-secondary', {

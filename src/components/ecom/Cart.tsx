@@ -10,7 +10,7 @@ import {
   CartLineItemRepeater,
   CartClear,
   CartNotes,
-  CartCouponRoot,
+  CartCoupon,
   CartCouponInput,
   CartCouponTrigger,
   CartCouponClear,
@@ -119,13 +119,13 @@ export default function CartContent() {
                 <label className="block text-sm font-medium text-content-primary mb-2">
                   Coupon Code:
                 </label>
-                <CartCouponRoot>
+                <CartCoupon>
                   <div className="space-y-2 mb-6">
                     <CartCouponInput placeholder="Enter coupon code" />
                     <CartCouponTrigger>Apply Coupon</CartCouponTrigger>
                     <CartCouponClear>Remove</CartCouponClear>
                   </div>
-                </CartCouponRoot>
+                </CartCoupon>
               </>
 
               <div className="w-full space-y-4">

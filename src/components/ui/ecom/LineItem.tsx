@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { LineItem as LineItemPrimitive } from '@wix/headless-ecom/react';
 
-export const LineItem = LineItemPrimitive;
+export const LineItem = LineItemPrimitive.Root;
 
 // LineItem Image Component
 const lineItemImageVariants = cva('rounded-lg object-cover', {
