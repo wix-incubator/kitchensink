@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { Quantity } from '@wix/headless-ecom/react';
+import {
+  QuantityDecrement,
+  QuantityInput,
+  QuantityIncrement,
+  QuantityReset,
+} from '@/components/ui/components/quantity';
 import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
 import {
   CartSummary,
@@ -259,7 +264,7 @@ export function MiniCartContent() {
                           Qty:
                         </Label>
                         <div className="flex items-center border border-brand-light rounded-lg bg-surface-primary">
-                          <Quantity.Decrement asChild>
+                          <QuantityDecrement variant="button" asChild>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -267,12 +272,9 @@ export function MiniCartContent() {
                             >
                               -
                             </Button>
-                          </Quantity.Decrement>
-                          <Quantity.Input
-                            disabled={true}
-                            className="w-16 text-center py-1 border-x border-brand-light bg-surface-primary text-content-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                          />
-                          <Quantity.Increment asChild>
+                          </QuantityDecrement>
+                          <QuantityInput variant="primary" disabled={true} />
+                          <QuantityIncrement variant="button" asChild>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -280,9 +282,9 @@ export function MiniCartContent() {
                             >
                               +
                             </Button>
-                          </Quantity.Increment>
+                          </QuantityIncrement>
                         </div>
-                        <Quantity.Reset asChild>
+                        <QuantityReset variant="button" asChild>
                           <Button
                             variant="link"
                             size="sm"
@@ -290,7 +292,7 @@ export function MiniCartContent() {
                           >
                             Remove
                           </Button>
-                        </Quantity.Reset>
+                        </QuantityReset>
                       </div>
                     </LineItemQuantity>
                   </div>

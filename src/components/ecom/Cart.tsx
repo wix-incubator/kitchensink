@@ -1,4 +1,9 @@
-import { Quantity } from '@wix/headless-ecom/react';
+import {
+  QuantityDecrement,
+  QuantityInput,
+  QuantityIncrement,
+  QuantityReset,
+} from '@/components/ui/components/quantity';
 import {
   CartTotalsPrice,
   CartTotalsDiscount,
@@ -83,16 +88,11 @@ export default function CartContent() {
                       <LineItemQuantity steps={1}>
                         <div className="flex items-center gap-2 mt-3">
                           <div className="flex items-center border border-brand-light rounded-lg">
-                            <Quantity.Decrement className="px-3 py-1 hover:bg-surface-primary transition-colors" />
-                            <Quantity.Input
-                              disabled={true}
-                              className="w-16 text-center py-1 border-x border-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                            />
-                            <Quantity.Increment className="px-3 py-1 hover:bg-surface-primary transition-colors" />
+                            <QuantityDecrement />
+                            <QuantityInput disabled={true} />
+                            <QuantityIncrement />
                           </div>
-                          <Quantity.Reset className="px-2 py-1 text-xs text-status-danger hover:text-status-danger/80 hover:bg-status-danger/10 rounded transition-colors">
-                            Remove
-                          </Quantity.Reset>
+                          <QuantityReset>Remove</QuantityReset>
                         </div>
                       </LineItemQuantity>
                     </div>
