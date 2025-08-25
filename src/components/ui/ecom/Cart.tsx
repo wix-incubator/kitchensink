@@ -298,3 +298,6 @@ export const CartErrors = React.forwardRef<
 });
 
 CartErrors.displayName = 'CartErrors';
+
+// Cart LineItemAdded Component
+export const CartLineItemAdded = CartPrimitive.LineItemAdded;
