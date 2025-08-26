@@ -29,6 +29,9 @@ import {
   ProductRaw,
   ProductSlug,
   ProductStock,
+  ProductVariantOptionRepeater,
+  ProductVariantOptions,
+  ProductVariants,
 } from '../ui/store/Product';
 import {
   LoadMoreTrigger,
@@ -41,6 +44,12 @@ import CategoryPicker from './CategoryPicker';
 import { ProductActionButtons } from './ProductActionButtons';
 import ProductFiltersSidebar from './ProductFiltersSidebar';
 import { SortDropdown } from './SortDropdown';
+import {
+  OptionChoiceRepeater,
+  OptionChoices,
+  OptionName,
+} from '../ui/store/Option';
+import { ChoiceColor, ChoiceText } from '../ui/store/Choice';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
@@ -201,153 +210,28 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                           )}
                         </ProductSlug>
                         {/* Enhanced Product Variants */}
-                        <ProductVariantSelectorPrimitive.Options>
-                          {({ options, hasOptions }) => (
-                            <>
-                              {hasOptions && (
-                                <div className="mb-3 space-y-2">
-                                  {options.map((option: any) => (
-                                    <ProductVariantSelectorPrimitive.Option
-                                      key={option._id}
-                                      option={option}
-                                    >
-                                      {({ name, choices }) => (
-                                        <div className="space-y-2">
-                                          <span className="text-content-secondary text-xs font-medium uppercase tracking-wide">
-                                            {String(name)}:
-                                          </span>
-                                          <div className="flex flex-wrap gap-1.5">
-                                            {choices
-                                              ?.slice(0, 3)
-                                              .map((choice: any) => (
-                                                <ProductVariantSelectorPrimitive.Choice
-                                                  key={choice.choiceId}
-                                                  option={option}
-                                                  choice={choice}
-                                                >
-                                                  {({
-                                                    value,
-                                                    isSelected,
-                                                    isVisible,
-                                                    isInStock,
-                                                    isPreOrderEnabled,
-                                                    select,
-                                                  }) => {
-                                                    if (!isVisible) return null;
-                                                    const nonSelectable =
-                                                      !isInStock &&
-                                                      !isPreOrderEnabled;
-
-                                                    const isColorOption =
-                                                      String(name)
-                                                        .toLowerCase()
-                                                        .includes('color');
-                                                    const hasColorCode =
-                                                      choice.colorCode ||
-                                                      choice.media?.image;
-
-                                                    if (
-                                                      isColorOption &&
-                                                      (choice.colorCode ||
-                                                        hasColorCode)
-                                                    ) {
-                                                      return (
-                                                        <Tooltip
-                                                          delayDuration={0}
-                                                        >
-                                                          <TooltipTrigger
-                                                            asChild
-                                                          >
-                                                            <div className="relative">
-                                                              <div
-                                                                className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 ${
-                                                                  isSelected
-                                                                    ? 'border-brand-primary shadow-lg ring-2 ring-brand-primary/30 scale-110'
-                                                                    : 'border-color-swatch hover:border-color-swatch-hover hover:shadow-md'
-                                                                } ${
-                                                                  nonSelectable
-                                                                    ? 'grayscale opacity-50'
-                                                                    : ''
-                                                                }`}
-                                                                style={{
-                                                                  backgroundColor:
-                                                                    choice.colorCode ||
-                                                                    'var(--theme-fallback-color)',
-                                                                }}
-                                                                onClick={select}
-                                                              />
-                                                              {nonSelectable && (
-                                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                                  <svg
-                                                                    className="w-3 h-3 text-status-error drop-shadow-sm"
-                                                                    fill="none"
-                                                                    viewBox="0 0 24 24"
-                                                                    stroke="currentColor"
-                                                                  >
-                                                                    <path
-                                                                      strokeLinecap="round"
-                                                                      strokeLinejoin="round"
-                                                                      strokeWidth="2"
-                                                                      d="M6 18L18 6M6 6l12 12"
-                                                                    />
-                                                                  </svg>
-                                                                </div>
-                                                              )}
-                                                            </div>
-                                                          </TooltipTrigger>
-                                                          <TooltipContent>
-                                                            <p>
-                                                              {String(value)}
-                                                              {nonSelectable &&
-                                                                ' (Out of Stock)'}
-                                                            </p>
-                                                          </TooltipContent>
-                                                        </Tooltip>
-                                                      );
-                                                    } else {
-                                                      return (
-                                                        <Button
-                                                          variant={
-                                                            isSelected
-                                                              ? 'default'
-                                                              : 'outline'
-                                                          }
-                                                          onClick={select}
-                                                          className={
-                                                            isSelected
-                                                              ? ''
-                                                              : `text-content-primary border-surface-subtle hover:bg-primary/10 ${
-                                                                  nonSelectable
-                                                                    ? 'opacity-50 line-through'
-                                                                    : ''
-                                                                }`
-                                                          }
-                                                          disabled={
-                                                            nonSelectable
-                                                          }
-                                                        >
-                                                          {String(value)}
-                                                        </Button>
-                                                      );
-                                                    }
-                                                  }}
-                                                </ProductVariantSelectorPrimitive.Choice>
-                                              ))}
-                                            {choices?.length > 3 && (
-                                              <span className="text-content-muted text-xs self-center bg-surface-subtle px-2 py-1 rounded-full">
-                                                +{choices.length - 3} more
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-                                      )}
-                                    </ProductVariantSelectorPrimitive.Option>
-                                  ))}
+                        <ProductVariants>
+                          <ProductVariantOptions>
+                            <div className="mb-3 space-y-2">
+                              <ProductVariantOptionRepeater>
+                                <div className="space-y-2">
+                                  <OptionName className="text-content-secondary text-xs font-medium uppercase tracking-wide" />
+                                  <OptionChoices>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      <OptionChoiceRepeater>
+                                        <>
+                                          <ChoiceColor className="w-7 h-7 border-2" />
+                                          <ChoiceText className="inline-flex items-center px-2 py-1 text-xs rounded border cursor-pointer bg-surface-primary data-[selected='true']:bg-brand-primary data-[selected='true']:text-content-primary data-[selected='true']:border-brand-primary" />
+                                        </>
+                                      </OptionChoiceRepeater>
+                                    </div>
+                                  </OptionChoices>
                                 </div>
-                              )}
-                            </>
-                          )}
-                        </ProductVariantSelectorPrimitive.Options>
+                              </ProductVariantOptionRepeater>
+                            </div>
+                          </ProductVariantOptions>
+                        </ProductVariants>
+
                         {/* Reset Selections */}
                         <ProductVariantSelectorPrimitive.Reset>
                           {({ reset, hasSelections }) =>
