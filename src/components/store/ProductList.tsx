@@ -455,7 +455,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                           </div>
                         </div>
                         {/* Enhanced Action Buttons */}
-                        <ProductActionButtons isQuickView={true} />
+                        <ProductActionButtons />
 
                         <ProductSlug asChild>
                           {({ slug }) => (

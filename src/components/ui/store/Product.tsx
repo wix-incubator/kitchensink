@@ -278,13 +278,25 @@ export const ProductActionBuyNow = React.forwardRef<
     <ProductPrimitive.ProductActionBuyNow
       {...props}
       ref={ref}
-      className={cn(
-        'flex-1 transform hover:scale-105 disabled:hover:scale-100',
-        props.className
-      )}
+      className={props.className}
       asChild
     >
-      <Button variant="secondary" size="lg" children={props.label} />
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="secondary"
+            size="lg"
+            className={cn(
+              'flex-1 transform hover:scale-105 disabled:hover:scale-100',
+              props.className
+            )}
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
     </ProductPrimitive.ProductActionBuyNow>
   );
 });
