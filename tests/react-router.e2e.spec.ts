@@ -102,7 +102,9 @@ async function navigateToFirstAvailableProduct(
       `[data-testid="product-list-item"][data-product-available="${available}"]`
     )
     .filter({
-      has: page.locator('[data-testid="add-to-cart-button"]:not([disabled])'),
+      has: page.locator(
+        '[data-testid="product-action-add-to-cart"]:not([disabled])'
+      ),
     });
 
   const viewProductButton = selectedProductItem.getByTestId(
@@ -145,7 +147,7 @@ test.describe('React Router e2e Flow', () => {
     // Configure all product options and modifiers
     await configureProductOptions(page);
 
-    const addToCartButton = page.getByTestId('add-to-cart-button');
+    const addToCartButton = page.getByTestId('product-action-add-to-cart');
     await expect(addToCartButton).toBeVisible();
     await addToCartButton.click();
 
