@@ -310,7 +310,7 @@ export default function ProductDetails({
                     </div>
 
                     {/* Product Details */}
-                    {(
+                    {
                       <SelectedVariant.Details>
                         {({ sku, weight }) => (
                           <>
@@ -338,7 +338,7 @@ export default function ProductDetails({
                           </>
                         )}
                       </SelectedVariant.Details>
-                    )}
+                    }
                   </div>
                 </div>
 
