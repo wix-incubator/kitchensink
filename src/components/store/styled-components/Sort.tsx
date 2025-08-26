@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sort as SortPrimitive } from '@wix/headless-components/react';
-import { ProductListSort as ProductListSortPrimitive } from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
 import type {
   Sort as SortType,
   SortRootProps as PrimitiveSortRootProps,
@@ -31,7 +31,7 @@ export interface StyledProductListSortProps {
 
 export const StyledProductListSort = (props: StyledProductListSortProps) => {
   return (
-    <ProductListSortPrimitive.ProductListSort>
+    <ProductListPrimitive.Sort>
       {({ currentSort, sortOptions, setSort }) => (
         <Root
           value={currentSort}
@@ -41,7 +41,7 @@ export const StyledProductListSort = (props: StyledProductListSortProps) => {
           className={props.className}
         />
       )}
-    </ProductListSortPrimitive.ProductListSort>
+    </ProductListPrimitive.Sort>
   );
 };
 
