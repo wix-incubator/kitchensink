@@ -2,6 +2,7 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
+import { Button } from '../button';
 
 export const Product = ProductPrimitive.Root;
 
@@ -247,12 +248,22 @@ export const ProductActionAddToCart = React.forwardRef<
     <ProductPrimitive.ProductActionAddToCart
       {...props}
       ref={ref}
-      className={cn(
-        'btn-primary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed',
-        props.className
-      )}
+      className={props.className}
+      asChild
     >
-      {props.children}
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="default"
+            size="lg"
+            className="flex-1 relative"
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
     </ProductPrimitive.ProductActionAddToCart>
   );
 });
@@ -268,11 +279,12 @@ export const ProductActionBuyNow = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'btn-secondary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:hover:scale-100',
+        'flex-1 transform hover:scale-105 disabled:hover:scale-100',
         props.className
       )}
+      asChild
     >
-      {props.children}
+      <Button variant="secondary" size="lg" children={props.label} />
     </ProductPrimitive.ProductActionBuyNow>
   );
 });
@@ -287,10 +299,7 @@ export const ProductActionPreOrder = React.forwardRef<
     <ProductPrimitive.ProductActionPreOrder
       {...props}
       ref={ref}
-      className={cn(
-        'btn-primary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed',
-        props.className
-      )}
+      className={cn('', props.className)}
     >
       {props.children}
     </ProductPrimitive.ProductActionPreOrder>
