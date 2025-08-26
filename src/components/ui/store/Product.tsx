@@ -311,9 +311,22 @@ export const ProductActionPreOrder = React.forwardRef<
     <ProductPrimitive.ProductActionPreOrder
       {...props}
       ref={ref}
-      className={cn('', props.className)}
+      className={props.className}
+      asChild
     >
-      {props.children}
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="default"
+            size="lg"
+            className="flex-1 relative"
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
     </ProductPrimitive.ProductActionPreOrder>
   );
 });
