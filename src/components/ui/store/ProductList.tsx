@@ -51,67 +51,65 @@ Products.displayName = 'Products';
 
 export const ProductRepeater = ProductListPrimitive.ProductRepeater;
 
+/**
+ * Load more trigger component that displays a button to load additional products.
+ * Shows different states for loading and available products.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LoadMoreTrigger
+ *   label="Load More Products"
+ *   loadingState="Loading..."
+ * />
+ * ```
+ */
 export const LoadMoreTrigger = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    labels: {
-      loading: string;
-      hasMoreProducts: string;
-    };
+    /** Label text to display when more products are available */
+    label?: React.ReactNode;
+    /** Loading state content to display while loading */
+    loadingState?: React.ReactNode;
   }
->(({ className, ...props }, ref) => (
-  <ProductListPaginationPrimitive.LoadMoreTrigger>
-    {({ loadMore, hasMoreProducts, isLoading }) =>
-      hasMoreProducts ? (
-        <ProductListPrimitive.LoadMoreTrigger
-          className={cn('font-semibold transform hover:scale-105', className)}
-          ref={ref}
-          {...props}
-          asChild
-        >
-          <Button
-            variant="default"
-            size="lg"
-            onClick={() => loadMore(10)}
-            disabled={isLoading}
-            className={`font-semibold transform hover:scale-105 ${
-              isLoading
-                ? 'bg-surface-loading animate-pulse'
-                : 'shadow-md hover:shadow-lg'
-            }`}
+>(
+  (
+    {
+      className,
+      label = 'Load More Products',
+      loadingState = 'Loading...',
+      ...props
+    },
+    ref
+  ) => (
+    <ProductListPaginationPrimitive.LoadMoreTrigger>
+      {({ loadMore, hasMoreProducts, isLoading }) =>
+        hasMoreProducts ? (
+          <ProductListPrimitive.LoadMoreTrigger
+            className={cn('font-semibold transform hover:scale-105', className)}
+            ref={ref}
+            {...props}
+            asChild
           >
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <svg
-                  className="animate-spin w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                {props.labels.loading || 'Loading...'}
-              </span>
-            ) : (
-              props.labels.hasMoreProducts || 'Load More Products'
-            )}
-          </Button>
-        </ProductListPrimitive.LoadMoreTrigger>
-      ) : null
-    }
-  </ProductListPaginationPrimitive.LoadMoreTrigger>
-));
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => loadMore(10)}
+              disabled={isLoading}
+              className={`font-semibold transform hover:scale-105 ${
+                isLoading
+                  ? 'bg-surface-loading animate-pulse'
+                  : 'shadow-md hover:shadow-lg'
+              }`}
+            >
+              {!isLoading ? label : loadingState}
+            </Button>
+          </ProductListPrimitive.LoadMoreTrigger>
+        ) : null
+      }
+    </ProductListPaginationPrimitive.LoadMoreTrigger>
+  )
+);
 
 LoadMoreTrigger.displayName = 'LoadMoreTrigger';
 
