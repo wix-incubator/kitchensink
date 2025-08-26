@@ -18,6 +18,7 @@ import {
   MiniCartModalProvider,
   useMiniCartModal,
 } from '@/components/MiniCartModal';
+import { Commerce } from '@/components/ui/ecom/Commerce';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
   route,
@@ -46,13 +47,15 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
 
   return (
     <div data-testid="main-container">
-      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-        <NavigationProvider
-          navigationComponent={ReactRouterNavigationComponent}
-        >
-          {props.children}
-        </NavigationProvider>
-      </CurrentCart>
+      <Commerce.Root checkoutServiceConfig={{}}>
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+          <NavigationProvider
+            navigationComponent={ReactRouterNavigationComponent}
+          >
+            {props.children}
+          </NavigationProvider>
+        </CurrentCart>
+      </Commerce.Root>
     </div>
   );
 }

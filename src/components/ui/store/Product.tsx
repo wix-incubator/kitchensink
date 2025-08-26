@@ -238,3 +238,63 @@ export const ProductStock = React.forwardRef<
 });
 
 ProductStock.displayName = 'ProductStock';
+
+export const ProductActionAddToCart = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionAddToCart>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionAddToCart>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionAddToCart
+      {...props}
+      ref={ref}
+      className={cn(
+        'btn-primary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed',
+        props.className
+      )}
+    >
+      {props.children}
+    </ProductPrimitive.ProductActionAddToCart>
+  );
+});
+
+ProductActionAddToCart.displayName = 'ProductActionAddToCart';
+
+export const ProductActionBuyNow = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionBuyNow>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionBuyNow>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionBuyNow
+      {...props}
+      ref={ref}
+      className={cn(
+        'btn-secondary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:hover:scale-100',
+        props.className
+      )}
+    >
+      {props.children}
+    </ProductPrimitive.ProductActionBuyNow>
+  );
+});
+
+ProductActionBuyNow.displayName = 'ProductActionBuyNow';
+
+export const ProductActionPreOrder = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionPreOrder>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionPreOrder>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionPreOrder
+      {...props}
+      ref={ref}
+      className={cn(
+        'btn-primary flex-1 relative disabled:opacity-50 disabled:cursor-not-allowed',
+        props.className
+      )}
+    >
+      {props.children}
+    </ProductPrimitive.ProductActionPreOrder>
+  );
+});
+
+ProductActionPreOrder.displayName = 'ProductActionPreOrder';
