@@ -14,6 +14,7 @@ import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 import * as StyledMediaGallery from '@/components/media/MediaGallery';
 // Reusable FreeText Input Component
@@ -465,7 +466,7 @@ export default function ProductDetails({
                                                 toggle,
                                               }) => (
                                                 <div className="space-y-3">
-                                                  <label className="flex items-center gap-2">
+                                                  <Label className="flex items-center gap-2">
                                                     <input
                                                       type="checkbox"
                                                       checked={isTextInputShown}
@@ -475,7 +476,7 @@ export default function ProductDetails({
                                                     <span className="text-content-primary">
                                                       Enable
                                                     </span>
-                                                  </label>
+                                                  </Label>
                                                   {isTextInputShown && (
                                                     <FreeTextInput
                                                       modifier={modifier}

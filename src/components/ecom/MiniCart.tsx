@@ -260,39 +260,12 @@ export function MiniCartContent() {
                     {/* Quantity Controls */}
                     <LineItemQuantity steps={1}>
                       <div className="flex items-center gap-2 mt-3">
-                        <Label className="text-sm text-content-secondary">
-                          Qty:
-                        </Label>
                         <div className="flex items-center border border-brand-light rounded-lg bg-surface-primary">
-                          <QuantityDecrement variant="button" asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="px-3 py-1 text-content-primary hover:bg-surface-interactive transition-colors"
-                            >
-                              -
-                            </Button>
-                          </QuantityDecrement>
-                          <QuantityInput variant="primary" disabled={true} />
-                          <QuantityIncrement variant="button" asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="px-3 py-1 text-content-primary hover:bg-surface-interactive transition-colors"
-                            >
-                              +
-                            </Button>
-                          </QuantityIncrement>
+                          <QuantityDecrement />
+                          <QuantityInput disabled={true} />
+                          <QuantityIncrement />
                         </div>
-                        <QuantityReset variant="button" asChild>
-                          <Button
-                            variant="link"
-                            size="sm"
-                            className="px-2 py-1 text-xs text-status-danger hover:text-status-danger/80 hover:bg-status-danger/10 rounded transition-colors"
-                          >
-                            Remove
-                          </Button>
-                        </QuantityReset>
+                        <QuantityReset>Remove</QuantityReset>
                       </div>
                     </LineItemQuantity>
                   </div>

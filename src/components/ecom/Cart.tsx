@@ -28,6 +28,8 @@ import {
   LineItemSelectedOptionRepeater,
   LineItemQuantity,
 } from '@/components/ui/ecom/LineItem';
+import { Label } from '@/components/ui/label';
+
 import { CommerceActionsCheckout } from '@/components/ui/ecom/Commerce';
 import {
   SelectedOptionText,
@@ -116,9 +118,9 @@ export default function CartContent() {
 
               {/* Coupon Section */}
               <>
-                <label className="block text-sm font-medium text-content-primary mb-2">
+                <Label className="block text-sm font-medium text-content-primary mb-2">
                   Coupon Code:
-                </label>
+                </Label>
                 <CartCoupon>
                   <div className="space-y-2 mb-6">
                     <CartCouponInput placeholder="Enter coupon code" />

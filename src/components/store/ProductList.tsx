@@ -236,7 +236,6 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             <StyledMediaGallery.Viewport className="object-cover group-hover:scale-110 transition-transform duration-300" />
                           </ProductMediaGallery>
                         </div>
-
                         {/* Product Ribbon */}
                         <ProductRaw asChild>
                           {({ product }) =>
@@ -252,7 +251,6 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             )
                           }
                         </ProductRaw>
-
                         {/* Product Title */}
                         <ProductSlug asChild>
                           {({ slug }) => (
@@ -266,7 +264,6 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             </Navigation>
                           )}
                         </ProductSlug>
-
                         {/* Enhanced Product Variants */}
                         <ProductVariantSelectorPrimitive.Options>
                           {({ options, hasOptions }) => (
@@ -415,7 +412,6 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             </>
                           )}
                         </ProductVariantSelectorPrimitive.Options>
-
                         {/* Reset Selections */}
                         <ProductVariantSelectorPrimitive.Reset>
                           {({ reset, hasSelections }) =>
@@ -433,7 +429,6 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             )
                           }
                         </ProductVariantSelectorPrimitive.Reset>
-
                         {/* Product Description */}
                         <ProductDescription
                           as="html"
