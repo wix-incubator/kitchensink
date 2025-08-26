@@ -115,15 +115,48 @@ export const LoadMoreTrigger = React.forwardRef<
 
 LoadMoreTrigger.displayName = 'LoadMoreTrigger';
 
+/**
+ * Displays the total number of products currently shown in the product list.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * // Basic usage with default label
+ * <TotalsDisplayed />
+ *
+ * // Custom label format
+ * <TotalsDisplayed label="Showing {length} products" />
+ *
+ * // With custom styling
+ * <TotalsDisplayed
+ *   label="{length} items found"
+ *   className="text-sm text-muted-foreground"
+ * />
+ * ```
+ */
 export const TotalsDisplayed = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <ProductListPrimitive.TotalsDisplayed ref={ref} asChild {...props}>
+  React.HTMLAttributes<HTMLDivElement> & {
+    /**
+     * Custom label format for displaying the product count.
+     * Use `{length}` as a placeholder that will be replaced with the actual number of displayed products.
+     *
+     * @default '{length} products loaded'
+     * @example 'Showing {length} products'
+     * @example '{length} items found'
+     * @example 'Displaying {length} of total products'
+     */
+    label?: string;
+  }
+>(({ className, label = '{length} products loaded', ...props }, ref) => (
+  <ProductListPrimitive.TotalsDisplayed
+    ref={ref}
+    {...props}
+    className={className}
+    asChild
+  >
     {({ displayedProducts }) => (
-      <p className={cn('text-content-muted text-sm mt-4', className)}>
-        {displayedProducts} products loaded
-      </p>
+      <span>{label.replace('{length}', displayedProducts.toString())}</span>
     )}
   </ProductListPrimitive.TotalsDisplayed>
 ));
