@@ -567,7 +567,7 @@ export default function ProductDetails({
 
                     {/* Add to Cart */}
                     <div className="space-y-4">
-                      <ProductActionButtons isQuickView={isQuickView} />
+                      <ProductActionButtons showBuyNow={true} />
 
                       {/* Stock Status */}
                       <ProductVariantSelector.Stock>

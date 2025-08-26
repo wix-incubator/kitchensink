@@ -7,6 +7,7 @@ import {
   MiniCartModalProvider,
   useMiniCartModal,
 } from '../components/MiniCartModal';
+import { Commerce } from '../components/ui/ecom/Commerce';
 
 interface StoreLayoutProps {
   children: ReactNode;
@@ -23,13 +24,15 @@ export function StoreLayout({
 
   return (
     <MiniCartModalProvider>
-      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-        <StoreLayoutContent
-          children={children}
-          showSuccessMessage={showSuccessMessage}
-          setShowSuccessMessage={setShowSuccessMessage}
-        />
-      </CurrentCart>
+      <Commerce.Root checkoutServiceConfig={{}}>
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+          <StoreLayoutContent
+            children={children}
+            showSuccessMessage={showSuccessMessage}
+            setShowSuccessMessage={setShowSuccessMessage}
+          />
+        </CurrentCart>
+      </Commerce.Root>
     </MiniCartModalProvider>
   );
 }
