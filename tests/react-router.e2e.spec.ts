@@ -99,10 +99,12 @@ async function navigateToFirstAvailableProduct(
 
   const selectedProductItem = page
     .locator(
-      `[data-testid="product-item"][data-product-available="${available}"]`
+      `[data-testid="product-list-item"][data-product-available="${available}"]`
     )
     .filter({
-      has: page.locator('[data-testid="add-to-cart-button"]:not([disabled])'),
+      has: page.locator(
+        '[data-testid="product-action-add-to-cart"]:not([disabled])'
+      ),
     });
 
   const viewProductButton = selectedProductItem.getByTestId(
@@ -145,7 +147,7 @@ test.describe('React Router e2e Flow', () => {
     // Configure all product options and modifiers
     await configureProductOptions(page);
 
-    const addToCartButton = page.getByTestId('add-to-cart-button');
+    const addToCartButton = page.getByTestId('product-action-add-to-cart');
     await expect(addToCartButton).toBeVisible();
     await addToCartButton.click();
 
@@ -153,17 +155,12 @@ test.describe('React Router e2e Flow', () => {
     await expect(viewCartButton).toBeVisible();
     await viewCartButton.click();
 
-    const cartSummary = page.getByTestId('cart-summary');
+    const cartSummary = page.getByTestId('cart-summary').first();
     await expect(cartSummary).toBeVisible();
 
-    const proceedToCheckoutButton = page.getByTestId(
-      'proceed-to-checkout-button'
-    );
+    const proceedToCheckoutButton = page.getByTestId('action-checkout');
     await expect(proceedToCheckoutButton).toBeVisible();
     await proceedToCheckoutButton.click();
-
-    const checkoutButton = page.getByTestId('proceed-to-checkout-button');
-    await expect(checkoutButton).toBeVisible();
 
     await expect(page).toHaveURL(/\/checkout\?checkoutId=.*$/, {
       timeout: 10000,

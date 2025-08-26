@@ -1,11 +1,19 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
+import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import {
+  MiniCartModalProvider,
+  useMiniCartModal,
+} from '../components/MiniCartModal';
+import { Commerce } from '../components/ui/ecom/Commerce';
 
 interface StoreLayoutProps {
   children: ReactNode;
   currentCartServiceConfig: CurrentCartServiceConfig;
+  showSuccessMessage?: boolean;
+  onSuccessMessageChange?: (show: boolean) => void;
 }
 
 export function StoreLayout({
@@ -15,28 +23,50 @@ export function StoreLayout({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   return (
-    <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
-      <CurrentCart.OpenTrigger>
-        {({ open }) => (
-          <CurrentCart.LineItemAdded>
-            {({ onAddedToCart }) => {
-              useEffect(
-                () =>
-                  onAddedToCart(() => {
-                    setShowSuccessMessage(true);
-                    setTimeout(() => {
-                      setShowSuccessMessage(false);
-                      open();
-                    }, 3000);
-                  }),
-                [onAddedToCart]
-              );
+    <MiniCartModalProvider>
+      <Commerce.Root checkoutServiceConfig={{}}>
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+          <StoreLayoutContent
+            children={children}
+            showSuccessMessage={showSuccessMessage}
+            setShowSuccessMessage={setShowSuccessMessage}
+          />
+        </CurrentCart>
+      </Commerce.Root>
+    </MiniCartModalProvider>
+  );
+}
 
-              return null;
-            }}
-          </CurrentCart.LineItemAdded>
-        )}
-      </CurrentCart.OpenTrigger>
+function StoreLayoutContent({
+  children,
+  showSuccessMessage,
+  setShowSuccessMessage,
+}: {
+  children: ReactNode;
+  showSuccessMessage: boolean;
+  setShowSuccessMessage: (show: boolean) => void;
+}) {
+  const { open } = useMiniCartModal();
+  return (
+    <>
+      <CartLineItemAdded>
+        {({ onAddedToCart }) => {
+          useEffect(
+            () =>
+              onAddedToCart(() => {
+                setShowSuccessMessage(true);
+                setTimeout(() => {
+                  setShowSuccessMessage(false);
+                  open();
+                }, 3000);
+              }),
+            [onAddedToCart]
+          );
+
+          return null;
+        }}
+      </CartLineItemAdded>
+
       {/* Success Message */}
       {showSuccessMessage && (
         <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
@@ -65,6 +95,6 @@ export function StoreLayout({
       {children}
 
       <MiniCartContent />
-    </CurrentCart.Root>
+    </>
   );
 }

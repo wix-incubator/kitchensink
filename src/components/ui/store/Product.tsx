@@ -1,21 +1,36 @@
 import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
+import { Button } from '../button';
 
 export const Product = ProductPrimitive.Root;
 
+const productNameVariants = cva('font-theme-heading', {
+  variants: {
+    variant: {
+      heading: 'text-4xl font-bold text-content-primary mb-4',
+      paragraph: '',
+    },
+  },
+  defaultVariants: {
+    variant: 'heading',
+  },
+});
+
+export interface ProductNameProps
+  extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>,
+    VariantProps<typeof productNameVariants> {}
+
 export const ProductName = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Name>,
-  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>
->((props, ref) => {
+  ProductNameProps
+>(({ variant, className, ...props }, ref) => {
   return (
     <ProductPrimitive.Name
       {...props}
       ref={ref}
-      className={cn(
-        'text-4xl font-bold text-content-primary mb-4 font-theme-heading',
-        props.className
-      )}
+      className={cn(productNameVariants({ variant }), className)}
     >
       {props.children}
     </ProductPrimitive.Name>
@@ -89,10 +104,7 @@ export const ProductSlug = React.forwardRef<
     <ProductPrimitive.Slug
       {...props}
       ref={ref}
-      className={cn(
-        'text-content-secondary font-mono text-sm',
-        props.className
-      )}
+      className={cn('text-content-secondary text-sm', props.className)}
     >
       {props.children}
     </ProductPrimitive.Slug>
@@ -200,3 +212,123 @@ export const ProductModifierOptionRepeater =
   ProductPrimitive.ModifierOptionRepeater;
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';
+
+export const ProductStock = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Stock>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Stock>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.Stock
+      {...props}
+      ref={ref}
+      labels={{
+        inStock: 'In Stock',
+        limitedStock: 'Limited Stock',
+        outOfStock: 'Out of Stock',
+        ...props.labels,
+      }}
+      className={cn(
+        'data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success',
+        props.className
+      )}
+      asChild
+    >
+      {props.children}
+    </ProductPrimitive.Stock>
+  );
+});
+
+ProductStock.displayName = 'ProductStock';
+
+export const ProductActionAddToCart = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionAddToCart>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionAddToCart>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionAddToCart
+      {...props}
+      ref={ref}
+      className={props.className}
+      asChild
+    >
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="default"
+            size="lg"
+            className="flex-1 relative"
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
+    </ProductPrimitive.ProductActionAddToCart>
+  );
+});
+
+ProductActionAddToCart.displayName = 'ProductActionAddToCart';
+
+export const ProductActionBuyNow = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionBuyNow>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionBuyNow>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionBuyNow
+      {...props}
+      ref={ref}
+      className={props.className}
+      asChild
+    >
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="secondary"
+            size="lg"
+            className={cn(
+              'flex-1 transform hover:scale-105 disabled:hover:scale-100',
+              props.className
+            )}
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
+    </ProductPrimitive.ProductActionBuyNow>
+  );
+});
+
+ProductActionBuyNow.displayName = 'ProductActionBuyNow';
+
+export const ProductActionPreOrder = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductActionPreOrder>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionPreOrder>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductActionPreOrder
+      {...props}
+      ref={ref}
+      className={props.className}
+      asChild
+    >
+      {React.forwardRef(({ isLoading, ...restProps }, ref) => {
+        return (
+          <Button
+            ref={ref as React.RefObject<HTMLButtonElement>}
+            variant="default"
+            size="lg"
+            className="flex-1 relative"
+            {...restProps}
+          >
+            {!isLoading ? props.label : props.loadingState}
+          </Button>
+        );
+      })}
+    </ProductPrimitive.ProductActionPreOrder>
+  );
+});
+
+ProductActionPreOrder.displayName = 'ProductActionPreOrder';
