@@ -3,7 +3,7 @@ import {
   ProductActionAddToCart,
   ProductActionBuyNow,
   ProductActionPreOrder,
-} from '../ui/store/Product';
+} from '@/components/ui/store/Product';
 
 interface ProductActionButtonsProps {
   showBuyNow?: boolean;

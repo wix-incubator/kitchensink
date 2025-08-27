@@ -7,7 +7,7 @@ import {
   MiniCartModalProvider,
   useMiniCartModal,
 } from '../components/MiniCartModal';
-import { Commerce } from '../components/ui/ecom/Commerce';
+import { Commerce } from '@/components/ui/ecom/Commerce';
 
 interface StoreLayoutProps {
   children: ReactNode;
