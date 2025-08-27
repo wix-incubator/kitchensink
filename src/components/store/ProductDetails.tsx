@@ -18,14 +18,18 @@ import {
   ProductModifierOptions,
   ProductModifierOptionRepeater,
   ProductModifiers,
-} from '../ui/store/Product';
+} from '@/components/ui/store/Product';
 import {
   OptionName,
   OptionChoices,
   OptionChoiceRepeater,
   OptionMandatoryIndicator,
-} from '../ui/store/Option';
-import { ChoiceColor, ChoiceText, ChoiceFreeText } from '../ui/store/Choice';
+} from '@/components/ui/store/Option';
+import {
+  ChoiceColor,
+  ChoiceText,
+  ChoiceFreeText,
+} from '@/components/ui/store/Choice';
 
 import { productsV3 } from '@wix/stores';
 

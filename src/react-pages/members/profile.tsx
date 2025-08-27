@@ -6,16 +6,16 @@ import {
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import { actions } from 'astro:actions';
 import { useState } from 'react';
-import { PageDocsRegistration } from '../../components/DocsMode';
-import { CameraIcon } from '../../components/icons/CameraIcon';
-import { CheckCircleIcon } from '../../components/icons/CheckCircleIcon';
-import { CheckIcon } from '../../components/icons/CheckIcon';
-import { MailIcon } from '../../components/icons/MailIcon';
-import { PencilIcon } from '../../components/icons/PencilIcon';
-import { SignOutIcon } from '../../components/icons/SignOutIcon';
-import { UserIcon } from '../../components/icons/UserIcon';
-import PhotoUploadDialog from '../../components/PhotoUploadDialog';
-import UpdateProfileDialog from '../../components/UpdateProfileDialog';
+import { PageDocsRegistration } from '@/components/DocsMode';
+import { CameraIcon } from '@/components/icons/CameraIcon';
+import { CheckCircleIcon } from '@/components/icons/CheckCircleIcon';
+import { CheckIcon } from '@/components/icons/CheckIcon';
+import { MailIcon } from '@/components/icons/MailIcon';
+import { PencilIcon } from '@/components/icons/PencilIcon';
+import { SignOutIcon } from '@/components/icons/SignOutIcon';
+import { UserIcon } from '@/components/icons/UserIcon';
+import PhotoUploadDialog from '@/components/PhotoUploadDialog';
+import UpdateProfileDialog from '@/components/UpdateProfileDialog';
 import {
   CurrentMemberService,
   CurrentMemberServiceDefinition,

@@ -1,4 +1,4 @@
-import { PageDocsRegistration } from '../../components/DocsMode';
+import { PageDocsRegistration } from '@/components/DocsMode';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 import '../../styles/theme-1.css';
 

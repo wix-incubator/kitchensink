@@ -18,7 +18,7 @@ import {
 
 import React from 'react';
 import { useNavigation } from '../NavigationContext';
-import { Badge } from '../ui/badge';
+import { Badge } from '@/components/ui/badge';
 import {
   ProductCompareAtPrice,
   ProductDescription,
@@ -31,14 +31,14 @@ import {
   ProductVariantOptionRepeater,
   ProductVariantOptions,
   ProductVariants,
-} from '../ui/store/Product';
+} from '@/components/ui/store/Product';
 import {
   LoadMoreTrigger,
   ProductList,
   ProductRepeater,
   Products,
   TotalsDisplayed,
-} from '../ui/store/ProductList';
+} from '@/components/ui/store/ProductList';
 import CategoryPicker from './CategoryPicker';
 import { ProductActionButtons } from './ProductActionButtons';
 import ProductFiltersSidebar from './ProductFiltersSidebar';
@@ -47,8 +47,8 @@ import {
   OptionChoiceRepeater,
   OptionChoices,
   OptionName,
-} from '../ui/store/Option';
-import { ChoiceColor, ChoiceText } from '../ui/store/Choice';
+} from '@/components/ui/store/Option';
+import { ChoiceColor, ChoiceText } from '@/components/ui/store/Choice';
 
 interface ProductListProps {
   productsListConfig: ProductsListServiceConfig;
