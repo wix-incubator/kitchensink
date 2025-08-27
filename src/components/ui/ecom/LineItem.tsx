@@ -14,22 +14,29 @@ import { LineItem as LineItemPrimitive } from '@wix/headless-ecom/react';
  *   <CartLineItemRepeater>
  *     <LineItem>
  *       <div className="flex items-center gap-4 p-4 border-b">
- *         <LineItemImage size="lg" />
+ *         <LineItemImage size="lg" className="rounded-lg" />
  *         <div className="flex-1">
- *           <LineItemTitle className="font-semibold" />
- *           <LineItemSelectedOptions>
+ *           <LineItemTitle size="lg" className="font-semibold mb-2" />
+ *           <LineItemSelectedOptions className="text-sm text-gray-600">
  *             <LineItemSelectedOptionRepeater>
  *               <SelectedOption>
- *                 <SelectedOptionText />
+ *                 <SelectedOptionText size="sm" />
  *               </SelectedOption>
  *             </LineItemSelectedOptionRepeater>
  *           </LineItemSelectedOptions>
  *         </div>
- *         <LineItemQuantity>
- *           <Quantity>
- *             <QuantityInput />
- *           </Quantity>
- *         </LineItemQuantity>
+ *         <div className="text-right">
+ *           <div className="font-semibold mb-2">$29.99</div>
+ *           <LineItemQuantity>
+ *             <Quantity>
+ *               <div className="flex items-center border rounded">
+ *                 <QuantityDecrement>-</QuantityDecrement>
+ *                 <QuantityInput />
+ *                 <QuantityIncrement>+</QuantityIncrement>
+ *               </div>
+ *             </Quantity>
+ *           </LineItemQuantity>
+ *         </div>
  *       </div>
  *     </LineItem>
  *   </CartLineItemRepeater>

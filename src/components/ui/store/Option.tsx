@@ -32,19 +32,12 @@ export const Option = OptionPrimitive.Root;
  * @example
  * ```tsx
  * <Option>
- *   <div className="mb-2">
- *     <OptionName className="text-lg font-semibold">
- *       Size
- *     </OptionName>
- *     <OptionMandatoryIndicator>*</OptionMandatoryIndicator>
+ *   <OptionName className="text-content-secondary text-xs font-medium uppercase tracking-wide" />
+ *
+ *   <div className="flex items-center gap-1">
+ *     <OptionName />
+ *     <OptionMandatoryIndicator />
  *   </div>
- *   <OptionChoices>
- *     <OptionChoiceRepeater>
- *       <Choice>
- *         <ChoiceText>Large</ChoiceText>
- *       </Choice>
- *     </OptionChoiceRepeater>
- *   </OptionChoices>
  * </Option>
  * ```
  */
@@ -117,13 +110,16 @@ OptionMandatoryIndicator.displayName = 'OptionMandatoryIndicator';
  * @example
  * ```tsx
  * <Option>
- *   <OptionName>Color</OptionName>
- *   <OptionChoices className="flex gap-2 mt-2">
- *     <OptionChoiceRepeater>
- *       <Choice>
- *         <ChoiceColor />
- *       </Choice>
- *     </OptionChoiceRepeater>
+ *   <OptionName />
+ *   <OptionChoices>
+ *     <div className="flex flex-wrap gap-1.5">
+ *       <OptionChoiceRepeater>
+ *         <>
+ *           <ChoiceColor className="w-7 h-7 border-2" />
+ *           <ChoiceText className="inline-flex items-center px-2 py-1 text-xs rounded border cursor-pointer bg-surface-primary data-[selected='true']:bg-brand-primary" />
+ *         </>
+ *       </OptionChoiceRepeater>
+ *     </div>
  *   </OptionChoices>
  * </Option>
  * ```

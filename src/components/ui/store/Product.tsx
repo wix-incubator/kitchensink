@@ -56,11 +56,11 @@ export interface ProductNameProps
  * @example
  * ```tsx
  * <Product product={productData}>
- *   <ProductName variant="heading" asChild>
- *     <h1 className="mb-4" />
+ *   <ProductName asChild>
+ *     <h2 />
  *   </ProductName>
  *
- *   <ProductName variant="paragraph" className="text-lg" />
+ *   <ProductName variant="paragraph" className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors" />
  * </Product>
  * ```
  */
@@ -89,11 +89,23 @@ ProductName.displayName = 'ProductName';
  * @example
  * ```tsx
  * <Product product={productData}>
- *   <ProductName />
+ *   <ProductDescription
+ *     as="html"
+ *     className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
+ *   />
  *
- *   <ProductDescription className="mt-4 text-gray-600" />
- *
- *   <ProductDescription as="html" className="prose max-w-none" />
+ *   <ProductDescription as="html" asChild>
+ *     {({ description }) => (
+ *       <>
+ *         {description && (
+ *           <div>
+ *             <h3 className="text-xl font-semibold mb-3">Description</h3>
+ *             <div dangerouslySetInnerHTML={{ __html: description }} />
+ *           </div>
+ *         )}
+ *       </>
+ *     )}
+ *   </ProductDescription>
  * </Product>
  * ```
  */
@@ -122,10 +134,16 @@ ProductDescription.displayName = 'ProductDescription';
  * @example
  * ```tsx
  * <Product product={productData}>
- *   <ProductName />
- *   <div className="flex items-center gap-3 mt-2">
- *     <ProductPrice className="text-2xl font-bold" />
- *     <ProductCompareAtPrice />
+ *   <div className="flex items-center gap-2">
+ *     <ProductPrice className="text-xl font-bold text-content-primary" />
+ *     <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
+ *   </div>
+ *
+ *   <div className="space-y-1">
+ *     <ProductPrice />
+ *     <ProductCompareAtPrice asChild>
+ *       <div></div>
+ *     </ProductCompareAtPrice>
  *   </div>
  * </Product>
  * ```
@@ -275,18 +293,23 @@ ProductMediaGallery.displayName = 'ProductMediaGallery';
  * @example
  * ```tsx
  * <Product product={productData}>
- *   <ProductVariants className="mt-6">
+ *   <ProductVariants>
  *     <ProductVariantOptions>
  *       <ProductVariantOptionRepeater>
  *         <Option>
- *           <OptionName>Size</OptionName>
- *           <OptionChoices>
- *             <OptionChoiceRepeater>
- *               <Choice>
- *                 <ChoiceText>Large</ChoiceText>
- *               </Choice>
- *             </OptionChoiceRepeater>
- *           </OptionChoices>
+ *           <div className="space-y-3 mb-4">
+ *             <OptionName />
+ *             <OptionChoices>
+ *               <div className="flex flex-wrap gap-3">
+ *                 <OptionChoiceRepeater>
+ *                   <>
+ *                     <ChoiceColor />
+ *                     <ChoiceText />
+ *                   </>
+ *                 </OptionChoiceRepeater>
+ *               </div>
+ *             </OptionChoices>
+ *           </div>
  *         </Option>
  *       </ProductVariantOptionRepeater>
  *     </ProductVariantOptions>
@@ -319,24 +342,23 @@ ProductVariants.displayName = 'ProductVariants';
  * @example
  * ```tsx
  * <Product product={productData}>
- *   <ProductVariants>
- *     <ProductVariantOptions>
- *       <Option>
- *         <OptionName>Size</OptionName>
- *       </Option>
- *     </ProductVariantOptions>
- *   </ProductVariants>
- *
- *   <ProductModifiers className="mt-6">
+ *   <ProductModifiers>
  *     <ProductModifierOptions>
  *       <ProductModifierOptionRepeater>
  *         <Option>
- *           <OptionName>Gift Wrapping</OptionName>
+ *           <div className="flex items-center gap-1">
+ *             <OptionName />
+ *             <OptionMandatoryIndicator />
+ *           </div>
  *           <OptionChoices>
  *             <OptionChoiceRepeater>
- *               <Choice>
- *                 <ChoiceText>Yes (+$5)</ChoiceText>
- *               </Choice>
+ *               <>
+ *                 <ChoiceColor />
+ *                 <ChoiceText asChild>
+ *                   <Button variant="outline"></Button>
+ *                 </ChoiceText>
+ *                 <ChoiceFreeText placeholder="Enter custom text" />
+ *               </>
  *             </OptionChoiceRepeater>
  *           </OptionChoices>
  *         </Option>

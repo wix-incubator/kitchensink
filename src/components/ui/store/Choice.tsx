@@ -23,18 +23,17 @@ export const Choice = ChoicePrimitive.Root;
  * @component
  * @example
  * ```tsx
- * <Option>
- *   <OptionName>Size</OptionName>
- *   <OptionChoices>
- *     <OptionChoiceRepeater>
- *       <Choice>
- *         <ChoiceText className="px-4 py-2 border rounded">
- *           Small
- *         </ChoiceText>
- *       </Choice>
- *     </OptionChoiceRepeater>
- *   </OptionChoices>
- * </Option>
+ * <OptionChoices>
+ *   <OptionChoiceRepeater>
+ *     <Choice>
+ *       <ChoiceText className="inline-flex items-center px-2 py-1 text-xs rounded border cursor-pointer bg-surface-primary data-[selected='true']:bg-brand-primary data-[selected='true']:text-content-primary data-[selected='true']:border-brand-primary" />
+ *
+ *       <ChoiceText asChild>
+ *         <Button variant="outline"></Button>
+ *       </ChoiceText>
+ *     </Choice>
+ *   </OptionChoiceRepeater>
+ * </OptionChoices>
  * ```
  */
 export const ChoiceText = React.forwardRef<
@@ -64,16 +63,25 @@ ChoiceText.displayName = 'ChoiceText';
  * @component
  * @example
  * ```tsx
- * <Option>
- *   <OptionName>Color</OptionName>
- *   <OptionChoices>
+ * <OptionChoices>
+ *   <div className="flex flex-wrap gap-1.5">
  *     <OptionChoiceRepeater>
  *       <Choice>
- *         <ChoiceColor style={{ backgroundColor: '#ff0000' }} />
+ *         <ChoiceColor className="w-7 h-7 border-2" />
  *       </Choice>
  *     </OptionChoiceRepeater>
- *   </OptionChoices>
- * </Option>
+ *   </div>
+ * </OptionChoices>
+ *
+ * <OptionChoices>
+ *   <div className="flex flex-wrap gap-3">
+ *     <OptionChoiceRepeater>
+ *       <Choice>
+ *         <ChoiceColor />
+ *       </Choice>
+ *     </OptionChoiceRepeater>
+ *   </div>
+ * </OptionChoices>
  * ```
  */
 export const ChoiceColor = React.forwardRef<

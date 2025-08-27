@@ -204,22 +204,33 @@ CartTotalsTotal.displayName = 'CartTotalsTotal';
 // Cart Summary Component
 /**
  * Displays a summary of cart contents (e.g., "3 items in cart").
- * Provides a quick overview of cart status.
+ * Provides a quick overview of cart status and can use render props.
  *
  * @component
  * @example
  * ```tsx
- * <Cart>
- *   <div className="flex justify-between items-center mb-4">
- *     <h2 className="text-xl font-semibold">Shopping Cart</h2>
- *     <CartSummary className="text-sm text-gray-500" />
- *   </div>
- *   <CartLineItems>
- *     <CartLineItemRepeater>
- *       <LineItem />
- *     </CartLineItemRepeater>
- *   </CartLineItems>
- * </Cart>
+ * <CartSummary>
+ *   {({ subtotal, totalItems }) => (
+ *     <>
+ *       {totalItems > 0 ? (
+ *         <div className="bg-surface-card rounded-xl p-6 border border-brand-subtle">
+ *           <div className="flex justify-between items-center mb-4">
+ *             <h3 className="text-xl font-semibold text-content-primary">
+ *               Cart Summary
+ *             </h3>
+ *             <span className="text-content-secondary text-sm">
+ *               {totalItems} {totalItems === 1 ? 'item' : 'items'}
+ *             </span>
+ *           </div>
+ *         </div>
+ *       ) : (
+ *         <div className="text-center py-8">
+ *           <p className="text-content-muted">Your cart is empty</p>
+ *         </div>
+ *       )}
+ *     </>
+ *   )}
+ * </CartSummary>
  * ```
  */
 export const CartSummary = React.forwardRef<

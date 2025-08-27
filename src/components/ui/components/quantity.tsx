@@ -11,12 +11,15 @@ import { Quantity as QuantityPrimitive } from '@wix/headless-components/react';
  * @example
  * ```tsx
  * <Quantity>
- *   <div className="flex items-center border rounded">
- *     <QuantityDecrement>-</QuantityDecrement>
- *     <QuantityInput />
- *     <QuantityIncrement>+</QuantityIncrement>
+ *   <div className="flex items-center border border-brand-light rounded-lg">
+ *     <QuantityDecrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+ *       -
+ *     </QuantityDecrement>
+ *     <QuantityInput className="px-4 py-2 text-content-primary border-x border-brand-light min-w-[3rem] text-center" />
+ *     <QuantityIncrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+ *       +
+ *     </QuantityIncrement>
  *   </div>
- *   <QuantityReset>Reset</QuantityReset>
  * </Quantity>
  * ```
  */
