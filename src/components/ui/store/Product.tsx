@@ -727,3 +727,211 @@ export const ProductActionPreOrder = React.forwardRef<
 });
 
 ProductActionPreOrder.displayName = 'ProductActionPreOrder';
+
+// Quantity Components
+const productQuantityVariants = cva('', {
+  variants: {
+    variant: {
+      default: '',
+      button:
+        'px-3 py-1 hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors',
+      input:
+        'w-16 text-center py-1 border-x border-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary',
+    },
+    size: {
+      default: '',
+      sm: 'text-sm',
+      lg: 'text-lg',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
+
+export interface ProductQuantityRootProps
+  extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Quantity.Root>,
+    VariantProps<typeof productQuantityVariants> {}
+
+/**
+ * Root component for product quantity selection.
+ * Wraps all quantity-related components and provides proper layout.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductQuantityRoot className="flex items-center gap-3">
+ *     <ProductQuantityDecrement />
+ *     <ProductQuantityInput />
+ *     <ProductQuantityIncrement />
+ *   </ProductQuantityRoot>
+ * </Product>
+ * ```
+ */
+export const ProductQuantityRoot = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Quantity.Root>,
+  ProductQuantityRootProps
+>(({ variant, size, className, ...props }, ref) => {
+  return (
+    <ProductPrimitive.Quantity.Root
+      {...props}
+      ref={ref}
+      className={cn(productQuantityVariants({ variant, size }), className)}
+    >
+      {props.children}
+    </ProductPrimitive.Quantity.Root>
+  );
+});
+
+ProductQuantityRoot.displayName = 'ProductQuantityRoot';
+
+export interface ProductQuantityDecrementProps
+  extends React.ComponentPropsWithoutRef<
+      typeof ProductPrimitive.Quantity.Decrement
+    >,
+    VariantProps<typeof productQuantityVariants> {}
+
+/**
+ * Decrement button for product quantity.
+ * Reduces the quantity by one when clicked.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductQuantityRoot>
+ *   <ProductQuantityDecrement variant="button" />
+ *   <ProductQuantityInput />
+ *   <ProductQuantityIncrement variant="button" />
+ * </ProductQuantityRoot>
+ * ```
+ */
+export const ProductQuantityDecrement = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Quantity.Decrement>,
+  ProductQuantityDecrementProps
+>(({ variant, size, className, ...props }, ref) => {
+  return (
+    <ProductPrimitive.Quantity.Decrement
+      {...props}
+      ref={ref}
+      className={cn(productQuantityVariants({ variant, size }), className)}
+    >
+      {props.children}
+    </ProductPrimitive.Quantity.Decrement>
+  );
+});
+
+ProductQuantityDecrement.displayName = 'ProductQuantityDecrement';
+
+export interface ProductQuantityInputProps
+  extends React.ComponentPropsWithoutRef<
+      typeof ProductPrimitive.Quantity.Input
+    >,
+    VariantProps<typeof productQuantityVariants> {}
+
+/**
+ * Input field for product quantity.
+ * Allows users to directly enter a quantity value.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductQuantityRoot>
+ *   <ProductQuantityDecrement />
+ *   <ProductQuantityInput variant="input" />
+ *   <ProductQuantityIncrement />
+ * </ProductQuantityRoot>
+ * ```
+ */
+export const ProductQuantityInput = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Quantity.Input>,
+  ProductQuantityInputProps
+>(({ variant, size, className, ...props }, ref) => {
+  return (
+    <ProductPrimitive.Quantity.Input
+      {...props}
+      ref={ref}
+      className={cn(productQuantityVariants({ variant, size }), className)}
+    />
+  );
+});
+
+ProductQuantityInput.displayName = 'ProductQuantityInput';
+
+export interface ProductQuantityIncrementProps
+  extends React.ComponentPropsWithoutRef<
+      typeof ProductPrimitive.Quantity.Increment
+    >,
+    VariantProps<typeof productQuantityVariants> {}
+
+/**
+ * Increment button for product quantity.
+ * Increases the quantity by one when clicked.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductQuantityRoot>
+ *   <ProductQuantityDecrement />
+ *   <ProductQuantityInput />
+ *   <ProductQuantityIncrement variant="button" />
+ * </ProductQuantityRoot>
+ * ```
+ */
+export const ProductQuantityIncrement = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Quantity.Increment>,
+  ProductQuantityIncrementProps
+>(({ variant, size, className, ...props }, ref) => {
+  return (
+    <ProductPrimitive.Quantity.Increment
+      {...props}
+      ref={ref}
+      className={cn(productQuantityVariants({ variant, size }), className)}
+    >
+      {props.children}
+    </ProductPrimitive.Quantity.Increment>
+  );
+});
+
+ProductQuantityIncrement.displayName = 'ProductQuantityIncrement';
+
+/**
+ * Raw component that provides direct access to quantity data.
+ * Useful for custom rendering or accessing quantity properties.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductQuantityRoot>
+ *   <ProductQuantityDecrement />
+ *   <ProductQuantityInput />
+ *   <ProductQuantityIncrement />
+ *   <ProductQuantityRaw>
+ *     {({ availableQuantity, inStock, isPreOrderEnabled }) => (
+ *       <div className="text-sm text-content-muted">
+ *         {!inStock && isPreOrderEnabled && availableQuantity && (
+ *           <span>Max: {availableQuantity} Pre Order</span>
+ *         )}
+ *       </div>
+ *     )}
+ *   </ProductQuantityRaw>
+ * </ProductQuantityRoot>
+ * ```
+ */
+export const ProductQuantityRaw = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Quantity.Raw>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Quantity.Raw>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.Quantity.Raw
+      {...props}
+      ref={ref}
+      className={cn('block', props.className)}
+    >
+      {props.children}
+    </ProductPrimitive.Quantity.Raw>
+  );
+});
+
+ProductQuantityRaw.displayName = 'ProductQuantityRaw';
