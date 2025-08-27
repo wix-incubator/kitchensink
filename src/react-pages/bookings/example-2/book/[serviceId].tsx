@@ -17,7 +17,7 @@ import {
 } from '../../../../headless/bookings/components';
 import { WixMediaImage } from '../../../../headless/media/components';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
-import { PageDocsRegistration } from '../../../../components/DocsMode';
+import { PageDocsRegistration } from '@/components/DocsMode';
 import { BookingAvailabilityServiceDefinition } from '../../../../headless/bookings/services/booking-availability-service';
 import { BookingSelectionServiceDefinition } from '../../../../headless/bookings/services/booking-selection-service';
 

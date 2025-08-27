@@ -2,16 +2,13 @@ import { useLoaderData } from 'react-router-dom';
 import { useEffect, useState, type ReactNode } from 'react';
 
 import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
-import {
-  MiniCartContent,
-  MiniCartIcon,
-} from '../../../components/ecom/MiniCart';
+import { MiniCartContent, MiniCartIcon } from '@/components/ecom/MiniCart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import {
   NavigationProvider,
   type NavigationComponent,
-} from '../../../components/NavigationContext';
+} from '@/components/NavigationContext';
 import { Link } from 'react-router-dom';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
 import {

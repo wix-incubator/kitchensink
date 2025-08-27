@@ -1,12 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { MiniCartContent, MiniCartIcon } from '../components/ecom/MiniCart';
+import { MiniCartContent, MiniCartIcon } from '@/components/ecom/MiniCart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
   MiniCartModalProvider,
   useMiniCartModal,
-} from '../components/MiniCartModal';
+} from '@/components/MiniCartModal';
 import { Commerce } from '@/components/ui/ecom/Commerce';
 
 interface StoreLayoutProps {

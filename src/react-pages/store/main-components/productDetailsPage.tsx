@@ -1,4 +1,4 @@
-import ProductDetails from '../../../components/store/ProductDetails';
+import ProductDetails from '@/components/store/ProductDetails';
 
 interface ProductDetailPageProps {
   productServiceConfig?: any;

@@ -1,4 +1,4 @@
-import CartContent from '../../../components/ecom/Cart';
+import CartContent from '@/components/ecom/Cart';
 
 export function Cart() {
   return (

@@ -6,7 +6,7 @@ import {
 } from '@wix/headless-stores/services';
 import { loadProductsListServiceConfig } from '@wix/headless-stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
-import { ProductListSkeleton } from '../../../components/store/ProductList';
+import { ProductListSkeleton } from '@/components/store/ProductList';
 import { Card, CardContent } from '@/components/ui/card';
 import { customizationsV3 } from '@wix/stores';
 // Skeleton component for product collection loading

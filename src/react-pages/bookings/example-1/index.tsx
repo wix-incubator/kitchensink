@@ -18,7 +18,7 @@ import {
 } from '../../../headless/bookings/components';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import { WixMediaImage } from '../../../headless/media/components';
-import { PageDocsRegistration } from '../../../components/DocsMode';
+import { PageDocsRegistration } from '@/components/DocsMode';
 
 interface BookingsPageProps {
   bookingServicesConfig: any;

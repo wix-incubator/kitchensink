@@ -1,4 +1,4 @@
-import { PageDocsRegistration } from '../../../../components/DocsMode';
+import { PageDocsRegistration } from '@/components/DocsMode';
 import { CurrentCartService } from '@wix/headless-ecom/services';
 import { ProductService } from '@wix/headless-stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';

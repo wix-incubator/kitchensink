@@ -4,8 +4,8 @@ import {
   DocsToggleButton,
   DocsDrawer,
   DocsFloatingMenu,
-} from '../components/DocsMode';
-import { NavigationProvider } from '../components/NavigationContext';
+} from '@/components/DocsMode';
+import { NavigationProvider } from '@/components/NavigationContext';
 
 interface KitchensinkLayoutProps {
   children: React.ReactNode;

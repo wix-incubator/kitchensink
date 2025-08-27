@@ -1,4 +1,4 @@
-import ProductList from '../../../components/store/ProductList';
+import ProductList from '@/components/store/ProductList';
 
 import {
   type CategoriesListServiceConfig,
