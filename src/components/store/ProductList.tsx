@@ -104,9 +104,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <CategoryPicker
-                      categoriesListConfig={categoriesListConfig}
-                    />
+                  <CategoryPicker categoriesListConfig={categoriesListConfig} />
                 </div>
                 <SortDropdown />
               </div>
