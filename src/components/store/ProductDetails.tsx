@@ -18,6 +18,11 @@ import {
   ProductModifierOptions,
   ProductModifierOptionRepeater,
   ProductModifiers,
+  ProductQuantityRoot,
+  ProductQuantityDecrement,
+  ProductQuantityInput,
+  ProductQuantityIncrement,
+  ProductQuantityRaw,
 } from '@/components/ui/store/Product';
 import {
   OptionName,
@@ -202,14 +207,14 @@ export default function ProductDetails({
                       <h3 className="text-lg font-semibold text-content-primary">
                         Quantity
                       </h3>
-                      <ProductPrimitive.Quantity.Root className="flex items-center gap-3">
+                      <ProductQuantityRoot className="flex items-center gap-3">
                         <>
                           <div className="flex items-center border border-brand-light rounded-lg">
-                            <ProductPrimitive.Quantity.Decrement className="px-3 py-1 hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors" />
-                            <ProductPrimitive.Quantity.Input className="w-16 text-center py-1 border-x border-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary" />
-                            <ProductPrimitive.Quantity.Increment className="px-3 py-1 hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors" />
+                            <ProductQuantityDecrement variant="button" />
+                            <ProductQuantityInput variant="input" />
+                            <ProductQuantityIncrement variant="button" />
                           </div>
-                          <ProductPrimitive.Quantity.Raw asChild>
+                          <ProductQuantityRaw asChild>
                             {({
                               availableQuantity,
                               inStock,
@@ -234,9 +239,9 @@ export default function ProductDetails({
                                   )}
                               </div>
                             )}
-                          </ProductPrimitive.Quantity.Raw>
+                          </ProductQuantityRaw>
                         </>
-                      </ProductPrimitive.Quantity.Root>
+                      </ProductQuantityRoot>
                     </div>
 
                     <SocialSharingButtons />
