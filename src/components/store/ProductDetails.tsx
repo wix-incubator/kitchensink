@@ -1,7 +1,7 @@
-import React from 'react';
 import {
   ProductModifiers as ProductModifiersPrimitive,
   ProductVariantSelector as ProductVariantSelectorPrimitive,
+  Product as ProductPrimitive,
   SelectedVariant,
 } from '@wix/headless-stores/react';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -202,63 +202,41 @@ export default function ProductDetails({
                       <h3 className="text-lg font-semibold text-content-primary">
                         Quantity
                       </h3>
-                      <ProductVariantSelectorPrimitive.Stock>
-                        {({
-                          inStock,
-                          isPreOrderEnabled,
-                          availableQuantity,
-                          selectedQuantity,
-                          incrementQuantity,
-                          decrementQuantity,
-                        }) => {
-                          return (
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center border border-brand-light rounded-lg">
-                                <button
-                                  onClick={decrementQuantity}
-                                  disabled={
-                                    selectedQuantity <= 1 ||
-                                    (!inStock && !isPreOrderEnabled)
-                                  }
-                                  className="px-3 py-2 text-content-primary hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                  -
-                                </button>
-                                <span className="px-4 py-2 text-content-primary border-x border-brand-light min-w-[3rem] text-center">
-                                  {selectedQuantity}
-                                </span>
-                                <button
-                                  onClick={incrementQuantity}
-                                  disabled={
-                                    (!!availableQuantity &&
-                                      selectedQuantity >= availableQuantity) ||
-                                    (!inStock && !isPreOrderEnabled)
-                                  }
-                                  className="px-3 py-2 text-content-primary hover:bg-surface-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                  +
-                                </button>
+                      <ProductPrimitive.Quantity.Root className="flex items-center gap-3">
+                        <>
+                          <div className="flex items-center border border-brand-light rounded-lg">
+                            <ProductPrimitive.Quantity.Decrement className="px-3 py-1 hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors" />
+                            <ProductPrimitive.Quantity.Input className="w-16 text-center py-1 border-x border-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary" />
+                            <ProductPrimitive.Quantity.Increment className="px-3 py-1 hover:bg-surface-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors" />
+                          </div>
+                          <ProductPrimitive.Quantity.Raw asChild>
+                            {({
+                              availableQuantity,
+                              inStock,
+                              isPreOrderEnabled,
+                            }) => (
+                              <div>
+                                {/* Show max quantity only when out of stock AND preorder enabled */}
+                                {!inStock &&
+                                  isPreOrderEnabled &&
+                                  availableQuantity && (
+                                    <span className="text-content-muted text-sm">
+                                      Max: {availableQuantity} Pre Order
+                                    </span>
+                                  )}
+                                {/* Show stock message when in stock but available quantity < 10 */}
+                                {inStock &&
+                                  availableQuantity &&
+                                  availableQuantity < 10 && (
+                                    <span className="text-content-muted text-sm">
+                                      Only {availableQuantity} left in stock
+                                    </span>
+                                  )}
                               </div>
-                              {/* Show max quantity only when out of stock AND preorder enabled */}
-                              {!inStock &&
-                                isPreOrderEnabled &&
-                                availableQuantity && (
-                                  <span className="text-content-muted text-sm">
-                                    Max: {availableQuantity} Pre Order
-                                  </span>
-                                )}
-                              {/* Show stock message when in stock but available quantity < 10 */}
-                              {inStock &&
-                                availableQuantity &&
-                                availableQuantity < 10 && (
-                                  <span className="text-content-muted text-sm">
-                                    Only {availableQuantity} left in stock
-                                  </span>
-                                )}
-                            </div>
-                          );
-                        }}
-                      </ProductVariantSelectorPrimitive.Stock>
+                            )}
+                          </ProductPrimitive.Quantity.Raw>
+                        </>
+                      </ProductPrimitive.Quantity.Root>
                     </div>
 
                     <SocialSharingButtons />
