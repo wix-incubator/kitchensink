@@ -7,10 +7,52 @@ import {
 } from '@wix/headless-stores/react';
 import { Button } from '@/components/ui/button';
 
-// Root wrapper for the ProductList
+/**
+ * Root component for product list functionality.
+ * Provides context for all product list related components like filters, pagination, etc.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductList productsListConfig={productsListConfig}>
+ *   <div className="space-y-6">
+ *     <Products>
+ *       <ProductRepeater>
+ *         <Product>
+ *           <ProductName />
+ *           <ProductPrice />
+ *         </Product>
+ *       </ProductRepeater>
+ *     </Products>
+ *     <LoadMoreTrigger />
+ *     <TotalsDisplayed />
+ *   </div>
+ * </ProductList>
+ * ```
+ */
 export const ProductList = ProductListPrimitive.Root;
 
-// Products wrapper component
+/**
+ * Container for the actual product grid/list display.
+ * Handles empty states and provides responsive grid layout.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductList>
+ *   <Products className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+ *     <ProductRepeater>
+ *       <Product>
+ *         <div className="border rounded-lg p-4">
+ *           <ProductName className="font-semibold" />
+ *           <ProductPrice className="text-lg" />
+ *         </div>
+ *       </Product>
+ *     </ProductRepeater>
+ *   </Products>
+ * </ProductList>
+ * ```
+ */
 export const Products = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -49,6 +91,26 @@ export const Products = React.forwardRef<
 });
 Products.displayName = 'Products';
 
+/**
+ * Repeater component that renders each product in the list.
+ * Automatically iterates through all products in the current list.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Products>
+ *   <ProductRepeater>
+ *     <Product>
+ *       <div className="product-card">
+ *         <ProductName />
+ *         <ProductPrice />
+ *         <ProductDescription className="text-sm text-gray-600" />
+ *       </div>
+ *     </Product>
+ *   </ProductRepeater>
+ * </Products>
+ * ```
+ */
 export const ProductRepeater = ProductListPrimitive.ProductRepeater;
 
 /**

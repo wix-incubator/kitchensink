@@ -1,0 +1,325 @@
+---
+description: UI Components for Store and E-commerce functionality
+globs:
+alwaysApply: false
+---
+
+# UI Components - Store & E-commerce
+
+This document describes the actual UI components available under `/src/components/ui/{store/ecom/components}/` based on the current implementation.
+
+## Store UI Components (`/src/components/ui/store/`)
+
+### Product Components (`Product.tsx`)
+
+The `Product.tsx` file exports styled UI components that wrap Wix headless primitives:
+
+#### Core Product Components:
+
+- `Product` - Root component (wraps `ProductPrimitive.Root`)
+- `ProductName` - Product title with variants (`heading`, `paragraph`)
+- `ProductDescription` - Product description with HTML rendering support
+- `ProductPrice` - Current product price with formatting
+- `ProductCompareAtPrice` - Original/compare price (crossed out)
+- `ProductStock` - Stock status display
+- `ProductSlug` - Product URL slug
+- `ProductMediaGallery` - Media gallery wrapper
+
+#### Variant & Option Components:
+
+- `ProductVariants` - Container for variant selection
+- `ProductVariantOptions` - Individual variant option group
+- `ProductVariantOptionRepeater` - Repeater for variant options (should be `Repeater` in context)
+
+#### Modifier Components:
+
+- `ProductModifiers` - Container for product modifiers
+- `ProductModifierOptions` - Individual modifier option group
+- `ProductModifierOptionRepeater` - Repeater for modifier options (should be `Repeater` in context)
+
+#### Action Components:
+
+- `ProductActionAddToCart` - Add to cart button
+- `ProductActionBuyNow` - Buy now button
+- `ProductActionPreOrder` - Pre-order button
+
+#### Raw Data Component:
+
+- `ProductRaw` - Access to raw product data
+
+**Usage Pattern:**
+
+```tsx
+<Product product={productData}>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <ProductMediaGallery />
+    <div>
+      <ProductName asChild>
+        <h1 className="text-4xl font-bold mb-4">Product Title</h1>
+      </ProductName>
+      <ProductPrice className="text-2xl font-semibold mb-2" />
+      <ProductCompareAtPrice className="text-lg text-content-muted line-through" />
+      <ProductDescription className="text-content-secondary mb-6" />
+
+      <ProductVariants>
+        <ProductVariantOptions>
+          <Option>
+            <OptionName className="font-semibold mb-2" />
+            <OptionChoices>
+              <OptionChoiceRepeater>
+                <Choice asChild>
+                  <Button variant="outline" className="mr-2 mb-2">
+                    <ChoiceText />
+                  </Button>
+                </Choice>
+              </OptionChoiceRepeater>
+            </OptionChoices>
+          </Option>
+        </ProductVariantOptions>
+      </ProductVariants>
+
+      <ProductActionAddToCart asChild>
+        <Button size="lg" className="w-full">
+          Add to Cart
+        </Button>
+      </ProductActionAddToCart>
+    </div>
+  </div>
+</Product>
+```
+
+### Option Components (`Option.tsx`)
+
+Components for product variant and modifier options:
+
+- `Option` - Root option component
+- `OptionName` - Option name/label
+- `OptionMandatoryIndicator` - Shows if option is required
+- `OptionChoices` - Container for option choices
+- `OptionChoiceRepeater` - Repeater for choices (should be `Repeater` in OptionChoices context)
+
+### Choice Components (`Choice.tsx`)
+
+Components for individual option choices:
+
+- `Choice` - Root choice component
+- `ChoiceText` - Choice text/label
+- `ChoiceColor` - Color swatch for color choices
+- `ChoiceFreeText` - Free text input for custom choices
+
+**Usage Pattern:**
+
+```tsx
+<OptionChoices>
+  <Repeater>
+    <Choice asChild>
+      <Button variant="outline" className="mr-2 mb-2">
+        <ChoiceText />
+        <ChoiceColor className="ml-2 w-4 h-4 rounded-full" />
+      </Button>
+    </Choice>
+  </Repeater>
+</OptionChoices>
+```
+
+### ProductList Components (`ProductList.tsx`)
+
+Components for product listing and collections:
+
+- `ProductList` - Root list component
+- `Products` - Products container
+- `Repeater` - Individual product repeater (not `ProductRepeater` - redundant in Products context)
+- `LoadMoreTrigger` - Load more products trigger
+- `TotalsDisplayed` - Total products count display
+
+## E-commerce UI Components (`/src/components/ui/ecom/`)
+
+### Cart Components (`Cart.tsx`)
+
+Shopping cart UI components:
+
+#### Core Cart Components:
+
+- `Cart` - Root cart component
+- `CartLineItems` - Line items container
+- `CartLineItemRepeater` - Individual line item repeater (should be `Repeater` in CartLineItems context)
+- `CartSummary` - Cart summary with totals (render prop)
+- `CartClear` - Clear cart button
+
+#### Cart Totals Components:
+
+- `CartTotalsPrice` - Subtotal display
+- `CartTotalsDiscount` - Discount amount
+- `CartTotalsShipping` - Shipping costs
+- `CartTotalsTax` - Tax amount
+- `CartTotalsTotal` - Final total
+
+#### Coupon Components:
+
+- `CartCouponInput` - Coupon code input
+- `CartCouponTrigger` - Apply coupon button
+- `CartCoupon` - Applied coupon display
+- `CartCouponClear` - Remove coupon button
+- `CartCouponRaw` - Raw coupon data
+
+#### Other Components:
+
+- `CartNotes` - Order notes input
+- `CartErrors` - Error messages display
+- `CartLineItemAdded` - Recently added item indicator
+
+**Usage Pattern:**
+
+```tsx
+<Cart>
+  <div className="bg-white rounded-lg shadow p-6">
+    <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+
+    <CartLineItems>
+      <CartLineItemRepeater>
+        <LineItem>
+          <div className="flex items-center space-x-4 py-4 border-b">
+            <LineItemImage className="w-16 h-16 rounded" />
+            <div className="flex-1">
+              <LineItemTitle className="font-medium" />
+              <LineItemSelectedOptions>
+                <LineItemSelectedOptionRepeater>
+                  <SelectedOption>
+                    <SelectedOptionText className="text-sm text-content-muted" />
+                  </SelectedOption>
+                </LineItemSelectedOptionRepeater>
+              </LineItemSelectedOptions>
+            </div>
+            <LineItemQuantity />
+          </div>
+        </LineItem>
+      </CartLineItemRepeater>
+    </CartLineItems>
+
+    <div className="border-t pt-4 mt-4">
+      <CartSummary>
+        {({ subtotal, totalItems }) => (
+          <div>
+            <div className="flex justify-between mb-2">
+              <span>Items ({totalItems})</span>
+              <span>{subtotal}</span>
+            </div>
+          </div>
+        )}
+      </CartSummary>
+
+      <CartTotalsTotal className="flex justify-between text-xl font-bold border-t pt-2" />
+    </div>
+  </div>
+</Cart>
+```
+
+### LineItem Components (`LineItem.tsx`)
+
+Shopping cart line item components:
+
+- `LineItem` - Root line item component
+- `LineItemImage` - Product image
+- `LineItemTitle` - Product title
+- `LineItemSelectedOptions` - Selected variant/modifier options
+- `LineItemSelectedOptionRepeater` - Options repeater (should be `Repeater` in SelectedOptions context)
+- `LineItemQuantity` - Quantity selector
+
+### SelectedOption Components (`SelectedOption.tsx`)
+
+Components for displaying selected product options in cart:
+
+- `SelectedOption` - Root selected option component
+- `SelectedOptionText` - Option text display
+- `SelectedOptionColor` - Color swatch display
+
+### Commerce Components (`Commerce.tsx`)
+
+High-level commerce functionality:
+
+- `Commerce` - Root commerce component
+- `CommerceActionsCheckout` - Checkout action button
+
+### CurrentCart Components (`CurrentCart.tsx`)
+
+Current cart state display:
+
+- `CurrentCart` - Displays current cart summary/count
+
+## General UI Components (`/src/components/ui/components/`)
+
+### Quantity Components (`quantity.tsx`)
+
+Quantity selector components:
+
+- `Quantity` - Root quantity component
+- `QuantityDecrement` - Decrease quantity button (-)
+- `QuantityInput` - Quantity input field
+- `QuantityIncrement` - Increase quantity button (+)
+- `QuantityReset` - Reset to default quantity
+
+**Usage Pattern:**
+
+```tsx
+<Quantity>
+  <div className="flex items-center border border-brand-light rounded-lg">
+    <QuantityDecrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+      -
+    </QuantityDecrement>
+    <QuantityInput className="px-4 py-2 text-content-primary border-x border-brand-light min-w-[3rem] text-center" />
+    <QuantityIncrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+      +
+    </QuantityIncrement>
+  </div>
+</Quantity>
+```
+
+## Key Implementation Patterns
+
+### 1. Component Structure
+
+All UI components follow this pattern:
+
+- Wrap Wix headless primitives (e.g., `ProductPrimitive.Root`)
+- Use `class-variance-authority` (cva) for styling variants
+- Support `asChild` prop for composition
+- Export TypeScript interfaces for props
+
+### 2. Styling System
+
+- Use semantic CSS classes (defined in theme files)
+- Follow color system rules (no hardcoded colors)
+- Support multiple variants and sizes via cva
+- Consistent spacing and typography
+
+### 3. Composition Patterns
+
+- Components are designed to be composed together
+- Use `asChild` prop to render as different HTML elements
+- Support render props for data access (e.g., `CartSummary`)
+- Repeater components for lists and collections
+
+### 4. Data Flow
+
+- Components receive data from wrapped primitives
+- No direct service dependencies in UI components
+- Data flows through primitive component context
+- Actions are handled by primitive components
+
+## Important Notes
+
+1. **No Primitive References**: UI components should not directly reference or import primitive components in examples or documentation.
+
+2. **Semantic Styling**: All styling uses semantic CSS classes, never hardcoded colors or direct CSS variables.
+
+3. **Composition First**: Components are designed to be composed together using the `asChild` pattern and proper nesting.
+
+4. **TypeScript Support**: All components export proper TypeScript interfaces and support generic typing where applicable.
+
+5. **Redundant Naming Issue**: Many repeater components have redundant prefixes in their current implementation:
+   - `ProductRepeater` (should be `Repeater` within `Products` context)
+   - `OptionChoiceRepeater` (should be `Repeater` within `OptionChoices` context)
+   - `CartLineItemRepeater` (should be `Repeater` within `CartLineItems` context)
+   - `ProductVariantOptionRepeater` (should be `Repeater` within `ProductVariantOptions` context)
+
+   This naming redundancy should be addressed in future refactoring for cleaner component composition.

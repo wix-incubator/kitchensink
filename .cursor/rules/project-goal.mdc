@@ -1,8 +1,108 @@
 ---
-description: 
-globs: 
+description: Wix Kitchensink project goals and implementation guidelines
+globs:
 alwaysApply: false
 ---
-This project is the Wix Kitchensink, a website that showcases all the Wix features, implementations for different use cases etc. Developers building on top of the Wix platform will use this website to explore what we have to offer, learn about how to implement each part of this kitchensink project. The code is open source, and each part will contains references to the source code of the current page or feature.
-Every feature or page will have documentation attached to it. The user can enter "documentation" mode and the hover on different elements and features and explore the documentation of each part in place inside the website. A documentation panel showing markdown will explain each feature.
-The index page will be an index that acts as a navigation entry point to all the different implemented uses cases. The features will be split by wix business solutions (members, stores, bookings & services, events etc). 
+
+# Wix Kitchensink Project Goals
+
+This project is the **Wix Kitchensink**, a comprehensive showcase website demonstrating all Wix platform features and implementation patterns. Developers building on Wix will use this as a reference to explore capabilities and learn implementation approaches.
+
+## Core Objectives
+
+### 1. **Feature Showcase**
+
+- Demonstrate real-world implementations of Wix business solutions
+- Provide working examples of stores, bookings, members, events, and more
+- Show different architectural patterns and use cases
+- Include both simple and complex implementation scenarios
+
+### 2. **Developer Education**
+
+- Every feature includes comprehensive documentation
+- Interactive "documentation mode" allows hovering over elements to see implementation details
+- Source code references for each feature and page
+- Best practices and patterns clearly demonstrated
+
+### 3. **Business Solution Coverage**
+
+The project is organized by Wix business solutions:
+
+#### **Wix Stores** (Primary Focus)
+
+- **Product catalogs** with filtering and search
+- **Shopping cart** functionality with quantity management
+- **Product details** with variant selection and media galleries
+- **Checkout flows** and payment integration
+- **Collection pages** with responsive layouts
+- **React Router integration** for SPA experiences
+
+#### **Wix Members**
+
+- **Authentication flows** (login/logout/registration)
+- **Member profiles** with photo upload
+- **Protected content** and member-only areas
+
+#### **Wix Bookings**
+
+- **Service listings** and availability
+- **Booking selection** and calendar integration
+- **Service management** workflows
+
+#### **Other Solutions** (Future)
+
+- Events, Blog, Forms, etc.
+
+## Implementation Principles
+
+### **Architecture Patterns**
+
+1. **Astro + React hybrid** - Server-side rendering with client-side interactivity
+2. **UI Components** - Styled components wrapping Wix headless primitives
+3. **Headless Components** - Business logic separation from UI presentation
+4. **Client-side Services** - Reactive state management using Signals
+5. **Multiple routing approaches** - Both traditional navigation and React Router SPA
+
+### **Code Quality Standards**
+
+- **Open source** with full transparency
+- **Production-ready** examples, not just demos
+- **Responsive design** with mobile-first approach
+- **Accessibility compliant** implementations
+- **Performance optimized** with proper caching and loading strategies
+
+### **Documentation Standards**
+
+- **In-context documentation** via documentation mode
+- **Code examples** with full implementation details
+- **API references** and integration guides
+- **Best practices** and common pitfalls highlighted
+
+## Navigation Structure
+
+The **index page** serves as the main navigation hub, organizing features by:
+
+1. **Business Solution Categories** (Stores, Members, Bookings, etc.)
+2. **Implementation Patterns** (Traditional pages, SPA, Headless components)
+3. **Complexity Levels** (Basic examples, Advanced implementations)
+4. **Use Case Scenarios** (E-commerce store, Service booking, Community site)
+
+## Current Store Implementation Status
+
+### **Completed Features**
+
+- ✅ Product catalog browsing with categories
+- ✅ Product detail pages with variant selection
+- ✅ Shopping cart with quantity management
+- ✅ React Router SPA integration
+- ✅ Responsive UI components
+- ✅ Documentation system integration
+
+### **Key Technical Achievements**
+
+- **UI Component Library** - Complete set of store/ecom components
+- **Multiple Architecture Patterns** - Traditional Astro pages + React Router SPA
+- **Real Wix Integration** - Uses actual Wix Stores APIs and headless primitives
+- **Production Patterns** - Error handling, loading states, responsive design
+
+This kitchensink demonstrates that Wix can power sophisticated e-commerce experiences with multiple architectural approaches, giving developers flexibility to choose the best pattern for their specific needs.

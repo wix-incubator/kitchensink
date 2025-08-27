@@ -4,6 +4,32 @@ import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
 import { Button } from '../button';
 
+/**
+ * Root component for product display and interaction.
+ * Provides context for all product-related components like name, price, variants, etc.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+ *     <ProductMediaGallery />
+ *     <div>
+ *       <ProductName />
+ *       <ProductPrice />
+ *       <ProductDescription />
+ *       <ProductVariants>
+ *         <ProductVariantOptions>
+ *           <Option>
+ *             <OptionName>Size</OptionName>
+ *           </Option>
+ *         </ProductVariantOptions>
+ *       </ProductVariants>
+ *     </div>
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const Product = ProductPrimitive.Root;
 
 const productNameVariants = cva('font-theme-heading', {
@@ -22,6 +48,22 @@ export interface ProductNameProps
   extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>,
     VariantProps<typeof productNameVariants> {}
 
+/**
+ * Displays the product name/title.
+ * Can be rendered as different heading levels or paragraph text.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductName asChild>
+ *     <h2 />
+ *   </ProductName>
+ *
+ *   <ProductName variant="paragraph" className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors" />
+ * </Product>
+ * ```
+ */
 export const ProductName = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Name>,
   ProductNameProps
@@ -39,6 +81,34 @@ export const ProductName = React.forwardRef<
 
 ProductName.displayName = 'ProductName';
 
+/**
+ * Displays the product description.
+ * Supports both plain text and HTML content rendering.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductDescription
+ *     as="html"
+ *     className="text-content-muted text-sm mb-3 line-clamp-2 leading-relaxed"
+ *   />
+ *
+ *   <ProductDescription as="html" asChild>
+ *     {({ description }) => (
+ *       <>
+ *         {description && (
+ *           <div>
+ *             <h3 className="text-xl font-semibold mb-3">Description</h3>
+ *             <div dangerouslySetInnerHTML={{ __html: description }} />
+ *           </div>
+ *         )}
+ *       </>
+ *     )}
+ *   </ProductDescription>
+ * </Product>
+ * ```
+ */
 export const ProductDescription = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Description>
@@ -56,6 +126,28 @@ export const ProductDescription = React.forwardRef<
 
 ProductDescription.displayName = 'ProductDescription';
 
+/**
+ * Displays the current product price.
+ * Automatically handles currency formatting and price ranges.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-center gap-2">
+ *     <ProductPrice className="text-xl font-bold text-content-primary" />
+ *     <ProductCompareAtPrice className="text-sm font-medium text-content-faded line-through" />
+ *   </div>
+ *
+ *   <div className="space-y-1">
+ *     <ProductPrice />
+ *     <ProductCompareAtPrice asChild>
+ *       <div></div>
+ *     </ProductCompareAtPrice>
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductPrice = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Price>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Price>
@@ -76,6 +168,21 @@ export const ProductPrice = React.forwardRef<
 
 ProductPrice.displayName = 'ProductPrice';
 
+/**
+ * Displays the original/compare-at price (usually crossed out).
+ * Only shows when the product is on sale and has a compare-at price.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-baseline gap-2">
+ *     <ProductPrice className="text-2xl font-bold text-red-600" />
+ *     <ProductCompareAtPrice className="text-sm text-gray-500" />
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductCompareAtPrice = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.CompareAtPrice>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.CompareAtPrice>
@@ -96,6 +203,19 @@ export const ProductCompareAtPrice = React.forwardRef<
 
 ProductCompareAtPrice.displayName = 'ProductCompareAtPrice';
 
+/**
+ * Displays the product slug/URL identifier.
+ * Typically used for SEO or debugging purposes.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductName />
+ *   <ProductSlug className="text-xs text-gray-400 mt-1" />
+ * </Product>
+ * ```
+ */
 export const ProductSlug = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Slug>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Slug>
@@ -113,6 +233,25 @@ export const ProductSlug = React.forwardRef<
 
 ProductSlug.displayName = 'ProductSlug';
 
+/**
+ * Raw component that provides direct access to the product data.
+ * Useful for custom rendering or accessing product properties not covered by other components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductRaw className="block">
+ *     {({ product }) => (
+ *       <div>
+ *         <p>Product ID: {product._id}</p>
+ *         <p>Created: {product._createdDate}</p>
+ *       </div>
+ *     )}
+ *   </ProductRaw>
+ * </Product>
+ * ```
+ */
 export const ProductRaw = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Raw>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Raw>
@@ -130,6 +269,28 @@ export const ProductRaw = React.forwardRef<
 
 ProductRaw.displayName = 'ProductRaw';
 
+/**
+ * Container for product media gallery functionality.
+ * Integrates with media gallery components for image/video display.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+ *     <div>
+ *       <ProductMediaGallery>
+ *         <MediaGalleryViewport />
+ *       </ProductMediaGallery>
+ *     </div>
+ *     <div>
+ *       <ProductName />
+ *       <ProductPrice />
+ *     </div>
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductMediaGallery = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ProductMediaGallery>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductMediaGallery>
@@ -143,6 +304,38 @@ export const ProductMediaGallery = React.forwardRef<
 
 ProductMediaGallery.displayName = 'ProductMediaGallery';
 
+/**
+ * Container for product variants (size, color, style, etc.).
+ * Wraps all variant options and provides proper spacing.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductVariants>
+ *     <ProductVariantOptions>
+ *       <ProductVariantOptionRepeater>
+ *         <Option>
+ *           <div className="space-y-3 mb-4">
+ *             <OptionName />
+ *             <OptionChoices>
+ *               <div className="flex flex-wrap gap-3">
+ *                 <OptionChoiceRepeater>
+ *                   <>
+ *                     <ChoiceColor />
+ *                     <ChoiceText />
+ *                   </>
+ *                 </OptionChoiceRepeater>
+ *               </div>
+ *             </OptionChoices>
+ *           </div>
+ *         </Option>
+ *       </ProductVariantOptionRepeater>
+ *     </ProductVariantOptions>
+ *   </ProductVariants>
+ * </Product>
+ * ```
+ */
 export const ProductVariants = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Variants>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Variants>
@@ -160,6 +353,40 @@ export const ProductVariants = React.forwardRef<
 
 ProductVariants.displayName = 'ProductVariants';
 
+/**
+ * Container for product modifiers (add-ons, customizations, etc.).
+ * Wraps all modifier options and provides proper spacing.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductModifiers>
+ *     <ProductModifierOptions>
+ *       <ProductModifierOptionRepeater>
+ *         <Option>
+ *           <div className="flex items-center gap-1">
+ *             <OptionName />
+ *             <OptionMandatoryIndicator />
+ *           </div>
+ *           <OptionChoices>
+ *             <OptionChoiceRepeater>
+ *               <>
+ *                 <ChoiceColor />
+ *                 <ChoiceText asChild>
+ *                   <Button variant="outline"></Button>
+ *                 </ChoiceText>
+ *                 <ChoiceFreeText placeholder="Enter custom text" />
+ *               </>
+ *             </OptionChoiceRepeater>
+ *           </OptionChoices>
+ *         </Option>
+ *       </ProductModifierOptionRepeater>
+ *     </ProductModifierOptions>
+ *   </ProductModifiers>
+ * </Product>
+ * ```
+ */
 export const ProductModifiers = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Modifiers>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Modifiers>
@@ -177,6 +404,31 @@ export const ProductModifiers = React.forwardRef<
 
 ProductModifiers.displayName = 'ProductModifiers';
 
+/**
+ * Container for product variant option groups.
+ * Wraps all variant option repeaters and provides proper structure.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductVariants>
+ *   <ProductVariantOptions>
+ *     <ProductVariantOptionRepeater>
+ *       <Option>
+ *         <OptionName />
+ *         <OptionChoices>
+ *           <OptionChoiceRepeater>
+ *             <Choice>
+ *               <ChoiceText />
+ *             </Choice>
+ *           </OptionChoiceRepeater>
+ *         </OptionChoices>
+ *       </Option>
+ *     </ProductVariantOptionRepeater>
+ *   </ProductVariantOptions>
+ * </ProductVariants>
+ * ```
+ */
 export const ProductVariantOptions = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.VariantOptions>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.VariantOptions>
@@ -190,11 +442,68 @@ export const ProductVariantOptions = React.forwardRef<
 
 ProductVariantOptions.displayName = 'ProductVariantOptions';
 
+/**
+ * Repeater component that renders each variant option within a product.
+ * Automatically iterates through all available variant options.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductVariantOptions>
+ *   <ProductVariantOptionRepeater>
+ *     <Option>
+ *       <div className="space-y-3 mb-4">
+ *         <OptionName />
+ *         <OptionChoices>
+ *           <div className="flex flex-wrap gap-3">
+ *             <OptionChoiceRepeater>
+ *               <Choice>
+ *                 <ChoiceColor />
+ *                 <ChoiceText />
+ *               </Choice>
+ *             </OptionChoiceRepeater>
+ *           </div>
+ *         </OptionChoices>
+ *       </div>
+ *     </Option>
+ *   </ProductVariantOptionRepeater>
+ * </ProductVariantOptions>
+ * ```
+ */
 export const ProductVariantOptionRepeater =
   ProductPrimitive.VariantOptionRepeater;
 
 ProductVariantOptionRepeater.displayName = 'ProductVariantOptionRepeater';
 
+/**
+ * Container for product modifier option groups.
+ * Wraps all modifier option repeaters and provides proper structure.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductModifiers>
+ *   <ProductModifierOptions>
+ *     <ProductModifierOptionRepeater>
+ *       <Option>
+ *         <div className="flex items-center gap-1">
+ *           <OptionName />
+ *           <OptionMandatoryIndicator />
+ *         </div>
+ *         <OptionChoices>
+ *           <OptionChoiceRepeater>
+ *             <Choice>
+ *               <ChoiceText />
+ *               <ChoiceFreeText placeholder="Custom option" />
+ *             </Choice>
+ *           </OptionChoiceRepeater>
+ *         </OptionChoices>
+ *       </Option>
+ *     </ProductModifierOptionRepeater>
+ *   </ProductModifierOptions>
+ * </ProductModifiers>
+ * ```
+ */
 export const ProductModifierOptions = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ModifierOptions>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ModifierOptions>
@@ -213,6 +522,31 @@ export const ProductModifierOptionRepeater =
 
 ProductModifierOptionRepeater.displayName = 'ProductModifierOptionRepeater';
 
+/**
+ * Displays the product stock status with appropriate styling.
+ * Shows different states: in stock, limited stock, or out of stock.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-center gap-4 mt-4">
+ *     <ProductPrice />
+ *     <ProductStock className="text-sm font-medium">
+ *       {({ stockStatus }) => (
+ *         <span className={`px-2 py-1 rounded ${
+ *           stockStatus === 'in-stock' ? 'bg-green-100' :
+ *           stockStatus === 'limited-stock' ? 'bg-yellow-100' : 'bg-red-100'
+ *         }`}>
+ *           {stockStatus === 'in-stock' ? 'In Stock' :
+ *            stockStatus === 'limited-stock' ? 'Limited Stock' : 'Out of Stock'}
+ *         </span>
+ *       )}
+ *     </ProductStock>
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductStock = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Stock>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Stock>
@@ -240,6 +574,29 @@ export const ProductStock = React.forwardRef<
 
 ProductStock.displayName = 'ProductStock';
 
+/**
+ * Add to cart button with loading states and automatic cart integration.
+ * Handles product variants, quantities, and cart updates automatically.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex gap-3 mt-6">
+ *     <ProductActionAddToCart
+ *       label="Add to Cart"
+ *       loadingState="Adding..."
+ *       className="flex-1"
+ *     />
+ *     <ProductActionBuyNow
+ *       label="Buy Now"
+ *       loadingState="Processing..."
+ *       className="flex-1"
+ *     />
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductActionAddToCart = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ProductActionAddToCart>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionAddToCart>
@@ -270,6 +627,25 @@ export const ProductActionAddToCart = React.forwardRef<
 
 ProductActionAddToCart.displayName = 'ProductActionAddToCart';
 
+/**
+ * Buy now button that redirects directly to checkout.
+ * Bypasses the cart and goes straight to the purchase flow.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex gap-3 mt-6">
+ *     <ProductActionAddToCart label="Add to Cart" />
+ *     <ProductActionBuyNow
+ *       label="Buy Now"
+ *       loadingState="Redirecting..."
+ *       className="bg-orange-600 hover:bg-orange-700"
+ *     />
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductActionBuyNow = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ProductActionBuyNow>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionBuyNow>
@@ -303,6 +679,25 @@ export const ProductActionBuyNow = React.forwardRef<
 
 ProductActionBuyNow.displayName = 'ProductActionBuyNow';
 
+/**
+ * Pre-order button for products not yet available.
+ * Automatically shows when product is in pre-order status.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="space-y-3">
+ *     <ProductStock />
+ *     <ProductActionPreOrder
+ *       label="Pre-Order Now"
+ *       loadingState="Processing Pre-Order..."
+ *       className="w-full"
+ *     />
+ *   </div>
+ * </Product>
+ * ```
+ */
 export const ProductActionPreOrder = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ProductActionPreOrder>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionPreOrder>

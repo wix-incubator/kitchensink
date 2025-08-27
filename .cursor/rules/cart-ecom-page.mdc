@@ -1,0 +1,333 @@
+---
+description: Creating cart and e-commerce pages using UI components
+globs:
+alwaysApply: false
+---
+
+# Creating Cart and E-commerce Pages
+
+This document describes how to create cart and e-commerce functionality using the UI components from `/src/components/ui/ecom/`.
+
+## Cart Page Implementation
+
+### Basic Cart Structure
+
+```tsx
+import {
+  Cart,
+  CartLineItems,
+  CartLineItemRepeater,
+  CartSummary,
+  CartTotalsTotal,
+  CartClear,
+} from '@/components/ui/ecom/Cart';
+import {
+  LineItem,
+  LineItemImage,
+  LineItemTitle,
+  LineItemSelectedOptions,
+  LineItemQuantity,
+} from '@/components/ui/ecom/LineItem';
+import {
+  SelectedOption,
+  SelectedOptionText,
+} from '@/components/ui/ecom/SelectedOption';
+import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
+
+<Cart>
+  <div className="bg-white rounded-lg shadow p-6">
+    <div className="flex justify-between items-center mb-6">
+      <h1 className="text-2xl font-bold">Shopping Cart</h1>
+      <CurrentCart>
+        {({ itemCount }) => (
+          <span className="text-content-muted">
+            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+          </span>
+        )}
+      </CurrentCart>
+    </div>
+
+    <CartLineItems>
+      <CartLineItemRepeater>
+        <LineItem>
+          <div className="flex items-center space-x-4 py-4 border-b">
+            <LineItemImage className="w-20 h-20 rounded object-cover" />
+            <div className="flex-1">
+              <LineItemTitle className="font-medium text-content-primary mb-1" />
+              <LineItemSelectedOptions>
+                <LineItemSelectedOptionRepeater>
+                  <SelectedOption>
+                    <SelectedOptionText className="text-sm text-content-muted" />
+                  </SelectedOption>
+                </LineItemSelectedOptionRepeater>
+              </LineItemSelectedOptions>
+            </div>
+            <div className="flex items-center space-x-4">
+              <LineItemQuantity />
+              <LineItemPrice className="font-semibold" />
+            </div>
+          </div>
+        </LineItem>
+      </CartLineItemRepeater>
+    </CartLineItems>
+
+    {/* Cart Summary */}
+    <div className="border-t pt-6 mt-6">
+      <CartSummary>
+        {({ subtotal, totalItems, discount }) => (
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>Subtotal ({totalItems} items)</span>
+              <span>{subtotal}</span>
+            </div>
+            {discount && (
+              <div className="flex justify-between text-status-success">
+                <span>Discount</span>
+                <span>-{discount}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </CartSummary>
+
+      <CartTotalsShipping className="flex justify-between py-2" />
+      <CartTotalsTax className="flex justify-between py-2" />
+      <CartTotalsTotal className="flex justify-between text-xl font-bold border-t pt-4 mt-4" />
+
+      <div className="mt-6 space-y-3">
+        <CommerceActionsCheckout asChild>
+          <Button size="lg" className="w-full">
+            Proceed to Checkout
+          </Button>
+        </CommerceActionsCheckout>
+
+        <CartClear asChild>
+          <Button variant="outline" className="w-full">
+            Clear Cart
+          </Button>
+        </CartClear>
+      </div>
+    </div>
+  </div>
+</Cart>;
+```
+
+## Coupon Functionality
+
+```tsx
+import {
+  CartCouponInput,
+  CartCouponTrigger,
+  CartCoupon,
+  CartCouponClear,
+} from '@/components/ui/ecom/Cart';
+
+{
+  /* Add to cart summary section */
+}
+<div className="border rounded-lg p-4 mb-4">
+  <h3 className="font-medium mb-3">Promo Code</h3>
+  <div className="flex space-x-2">
+    <CartCouponInput className="flex-1" placeholder="Enter promo code" />
+    <CartCouponTrigger asChild>
+      <Button variant="outline">Apply</Button>
+    </CartCouponTrigger>
+  </div>
+
+  {/* Show applied coupons */}
+  <CartCoupon>
+    {({ code, discount }) => (
+      <div className="flex justify-between items-center mt-3 p-2 bg-status-success-light rounded">
+        <span className="text-sm">
+          Code: <strong>{code}</strong> (-{discount})
+        </span>
+        <CartCouponClear asChild>
+          <Button variant="ghost" size="sm">
+            Remove
+          </Button>
+        </CartCouponClear>
+      </div>
+    )}
+  </CartCoupon>
+</div>;
+```
+
+## Mini Cart / Cart Dropdown
+
+```tsx
+import { CurrentCart } from '../ui/ecom/CurrentCart';
+
+<CurrentCart>
+  {({ itemCount, isEmpty, subtotal }) => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" className="relative">
+          <ShoppingCartIcon className="h-6 w-6" />
+          {!isEmpty && (
+            <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+              {itemCount}
+            </Badge>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        {isEmpty ? (
+          <p className="text-center py-4 text-content-muted">
+            Your cart is empty
+          </p>
+        ) : (
+          <Cart>
+            <div className="space-y-4">
+              <h3 className="font-semibold">Cart ({itemCount})</h3>
+
+              <CartLineItems>
+                <CartLineItemRepeater>
+                  <LineItem>
+                    <div className="flex items-center space-x-3 py-2">
+                      <LineItemImage className="w-12 h-12 rounded" />
+                      <div className="flex-1">
+                        <LineItemTitle className="text-sm font-medium" />
+                        <LineItemQuantity />
+                      </div>
+                    </div>
+                  </LineItem>
+                </CartLineItemRepeater>
+              </CartLineItems>
+
+              <div className="border-t pt-3">
+                <div className="flex justify-between font-semibold">
+                  <span>Subtotal</span>
+                  <span>{subtotal}</span>
+                </div>
+
+                <CommerceActionsCheckout asChild>
+                  <Button className="w-full mt-3">Checkout</Button>
+                </CommerceActionsCheckout>
+              </div>
+            </div>
+          </Cart>
+        )}
+      </PopoverContent>
+    </Popover>
+  )}
+</CurrentCart>;
+```
+
+## Add to Cart Functionality
+
+When building product pages, use the product action components:
+
+```tsx
+import {
+  ProductActionAddToCart,
+  ProductActionBuyNow,
+} from '@/components/ui/store/Product';
+import {
+  Quantity,
+  QuantityDecrement,
+  QuantityInput,
+  QuantityIncrement,
+} from '@/components/ui/components/quantity';
+
+{
+  /* In product details */
+}
+<div className="space-y-4">
+  {/* Quantity Selector */}
+  <div>
+    <label className="block text-sm font-medium mb-2">Quantity</label>
+    <Quantity>
+      <div className="flex items-center border border-brand-light rounded-lg w-fit">
+        <QuantityDecrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+          -
+        </QuantityDecrement>
+        <QuantityInput className="px-4 py-2 text-content-primary border-x border-brand-light min-w-[3rem] text-center" />
+        <QuantityIncrement className="px-3 py-2 hover:bg-surface-primary transition-colors">
+          +
+        </QuantityIncrement>
+      </div>
+    </Quantity>
+  </div>
+
+  {/* Action Buttons */}
+  <div className="space-y-2">
+    <ProductActionAddToCart asChild>
+      <Button size="lg" className="w-full">
+        Add to Cart
+      </Button>
+    </ProductActionAddToCart>
+
+    <ProductActionBuyNow asChild>
+      <Button variant="outline" size="lg" className="w-full">
+        Buy Now
+      </Button>
+    </ProductActionBuyNow>
+  </div>
+</div>;
+```
+
+## Error Handling
+
+```tsx
+import { CartErrors } from '@/components/ui/ecom/Cart';
+
+{
+  /* Add to cart section */
+}
+<CartErrors>
+  {({ errors }) =>
+    errors.length > 0 && (
+      <Alert variant="destructive" className="mb-4">
+        <AlertDescription>
+          {errors.map((error, index) => (
+            <div key={index}>{error.message}</div>
+          ))}
+        </AlertDescription>
+      </Alert>
+    )
+  }
+</CartErrors>;
+```
+
+## Notes Component
+
+```tsx
+import { CartNotes } from '@/components/ui/ecom/Cart';
+
+{
+  /* Add to cart summary */
+}
+<div className="mt-4">
+  <label className="block text-sm font-medium mb-2">Order Notes</label>
+  <CartNotes placeholder="Add special instructions..." className="w-full" />
+</div>;
+```
+
+## Key Patterns
+
+1. **Composition**: Use `asChild` prop to render components as different HTML elements
+2. **Render Props**: Components like `CurrentCart` and `CartSummary` provide data via render props
+3. **Semantic Styling**: Always use semantic CSS classes, never hardcoded colors
+4. **Responsive Design**: Use responsive classes for mobile-first design
+5. **Accessibility**: Include proper labels, ARIA attributes, and keyboard navigation
+
+## Component Hierarchy
+
+```
+Commerce
+└── Cart
+    ├── CartLineItems
+    │   └── CartLineItemRepeater
+    │       └── LineItem
+    │           ├── LineItemImage
+    │           ├── LineItemTitle
+    │           ├── LineItemSelectedOptions
+    │           └── LineItemQuantity
+    ├── CartSummary (render prop)
+    ├── CartTotals*
+    ├── CartCoupon*
+    └── CartActions
+        └── CommerceActionsCheckout
+```
+
+Always wrap e-commerce functionality in the `Commerce` root component and use the appropriate nested components for the specific functionality needed.

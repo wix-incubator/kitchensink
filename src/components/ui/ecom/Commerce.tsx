@@ -3,6 +3,25 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Commerce as CommercePrimitive } from '@wix/headless-ecom/react';
 
+/**
+ * Root commerce provider that enables e-commerce functionality.
+ * Provides context for cart operations, checkout flows, and commerce actions.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Commerce>
+ *   <div className="min-h-screen">
+ *     <Header />
+ *     <main>
+ *       <ProductList />
+ *       <Cart />
+ *     </main>
+ *     <Footer />
+ *   </div>
+ * </Commerce>
+ * ```
+ */
 export const Commerce = CommercePrimitive;
 
 // Commerce Actions Checkout Component
@@ -46,6 +65,32 @@ export interface CommerceCheckoutProps
     >,
     VariantProps<typeof commerceCheckoutVariants> {}
 
+/**
+ * Checkout button that initiates the checkout process.
+ * Handles cart validation and redirects to the checkout flow.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="border-t pt-4 mt-4">
+ *     <div className="flex justify-between items-center mb-4">
+ *       <span className="text-lg font-semibold">Total:</span>
+ *       <CartTotalsTotal />
+ *     </div>
+ *     <CommerceActionsCheckout
+ *       variant="primary"
+ *       size="lg"
+ *       width="full"
+ *       animation="scale"
+ *       className="font-semibold"
+ *     >
+ *       Proceed to Checkout
+ *     </CommerceActionsCheckout>
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export const CommerceActionsCheckout = React.forwardRef<
   React.ElementRef<typeof CommercePrimitive.Actions.Checkout>,
   CommerceCheckoutProps
