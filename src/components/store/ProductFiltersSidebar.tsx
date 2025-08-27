@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ProductList } from '@wix/headless-stores/react';
-import * as Filter from '@/components/store/styled-components/Filter';
+import * as Filter from '@/components/ui/store/Filter';
 
 interface ProductFiltersSidebarProps {
   className?: string;

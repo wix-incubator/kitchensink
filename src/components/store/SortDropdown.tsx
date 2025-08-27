@@ -1,4 +1,4 @@
-import { StyledProductListSort } from '@/components/store/styled-components/Sort';
+import { StyledProductListSort } from '@/components/ui/store/Sort';
 
 export function SortDropdown() {
   return (
@@ -9,7 +9,7 @@ export function SortDropdown() {
         </h3>
       </div>
 
-      <StyledProductListSort as="select" />
+      <StyledProductListSort />
     </div>
   );
 }
