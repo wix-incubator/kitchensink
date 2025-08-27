@@ -1,4 +1,4 @@
-import * as StyledMediaGallery from '@/components/media/MediaGallery';
+import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import {

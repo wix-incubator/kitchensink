@@ -34,7 +34,7 @@ import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
 import { Button } from '@/components/ui/button';
 
-import * as StyledMediaGallery from '@/components/media/MediaGallery';
+import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 
 export default function ProductDetails({
   isQuickView = false,
