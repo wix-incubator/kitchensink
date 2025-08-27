@@ -138,6 +138,25 @@ export const CartTotalsDiscount = React.forwardRef<
 
 CartTotalsDiscount.displayName = 'CartTotalsDiscount';
 
+/**
+ * Displays cart shipping costs.
+ * Shows shipping fees and delivery options when applicable.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="space-y-2">
+ *     <CartTotalsPrice />
+ *     <div className="flex justify-between">
+ *       <span>Shipping:</span>
+ *       <CartTotalsShipping variant="shipping" />
+ *     </div>
+ *     <CartTotalsTotal />
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export interface CartTotalShippingProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Shipping>,
     VariantProps<typeof cartTotalVariants> {}
@@ -159,6 +178,26 @@ export const CartTotalsShipping = React.forwardRef<
 
 CartTotalsShipping.displayName = 'CartTotalsShipping';
 
+/**
+ * Displays cart tax amount.
+ * Shows calculated taxes based on cart contents and shipping address.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="space-y-2">
+ *     <CartTotalsPrice />
+ *     <CartTotalsShipping />
+ *     <div className="flex justify-between">
+ *       <span>Tax:</span>
+ *       <CartTotalsTax variant="tax" />
+ *     </div>
+ *     <CartTotalsTotal />
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export interface CartTotalTaxProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Tax>,
     VariantProps<typeof cartTotalVariants> {}
@@ -180,6 +219,26 @@ export const CartTotalsTax = React.forwardRef<
 
 CartTotalsTax.displayName = 'CartTotalsTax';
 
+/**
+ * Displays the final cart total including all fees and taxes.
+ * Shows the complete amount the customer will be charged.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="space-y-2">
+ *     <CartTotalsPrice />
+ *     <CartTotalsShipping />
+ *     <CartTotalsTax />
+ *     <div className="flex justify-between font-bold border-t pt-2">
+ *       <span>Total:</span>
+ *       <CartTotalsTotal variant="total" />
+ *     </div>
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export interface CartTotalTotalProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Total>,
     VariantProps<typeof cartTotalVariants> {}
@@ -296,6 +355,34 @@ CartLineItems.displayName = 'CartLineItems';
 
 // Cart LineItem Repeater Component
 export const CartLineItemRepeater = CartPrimitive.LineItemRepeater;
+/**
+ * Repeater component that renders each line item in the cart.
+ * Automatically iterates through all items in the cart.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartLineItems>
+ *   <CartLineItemRepeater>
+ *     <LineItem>
+ *       <div className="flex items-center gap-4 p-4">
+ *         <LineItemImage size="lg" />
+ *         <div className="flex-1">
+ *           <LineItemTitle />
+ *           <LineItemSelectedOptions>
+ *             <LineItemSelectedOptionRepeater>
+ *               <SelectedOption>
+ *                 <SelectedOptionText />
+ *               </SelectedOption>
+ *             </LineItemSelectedOptionRepeater>
+ *           </LineItemSelectedOptions>
+ *         </div>
+ *       </div>
+ *     </LineItem>
+ *   </CartLineItemRepeater>
+ * </CartLineItems>
+ * ```
+ */
 CartLineItemRepeater.displayName = 'CartLineItemRepeater';
 
 // Cart Clear Component
@@ -360,9 +447,46 @@ export const CartNotes = React.forwardRef<
   );
 });
 
+/**
+ * Component for adding special instructions or notes to the cart.
+ * Allows customers to add delivery instructions or special requests.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="mt-4">
+ *     <h3 className="font-medium mb-2">Special Instructions</h3>
+ *     <CartNotes className="w-full">
+ *       <textarea
+ *         placeholder="Add delivery instructions..."
+ *         className="w-full p-3 border rounded-lg"
+ *       />
+ *     </CartNotes>
+ *   </div>
+ * </Cart>
+ * ```
+ */
 CartNotes.displayName = 'CartNotes';
 
-// Cart Coupon Components
+/**
+ * Root component for coupon/promo code functionality.
+ * Provides context for coupon input, trigger, and clear actions.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <CartCoupon>
+ *     <div className="flex gap-2">
+ *       <CartCouponInput placeholder="Enter promo code" />
+ *       <CartCouponTrigger>Apply</CartCouponTrigger>
+ *     </div>
+ *     <CartCouponClear>Remove coupon</CartCouponClear>
+ *   </CartCoupon>
+ * </Cart>
+ * ```
+ */
 export const CartCoupon = CartPrimitive.Coupon.Root;
 CartCoupon.displayName = 'CartCoupon';
 
@@ -448,6 +572,26 @@ export const CartCouponTrigger = React.forwardRef<
 
 CartCouponTrigger.displayName = 'CartCouponTrigger';
 
+/**
+ * Button to remove/clear applied coupon codes.
+ * Only shows when a coupon is currently applied to the cart.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartCoupon>
+ *   <div className="space-y-2">
+ *     <div className="flex gap-2">
+ *       <CartCouponInput />
+ *       <CartCouponTrigger>Apply</CartCouponTrigger>
+ *     </div>
+ *     <CartCouponClear className="text-sm text-red-600 hover:text-red-700">
+ *       Remove coupon
+ *     </CartCouponClear>
+ *   </div>
+ * </CartCoupon>
+ * ```
+ */
 export const CartCouponClear = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Clear>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Clear>
@@ -468,6 +612,28 @@ export const CartCouponClear = React.forwardRef<
 
 CartCouponClear.displayName = 'CartCouponClear';
 
+/**
+ * Raw component that provides direct access to coupon data.
+ * Useful for custom coupon display or accessing coupon properties.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartCoupon>
+ *   <CartCouponRaw>
+ *     {({ coupon, isApplied }) => (
+ *       <div>
+ *         {isApplied && (
+ *           <div className="bg-green-100 p-2 rounded">
+ *             Coupon {coupon?.code} applied!
+ *           </div>
+ *         )}
+ *       </div>
+ *     )}
+ *   </CartCouponRaw>
+ * </CartCoupon>
+ * ```
+ */
 export const CartCouponRaw = CartPrimitive.Coupon.Raw;
 CartCouponRaw.displayName = 'CartCouponRaw';
 
@@ -490,7 +656,50 @@ export const CartErrors = React.forwardRef<
   );
 });
 
+/**
+ * Displays cart-related errors and validation messages.
+ * Shows errors like inventory issues, shipping problems, or payment errors.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <CartErrors className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+ *     {({ errors }) => (
+ *       <div>
+ *         <h4 className="font-medium mb-2">Cart Errors:</h4>
+ *         <ul className="list-disc list-inside space-y-1">
+ *           {errors.map((error, index) => (
+ *             <li key={index}>{error.message}</li>
+ *           ))}
+ *         </ul>
+ *       </div>
+ *     )}
+ *   </CartErrors>
+ * </Cart>
+ * ```
+ */
 CartErrors.displayName = 'CartErrors';
 
-// Cart LineItemAdded Component
+/**
+ * Component that detects when items are added to the cart.
+ * Provides callbacks for handling add-to-cart events and notifications.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartLineItemAdded>
+ *   {({ onAddedToCart }) => {
+ *     useEffect(() => {
+ *       return onAddedToCart((lineItems) => {
+ *         if (lineItems && lineItems.length > 0) {
+ *           showNotification('Item added to cart!');
+ *         }
+ *       });
+ *     }, []);
+ *     return null;
+ *   }}
+ * </CartLineItemAdded>
+ * ```
+ */
 export const CartLineItemAdded = CartPrimitive.LineItemAdded;

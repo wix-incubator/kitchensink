@@ -233,6 +233,25 @@ export const ProductSlug = React.forwardRef<
 
 ProductSlug.displayName = 'ProductSlug';
 
+/**
+ * Raw component that provides direct access to the product data.
+ * Useful for custom rendering or accessing product properties not covered by other components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductRaw className="block">
+ *     {({ product }) => (
+ *       <div>
+ *         <p>Product ID: {product._id}</p>
+ *         <p>Created: {product._createdDate}</p>
+ *       </div>
+ *     )}
+ *   </ProductRaw>
+ * </Product>
+ * ```
+ */
 export const ProductRaw = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Raw>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Raw>
@@ -385,6 +404,31 @@ export const ProductModifiers = React.forwardRef<
 
 ProductModifiers.displayName = 'ProductModifiers';
 
+/**
+ * Container for product variant option groups.
+ * Wraps all variant option repeaters and provides proper structure.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductVariants>
+ *   <ProductVariantOptions>
+ *     <ProductVariantOptionRepeater>
+ *       <Option>
+ *         <OptionName />
+ *         <OptionChoices>
+ *           <OptionChoiceRepeater>
+ *             <Choice>
+ *               <ChoiceText />
+ *             </Choice>
+ *           </OptionChoiceRepeater>
+ *         </OptionChoices>
+ *       </Option>
+ *     </ProductVariantOptionRepeater>
+ *   </ProductVariantOptions>
+ * </ProductVariants>
+ * ```
+ */
 export const ProductVariantOptions = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.VariantOptions>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.VariantOptions>
@@ -398,11 +442,68 @@ export const ProductVariantOptions = React.forwardRef<
 
 ProductVariantOptions.displayName = 'ProductVariantOptions';
 
+/**
+ * Repeater component that renders each variant option within a product.
+ * Automatically iterates through all available variant options.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductVariantOptions>
+ *   <ProductVariantOptionRepeater>
+ *     <Option>
+ *       <div className="space-y-3 mb-4">
+ *         <OptionName />
+ *         <OptionChoices>
+ *           <div className="flex flex-wrap gap-3">
+ *             <OptionChoiceRepeater>
+ *               <Choice>
+ *                 <ChoiceColor />
+ *                 <ChoiceText />
+ *               </Choice>
+ *             </OptionChoiceRepeater>
+ *           </div>
+ *         </OptionChoices>
+ *       </div>
+ *     </Option>
+ *   </ProductVariantOptionRepeater>
+ * </ProductVariantOptions>
+ * ```
+ */
 export const ProductVariantOptionRepeater =
   ProductPrimitive.VariantOptionRepeater;
 
 ProductVariantOptionRepeater.displayName = 'ProductVariantOptionRepeater';
 
+/**
+ * Container for product modifier option groups.
+ * Wraps all modifier option repeaters and provides proper structure.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ProductModifiers>
+ *   <ProductModifierOptions>
+ *     <ProductModifierOptionRepeater>
+ *       <Option>
+ *         <div className="flex items-center gap-1">
+ *           <OptionName />
+ *           <OptionMandatoryIndicator />
+ *         </div>
+ *         <OptionChoices>
+ *           <OptionChoiceRepeater>
+ *             <Choice>
+ *               <ChoiceText />
+ *               <ChoiceFreeText placeholder="Custom option" />
+ *             </Choice>
+ *           </OptionChoiceRepeater>
+ *         </OptionChoices>
+ *       </Option>
+ *     </ProductModifierOptionRepeater>
+ *   </ProductModifierOptions>
+ * </ProductModifiers>
+ * ```
+ */
 export const ProductModifierOptions = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ModifierOptions>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ModifierOptions>

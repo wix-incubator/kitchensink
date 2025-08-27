@@ -207,12 +207,61 @@ export const LineItemSelectedOptions = React.forwardRef<
 
 LineItemSelectedOptions.displayName = 'LineItemSelectedOptions';
 
-// LineItem SelectedOption Repeater Component
+/**
+ * Repeater component that renders each selected option for a line item.
+ * Automatically iterates through all selected product options.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LineItemSelectedOptions>
+ *   <LineItemSelectedOptionRepeater>
+ *     <SelectedOption>
+ *       <div className="flex items-center gap-2">
+ *         <SelectedOptionText size="sm" className="text-gray-600" />
+ *         <SelectedOptionColor className="w-4 h-4 rounded-full" />
+ *       </div>
+ *     </SelectedOption>
+ *   </LineItemSelectedOptionRepeater>
+ * </LineItemSelectedOptions>
+ * ```
+ */
 export const LineItemSelectedOptionRepeater =
   LineItemPrimitive.SelectedOptionRepeater;
 LineItemSelectedOptionRepeater.displayName = 'LineItemSelectedOptionRepeater';
 
-// LineItem Quantity Component
+/**
+ * Container for line item quantity controls.
+ * Wraps quantity selector components for cart line items.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LineItem>
+ *   <div className="flex items-center justify-between">
+ *     <div>
+ *       <LineItemTitle />
+ *       <LineItemSelectedOptions>
+ *         <LineItemSelectedOptionRepeater>
+ *           <SelectedOption>
+ *             <SelectedOptionText />
+ *           </SelectedOption>
+ *         </LineItemSelectedOptionRepeater>
+ *       </LineItemSelectedOptions>
+ *     </div>
+ *     <LineItemQuantity>
+ *       <Quantity>
+ *         <div className="flex items-center border rounded">
+ *           <QuantityDecrement>-</QuantityDecrement>
+ *           <QuantityInput />
+ *           <QuantityIncrement>+</QuantityIncrement>
+ *         </div>
+ *       </Quantity>
+ *     </LineItemQuantity>
+ *   </div>
+ * </LineItem>
+ * ```
+ */
 export const LineItemQuantity = React.forwardRef<
   React.ElementRef<typeof LineItemPrimitive.Quantity>,
   React.ComponentPropsWithoutRef<typeof LineItemPrimitive.Quantity>
