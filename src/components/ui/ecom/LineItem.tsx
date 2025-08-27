@@ -3,6 +3,39 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { LineItem as LineItemPrimitive } from '@wix/headless-ecom/react';
 
+/**
+ * Root component for cart line items.
+ * Provides context for line item details like image, title, quantity, selected options, etc.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartLineItems>
+ *   <CartLineItemRepeater>
+ *     <LineItem>
+ *       <div className="flex items-center gap-4 p-4 border-b">
+ *         <LineItemImage size="lg" />
+ *         <div className="flex-1">
+ *           <LineItemTitle className="font-semibold" />
+ *           <LineItemSelectedOptions>
+ *             <LineItemSelectedOptionRepeater>
+ *               <SelectedOption>
+ *                 <SelectedOptionText />
+ *               </SelectedOption>
+ *             </LineItemSelectedOptionRepeater>
+ *           </LineItemSelectedOptions>
+ *         </div>
+ *         <LineItemQuantity>
+ *           <Quantity>
+ *             <QuantityInput />
+ *           </Quantity>
+ *         </LineItemQuantity>
+ *       </div>
+ *     </LineItem>
+ *   </CartLineItemRepeater>
+ * </CartLineItems>
+ * ```
+ */
 export const LineItem = LineItemPrimitive.Root;
 
 // LineItem Image Component
@@ -24,6 +57,35 @@ export interface LineItemImageProps
   extends React.ComponentPropsWithoutRef<typeof LineItemPrimitive.Image>,
     VariantProps<typeof lineItemImageVariants> {}
 
+/**
+ * Displays the product image for a cart line item.
+ * Automatically loads the correct image from the product data.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LineItem>
+ *   <div className="flex items-start gap-4">
+ *     <LineItemImage
+ *       size="xl"
+ *       className="rounded-lg border"
+ *     />
+ *     <div className="flex-1">
+ *       <LineItemTitle />
+ *       <div className="text-sm text-gray-500 mt-1">
+ *         <LineItemSelectedOptions>
+ *           <LineItemSelectedOptionRepeater>
+ *             <SelectedOption>
+ *               <SelectedOptionText />
+ *             </SelectedOption>
+ *           </LineItemSelectedOptionRepeater>
+ *         </LineItemSelectedOptions>
+ *       </div>
+ *     </div>
+ *   </div>
+ * </LineItem>
+ * ```
+ */
 export const LineItemImage = React.forwardRef<
   React.ElementRef<typeof LineItemPrimitive.Image>,
   LineItemImageProps
@@ -58,6 +120,32 @@ export interface LineItemTitleProps
   extends React.ComponentPropsWithoutRef<typeof LineItemPrimitive.Title>,
     VariantProps<typeof lineItemTitleVariants> {}
 
+/**
+ * Displays the product title/name for a cart line item.
+ * Shows the name of the product that was added to the cart.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LineItem>
+ *   <div className="flex justify-between items-start">
+ *     <div>
+ *       <LineItemTitle size="lg" className="hover:text-blue-600 cursor-pointer" />
+ *       <LineItemSelectedOptions className="text-sm text-gray-500 mt-1">
+ *         <LineItemSelectedOptionRepeater>
+ *           <SelectedOption>
+ *             <SelectedOptionText />
+ *           </SelectedOption>
+ *         </LineItemSelectedOptionRepeater>
+ *       </LineItemSelectedOptions>
+ *     </div>
+ *     <div className="text-right">
+ *       <div className="font-semibold">$29.99</div>
+ *     </div>
+ *   </div>
+ * </LineItem>
+ * ```
+ */
 export const LineItemTitle = React.forwardRef<
   React.ElementRef<typeof LineItemPrimitive.Title>,
   LineItemTitleProps
@@ -76,6 +164,29 @@ export const LineItemTitle = React.forwardRef<
 LineItemTitle.displayName = 'LineItemTitle';
 
 // LineItem SelectedOptions Component
+/**
+ * Container for displaying all selected product options for a line item.
+ * Shows the chosen variants, modifiers, and customizations.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LineItem>
+ *   <LineItemTitle />
+ *   <LineItemSelectedOptions className="text-sm text-gray-600 mt-1">
+ *     <LineItemSelectedOptionRepeater>
+ *       <SelectedOption>
+ *         <div className="flex items-center gap-2">
+ *           <span className="font-medium">
+ *             <SelectedOptionText />
+ *           </span>
+ *         </div>
+ *       </SelectedOption>
+ *     </LineItemSelectedOptionRepeater>
+ *   </LineItemSelectedOptions>
+ * </LineItem>
+ * ```
+ */
 export const LineItemSelectedOptions = React.forwardRef<
   React.ElementRef<typeof LineItemPrimitive.SelectedOptions>,
   React.ComponentPropsWithoutRef<typeof LineItemPrimitive.SelectedOptions>

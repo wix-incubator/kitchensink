@@ -3,6 +3,30 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
 
+/**
+ * Root component for shopping cart functionality.
+ * Provides context for all cart-related components like line items, totals, actions, etc.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="bg-white rounded-lg shadow p-6">
+ *     <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+ *     <CartLineItems>
+ *       <CartLineItemRepeater>
+ *         <LineItem>
+ *           <LineItemTitle />
+ *         </LineItem>
+ *       </CartLineItemRepeater>
+ *     </CartLineItems>
+ *     <div className="border-t pt-4 mt-4">
+ *       <CartTotalsTotal />
+ *     </div>
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export const Cart = CartPrimitive.Root;
 
 // Cart Totals Components
@@ -32,6 +56,31 @@ export interface CartTotalProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Price>,
     VariantProps<typeof cartTotalVariants> {}
 
+/**
+ * Displays the cart subtotal price.
+ * Shows the sum of all line items before taxes, shipping, and discounts.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="space-y-2">
+ *     <div className="flex justify-between">
+ *       <span>Subtotal:</span>
+ *       <CartTotalsPrice variant="subtotal" />
+ *     </div>
+ *     <div className="flex justify-between">
+ *       <span>Shipping:</span>
+ *       <CartTotalsShipping />
+ *     </div>
+ *     <div className="flex justify-between font-bold border-t pt-2">
+ *       <span>Total:</span>
+ *       <CartTotalsTotal variant="total" />
+ *     </div>
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export const CartTotalsPrice = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Totals.Price>,
   CartTotalProps
@@ -53,6 +102,25 @@ export interface CartTotalDiscountProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Discount>,
     VariantProps<typeof cartTotalVariants> {}
 
+/**
+ * Displays cart discount amount (when coupons or promotions are applied).
+ * Only shows when there are active discounts on the cart.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="space-y-2">
+ *     <CartTotalsPrice />
+ *     <div className="flex justify-between text-green-600">
+ *       <span>Discount:</span>
+ *       <CartTotalsDiscount variant="discount" />
+ *     </div>
+ *     <CartTotalsTotal />
+ *   </div>
+ * </Cart>
+ * ```
+ */
 export const CartTotalsDiscount = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Totals.Discount>,
   CartTotalDiscountProps
@@ -134,6 +202,26 @@ export const CartTotalsTotal = React.forwardRef<
 CartTotalsTotal.displayName = 'CartTotalsTotal';
 
 // Cart Summary Component
+/**
+ * Displays a summary of cart contents (e.g., "3 items in cart").
+ * Provides a quick overview of cart status.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="flex justify-between items-center mb-4">
+ *     <h2 className="text-xl font-semibold">Shopping Cart</h2>
+ *     <CartSummary className="text-sm text-gray-500" />
+ *   </div>
+ *   <CartLineItems>
+ *     <CartLineItemRepeater>
+ *       <LineItem />
+ *     </CartLineItemRepeater>
+ *   </CartLineItems>
+ * </Cart>
+ * ```
+ */
 export const CartSummary = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Summary>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Summary>
@@ -152,6 +240,36 @@ export const CartSummary = React.forwardRef<
 CartSummary.displayName = 'CartSummary';
 
 // Cart LineItems Component
+/**
+ * Container for all cart line items.
+ * Wraps the line item repeater and individual line item components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <CartLineItems className="space-y-4 mb-6">
+ *     <CartLineItemRepeater>
+ *       <LineItem>
+ *         <div className="flex items-center gap-4">
+ *           <LineItemImage size="lg" />
+ *           <div className="flex-1">
+ *             <LineItemTitle />
+ *             <LineItemSelectedOptions>
+ *               <LineItemSelectedOptionRepeater>
+ *                 <SelectedOption>
+ *                   <SelectedOptionText />
+ *                 </SelectedOption>
+ *               </LineItemSelectedOptionRepeater>
+ *             </LineItemSelectedOptions>
+ *           </div>
+ *         </div>
+ *       </LineItem>
+ *     </CartLineItemRepeater>
+ *   </CartLineItems>
+ * </Cart>
+ * ```
+ */
 export const CartLineItems = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.LineItems>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.LineItems>
@@ -170,6 +288,28 @@ export const CartLineItemRepeater = CartPrimitive.LineItemRepeater;
 CartLineItemRepeater.displayName = 'CartLineItemRepeater';
 
 // Cart Clear Component
+/**
+ * Button to clear all items from the cart.
+ * Provides confirmation and handles cart clearing automatically.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <div className="flex justify-between items-center mb-4">
+ *     <h2>Shopping Cart</h2>
+ *     <CartClear className="text-red-600 hover:text-red-700">
+ *       Clear Cart
+ *     </CartClear>
+ *   </div>
+ *   <CartLineItems>
+ *     <CartLineItemRepeater>
+ *       <LineItem />
+ *     </CartLineItemRepeater>
+ *   </CartLineItems>
+ * </Cart>
+ * ```
+ */
 export const CartClear = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Clear>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Clear>
@@ -215,6 +355,28 @@ CartNotes.displayName = 'CartNotes';
 export const CartCoupon = CartPrimitive.Coupon.Root;
 CartCoupon.displayName = 'CartCoupon';
 
+/**
+ * Input field for entering coupon/promo codes.
+ * Must be used within a CartCoupon component.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Cart>
+ *   <CartCoupon>
+ *     <div className="flex gap-2 mt-4">
+ *       <CartCouponInput
+ *         placeholder="Enter promo code"
+ *         className="flex-1"
+ *       />
+ *       <CartCouponTrigger className="px-4 py-2 bg-blue-600 text-white rounded">
+ *         Apply
+ *       </CartCouponTrigger>
+ *     </div>
+ *   </CartCoupon>
+ * </Cart>
+ * ```
+ */
 export const CartCouponInput = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Input>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Input>
@@ -235,6 +397,26 @@ export const CartCouponInput = React.forwardRef<
 
 CartCouponInput.displayName = 'CartCouponInput';
 
+/**
+ * Button to apply the entered coupon code.
+ * Handles coupon validation and application automatically.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CartCoupon>
+ *   <div className="border rounded-lg p-4">
+ *     <h3 className="font-medium mb-2">Have a promo code?</h3>
+ *     <div className="flex gap-2">
+ *       <CartCouponInput placeholder="Enter code" />
+ *       <CartCouponTrigger>
+ *         Apply Code
+ *       </CartCouponTrigger>
+ *     </div>
+ *   </div>
+ * </CartCoupon>
+ * ```
+ */
 export const CartCouponTrigger = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Trigger>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Trigger>

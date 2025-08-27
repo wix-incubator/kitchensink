@@ -3,6 +3,23 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Quantity as QuantityPrimitive } from '@wix/headless-components/react';
 
+/**
+ * Root component for quantity selection functionality.
+ * Provides context for quantity increment, decrement, input, and reset components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Quantity>
+ *   <div className="flex items-center border rounded">
+ *     <QuantityDecrement>-</QuantityDecrement>
+ *     <QuantityInput />
+ *     <QuantityIncrement>+</QuantityIncrement>
+ *   </div>
+ *   <QuantityReset>Reset</QuantityReset>
+ * </Quantity>
+ * ```
+ */
 export const Quantity = QuantityPrimitive.Root;
 
 // Quantity Decrement Component
@@ -34,6 +51,24 @@ export interface QuantityDecrementProps
   [key: string]: any;
 }
 
+/**
+ * Button component that decreases the quantity value when clicked.
+ * Must be used within a Quantity component.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Quantity>
+ *   <div className="flex items-center">
+ *     <QuantityDecrement variant="default" size="sm">
+ *       -
+ *     </QuantityDecrement>
+ *     <QuantityInput />
+ *     <QuantityIncrement>+</QuantityIncrement>
+ *   </div>
+ * </Quantity>
+ * ```
+ */
 export const QuantityDecrement = React.forwardRef<any, QuantityDecrementProps>(
   ({ variant, size, className, children, ...props }, ref) => {
     return (
@@ -79,6 +114,22 @@ export interface QuantityInputProps
   [key: string]: any;
 }
 
+/**
+ * Input component for manually entering quantity values.
+ * Must be used within a Quantity component.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Quantity>
+ *   <div className="flex items-center border rounded">
+ *     <QuantityDecrement>-</QuantityDecrement>
+ *     <QuantityInput variant="primary" size="lg" />
+ *     <QuantityIncrement>+</QuantityIncrement>
+ *   </div>
+ * </Quantity>
+ * ```
+ */
 export const QuantityInput = React.forwardRef<any, QuantityInputProps>(
   ({ variant, size, className, ...props }, ref) => {
     return (
@@ -122,6 +173,24 @@ export interface QuantityIncrementProps
   [key: string]: any;
 }
 
+/**
+ * Button component that increases the quantity value when clicked.
+ * Must be used within a Quantity component.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Quantity>
+ *   <div className="flex items-center">
+ *     <QuantityDecrement>-</QuantityDecrement>
+ *     <QuantityInput />
+ *     <QuantityIncrement size="lg" variant="button">
+ *       +
+ *     </QuantityIncrement>
+ *   </div>
+ * </Quantity>
+ * ```
+ */
 export const QuantityIncrement = React.forwardRef<any, QuantityIncrementProps>(
   ({ variant, size, className, children, ...props }, ref) => {
     return (
@@ -167,6 +236,25 @@ export interface QuantityResetProps
   [key: string]: any;
 }
 
+/**
+ * Button component that resets the quantity value to its initial state.
+ * Must be used within a Quantity component.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Quantity>
+ *   <div className="flex items-center gap-2">
+ *     <div className="flex border rounded">
+ *       <QuantityDecrement>-</QuantityDecrement>
+ *       <QuantityInput />
+ *       <QuantityIncrement>+</QuantityIncrement>
+ *     </div>
+ *     <QuantityReset size="sm">Reset</QuantityReset>
+ *   </div>
+ * </Quantity>
+ * ```
+ */
 export const QuantityReset = React.forwardRef<any, QuantityResetProps>(
   ({ variant, size, className, children, ...props }, ref) => {
     return (
