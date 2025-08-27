@@ -29,13 +29,13 @@ The `Product.tsx` file exports styled UI components that wrap Wix headless primi
 
 - `ProductVariants` - Container for variant selection
 - `ProductVariantOptions` - Individual variant option group
-- `ProductVariantOptionRepeater` - Repeater for variant options
+- `ProductVariantOptionRepeater` - Repeater for variant options (should be `Repeater` in context)
 
 #### Modifier Components:
 
 - `ProductModifiers` - Container for product modifiers
 - `ProductModifierOptions` - Individual modifier option group
-- `ProductModifierOptionRepeater` - Repeater for modifier options
+- `ProductModifierOptionRepeater` - Repeater for modifier options (should be `Repeater` in context)
 
 #### Action Components:
 
@@ -96,7 +96,7 @@ Components for product variant and modifier options:
 - `OptionName` - Option name/label
 - `OptionMandatoryIndicator` - Shows if option is required
 - `OptionChoices` - Container for option choices
-- `OptionChoiceRepeater` - Repeater for choices
+- `OptionChoiceRepeater` - Repeater for choices (should be `Repeater` in OptionChoices context)
 
 ### Choice Components (`Choice.tsx`)
 
@@ -111,14 +111,14 @@ Components for individual option choices:
 
 ```tsx
 <OptionChoices>
-  <OptionChoiceRepeater>
+  <Repeater>
     <Choice asChild>
       <Button variant="outline" className="mr-2 mb-2">
         <ChoiceText />
         <ChoiceColor className="ml-2 w-4 h-4 rounded-full" />
       </Button>
     </Choice>
-  </OptionChoiceRepeater>
+  </Repeater>
 </OptionChoices>
 ```
 
@@ -128,7 +128,7 @@ Components for product listing and collections:
 
 - `ProductList` - Root list component
 - `Products` - Products container
-- `ProductRepeater` - Individual product repeater
+- `Repeater` - Individual product repeater (not `ProductRepeater` - redundant in Products context)
 - `LoadMoreTrigger` - Load more products trigger
 - `TotalsDisplayed` - Total products count display
 
@@ -142,7 +142,7 @@ Shopping cart UI components:
 
 - `Cart` - Root cart component
 - `CartLineItems` - Line items container
-- `CartLineItemRepeater` - Individual line item repeater
+- `CartLineItemRepeater` - Individual line item repeater (should be `Repeater` in CartLineItems context)
 - `CartSummary` - Cart summary with totals (render prop)
 - `CartClear` - Clear cart button
 
@@ -222,7 +222,7 @@ Shopping cart line item components:
 - `LineItemImage` - Product image
 - `LineItemTitle` - Product title
 - `LineItemSelectedOptions` - Selected variant/modifier options
-- `LineItemSelectedOptionRepeater` - Options repeater
+- `LineItemSelectedOptionRepeater` - Options repeater (should be `Repeater` in SelectedOptions context)
 - `LineItemQuantity` - Quantity selector
 
 ### SelectedOption Components (`SelectedOption.tsx`)
@@ -315,3 +315,11 @@ All UI components follow this pattern:
 3. **Composition First**: Components are designed to be composed together using the `asChild` pattern and proper nesting.
 
 4. **TypeScript Support**: All components export proper TypeScript interfaces and support generic typing where applicable.
+
+5. **Redundant Naming Issue**: Many repeater components have redundant prefixes in their current implementation:
+   - `ProductRepeater` (should be `Repeater` within `Products` context)
+   - `OptionChoiceRepeater` (should be `Repeater` within `OptionChoices` context)
+   - `CartLineItemRepeater` (should be `Repeater` within `CartLineItems` context)
+   - `ProductVariantOptionRepeater` (should be `Repeater` within `ProductVariantOptions` context)
+
+   This naming redundancy should be addressed in future refactoring for cleaner component composition.
