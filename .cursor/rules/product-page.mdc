@@ -1,23 +1,26 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: false
 ---
+
 Creating a product page:
 
-1. create an astro page (READ [create-astro-page.mdc](mdc:.cursor/rules/create-astro-page.mdc)) with a "slug" path param. Commonly at src/pages/products/[slug].astro, but can be customized to user needs, as long as a "slug" path param exists. 
-2. get product information by the slug param and product not found:
+1. Create an astro page (READ [create-astro-page.mdc](mdc:.cursor/rules/create-astro-page.mdc)) with a "slug" path param. Commonly at src/pages/products/[slug].astro, but can be customized to user needs, as long as a "slug" path param exists.
+
+2. Get product information by the slug param and handle product not found:
+
 ```astro
 ---
-import { products } from "@wix/stores";
+import { products } from '@wix/stores';
 
 const { slug } = Astro.params;
 
 const { items } = await products
-    .queryProducts()
-    .eq("slug", slug)
-    .limit(1)
-    .find();
+  .queryProducts()
+  .eq('slug', slug)
+  .limit(1)
+  .find();
 
 const product = items[0];
 
@@ -27,4 +30,55 @@ if (!product) return new Response(null, { status: 404 });
 
 3. Use the wix:ReadFullDocsMethodSchema with https://dev.wix.com/docs/sdk/backend-modules/stores/products/query-products to get the type of the result, the Product type and what's available.
 
-4. Build the static parts of the page according to your task. 
+4. Build the product page using UI components from `/src/components/ui/store/`. Follow the patterns in [ui-components-store-ecom.mdc](mdc:.cursor/rules/ui-components-store-ecom.mdc).
+
+**Example React component structure:**
+
+```tsx
+import {
+  Product,
+  ProductName,
+  ProductPrice,
+  ProductDescription,
+  ProductVariants,
+  ProductActionAddToCart,
+} from '../ui/store/Product';
+import { Option, OptionName, OptionChoices } from '../ui/store/Option';
+import { Choice, ChoiceText, ChoiceColor } from '../ui/store/Choice';
+
+<Product product={product}>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <ProductMediaGallery />
+    <div>
+      <ProductName asChild>
+        <h1 className="text-4xl font-bold mb-4">Product Title</h1>
+      </ProductName>
+      <ProductPrice className="text-2xl font-semibold mb-2" />
+      <ProductDescription className="text-content-secondary mb-6" />
+
+      <ProductVariants>
+        <ProductVariantOptions>
+          <Option>
+            <OptionName className="font-semibold mb-2" />
+            <OptionChoices>
+              <OptionChoiceRepeater>
+                <Choice asChild>
+                  <Button variant="outline">
+                    <ChoiceText />
+                  </Button>
+                </Choice>
+              </OptionChoiceRepeater>
+            </OptionChoices>
+          </Option>
+        </ProductVariantOptions>
+      </ProductVariants>
+
+      <ProductActionAddToCart asChild>
+        <Button size="lg" className="w-full">
+          Add to Cart
+        </Button>
+      </ProductActionAddToCart>
+    </div>
+  </div>
+</Product>;
+```
