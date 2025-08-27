@@ -20,16 +20,19 @@ import {
   CartSummary,
   CartTotalsTotal,
   CartClear,
-} from '../ui/ecom/Cart';
+} from '@/components/ui/ecom/Cart';
 import {
   LineItem,
   LineItemImage,
   LineItemTitle,
   LineItemSelectedOptions,
   LineItemQuantity,
-} from '../ui/ecom/LineItem';
-import { SelectedOption, SelectedOptionText } from '../ui/ecom/SelectedOption';
-import { CurrentCart } from '../ui/ecom/CurrentCart';
+} from '@/components/ui/ecom/LineItem';
+import {
+  SelectedOption,
+  SelectedOptionText,
+} from '@/components/ui/ecom/SelectedOption';
+import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 
 <Cart>
   <div className="bg-white rounded-lg shadow p-6">
@@ -117,7 +120,7 @@ import {
   CartCouponTrigger,
   CartCoupon,
   CartCouponClear,
-} from '../ui/ecom/Cart';
+} from '@/components/ui/ecom/Cart';
 
 {
   /* Add to cart summary section */
@@ -218,13 +221,13 @@ When building product pages, use the product action components:
 import {
   ProductActionAddToCart,
   ProductActionBuyNow,
-} from '../ui/store/Product';
+} from '@/components/ui/store/Product';
 import {
   Quantity,
   QuantityDecrement,
   QuantityInput,
   QuantityIncrement,
-} from '../ui/components/quantity';
+} from '@/components/ui/components/quantity';
 
 {
   /* In product details */
@@ -266,7 +269,7 @@ import {
 ## Error Handling
 
 ```tsx
-import { CartErrors } from '../ui/ecom/Cart';
+import { CartErrors } from '@/components/ui/ecom/Cart';
 
 {
   /* Add to cart section */
@@ -289,7 +292,7 @@ import { CartErrors } from '../ui/ecom/Cart';
 ## Notes Component
 
 ```tsx
-import { CartNotes } from '../ui/ecom/Cart';
+import { CartNotes } from '@/components/ui/ecom/Cart';
 
 {
   /* Add to cart summary */

@@ -21,13 +21,13 @@ import {
   ProductName,
   ProductPrice,
   ProductDescription,
-} from '../ui/store/Product';
-import { Cart, CartLineItems, CartSummary } from '../ui/ecom/Cart';
+} from '@/components/ui/store/Product';
+import { Cart, CartLineItems, CartSummary } from '@/components/ui/ecom/Cart';
 import {
   Quantity,
   QuantityInput,
   QuantityIncrement,
-} from '../ui/components/quantity';
+} from '@/components/ui/components/quantity';
 ```
 
 ### **File Organization**
@@ -98,8 +98,8 @@ export { BookingSelection } from './BookingSelection';
 import {
   BookingServices,
   BookingService,
-} from '../../headless/bookings/components';
-import { CurrentMemberProfile } from '../../headless/members/components';
+} from '@/headless/bookings/components';
+import { CurrentMemberProfile } from '@/headless/members/components';
 ```
 
 ## Store Components Implementation

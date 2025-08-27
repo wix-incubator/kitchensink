@@ -42,9 +42,13 @@ import {
   ProductDescription,
   ProductVariants,
   ProductActionAddToCart,
-} from '../ui/store/Product';
-import { Option, OptionName, OptionChoices } from '../ui/store/Option';
-import { Choice, ChoiceText, ChoiceColor } from '../ui/store/Choice';
+} from '@/components/ui/store/Product';
+import {
+  Option,
+  OptionName,
+  OptionChoices,
+} from '@/components/ui/store/Option';
+import { Choice, ChoiceText, ChoiceColor } from '@/components/ui/store/Choice';
 
 <Product product={product}>
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
