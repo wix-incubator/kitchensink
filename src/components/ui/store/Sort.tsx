@@ -52,39 +52,42 @@ export const StyledProductListSort = (props: StyledProductListSortProps) => {
 
 // Styled Root component - pure styling wrapper, no logic
 export const Root: React.FC<SortRootProps> = props => {
-
   const toValueString = (option: SortOption) => {
     const fieldName = 'fieldName' in option ? option.fieldName : '';
     const order = 'order' in option ? option.order : '';
     return `${fieldName}:${order}`;
-  }
+  };
 
   const optionValues = props.sortOptions?.map(toValueString) || [];
 
   // Find current option based on the current sort value
-  let currentValueString = props.value?.length ? toValueString(props.value[0] as SortOption) : '';
+  let currentValueString = props.value?.length
+    ? toValueString(props.value[0] as SortOption)
+    : '';
 
   if (!currentValueString) {
-    currentValueString = toValueString(props.sortOptions?.[0] as SortOption) || '';
+    currentValueString =
+      toValueString(props.sortOptions?.[0] as SortOption) || '';
   }
 
-  const currentOption = props.sortOptions?.find((option, index) =>
-    optionValues[index] === currentValueString
+  const currentOption = props.sortOptions?.find(
+    (option, index) => optionValues[index] === currentValueString
   );
-  
+
   const handleValueChange = (valueString: string) => {
-    const option = props.sortOptions?.find((option) => toValueString(option) === valueString);
+    const option = props.sortOptions?.find(
+      option => toValueString(option) === valueString
+    );
     const sortValue: SortValue = option ? [option] : [];
     props.onChange?.(sortValue);
   };
 
   return (
-    <Select
-      value={currentValueString}
-      onValueChange={handleValueChange}
-    >
+    <Select value={currentValueString} onValueChange={handleValueChange}>
       <SelectTrigger className={`min-w-[160px] ${props.className || ''}`}>
-        <SelectValue placeholder={currentOption?.label || 'Select sort option'} />
+        <SelectValue
+          placeholder={currentOption?.label || 'Select sort option'}
+        />
       </SelectTrigger>
       <SelectContent>
         {props.sortOptions?.map((option, index) => (
