@@ -1,49 +1,200 @@
 ---
-description: 
-globs: 
+description: UI and Headless Component Architecture Patterns
+globs:
 alwaysApply: false
 ---
-## Headless Component Compositions Structure
 
-- **Short, Descriptive Exports:**  
-  All headless components must be exported from their module using concise, descriptive names (e.g., `Provider`, `List`, `Name`, `Description`).  
-  **Do not prefix component names with the module or namespace name.**  
-  _Example: Use `export const Provider = ...` instead of `export const CategoryProvider = ...`._
+# Component Architecture Patterns
 
-- **Barrel File Pattern:**  
-  The barrel file (`index.tsx`) for each group must re-export all components using the ES module namespace pattern:  
-  ```ts
-  export * as Category from "./Category";
-  export * as Product from "./Product";
-  // etc.
-  ```
-  **Do not use aliasing in the barrel file.**  
-  If a component needs a shorter name, rename it in its source file.
+This document describes the actual component architecture patterns used in the Wix Kitchensink project.
 
-- **Consuming Usage:**  
-  Always use the namespace and short component name in consuming code:  
-  - `<Category.Provider>` (not `<Category.CategoryProvider>`)
-  - `<Category.List>` (not `<Category.CategoryList>`)
-  - `<Product.Name>` (not `<Product.ProductName>`)
-  - `<ProductModifiers.FreeText>` (not `<ProductModifiers.ModifierFreeText>`)
+## UI Components Architecture (`/src/components/ui/`)
 
-- **Import Consistency:**  
-  Never import individual components directly from submodules.  
-  **Always import the namespace from the barrel file:**  
-  ```ts
-  import { Category, Product } from "headless/store/components";
-  ```
+### **Direct Export Pattern**
 
-- **No Aliasing:**  
-  Do not use `as` to alias exports in the barrel file.  
-  The component's name in its source file must match the desired short name.
+UI components use direct exports with descriptive names, not namespace patterns:
 
-- **Discoverability & Consistency:**  
-  This structure ensures all headless components are easily discoverable, consistently named, and simple to use in all consuming code.
+```tsx
+// ✅ CORRECT - Direct exports from UI component files
+import {
+  Product,
+  ProductName,
+  ProductPrice,
+  ProductDescription,
+} from '../ui/store/Product';
+import { Cart, CartLineItems, CartSummary } from '../ui/ecom/Cart';
+import {
+  Quantity,
+  QuantityInput,
+  QuantityIncrement,
+} from '../ui/components/quantity';
+```
 
----
+### **File Organization**
 
-**Summary:**  
-_Export all headless components with short names, use the namespace pattern in the barrel file, and always consume as `Namespace.Component`. Never alias or import directly from submodules._
+```
+src/components/ui/
+├── store/           # Store-specific UI components
+│   ├── Product.tsx  # All product-related components
+│   ├── Option.tsx   # Variant/modifier option components
+│   ├── Choice.tsx   # Individual choice components
+│   └── ProductList.tsx
+├── ecom/           # E-commerce UI components
+│   ├── Cart.tsx    # All cart-related components
+│   ├── LineItem.tsx
+│   ├── Commerce.tsx
+│   └── CurrentCart.tsx
+└── components/     # General UI components
+    └── quantity.tsx
+```
 
+### **Component Naming Convention**
 
+- **Descriptive prefixes**: `ProductName`, `CartLineItems`, `QuantityInput`
+- **Grouped by domain**: All product components in `Product.tsx`
+- **No namespace imports**: Import directly by component name
+
+## Headless Components Architecture (`/src/headless/`)
+
+### **Domain-Based Organization**
+
+```
+src/headless/
+├── bookings/
+│   ├── services/     # Business logic services
+│   └── components/   # Headless React components
+├── members/
+│   ├── services/
+│   ├── components/
+│   └── actions/      # Server actions
+└── media/
+    ├── actions/
+    └── components/
+```
+
+### **Headless Component Export Pattern**
+
+```tsx
+// ✅ CORRECT - Direct exports with descriptive names
+export const BookingServices = BookingServicesPrimitive.Root;
+export const BookingService = BookingServicePrimitive.Root;
+export const CurrentMemberProfile = CurrentMemberProfilePrimitive.Root;
+```
+
+### **Barrel File Pattern**
+
+```tsx
+// src/headless/bookings/components/index.tsx
+export { BookingServices } from './BookingServices';
+export { BookingService } from './BookingService';
+export { BookingAvailability } from './BookingAvailability';
+export { BookingSelection } from './BookingSelection';
+```
+
+### **Import Pattern**
+
+```tsx
+// ✅ CORRECT - Import from barrel files
+import {
+  BookingServices,
+  BookingService,
+} from '../../headless/bookings/components';
+import { CurrentMemberProfile } from '../../headless/members/components';
+```
+
+## Store Components Implementation
+
+### **Current Reality**
+
+Store functionality uses **Wix headless primitives directly** wrapped in UI components:
+
+```tsx
+// UI Components wrap primitives
+import { Product as ProductPrimitive } from '@wix/headless-stores/react';
+import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
+
+export const Product = ProductPrimitive.Root;
+export const Cart = CartPrimitive.Root;
+```
+
+### **No Custom Store Services**
+
+- **No** `ProductService`, `CollectionService`, or `SelectedVariantService`
+- Uses Wix SDK directly: `@wix/stores`, `@wix/headless-stores/react`
+- Business logic handled by Wix primitives, not custom services
+
+## Component Composition Patterns
+
+### **1. UI Component Composition**
+
+```tsx
+<Product product={productData}>
+  <ProductName asChild>
+    <h1 className="text-4xl font-bold">Product Title</h1>
+  </ProductName>
+  <ProductPrice className="text-2xl font-semibold" />
+  <ProductVariants>
+    <ProductVariantOptions>
+      <Option>
+        <OptionName />
+        <OptionChoices>
+          <Choice asChild>
+            <Button>
+              <ChoiceText />
+            </Button>
+          </Choice>
+        </OptionChoices>
+      </Option>
+    </ProductVariantOptions>
+  </ProductVariants>
+</Product>
+```
+
+### **2. Headless Component Composition**
+
+```tsx
+<ServicesManagerProvider servicesManager={servicesManager}>
+  <BookingServices>
+    {({ services, loading }) => (
+      <div>
+        {services.map(service => (
+          <BookingService key={service.id} serviceId={service.id}>
+            {({ service, bookingAvailable }) => (
+              <ServiceCard service={service} available={bookingAvailable} />
+            )}
+          </BookingService>
+        ))}
+      </div>
+    )}
+  </BookingServices>
+</ServicesManagerProvider>
+```
+
+## Key Architectural Principles
+
+### **1. Separation of Concerns**
+
+- **UI Components**: Styling, layout, interaction patterns
+- **Headless Components**: Business logic, data fetching, state management
+- **Services**: Complex state management, API interactions
+- **Primitives**: Core Wix functionality (provided by Wix)
+
+### **2. Composition Over Inheritance**
+
+- Use `asChild` prop for flexible rendering
+- Compose components together for complex UIs
+- Avoid deep component hierarchies
+
+### **3. Import Clarity**
+
+- Import components by their actual names
+- Use barrel files for organization
+- Avoid namespace aliasing that obscures component origins
+
+### **4. Domain Organization**
+
+- Group related components by business domain
+- Keep services and components in same domain folder
+- Separate UI styling from business logic
+
+This architecture provides flexibility for different implementation patterns while maintaining clear separation between UI presentation and business logic.
