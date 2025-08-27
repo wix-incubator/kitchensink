@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProductListFilters } from '@wix/headless-stores/react';
+import { ProductList } from '@wix/headless-stores/react';
 import * as Filter from '@/components/store/styled-components/Filter';
 
 interface ProductFiltersSidebarProps {
@@ -19,7 +19,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
           <div
             className={`bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle ${className}`}
           >
-            <ProductListFilters.Filter>
+            <ProductList.Filter>
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-content-primary flex items-center gap-2">
@@ -78,7 +78,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                   </Filter.FilterOptionRepeater>
                 </Filter.FilterOptions>
               </div>
-            </ProductListFilters.Filter>
+            </ProductList.Filter>
           </div>
         </div>
       </div>

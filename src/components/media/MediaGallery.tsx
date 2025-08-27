@@ -10,7 +10,10 @@ export const Viewport: React.FC<
   React.ComponentProps<typeof MediaGalleryPrimitive.Viewport>
 > = ({ className, ...props }) => (
   <MediaGalleryPrimitive.Viewport
-    className={cn('w-full h-full', className)}
+    className={cn(
+      'w-full h-full flex items-center justify-center [&>img]:max-w-full [&>img]:max-h-full [&>img]:object-contain',
+      className
+    )}
     emptyState={
       <div className="w-full h-full flex items-center justify-center">
         <svg

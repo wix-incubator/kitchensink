@@ -3,7 +3,7 @@ import { categories } from '@wix/categories';
 import {
   CategoryList,
   Category,
-  ProductListFilters as ProductListFiltersPrimitive,
+  ProductList as ProductListPrimitive,
 } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,7 @@ export function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
 
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-          <ProductListFiltersPrimitive.CategoryFilter>
+          <ProductListPrimitive.CategoryFilter>
             {({ selectedCategory, setSelectedCategory }) => (
               <CategoryList.CategoryRepeater>
                 <Category.Trigger asChild>
@@ -40,7 +40,7 @@ export function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
                 </Category.Trigger>
               </CategoryList.CategoryRepeater>
             )}
-          </ProductListFiltersPrimitive.CategoryFilter>
+          </ProductListPrimitive.CategoryFilter>
         </div>
       </div>
     </CategoryList.Root>
