@@ -8,8 +8,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
-  ProductListFilters as ProductListFiltersPrimitive,
-  ProductListCore as ProductListPrimitive,
+  ProductList as ProductListPrimitive,
   ProductVariantSelector as ProductVariantSelectorPrimitive,
 } from '@wix/headless-stores/react';
 import {
@@ -105,11 +104,9 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <ProductListFiltersPrimitive.CategoryFilter>
                     <CategoryPicker
                       categoriesListConfig={categoriesListConfig}
                     />
-                  </ProductListFiltersPrimitive.CategoryFilter>
                 </div>
                 <SortDropdown />
               </div>
@@ -125,7 +122,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
             <div className="flex-1 min-w-0">
               <>
                 {/* Filter Status Bar */}
-                <ProductListFiltersPrimitive.ResetTrigger>
+                <ProductListPrimitive.FilterResetTrigger>
                   {({ resetFilters, isFiltered }) =>
                     isFiltered && (
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 filter-status-bar border rounded-xl p-4 mb-6">
@@ -159,7 +156,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                       </div>
                     )
                   }
-                </ProductListFiltersPrimitive.ResetTrigger>
+                </ProductListPrimitive.FilterResetTrigger>
 
                 {/* Products Grid */}
                 <Products>
