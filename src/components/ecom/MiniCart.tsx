@@ -185,7 +185,7 @@ export function MiniCartContent() {
       onClick={close}
     >
       <div
-        className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col"
+        className="fixed right-0 top-0 h-full w-full max-w-md bg-surface-modal shadow-xl flex flex-col bg-background"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-surface-subtle flex-shrink-0">
