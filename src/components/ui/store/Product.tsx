@@ -2,7 +2,7 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
-import { Button } from '../button';
+import { Button } from '@/components/ui/button';
 
 /**
  * Root component for product display and interaction.
