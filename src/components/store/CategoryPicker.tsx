@@ -1,12 +1,6 @@
 import React from 'react';
-import { categories } from '@wix/categories';
-import {
-  CategoryList,
-  Category,
-  ProductList as ProductListPrimitive,
-} from '@wix/headless-stores/react';
+import { CategoryList, Category } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
 interface CategoryPickerProps {
@@ -25,55 +19,17 @@ export function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
 
         {/* Category Navigation - Horizontal scrollable for mobile */}
         <div className="flex flex-wrap gap-2 overflow-x-auto scrollbar-hide">
-          <ProductListPrimitive.CategoryFilter>
-            {({ selectedCategory, setSelectedCategory }) => (
-              <CategoryList.CategoryRepeater>
-                <Category.Trigger asChild>
-                  {({ category }) => (
-                    <CategoryButton
-                      key={category._id}
-                      category={category}
-                      isSelected={selectedCategory?.slug === category.slug}
-                      onSelect={() => setSelectedCategory(category)}
-                    />
-                  )}
-                </Category.Trigger>
-              </CategoryList.CategoryRepeater>
-            )}
-          </ProductListPrimitive.CategoryFilter>
+          <CategoryList.CategoryRepeater>
+            <Category.Trigger asChild>
+              <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap text-content-secondary hover:bg-brand-light hover:text-content-primary data-[selected=true]:[background:var(--theme-btn-primary)] data-[selected=true]:text-[var(--theme-btn-primary-text)] data-[selected=true]:border-[var(--theme-btn-primary-border)] data-[selected=true]:shadow-lg data-[selected=true]:transform data-[selected=true]:scale-105">
+                <Category.Label />
+              </button>
+            </Category.Trigger>
+          </CategoryList.CategoryRepeater>
         </div>
       </div>
     </CategoryList.Root>
   );
 }
-
-// Individual Category Button Component
-interface CategoryButtonProps {
-  category: categories.Category;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-const CategoryButton: React.FC<CategoryButtonProps> = ({
-  category,
-  isSelected,
-  onSelect,
-}) => {
-  return (
-    <Category.Root categoryServiceConfig={{ category }}>
-      <Button
-        variant={isSelected ? 'default' : 'outline'}
-        onClick={onSelect}
-        className={
-          isSelected
-            ? ''
-            : 'text-content-primary border-surface-subtle hover:bg-primary/10'
-        }
-      >
-        <Category.Label></Category.Label>
-      </Button>
-    </Category.Root>
-  );
-};
 
 export default CategoryPicker;
