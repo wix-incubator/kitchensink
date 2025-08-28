@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import type {
   Sort as SortType,
   SortRootProps as PrimitiveSortRootProps,
@@ -84,7 +85,7 @@ export const Root: React.FC<SortRootProps> = props => {
 
   return (
     <Select value={currentValueString} onValueChange={handleValueChange}>
-      <SelectTrigger className={`min-w-[160px] ${props.className || ''}`}>
+      <SelectTrigger className={cn('min-w-[160px]', props.className)}>
         <SelectValue
           placeholder={currentOption?.label || 'Select sort option'}
         />
@@ -104,7 +105,7 @@ export const Root: React.FC<SortRootProps> = props => {
 export const Option: React.FC<SortOptionProps> = props => (
   <SortPrimitive.Option
     {...props}
-    className={`px-3 py-2 text-sm text-content-primary hover:bg-brand-light data-[selected=true]:bg-blue-500 data-[selected=true]:text-white rounded cursor-pointer border border-brand-light transition-colors ${props.className || ''}`}
+    className={cn('px-3 py-2 text-sm text-foreground hover:bg-muted data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground rounded cursor-pointer border border-border transition-colors', props.className)}
   />
 );
 
