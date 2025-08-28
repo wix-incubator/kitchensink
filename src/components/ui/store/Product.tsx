@@ -935,3 +935,83 @@ export const ProductQuantityRaw = React.forwardRef<
 });
 
 ProductQuantityRaw.displayName = 'ProductQuantityRaw';
+
+/**
+ * Displays the selected product variant SKU (Stock Keeping Unit).
+ * Only shows when a variant is selected and has an SKU.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-center gap-2 text-sm text-content-secondary">
+ *     <span>SKU:</span>
+ *     <ProductVariantSKU className="font-mono" />
+ *   </div>
+ *
+ *   <ProductVariantSKU asChild>
+ *     {({ sku }) => (
+ *       <span className="text-xs text-content-muted">
+ *         Item #{sku}
+ *       </span>
+ *     )}
+ *   </ProductVariantSKU>
+ * </Product>
+ * ```
+ */
+export const ProductVariantSKU = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductVariant.SKU>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductVariant.SKU>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductVariant.SKU
+      {...props}
+      ref={ref}
+      className={cn(props.className)}
+    >
+      {props.children}
+    </ProductPrimitive.ProductVariant.SKU>
+  );
+});
+
+ProductVariantSKU.displayName = 'ProductVariantSKU';
+
+/**
+ * Displays the selected product variant weight.
+ * Shows the weight value with appropriate formatting when available.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-center gap-2 text-sm text-content-secondary">
+ *     <span>Weight:</span>
+ *     <ProductVariantWeight className="font-medium" />
+ *   </div>
+ *
+ *   <ProductVariantWeight asChild>
+ *     {({ weight }) => (
+ *       <span className="text-sm text-content-secondary">
+ *         {weight} kg
+ *       </span>
+ *     )}
+ *   </ProductVariantWeight>
+ * </Product>
+ * ```
+ */
+export const ProductVariantWeight = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductVariant.Weight>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductVariant.Weight>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductVariant.Weight
+      {...props}
+      ref={ref}
+      className={cn(props.className)}
+    >
+      {props.children}
+    </ProductPrimitive.ProductVariant.Weight>
+  );
+});
+
+ProductVariantWeight.displayName = 'ProductVariantWeight';
