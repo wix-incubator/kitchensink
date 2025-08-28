@@ -105,7 +105,10 @@ export const Root: React.FC<SortRootProps> = props => {
 export const Option: React.FC<SortOptionProps> = props => (
   <SortPrimitive.Option
     {...props}
-    className={cn('px-3 py-2 text-sm text-foreground hover:bg-muted data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground rounded cursor-pointer border border-border transition-colors', props.className)}
+    className={cn(
+      'px-3 py-2 text-sm text-foreground hover:bg-muted data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground rounded cursor-pointer border border-border transition-colors',
+      props.className
+    )}
   />
 );
 

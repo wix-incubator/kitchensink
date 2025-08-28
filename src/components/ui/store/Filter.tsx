@@ -10,7 +10,10 @@ export const Filtered: React.FC<
   React.ComponentProps<typeof FilterPrimitive.Filtered>
 > = ({ className, children, ...props }) => (
   <FilterPrimitive.Filtered
-    className={cn('bg-background border border-border rounded-lg p-4 mb-4', className)}
+    className={cn(
+      'bg-background border border-border rounded-lg p-4 mb-4',
+      className
+    )}
     {...props}
   >
     {children}
@@ -47,7 +50,10 @@ export const Action = {
   >(({ className, ...props }, ref) => (
     <FilterPrimitive.Action.Clear
       ref={ref}
-      className={cn('text-sm text-muted-foreground hover:text-foreground transition-colors underline cursor-pointer disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed', className)}
+      className={cn(
+        'text-sm text-muted-foreground hover:text-foreground transition-colors underline cursor-pointer disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed',
+        className
+      )}
       {...props}
     />
   )),
@@ -74,7 +80,10 @@ export const FilterOption = {
   >(({ className, ...props }, ref) => (
     <FilterPrimitive.FilterOption.SingleFilter
       ref={ref}
-      className={cn('flex gap-2 [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:transition-all [&_button]:cursor-pointer [&_button]:border-border [&_button]:bg-background [&_button]:text-foreground [&_button[data-state=on]]:bg-primary [&_button[data-state=on]]:text-primary-foreground [&_button[data-state=on]]:border-primary [&_button[data-state=off]:hover]:bg-muted', className)}
+      className={cn(
+        'flex gap-2 [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:transition-all [&_button]:cursor-pointer [&_button]:border-border [&_button]:bg-background [&_button]:text-foreground [&_button[data-state=on]]:bg-primary [&_button[data-state=on]]:text-primary-foreground [&_button[data-state=on]]:border-primary [&_button[data-state=off]:hover]:bg-muted',
+        className
+      )}
       {...props}
     />
   )),
@@ -85,7 +94,8 @@ export const FilterOption = {
   >(({ className, ...props }, ref) => (
     <FilterPrimitive.FilterOption.MultiFilter
       ref={ref}
-      className={cn(`/* --- Child Button Styling --- */
+      className={cn(
+        `/* --- Child Button Styling --- */
 flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_button]:px-3 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:border [&_button]:border-border [&_button]:bg-background [&_button]:text-foreground [&_button[data-state=on]]:bg-primary [&_button[data-state=on]]:text-primary-foreground [&_button[data-state=on]]:border-primary [&_button[data-state=off]:hover]:bg-muted flex flex-wrap gap-2
     [&[data-display-type='color']_button]:relative
     [&[data-display-type='color']_button]:w-8
@@ -119,7 +129,9 @@ flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_butt
 
     /* --- Show Tooltip on Hover --- */
     [&[data-display-type='color']_button:hover:after]:opacity-100
-    [&[data-display-type='color']_button:hover:after]:visible`, className)}
+    [&[data-display-type='color']_button:hover:after]:visible`,
+        className
+      )}
       {...props}
     />
   )),
@@ -130,7 +142,8 @@ flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_butt
   >(({ className, ...props }, ref) => (
     <FilterPrimitive.FilterOption.RangeFilter
       ref={ref}
-      className={cn(`space-y-4 
+      className={cn(
+        `space-y-4 
         /* Range container */
         [&_span[dir=ltr]]:relative [&_span[dir=ltr]]:flex [&_span[dir=ltr]]:items-center [&_span[dir=ltr]]:select-none [&_span[dir=ltr]]:touch-none [&_span[dir=ltr]]:w-full [&_span[dir=ltr]]:h-6 [&_span[dir=ltr]]:px-2 
         /* Track styling - better contrast for dark theme */
@@ -145,7 +158,9 @@ flex flex-wrap gap-2 [&_button]:transition-all [&_button]:cursor-pointer [&_butt
         [&_span[data-range-value]]:px-3 [&_span[data-range-value]]:py-1.5 [&_span[data-range-value]]:bg-muted [&_span[data-range-value]]:text-foreground [&_span[data-range-value]]:rounded-md [&_span[data-range-value]]:border [&_span[data-range-value]]:border-border [&_span[data-range-value]]:font-medium [&_span[data-range-value]]:text-sm [&_span[data-range-value]]:shadow-sm
         /* Range labels */
         [&>div:last-child]:flex [&>div:last-child]:justify-between [&>div:last-child]:text-sm [&>div:last-child]:text-muted-foreground [&>div:last-child]:font-medium [&>div:last-child]:mt-2 
-        `, className)}
+        `,
+        className
+      )}
       {...props}
     />
   )),

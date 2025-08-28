@@ -8,16 +8,28 @@
   --color-secondary-foreground: var(--wix-theme-secondary-foreground);
   --color-background: var(--wix-theme-background);
   --color-foreground: var(--wix-theme-foreground);
-  
+
   /* Create muted variants using color-mix with existing variables */
-  --color-muted: color-mix(in srgb, var(--wix-theme-background) 95%, var(--wix-theme-foreground) 5%);
-  --color-muted-foreground: color-mix(in srgb, var(--wix-theme-foreground) 65%, transparent 35%);
-  --color-border: color-mix(in srgb, var(--wix-theme-foreground) 15%, transparent 85%);
+  --color-muted: color-mix(
+    in srgb,
+    var(--wix-theme-background) 95%,
+    var(--wix-theme-foreground) 5%
+  );
+  --color-muted-foreground: color-mix(
+    in srgb,
+    var(--wix-theme-foreground) 65%,
+    transparent 35%
+  );
+  --color-border: color-mix(
+    in srgb,
+    var(--wix-theme-foreground) 15%,
+    transparent 85%
+  );
   --color-input: var(--wix-theme-background);
   --color-ring: var(--wix-theme-primary);
   --color-destructive: var(--wix-theme-danger);
   --color-destructive-foreground: var(--wix-theme-primary-foreground);
-  
+
   --font-heading: var(--theme-font-family-heading);
   --font-paragraph: var(--theme-font-family-paragraph);
 }
