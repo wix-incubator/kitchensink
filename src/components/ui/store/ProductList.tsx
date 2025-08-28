@@ -122,7 +122,7 @@ export const ProductRepeater = ProductListPrimitive.ProductRepeater;
  * />
  * ```
  */
-export const LoadMoreTrigger = React.forwardRef<
+export const ProductLoadMoreTrigger = React.forwardRef<
   HTMLButtonElement,
   React.HTMLAttributes<HTMLButtonElement> & {
     /** Label text to display when more products are available */
@@ -164,7 +164,7 @@ export const LoadMoreTrigger = React.forwardRef<
   )
 );
 
-LoadMoreTrigger.displayName = 'LoadMoreTrigger';
+ProductLoadMoreTrigger.displayName = 'ProductLoadMoreTrigger';
 
 /**
  * Displays the total number of products currently shown in the product list.
@@ -185,7 +185,7 @@ LoadMoreTrigger.displayName = 'LoadMoreTrigger';
  * />
  * ```
  */
-export const TotalsDisplayed = React.forwardRef<
+export const ProductTotalsDisplayed = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     /**
@@ -212,4 +212,4 @@ export const TotalsDisplayed = React.forwardRef<
   </ProductListPrimitive.TotalsDisplayed>
 ));
 
-TotalsDisplayed.displayName = 'TotalsDisplayed';
+ProductTotalsDisplayed.displayName = 'ProductTotalsDisplayed';
