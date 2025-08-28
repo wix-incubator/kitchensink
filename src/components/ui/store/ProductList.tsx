@@ -1,10 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import {
-  ProductList as ProductListPrimitive,
-  ProductListCore as ProductListCorePrimitive,
-  ProductListPagination as ProductListPaginationPrimitive,
-} from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -126,54 +122,46 @@ export const ProductRepeater = ProductListPrimitive.ProductRepeater;
  * />
  * ```
  */
-export const LoadMoreTrigger = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+export const ProductLoadMoreTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.HTMLAttributes<HTMLButtonElement> & {
     /** Label text to display when more products are available */
-    label?: React.ReactNode;
+    label?: string;
     /** Loading state content to display while loading */
     loadingState?: React.ReactNode;
   }
->(
-  (
-    {
-      className,
-      label = 'Load More Products',
-      loadingState = 'Loading...',
-      ...props
-    },
-    ref
-  ) => (
-    <ProductListPaginationPrimitive.LoadMoreTrigger>
-      {({ loadMore, hasMoreProducts, isLoading }) =>
-        hasMoreProducts ? (
-          <ProductListPrimitive.LoadMoreTrigger
-            className={cn('font-semibold transform hover:scale-105', className)}
-            ref={ref}
-            {...props}
-            asChild
-          >
-            <Button
-              variant="default"
-              size="lg"
-              onClick={() => loadMore(10)}
-              disabled={isLoading}
-              className={`font-semibold transform hover:scale-105 ${
-                isLoading
-                  ? 'bg-surface-loading animate-pulse'
-                  : 'shadow-md hover:shadow-lg'
-              }`}
-            >
-              {!isLoading ? label : loadingState}
-            </Button>
-          </ProductListPrimitive.LoadMoreTrigger>
-        ) : null
-      }
-    </ProductListPaginationPrimitive.LoadMoreTrigger>
-  )
-);
+>((props, ref) => {
+  const loadingState = props.loadingState || 'Loading...';
+  const label = props.label || 'Load More Products';
 
-LoadMoreTrigger.displayName = 'LoadMoreTrigger';
+  return (
+    <ProductListPrimitive.LoadMoreTrigger
+      className={cn('font-semibold transform hover:scale-105', props.className)}
+      {...props}
+      ref={ref}
+      asChild
+    >
+      {({ isLoading, loadMore }) => (
+        <Button
+          variant="default"
+          onClick={() => loadMore()}
+          disabled={isLoading}
+          ref={ref as React.RefObject<HTMLButtonElement>}
+          size="lg"
+          className={`font-semibold transform hover:scale-105 ${
+            isLoading
+              ? 'bg-surface-loading animate-pulse'
+              : 'shadow-md hover:shadow-lg'
+          }`}
+        >
+          {isLoading ? loadingState : label}
+        </Button>
+      )}
+    </ProductListPrimitive.LoadMoreTrigger>
+  );
+});
+
+ProductLoadMoreTrigger.displayName = 'ProductLoadMoreTrigger';
 
 /**
  * Displays the total number of products currently shown in the product list.
@@ -194,7 +182,7 @@ LoadMoreTrigger.displayName = 'LoadMoreTrigger';
  * />
  * ```
  */
-export const TotalsDisplayed = React.forwardRef<
+export const ProductTotalsDisplayed = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     /**
@@ -221,4 +209,4 @@ export const TotalsDisplayed = React.forwardRef<
   </ProductListPrimitive.TotalsDisplayed>
 ));
 
-TotalsDisplayed.displayName = 'TotalsDisplayed';
+ProductTotalsDisplayed.displayName = 'ProductTotalsDisplayed';
