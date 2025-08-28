@@ -138,14 +138,21 @@ export const LoadMoreTrigger = React.forwardRef<
     <ProductListPrimitive.LoadMoreTrigger
       className={cn('font-semibold transform hover:scale-105', props.className)}
       {...props}
+      ref={ref}
       asChild
     >
-      {({ isLoading }) => (
+      {({ isLoading, loadMore }) => (
         <Button
           variant="default"
+          onClick={() => loadMore()}
+          disabled={isLoading}
           ref={ref as React.RefObject<HTMLButtonElement>}
           size="lg"
-          className="font-semibold transform hover:scale-105 shadow-md hover:shadow-lg"
+          className={`font-semibold transform hover:scale-105 ${
+            isLoading
+              ? 'bg-surface-loading animate-pulse'
+              : 'shadow-md hover:shadow-lg'
+          }`}
         >
           {isLoading ? loadingState : label}
         </Button>
