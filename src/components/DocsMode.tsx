@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BookOpenIcon } from './icons/StackedBooksIcon';
+import { BookOpenIcon } from '@/components/icons/StackedBooksIcon';
 
 // Context for managing docs mode state
 interface DocsContextType {

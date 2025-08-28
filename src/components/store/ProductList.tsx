@@ -1,12 +1,7 @@
 import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   ProductList as ProductListPrimitive,
   ProductVariantSelector as ProductVariantSelectorPrimitive,
