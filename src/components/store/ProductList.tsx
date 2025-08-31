@@ -197,7 +197,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                                       <OptionChoiceRepeater>
                                         <>
                                           <ChoiceColor className="w-7 h-7 border-2" />
-                                          <ChoiceText />
+                                          <ChoiceText className="text-xs" />
                                         </>
                                       </OptionChoiceRepeater>
                                     </div>

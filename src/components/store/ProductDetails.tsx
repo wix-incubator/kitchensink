@@ -171,8 +171,8 @@ export default function ProductDetails({
                               <OptionChoiceRepeater>
                                 <>
                                   <ChoiceColor />
-                                  <ChoiceText />
-                                  <ChoiceFreeText placeholder="dsfd" />
+                                  <ChoiceText className="text-lg" />
+                                  <ChoiceFreeText />
                                 </>
                               </OptionChoiceRepeater>
                             </div>
