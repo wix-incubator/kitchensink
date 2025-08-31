@@ -1049,12 +1049,12 @@ export const ProductRibbon = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'text-content-primary hover:bg-secondary absolute top-2 z-10 font-bold px-3 py-1 text-sm',
+        'text-content-primary hover:bg-secondary absolute top-2 z-10 px-3 py-1 left-2',
         props.className
       )}
       asChild
     >
-      <Badge variant="secondary" className="rounded-full" />
+      <Badge variant="secondary" />
     </ProductPrimitive.Ribbon>
   );
 });
