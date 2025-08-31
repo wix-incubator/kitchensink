@@ -2,7 +2,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import {
   ProductList as ProductListPrimitive,
-  ProductListCore as ProductListCorePrimitive,
   ProductListPagination as ProductListPaginationPrimitive,
 } from '@wix/headless-stores/react';
 import { Button } from '@/components/ui/button';
