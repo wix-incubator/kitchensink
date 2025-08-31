@@ -72,7 +72,7 @@ export const Root: React.FC<SortRootProps> = props => {
   }
 
   const currentOption = props.sortOptions?.find(
-    (option, index) => optionValues[index] === currentValueString
+    (_, index) => optionValues[index] === currentValueString
   );
 
   const handleValueChange = (valueString: string) => {

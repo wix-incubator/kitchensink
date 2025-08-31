@@ -1,4 +1,3 @@
-import React from 'react';
 import { CategoryList, Category } from '@wix/headless-stores/react';
 import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
 import { Label } from '@/components/ui/label';
