@@ -20,6 +20,7 @@ import {
   ProductQuantityRaw,
   ProductVariantSKU,
   ProductVariantWeight,
+  ProductVariantSelectorReset,
 } from '@/components/ui/store/Product';
 import {
   OptionName,
@@ -144,20 +145,7 @@ export default function ProductDetails({
                       </ProductVariantOptionRepeater>
                     </ProductVariantOptions>
 
-                    <ProductVariantSelectorPrimitive.Reset>
-                      {({ reset, hasSelections }) =>
-                        hasSelections && (
-                          <div className="pt-4">
-                            <button
-                              onClick={reset}
-                              className="text-sm text-brand-primary hover:text-brand-light transition-colors"
-                            >
-                              Reset Selections
-                            </button>
-                          </div>
-                        )
-                      }
-                    </ProductVariantSelectorPrimitive.Reset>
+                    <ProductVariantSelectorReset />
                   </div>
                 </ProductVariants>
 

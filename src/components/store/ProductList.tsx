@@ -2,10 +2,7 @@ import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import {
-  ProductList as ProductListPrimitive,
-  ProductVariantSelector as ProductVariantSelectorPrimitive,
-} from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
 import {
   type CategoriesListServiceConfig,
   type ProductsListServiceConfig,
@@ -26,6 +23,7 @@ import {
   ProductVariantOptionRepeater,
   ProductVariantOptions,
   ProductVariants,
+  ProductVariantSelectorReset,
 } from '@/components/ui/store/Product';
 import {
   LoadMoreTrigger,
@@ -211,22 +209,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                         </ProductVariants>
 
                         {/* Reset Selections */}
-                        <ProductVariantSelectorPrimitive.Reset>
-                          {({ reset, hasSelections }) =>
-                            hasSelections && (
-                              <div className="pt-2 pb-2">
-                                <Button
-                                  variant="link"
-                                  size="sm"
-                                  onClick={reset}
-                                  className="text-xs underline p-0"
-                                >
-                                  Reset Selections
-                                </Button>
-                              </div>
-                            )
-                          }
-                        </ProductVariantSelectorPrimitive.Reset>
+                        <ProductVariantSelectorReset className="text-xs underline p-0" />
                         {/* Product Description */}
                         <ProductDescription
                           as="html"

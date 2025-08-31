@@ -1018,6 +1018,56 @@ export const ProductVariantWeight = React.forwardRef<
 ProductVariantWeight.displayName = 'ProductVariantWeight';
 
 /**
+ * Reset button for product variant selections.
+ * Allows users to clear all selected variants and return to default state.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductVariants>
+ *     <ProductVariantOptions>
+ *       <ProductVariantOptionRepeater>
+ *         <Option>
+ *           <OptionName>Size</OptionName>
+ *           <OptionChoices>
+ *             <OptionChoiceRepeater>
+ *               <Choice>
+ *                 <ChoiceText />
+ *               </Choice>
+ *             </OptionChoiceRepeater>
+ *           </OptionChoices>
+ *         </Option>
+ *       </ProductVariantOptionRepeater>
+ *     </ProductVariantOptions>
+ *     <ProductVariantSelectorReset className="text-sm text-brand-primary hover:text-brand-light transition-colors" />
+ *   </ProductVariants>
+ * </Product>
+ * ```
+ */
+export const ProductVariantSelectorReset = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductVariantSelectorReset>,
+  React.ComponentPropsWithoutRef<
+    typeof ProductPrimitive.ProductVariantSelectorReset
+  >
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductVariantSelectorReset
+      {...props}
+      ref={ref}
+      className={cn(
+        'text-sm text-brand-primary hover:text-brand-light transition-colors',
+        props.className
+      )}
+    >
+      {props.children}
+    </ProductPrimitive.ProductVariantSelectorReset>
+  );
+});
+
+ProductVariantSelectorReset.displayName = 'ProductVariantSelectorReset';
+
+/**
  * Displays the product ribbon/badge.
  * Shows promotional badges, labels, or status indicators on the product.
  *
