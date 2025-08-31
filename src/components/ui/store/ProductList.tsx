@@ -1,9 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import {
-  ProductList as ProductListPrimitive,
-  ProductListPagination as ProductListPaginationPrimitive,
-} from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -143,32 +140,27 @@ export const LoadMoreTrigger = React.forwardRef<
     },
     ref
   ) => (
-    <ProductListPaginationPrimitive.LoadMoreTrigger>
-      {({ loadMore, hasMoreProducts, isLoading }) =>
-        hasMoreProducts ? (
-          <ProductListPrimitive.LoadMoreTrigger
-            className={cn('font-semibold transform hover:scale-105', className)}
-            {...props}
-            asChild
-          >
-            <Button
-              ref={ref}
-              variant="default"
-              size="lg"
-              onClick={() => loadMore(10)}
-              disabled={isLoading}
-              className={`font-semibold transform hover:scale-105 ${
-                isLoading
-                  ? 'bg-surface-loading animate-pulse'
-                  : 'shadow-md hover:shadow-lg'
-              }`}
-            >
-              {!isLoading ? label : loadingState}
-            </Button>
-          </ProductListPrimitive.LoadMoreTrigger>
-        ) : null
-      }
-    </ProductListPaginationPrimitive.LoadMoreTrigger>
+    <ProductListPrimitive.LoadMoreTrigger
+      className={cn('font-semibold transform hover:scale-105', className)}
+      {...props}
+      asChild
+    >
+      {({ loadMore, isLoading }) => (
+        <Button
+          ref={ref}
+          variant="default"
+          size="lg"
+          onClick={() => loadMore()}
+          className={`font-semibold transform hover:scale-105 ${
+            isLoading
+              ? 'bg-surface-loading animate-pulse'
+              : 'shadow-md hover:shadow-lg'
+          }`}
+        >
+          {!isLoading ? label : loadingState}
+        </Button>
+      )}
+    </ProductListPrimitive.LoadMoreTrigger>
   )
 );
 
