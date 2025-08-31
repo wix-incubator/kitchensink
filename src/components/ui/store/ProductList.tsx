@@ -126,8 +126,8 @@ export const ProductRepeater = ProductListPrimitive.ProductRepeater;
  * ```
  */
 export const LoadMoreTrigger = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  HTMLButtonElement,
+  React.HTMLAttributes<HTMLButtonElement> & {
     /** Label text to display when more products are available */
     label?: React.ReactNode;
     /** Loading state content to display while loading */
@@ -148,11 +148,11 @@ export const LoadMoreTrigger = React.forwardRef<
         hasMoreProducts ? (
           <ProductListPrimitive.LoadMoreTrigger
             className={cn('font-semibold transform hover:scale-105', className)}
-            ref={ref}
             {...props}
             asChild
           >
             <Button
+              ref={ref}
               variant="default"
               size="lg"
               onClick={() => loadMore(10)}

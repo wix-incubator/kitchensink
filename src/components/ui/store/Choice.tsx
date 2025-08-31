@@ -45,7 +45,7 @@ export const ChoiceText = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'data-[selected="false"]:text-content-primary border-surface-subtle hover:bg-primary/10',
+        "inline-flex items-center px-2 py-1 border transition-all duration-200 border-color-swatch hover:border-color-swatch-hover hover:scale-105 data-[selected='true']:border-accent-strong data-[selected='true']:shadow-lg data-[selected='true']:bg-primary data-[selected='true']:scale-115 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale",
         props.className
       )}
     >
@@ -93,7 +93,7 @@ export const ChoiceColor = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        "w-10 h-10 rounded-full border-4 transition-all duration-200 border-color-swatch hover:border-color-swatch-hover hover:scale-105 data-[selected='true']:border-brand-primary data-[selected='true']:shadow-lg data-[selected='true']:scale-110 data-[selected='true']:ring-2 data-[selected='true']:ring-brand-primary/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale",
+        "w-10 h-10 rounded-full border-4 transition-all duration-200 border-color-swatch hover:border-color-swatch-hover hover:scale-105 data-[selected='true']:border-accent-strong data-[selected='true']:ring-1 data-[selected='true']:scale-115 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale",
         props.className
       )}
     >
@@ -135,7 +135,7 @@ export const ChoiceFreeText = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'p-3 border-brand-light bg-surface-primary text-content-primary placeholder:text-content-subtle focus-visible:border-brand-medium resize-none',
+        'p-3 border-brand-light bg-surface-primary text-content-primary placeholder:text-content-subtle resize-none',
         props.className
       )}
     >

@@ -39,7 +39,6 @@ import { productsV3 } from '@wix/stores';
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
 import { getStockStatusMessage } from './enums/product-status-enums';
-import { Button } from '@/components/ui/button';
 
 import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 
@@ -171,10 +170,8 @@ export default function ProductDetails({
                               <OptionChoiceRepeater>
                                 <>
                                   <ChoiceColor />
-                                  <ChoiceText asChild>
-                                    <Button variant={'outline'}></Button>
-                                  </ChoiceText>
-                                  <ChoiceFreeText placeholder="dsfd" />
+                                  <ChoiceText className="text-lg" />
+                                  <ChoiceFreeText />
                                 </>
                               </OptionChoiceRepeater>
                             </div>
