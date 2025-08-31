@@ -45,7 +45,7 @@ export const ChoiceText = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        'data-[selected="false"]:text-content-primary border-surface-subtle hover:bg-primary/10',
+        "inline-flex items-center px-2 py-1 text-xs rounded border cursor-pointer data-[selected='true']:border-brand-primary data-[selected='true']:shadow-lg data-[selected='true']:scale-110 data-[selected='true']:ring-2 data-[selected='true']:ring-brand-primary/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale",
         props.className
       )}
     >

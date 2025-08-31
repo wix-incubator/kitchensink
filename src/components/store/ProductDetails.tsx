@@ -171,9 +171,7 @@ export default function ProductDetails({
                               <OptionChoiceRepeater>
                                 <>
                                   <ChoiceColor />
-                                  <ChoiceText asChild>
-                                    <Button variant={'outline'}></Button>
-                                  </ChoiceText>
+                                  <ChoiceText />
                                   <ChoiceFreeText placeholder="dsfd" />
                                 </>
                               </OptionChoiceRepeater>
