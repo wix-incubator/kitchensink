@@ -3,6 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Product as ProductPrimitive } from '@wix/headless-stores/react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '../badge';
 
 /**
  * Root component for product display and interaction.
@@ -1015,3 +1016,44 @@ export const ProductVariantWeight = React.forwardRef<
 });
 
 ProductVariantWeight.displayName = 'ProductVariantWeight';
+
+/**
+ * Displays the product ribbon/badge.
+ * Shows promotional badges, labels, or status indicators on the product.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="relative">
+ *     <ProductMediaGallery />
+ *     <ProductRibbon className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs rounded" />
+ *   </div>
+ *
+ *   <ProductRibbon asChild>
+ *     {({ ribbon }) => (
+ *       <span className="bg-blue-500 text-white px-2 py-1 text-xs rounded">
+ *         {ribbon.name}
+ *       </span>
+ *     )}
+ *   </ProductRibbon>
+ * </Product>
+ * ```
+ */
+export const ProductRibbon = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.Ribbon>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.Ribbon>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.Ribbon
+      {...props}
+      ref={ref}
+      className={cn('absolute top-2 z-10 px-3 py-1 left-2', props.className)}
+      asChild
+    >
+      <Badge variant="secondary" />
+    </ProductPrimitive.Ribbon>
+  );
+});
+
+ProductRibbon.displayName = 'ProductRibbon';

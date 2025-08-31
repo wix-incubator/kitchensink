@@ -13,15 +13,15 @@ import {
 
 import React from 'react';
 import { useNavigation } from '../NavigationContext';
-import { Badge } from '@/components/ui/badge';
+
 import {
   ProductCompareAtPrice,
   ProductDescription,
   ProductMediaGallery,
   ProductName,
   ProductPrice,
-  ProductRaw,
   ProductSlug,
+  ProductRibbon,
   ProductStock,
   ProductVariantOptionRepeater,
   ProductVariantOptions,
@@ -164,6 +164,8 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                 <Products>
                   <ProductRepeater>
                     <Card className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between">
+                      {/* Product Ribbon */}
+                      <ProductRibbon />
                       <CardContent className="p-4 pb-0">
                         {/* Product Image */}
                         <div className="aspect-square bg-surface-primary rounded-lg mb-4 overflow-hidden relative">
@@ -171,21 +173,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                             <StyledMediaGallery.Viewport className="object-cover group-hover:scale-110 transition-transform duration-300" />
                           </ProductMediaGallery>
                         </div>
-                        {/* Product Ribbon */}
-                        <ProductRaw asChild>
-                          {({ product }) =>
-                            product.ribbon?.name && (
-                              <div className="absolute top-2 left-2 z-10">
-                                <Badge
-                                  variant="secondary"
-                                  className="hover:bg-secondary"
-                                >
-                                  {product.ribbon.name}
-                                </Badge>
-                              </div>
-                            )
-                          }
-                        </ProductRaw>
+
                         {/* Product Title */}
                         <ProductSlug asChild>
                           {({ slug }) => (
