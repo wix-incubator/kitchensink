@@ -26,11 +26,11 @@ import {
   ProductVariantSelectorReset,
 } from '@/components/ui/store/Product';
 import {
-  LoadMoreTrigger,
+  ProductLoadMoreTrigger,
   ProductList,
   ProductRepeater,
   Products,
-  TotalsDisplayed,
+  ProductTotalsDisplayed,
 } from '@/components/ui/store/ProductList';
 import CategoryPicker from './CategoryPicker';
 import { ProductActionButtons } from './ProductActionButtons';
@@ -140,7 +140,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                             />
                           </svg>
-                          <TotalsDisplayed
+                          <ProductTotalsDisplayed
                             className="text-brand-light text-sm sm:text-base"
                             label="Showing {length} products"
                           />
@@ -280,7 +280,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
           <div className="text-center mt-12 mb-8">
             <div className="flex flex-col items-center gap-4">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LoadMoreTrigger
+                <ProductLoadMoreTrigger
                   label="Load More Products"
                   loadingState={
                     <span className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                   }
                 />
               </div>
-              <TotalsDisplayed
+              <ProductTotalsDisplayed
                 className="text-content-muted text-sm mt-4"
                 label={'{length} products loaded'}
               />
