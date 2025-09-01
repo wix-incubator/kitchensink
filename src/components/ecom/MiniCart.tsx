@@ -141,7 +141,7 @@ export function MiniCartIcon() {
               onClick={open}
               variant="ghost"
               size="icon"
-              className="relative p-2 text-content-primary hover:text-brand-light transition-colors"
+              className="relative p-2 text-content-primary hover:text-brand-light transition-colors [&_svg]:size-6"
             >
               <svg
                 className="w-6 h-6"
