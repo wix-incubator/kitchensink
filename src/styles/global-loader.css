@@ -1,3 +1,37 @@
 /* using tailwindcss as a base for styles */
 @import 'tailwindcss';
 @import '@wix/wix-vibe-plugins/plugins-theme.css';
+
+/* Semantic theme classes used in data attribute patterns - converted to Tailwind utilities 
+ * These classes are wrapped as @utility so Tailwind can recognize them and generate 
+ * data attribute modifiers like data-[selected='true']:text-content-primary.
+ * Without @utility, Tailwind wouldn't know about these custom classes and couldn't
+ * create the data-* variants needed for interactive state styling.
+ */
+@utility text-content-primary {
+  color: var(--theme-text-content);
+}
+
+@utility text-status-success {
+  color: var(--theme-text-success);
+}
+
+@utility text-status-error {
+  color: var(--theme-text-error);
+}
+
+@utility bg-surface-primary {
+  background-color: var(--theme-bg-options);
+}
+
+@utility border-accent-strong {
+  border-color: var(--theme-border-accent-30);
+}
+
+@utility border-color-swatch {
+  border-color: var(--theme-color-border-40);
+}
+
+@utility border-color-swatch-hover {
+  border-color: var(--theme-color-border-80);
+}
