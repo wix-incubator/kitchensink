@@ -19,7 +19,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
           <div
             className={`bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle ${className}`}
           >
-            <ProductList.Filter>
+            <ProductList.Filter.Root>
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-content-primary flex items-center gap-2">
@@ -78,7 +78,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                   </Filter.FilterOptionRepeater>
                 </Filter.FilterOptions>
               </div>
-            </ProductList.Filter>
+            </ProductList.Filter.Root>
           </div>
         </div>
       </div>
