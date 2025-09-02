@@ -20,6 +20,7 @@ import {
   ProductVariantSKU,
   ProductVariantWeight,
   ProductVariantSelectorReset,
+  ProductVariantStock,
 } from '@/components/ui/store/Product';
 import {
   OptionName,
@@ -222,6 +223,7 @@ export default function ProductDetails({
               {/* Add to Cart */}
               <div className="space-y-4">
                 <ProductActionButtons showBuyNow={true} />
+                <ProductVariantStock />
               </div>
 
               {/* Product Details */}
