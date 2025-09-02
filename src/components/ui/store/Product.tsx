@@ -1071,8 +1071,25 @@ export const ProductVariantStock = React.forwardRef<
         'data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="pre-order"]:text-status-success',
         props.className
       )}
+      asChild
     >
-      {props.children}
+      {React.forwardRef((props, ref) => {
+        return (
+          <div
+            ref={ref as React.RefObject<HTMLDivElement>}
+            className="flex items-center gap-2"
+          >
+            <span
+              className={`h-3 w-3 inline-block rounded-full ${
+                props.status === 'out-of-stock'
+                  ? 'status-dot-danger'
+                  : 'status-dot-success'
+              }`}
+            />
+            {props.label}
+          </div>
+        );
+      })}
     </ProductPrimitive.ProductVariant.Stock>
   );
 });
