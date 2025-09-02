@@ -1062,7 +1062,7 @@ export const ProductVariantStock = React.forwardRef<
       ref={ref}
       labels={{
         inStock: 'In Stock',
-        limitedStock: 'Limited Stock',
+        limitedStock: 'In Stock',
         outOfStock: 'Out of Stock',
         preOrder: 'Available for Pre-order',
         ...props.labels,
