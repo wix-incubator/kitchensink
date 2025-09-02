@@ -598,6 +598,9 @@ ProductStock.displayName = 'ProductStock';
  * </Product>
  * ```
  */
+
+const btnClass = 'flex-1 relative btn-primary';
+
 export const ProductActionAddToCart = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.ProductActionAddToCart>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductActionAddToCart>
@@ -615,7 +618,7 @@ export const ProductActionAddToCart = React.forwardRef<
             ref={ref as React.RefObject<HTMLButtonElement>}
             variant="default"
             size="lg"
-            className="flex-1 relative"
+            className={btnClass}
             {...restProps}
           >
             {!isLoading ? props.label : props.loadingState}
@@ -664,10 +667,7 @@ export const ProductActionBuyNow = React.forwardRef<
             ref={ref as React.RefObject<HTMLButtonElement>}
             variant="secondary"
             size="lg"
-            className={cn(
-              'flex-1 transform hover:scale-105 disabled:hover:scale-100',
-              props.className
-            )}
+            className={btnClass}
             {...restProps}
           >
             {!isLoading ? props.label : props.loadingState}
@@ -716,7 +716,7 @@ export const ProductActionPreOrder = React.forwardRef<
             ref={ref as React.RefObject<HTMLButtonElement>}
             variant="default"
             size="lg"
-            className="flex-1 relative"
+            className={btnClass}
             {...restProps}
           >
             {!isLoading ? props.label : props.loadingState}
