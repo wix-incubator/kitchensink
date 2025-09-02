@@ -14,7 +14,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   showBuyNow = false,
 }) => {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 w-full">
       <ProductActionAddToCart
         label="Add to Cart"
         loadingState={
