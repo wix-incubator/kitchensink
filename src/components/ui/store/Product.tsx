@@ -1068,7 +1068,7 @@ export const ProductVariantStock = React.forwardRef<
         ...props.labels,
       }}
       className={cn(
-        'data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="pre-order"]:text-status-success',
+        'text-sm data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="pre-order"]:text-status-success',
         props.className
       )}
       asChild
@@ -1077,7 +1077,7 @@ export const ProductVariantStock = React.forwardRef<
         return (
           <div
             ref={ref as React.RefObject<HTMLDivElement>}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1"
           >
             <span
               className={`h-3 w-3 inline-block rounded-full ${
