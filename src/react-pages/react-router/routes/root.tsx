@@ -57,14 +57,22 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
   );
 }
 
-export function MiniCart({ children }: { children?: ReactNode }) {
+export function MiniCart({
+  cartIcon,
+  cartIconClassName,
+  children,
+}: {
+  cartIcon?: React.ComponentType;
+  cartIconClassName?: string;
+  children?: ReactNode;
+}) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 
   return (
     <>
       <MiniCartModalProvider>
-        <MiniCartIcon />
+        <MiniCartIcon Icon={cartIcon} className={cartIconClassName} />
 
         <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
           <StoreLayoutContent
