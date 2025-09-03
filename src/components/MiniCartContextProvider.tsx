@@ -23,13 +23,13 @@ export function useMiniCartContext(): MiniCartModalContextValue {
   return context;
 }
 
-interface MiniCartContextProviderProps {
+interface MiniCartModalContextProviderProps {
   children: ReactNode;
 }
 
-export function MiniCartContextProvider({
+export function MiniCartModalContextProvider({
   children,
-}: MiniCartContextProviderProps) {
+}: MiniCartModalContextProviderProps) {
   const [isOpen, setIsOpened] = useState(false);
 
   const open = () => setIsOpened(true);
