@@ -49,7 +49,9 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
           <NavigationProvider
             navigationComponent={ReactRouterNavigationComponent}
           >
-            {props.children}
+            <MiniCartModalContextProvider>
+              {props.children}
+            </MiniCartModalContextProvider>
           </NavigationProvider>
         </CurrentCart>
       </Commerce.Root>
@@ -63,23 +65,21 @@ export function MiniCart({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      <MiniCartModalContextProvider>
-        <MiniCartIcon />
+      <MiniCartIcon />
 
-        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-          <StoreLayoutContent
-            children={children}
-            showSuccessMessage={showSuccessMessage}
-            setShowSuccessMessage={setShowSuccessMessage}
-          />
-        </CurrentCart>
-        {showSuccessMessage && (
-          <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
-            Added to cart successfully!
-          </div>
-        )}
-        <MiniCartContent />
-      </MiniCartModalContextProvider>
+      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+        <StoreLayoutContent
+          children={children}
+          showSuccessMessage={showSuccessMessage}
+          setShowSuccessMessage={setShowSuccessMessage}
+        />
+      </CurrentCart>
+      {showSuccessMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
+          Added to cart successfully!
+        </div>
+      )}
+      <MiniCartContent />
     </>
   );
 }
