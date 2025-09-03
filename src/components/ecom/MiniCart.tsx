@@ -128,40 +128,43 @@ const CouponFormMini = ({
   );
 };
 
-const defaultIcon = (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h12"
-    />
-  </svg>
+const DefaultMiniCartIcon = () => (
+  <div className="p-2 text-content-primary ">
+    <svg
+      className="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h12"
+      />
+    </svg>
+  </div>
 );
 
 export function MiniCartIcon({
-  icon = defaultIcon,
-}: { icon?: React.ReactNode } = {}) {
+  Icon = DefaultMiniCartIcon,
+  className = 'fixed top-6 right-6 z-50',
+}: { Icon?: React.ComponentType; className?: string } = {}) {
   const { open } = useMiniCartContext();
   return (
     <>
-      {/* Fixed Cart Icon */}
-      <div className="fixed top-6 right-6 z-50 text-content-primary">
+      {/* Cart Icon */}
+      <div className={className}>
         <CartSummary>
           {({ totalItems }) => (
             <Button
               data-testid="mini-cart-icon"
               onClick={open}
-              variant="ghost"
+              variant="link"
               size="icon"
-              className="relative p-2 text-content-primary hover:text-brand-light transition-colors [&_svg]:size-6"
+              className="relative [&_svg]:pointer-events-none [&_svg]:size-6"
             >
-              {icon}
+              <Icon />
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-accent-medium text-content-primary text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
