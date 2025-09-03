@@ -13,6 +13,9 @@ const MiniCartModalContext = createContext<
 export function useMiniCartContext(): MiniCartModalContextValue {
   const context = useContext(MiniCartModalContext);
   if (!context) {
+    console.error(
+      'useMiniCartModal must be used within a MiniCartModalProvider'
+    );
     throw new Error(
       'useMiniCartModal must be used within a MiniCartModalProvider'
     );
