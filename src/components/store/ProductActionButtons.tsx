@@ -37,7 +37,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       size="lg"
       onClick={onClick}
       disabled={disabled}
-      className="flex-1 relative"
+      className="add-to-cart-button flex-1 relative"
     >
       {isLoading ? (
         <>
@@ -83,7 +83,7 @@ const BuyNowButton: React.FC<BuyNowButtonProps> = ({
       size="lg"
       onClick={onClick}
       disabled={disabled}
-      className="flex-1 transform hover:scale-105 disabled:hover:scale-100"
+      className="buy-now-button flex-1 transform hover:scale-105 disabled:hover:scale-100"
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">

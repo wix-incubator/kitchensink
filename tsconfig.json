@@ -14,6 +14,36 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@/pages/*": [
+        "./src/pages/*"
+      ],
+      "@/react-pages/*": [
+        "./src/react-pages/*"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/headless/*": [
+        "./src/headless/*"
+      ],
+      "@/actions/*": [
+        "./src/actions/*"
+      ],
+      "@/wix/*": [
+        "./src/wix/*"
       ]
     }
   }

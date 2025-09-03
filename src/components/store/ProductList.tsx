@@ -18,7 +18,10 @@ import { useNavigation } from '../NavigationContext';
 import QuickViewModal from './QuickViewModal';
 import { ProductActionButtons } from './ProductActionButtons';
 import { CurrentCart } from '@wix/headless-ecom/react';
-import type { LineItem } from '@wix/headless-ecom/services';
+import type {
+  CurrentCartServiceConfig,
+  LineItem,
+} from '@wix/headless-ecom/services';
 import { productsV3 } from '@wix/stores';
 import SortDropdown from './SortDropdown';
 import CategoryPicker from './CategoryPicker';
@@ -33,20 +36,27 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { MediaGallery } from '@wix/headless-media/react';
+import { cn } from '@/lib/utils';
 
 interface ProductListProps {
+  id: string;
+  className: string;
   productsListConfig: ProductsListServiceConfig;
   productsListSearchConfig: ProductsListSearchServiceConfig;
   productPageRoute: string;
   categoriesListConfig: CategoriesListServiceConfig;
+  currentCartServiceConfig: CurrentCartServiceConfig;
   currentCategorySlug: string;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
+  id,
+  className,
   productsListConfig,
   productsListSearchConfig,
   productPageRoute,
   categoriesListConfig,
+  currentCartServiceConfig,
   currentCategorySlug,
 }) => {
   const [quickViewProduct, setQuickViewProduct] =
@@ -64,124 +74,138 @@ export const ProductList: React.FC<ProductListProps> = ({
   };
 
   return (
-    <TooltipProvider>
-      <HeadlessProductList.Root
-        productsListConfig={productsListConfig}
-        productsListSearchConfig={productsListSearchConfig}
-      >
-        <div className="min-h-screen">
-          {/* Error State */}
-          <HeadlessProductList.Error>
-            {({ error }) => (
-              <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <svg
-                    className="w-5 h-5 text-status-error flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p className="text-status-error text-sm sm:text-base font-medium">
-                    {error}
-                  </p>
+    <CurrentCart.Root currentCartServiceConfig={currentCartServiceConfig}>
+      <TooltipProvider>
+        <HeadlessProductList.Root
+          productsListConfig={productsListConfig}
+          productsListSearchConfig={productsListSearchConfig}
+        >
+          <div className={cn('min-h-screen', className)} id={id}>
+            {/* Error State */}
+            <HeadlessProductList.Error>
+              {({ error }) => (
+                <div className="bg-surface-error border border-status-error rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 backdrop-blur-sm">
+                  <div className="flex items-center gap-3">
+                    <svg
+                      className="w-5 h-5 text-status-error flex-shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <p className="text-status-error text-sm sm:text-base font-medium">
+                      {error}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </HeadlessProductList.Error>
+
+            {/* Header Controls */}
+            <Card className="border-surface-subtle mb-6 bg-surface-card">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <ProductListFilters.CategoryFilter>
+                      {({ selectedCategory, setSelectedCategory }) => {
+                        return (
+                          <CategoryPicker
+                            categoriesListConfig={categoriesListConfig}
+                            currentCategorySlug={
+                              selectedCategory?.slug || currentCategorySlug
+                            }
+                            onCategorySelect={setSelectedCategory}
+                          />
+                        );
+                      }}
+                    </ProductListFilters.CategoryFilter>
+                  </div>
+                  <SortDropdown />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Filters Section */}
+            {productsListSearchConfig && (
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                {/* Filters Sidebar */}
+                <div className="w-full lg:w-80 lg:flex-shrink-0">
+                  <div className="lg:sticky lg:top-6">
+                    <ProductFilters />
+                  </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="flex-1 min-w-0">
+                  <ProductGrid
+                    productPageRoute={productPageRoute}
+                    openQuickView={openQuickView}
+                  />
                 </div>
               </div>
             )}
-          </HeadlessProductList.Error>
 
-          {/* Header Controls */}
-          <Card className="border-surface-subtle mb-6 bg-surface-card">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <ProductListFilters.CategoryFilter>
-                    {({ selectedCategory, setSelectedCategory }) => {
-                      return (
-                        <CategoryPicker
-                          categoriesListConfig={categoriesListConfig}
-                          currentCategorySlug={
-                            selectedCategory?.slug || currentCategorySlug
-                          }
-                          onCategorySelect={setSelectedCategory}
-                        />
-                      );
-                    }}
-                  </ProductListFilters.CategoryFilter>
-                </div>
-                <SortDropdown />
-              </div>
-            </CardContent>
-          </Card>
+            {/* Products Grid (when no filters config provided) */}
+            {!productsListSearchConfig && (
+              <ProductGrid
+                productPageRoute={productPageRoute}
+                openQuickView={openQuickView}
+              />
+            )}
 
-          {/* Filters Section */}
-          {productsListSearchConfig && (
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              {/* Filters Sidebar */}
-              <div className="w-full lg:w-80 lg:flex-shrink-0">
-                <div className="lg:sticky lg:top-6">
-                  <ProductFilters />
-                </div>
-              </div>
+            {/* Load More Section */}
+            <LoadMoreSection />
+          </div>
 
-              {/* Main Content Area */}
-              <div className="flex-1 min-w-0">
-                <ProductGrid
-                  productPageRoute={productPageRoute}
-                  openQuickView={openQuickView}
-                />
-              </div>
-            </div>
+          {/* Quick View Modal */}
+          {quickViewProduct && (
+            <ProductCore.Root
+              productServiceConfig={{ productSlug: quickViewProduct.slug! }}
+            >
+              <ProductCore.Loading>
+                {({ isLoading }) => (
+                  <ProductCore.Content>
+                    {({ product }) => (
+                      <QuickViewModal
+                        product={product}
+                        isLoading={isLoading}
+                        isOpen={isQuickViewOpen}
+                        onClose={closeQuickView}
+                        productPageRoute={productPageRoute}
+                      />
+                    )}
+                  </ProductCore.Content>
+                )}
+              </ProductCore.Loading>
+            </ProductCore.Root>
           )}
-
-          {/* Products Grid (when no filters config provided) */}
-          {!productsListSearchConfig && (
-            <ProductGrid
-              productPageRoute={productPageRoute}
-              openQuickView={openQuickView}
-            />
-          )}
-
-          {/* Load More Section */}
-          <LoadMoreSection />
-        </div>
-
-        {/* Quick View Modal */}
-        {quickViewProduct && (
-          <ProductCore.Root
-            productServiceConfig={{ productSlug: quickViewProduct.slug! }}
-          >
-            <ProductCore.Loading>
-              {({ isLoading }) => (
-                <ProductCore.Content>
-                  {({ product }) => (
-                    <QuickViewModal
-                      product={product}
-                      isLoading={isLoading}
-                      isOpen={isQuickViewOpen}
-                      onClose={closeQuickView}
-                      productPageRoute={productPageRoute}
-                    />
-                  )}
-                </ProductCore.Content>
-              )}
-            </ProductCore.Loading>
-          </ProductCore.Root>
-        )}
-      </HeadlessProductList.Root>
-    </TooltipProvider>
+        </HeadlessProductList.Root>
+      </TooltipProvider>
+    </CurrentCart.Root>
   );
 };
 
-export const ProductListSkeleton = () => {
+export const ProductListSkeleton = ({
+  id,
+  className,
+}: {
+  id?: string;
+  className?: string;
+}) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+    <div
+      id={id}
+      className={cn(
+        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
+        className
+      )}
+    >
       {Array.from({ length: 8 }).map((_, i) => (
         <Card
           key={i}
@@ -364,7 +388,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             data-testid="product-item"
             data-product-id={product._id}
             data-product-available={available}
-            className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
+            className="product-item relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between"
           >
             {/* Enhanced Success Message */}
             {showSuccessMessage && (
@@ -419,7 +443,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 {product.media?.main?.image ? (
                   <WixMediaImage
                     media={{ image: product.media.main.image }}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="product-image w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     alt={product.media.main.altText || ''}
                   />
                 ) : (
@@ -477,7 +501,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
               {/* Product Ribbon */}
               {product.ribbon?.name && (
                 <div className="absolute top-2 left-2 z-10">
-                  <Badge variant="secondary" className="hover:bg-secondary">
+                  <Badge
+                    variant="secondary"
+                    className="product-ribbon hover:bg-secondary"
+                  >
                     {product.ribbon.name}
                   </Badge>
                 </div>
@@ -488,7 +515,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 data-testid="title-navigation"
                 route={`${productPageRoute}/${product.slug}`}
               >
-                <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors font-theme-heading">
+                <CardTitle className="product-title text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors font-theme-heading">
                   {product.name}
                 </CardTitle>
               </Navigation>
@@ -724,7 +751,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 route={`${productPageRoute}/${product.slug}`}
                 className="w-full"
               >
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="view-product-button w-full"
+                >
                   View Product
                   <svg
                     className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
