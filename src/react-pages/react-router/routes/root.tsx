@@ -12,9 +12,9 @@ import {
 import { Link } from 'react-router-dom';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
 import {
-  MiniCartContextProvider,
-  useMiniCartContext,
-} from '@/components/MiniCartContextProvider';
+  MiniCartModalProvider,
+  useMiniCartModal,
+} from '@/components/MiniCartModal';
 import { Commerce } from '@/components/ui/ecom/Commerce';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
@@ -44,42 +44,50 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
 
   return (
     <div data-testid="main-container">
-      <MiniCartContextProvider>
-        <Commerce.Root checkoutServiceConfig={{}}>
-          <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-            <NavigationProvider
-              navigationComponent={ReactRouterNavigationComponent}
-            >
-              {props.children}
-            </NavigationProvider>
-          </CurrentCart>
-        </Commerce.Root>
-      </MiniCartContextProvider>
+      <Commerce.Root checkoutServiceConfig={{}}>
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+          <NavigationProvider
+            navigationComponent={ReactRouterNavigationComponent}
+          >
+            {props.children}
+          </NavigationProvider>
+        </CurrentCart>
+      </Commerce.Root>
     </div>
   );
 }
 
-export function MiniCart({ children }: { children?: ReactNode }) {
+export function MiniCart({
+  cartIcon,
+  cartIconClassName,
+  children,
+}: {
+  cartIcon?: React.ComponentType;
+  cartIconClassName?: string;
+  children?: ReactNode;
+}) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
 
   return (
     <>
-      <MiniCartIcon />
+      <MiniCartModalProvider>
+        <MiniCartIcon Icon={cartIcon} className={cartIconClassName} />
 
-      <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-        <StoreLayoutContent
-          children={children}
-          showSuccessMessage={showSuccessMessage}
-          setShowSuccessMessage={setShowSuccessMessage}
-        />
-      </CurrentCart>
-      {showSuccessMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
-          Added to cart successfully!
-        </div>
-      )}
-      <MiniCartContent />
+        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+          <StoreLayoutContent
+            children={children}
+            showSuccessMessage={showSuccessMessage}
+            setShowSuccessMessage={setShowSuccessMessage}
+          />
+        </CurrentCart>
+        {showSuccessMessage && (
+          <div className="fixed top-4 right-4 z-50 bg-status-success-medium backdrop-blur-sm text-content-primary px-6 py-3 rounded-xl shadow-lg border border-status-success animate-pulse">
+            Added to cart successfully!
+          </div>
+        )}
+        <MiniCartContent />
+      </MiniCartModalProvider>
     </>
   );
 }
@@ -93,7 +101,7 @@ function StoreLayoutContent({
   showSuccessMessage: boolean;
   setShowSuccessMessage: (show: boolean) => void;
 }) {
-  const { open } = useMiniCartContext();
+  const { open } = useMiniCartModal();
   return (
     <>
       <CartLineItemAdded>
