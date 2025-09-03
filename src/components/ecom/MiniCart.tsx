@@ -144,7 +144,9 @@ const defaultIcon = (
   </svg>
 );
 
-export function MiniCartIcon(icon = defaultIcon) {
+export function MiniCartIcon({
+  icon = defaultIcon,
+}: { icon?: React.ReactNode } = {}) {
   const { open } = useMiniCartModal();
   return (
     <>
