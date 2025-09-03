@@ -147,7 +147,7 @@ const defaultIcon = (
 export function MiniCartIcon({
   icon = defaultIcon,
 }: { icon?: React.ReactNode } = {}) {
-  const { open } = useMiniCartModal();
+  const { open } = useMiniCartContext();
   return (
     <>
       {/* Fixed Cart Icon */}
