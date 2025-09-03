@@ -44,15 +44,17 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
 
   return (
     <div data-testid="main-container">
-      <Commerce.Root checkoutServiceConfig={{}}>
-        <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-          <NavigationProvider
-            navigationComponent={ReactRouterNavigationComponent}
-          >
-            {props.children}
-          </NavigationProvider>
-        </CurrentCart>
-      </Commerce.Root>
+      <MiniCartContextProvider>
+        <Commerce.Root checkoutServiceConfig={{}}>
+          <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+            <NavigationProvider
+              navigationComponent={ReactRouterNavigationComponent}
+            >
+              {props.children}
+            </NavigationProvider>
+          </CurrentCart>
+        </Commerce.Root>
+      </MiniCartContextProvider>
     </div>
   );
 }
