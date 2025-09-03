@@ -1,0 +1,68 @@
+---
+import {
+  loadBlogFeedServiceConfig,
+  loadBlogCategoriesServiceConfig,
+} from '@wix/headless-blog/services';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogFeedPage from '../../../react-pages/blog/index';
+import {
+  loadSEOTagsServiceConfig,
+  type SEOTagsServiceConfig,
+} from '@wix/headless-seo/services';
+import { SEO } from '@wix/headless-seo/react';
+
+const { slug } = Astro.params;
+export const prerender = false;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+let blogFeedServiceConfig;
+let blogCategoriesServiceConfig;
+let categoryName = slug;
+let seoTagsServiceConfig: SEOTagsServiceConfig;
+
+try {
+  [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
+    loadBlogFeedServiceConfig({
+      categorySlug: slug,
+      pageSize: 3,
+      sort: [
+        {
+          fieldName: 'firstPublishedDate',
+          order: 'DESC',
+        },
+      ],
+    }),
+    loadBlogCategoriesServiceConfig(),
+  ]);
+
+  // Get the category name for the page title
+  categoryName = blogFeedServiceConfig.initialCategory?.label || slug;
+
+  seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+    pageUrl: Astro.url.href,
+    itemData: {
+      slug,
+      pageName: categoryName,
+      seoData: blogFeedServiceConfig.initialCategory?.seoData,
+    },
+  });
+} catch (error) {
+  // If category not found, redirect to 404
+  return Astro.rewrite('/404');
+}
+---
+
+<BaseLayout>
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
+
+  <BlogFeedPage
+    client:load
+    pathname={Astro.url.pathname}
+    blogFeedServiceConfig={blogFeedServiceConfig}
+    blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+    slot="body"
+  />
+</BaseLayout>

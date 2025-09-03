@@ -1,0 +1,56 @@
+---
+import {
+  loadBlogFeedServiceConfig,
+  loadBlogPostServiceConfig,
+} from '@wix/headless-blog/services';
+import { SEO } from '@wix/headless-seo/react';
+import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostPage from '../../react-pages/blog/[slug]';
+
+const { slug } = Astro.params;
+export const prerender = false;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+const blogPostServiceConfigResult = await loadBlogPostServiceConfig({
+  postSlug: slug,
+});
+
+if (blogPostServiceConfigResult.type === 'notFound') {
+  return Astro.rewrite('/404');
+}
+
+const blogPostServiceConfig = blogPostServiceConfigResult.config;
+
+const [recentPostsServiceConfig, seoTagsServiceConfig] = await Promise.all([
+  loadBlogFeedServiceConfig({
+    pageSize: 3,
+    sort: [{ fieldName: 'firstPublishedDate', order: 'DESC' }],
+    postIds: blogPostServiceConfig.post.relatedPostIds,
+    excludePostIds: [blogPostServiceConfig.post._id],
+  }),
+  loadSEOTagsServiceConfig({
+    pageUrl: Astro.url.href,
+    itemData: {
+      slug,
+      pageName: 'Post',
+      seoData: blogPostServiceConfig.post.seoData,
+    },
+  }),
+]);
+---
+
+<BaseLayout>
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
+
+  <BlogPostPage
+    client:load
+    blogPostServiceConfig={blogPostServiceConfig}
+    recentPostsServiceConfig={recentPostsServiceConfig}
+    href={Astro.url.href}
+    slot="body"
+  />
+</BaseLayout>

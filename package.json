@@ -63,6 +63,7 @@
     "@wix/seo": "^1.0.27",
     "@wix/stores": "^1.0.512",
     "@wix/essentials": "^0.1.24",
+    "@wix/headless-blog": "^0.0.4",
     "@wix/headless-components": "^0.0.12",
     "@wix/image": "^1.392.0",
     "@wix/media": "^1.0.184",
