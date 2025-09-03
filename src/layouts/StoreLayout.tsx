@@ -4,7 +4,7 @@ import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
 import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
 import {
-  MiniCartModalContextProvider,
+  MiniCartContextProvider,
   useMiniCartContext,
 } from '@/components/MiniCartContextProvider';
 import { Commerce } from '@/components/ui/ecom/Commerce';
@@ -23,7 +23,7 @@ export function StoreLayout({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   return (
-    <MiniCartModalContextProvider>
+    <MiniCartContextProvider>
       <Commerce.Root checkoutServiceConfig={{}}>
         <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
           <StoreLayoutContent
@@ -33,7 +33,7 @@ export function StoreLayout({
           />
         </CurrentCart>
       </Commerce.Root>
-    </MiniCartModalContextProvider>
+    </MiniCartContextProvider>
   );
 }
 

@@ -10,26 +10,64 @@ const MiniCartModalContext = createContext<
   MiniCartModalContextValue | undefined
 >(undefined);
 
+/**
+ * Hook to access the mini cart modal context value.
+ *
+ * ⚠️ **PROVIDER REQUIREMENT**: This hook can ONLY be used within components that are wrapped by
+ * the `<MiniCartContextProvider>` component. Using this hook outside of the provider will
+ * result in a runtime error.
+ *
+ * @throws {Error} Throws an error if used outside of MiniCartContextProvider
+ *
+ * @example
+ * ```tsx
+ * // ✅ CORRECT - Component is wrapped with provider
+ * function App() {
+ *   return (
+ *     <MiniCartContextProvider>
+ *       <MyComponent /> // Can use useMiniCartContext here
+ *     </MiniCartContextProvider>
+ *   );
+ * }
+ *
+ * function MyComponent() {
+ *   const { isOpen, open, close } = useMiniCartContext(); // ✅ Safe to use
+ *   return <div>{isOpen ? 'Cart is open' : 'Cart is closed'}</div>;
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // ❌ INCORRECT - Will throw runtime error
+ * function MyComponent() {
+ *   const { isOpen, open, close } = useMiniCartContext(); // ❌ Error: not wrapped
+ *   return <div>This will fail</div>;
+ * }
+ * ```
+ *
+ * @returns {MiniCartModalContextValue} The context value containing:
+ *   - `isOpen`: boolean - Whether the mini cart modal is currently open
+ *   - `open`: function - Function to open the mini cart modal
+ *   - `close`: function - Function to close the mini cart modal
+ */
 export function useMiniCartContext(): MiniCartModalContextValue {
   const context = useContext(MiniCartModalContext);
   if (!context) {
-    console.error(
-      'useMiniCartModal must be used within a MiniCartModalProvider'
-    );
     throw new Error(
-      'useMiniCartModal must be used within a MiniCartModalProvider'
+      'useMiniCartContext must be used within a MiniCartContextProvider. ' +
+        'Make sure your component is wrapped with <MiniCartContextProvider>.'
     );
   }
   return context;
 }
 
-interface MiniCartModalContextProviderProps {
+interface MiniCartContextProviderProps {
   children: ReactNode;
 }
 
-export function MiniCartModalContextProvider({
+export function MiniCartContextProvider({
   children,
-}: MiniCartModalContextProviderProps) {
+}: MiniCartContextProviderProps) {
   const [isOpen, setIsOpened] = useState(false);
 
   const open = () => setIsOpened(true);

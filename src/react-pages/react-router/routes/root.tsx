@@ -12,7 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
 import {
-  MiniCartModalContextProvider,
+  MiniCartContextProvider,
   useMiniCartContext,
 } from '@/components/MiniCartContextProvider';
 import { Commerce } from '@/components/ui/ecom/Commerce';
@@ -49,9 +49,7 @@ export function WixServicesProvider(props: { children: React.ReactNode }) {
           <NavigationProvider
             navigationComponent={ReactRouterNavigationComponent}
           >
-            <MiniCartModalContextProvider>
-              {props.children}
-            </MiniCartModalContextProvider>
+            <MiniCartContextProvider>{props.children}</MiniCartContextProvider>
           </NavigationProvider>
         </CurrentCart>
       </Commerce.Root>
