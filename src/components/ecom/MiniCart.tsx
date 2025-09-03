@@ -36,7 +36,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useMiniCartModal } from '../MiniCartModal';
+import { useMiniCartContext } from '../MiniCartContextProvider';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
@@ -147,7 +147,7 @@ const defaultIcon = (
 export function MiniCartIcon({
   icon = defaultIcon,
 }: { icon?: React.ReactNode } = {}) {
-  const { open } = useMiniCartModal();
+  const { open } = useMiniCartContext();
   return (
     <>
       {/* Fixed Cart Icon */}
@@ -176,7 +176,7 @@ export function MiniCartIcon({
 }
 
 export function MiniCartContent() {
-  const { close, isOpen } = useMiniCartModal();
+  const { close, isOpen } = useMiniCartContext();
   // Lock body scroll when modal is open
   if (typeof document !== 'undefined') {
     if (isOpen) {
