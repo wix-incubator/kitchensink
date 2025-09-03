@@ -35,3 +35,11 @@
 @utility border-color-swatch-hover {
   border-color: var(--theme-color-border-80);
 }
+
+@utility status-dot-success {
+  background-color: var(--theme-success-500);
+}
+
+@utility status-dot-danger {
+  background-color: var(--theme-danger-500);
+}

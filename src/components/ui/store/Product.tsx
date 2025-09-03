@@ -1018,6 +1018,78 @@ export const ProductVariantWeight = React.forwardRef<
 ProductVariantWeight.displayName = 'ProductVariantWeight';
 
 /**
+ * Displays the selected product variant stock status.
+ * Shows different states: in stock, limited stock, out of stock, or pre-order available.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <div className="flex items-center gap-2">
+ *     <ProductVariantStock
+ *       labels={{
+ *         inStock: 'In Stock',
+ *         limitedStock: 'Limited Stock',
+ *         outOfStock: 'Out of Stock',
+ *         preOrder: 'Available for Pre-order',
+ *       }}
+ *       className="flex items-center gap-2 data-[state='out-of-stock']:text-status-error data-[state='in-stock']:text-status-success data-[state='limited-stock']:text-status-success data-[state='pre-order']:text-status-success"
+ *     />
+ *   </div>
+ *
+ *   <ProductVariantStock asChild>
+ *     {({ status, label }) => (
+ *       <span className={`px-2 py-1 rounded text-sm ${
+ *         status === 'in-stock' ? 'bg-green-100 text-green-800' :
+ *         status === 'limited-stock' ? 'bg-yellow-100 text-yellow-800' :
+ *         status === 'out-of-stock' ? 'bg-red-100 text-red-800' :
+ *         'bg-blue-100 text-blue-800'
+ *       }`}>
+ *         {label}
+ *       </span>
+ *     )}
+ *   </ProductVariantStock>
+ * </Product>
+ * ```
+ */
+export const ProductVariantStock = React.forwardRef<
+  React.ElementRef<typeof ProductPrimitive.ProductVariant.Stock>,
+  React.ComponentPropsWithoutRef<typeof ProductPrimitive.ProductVariant.Stock>
+>((props, ref) => {
+  return (
+    <ProductPrimitive.ProductVariant.Stock
+      {...props}
+      ref={ref}
+      className={cn(
+        'text-sm data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="can-pre-order"]:text-status-success',
+        props.className
+      )}
+      asChild
+    >
+      {React.forwardRef((props, ref) => {
+        return (
+          <div
+            ref={ref as React.RefObject<HTMLDivElement>}
+            className="flex items-center gap-1"
+          >
+            <span
+              className={`h-3 w-3 inline-block rounded-full ${
+                props.status === 'out-of-stock'
+                  ? 'status-dot-danger'
+                  : 'status-dot-success'
+              }`}
+            />
+            {props.label}
+          </div>
+        );
+      })}
+    </ProductPrimitive.ProductVariant.Stock>
+  );
+});
+
+ProductVariantStock.displayName = 'ProductVariantStock';
+
+/**
  * Reset button for product variant selections.
  * Allows users to clear all selected variants and return to default state.
  *
