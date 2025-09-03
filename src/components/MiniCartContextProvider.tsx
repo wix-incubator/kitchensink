@@ -10,7 +10,7 @@ const MiniCartModalContext = createContext<
   MiniCartModalContextValue | undefined
 >(undefined);
 
-export function useMiniCartModal(): MiniCartModalContextValue {
+export function useMiniCartContext(): MiniCartModalContextValue {
   const context = useContext(MiniCartModalContext);
   if (!context) {
     throw new Error(
@@ -20,13 +20,13 @@ export function useMiniCartModal(): MiniCartModalContextValue {
   return context;
 }
 
-interface MiniCartModalProviderProps {
+interface MiniCartContextProviderProps {
   children: ReactNode;
 }
 
-export function MiniCartModalProvider({
+export function MiniCartContextProvider({
   children,
-}: MiniCartModalProviderProps) {
+}: MiniCartContextProviderProps) {
   const [isOpen, setIsOpened] = useState(false);
 
   const open = () => setIsOpened(true);

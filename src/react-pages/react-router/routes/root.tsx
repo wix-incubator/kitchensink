@@ -12,9 +12,9 @@ import {
 import { Link } from 'react-router-dom';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
 import {
-  MiniCartModalProvider,
-  useMiniCartModal,
-} from '@/components/MiniCartModal';
+  MiniCartModalContextProvider,
+  useMiniCartContext,
+} from '@/components/MiniCartContextProvider';
 import { Commerce } from '@/components/ui/ecom/Commerce';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
@@ -63,7 +63,7 @@ export function MiniCart({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      <MiniCartModalProvider>
+      <MiniCartModalContextProvider>
         <MiniCartIcon />
 
         <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
@@ -79,7 +79,7 @@ export function MiniCart({ children }: { children?: ReactNode }) {
           </div>
         )}
         <MiniCartContent />
-      </MiniCartModalProvider>
+      </MiniCartModalContextProvider>
     </>
   );
 }
@@ -93,7 +93,7 @@ function StoreLayoutContent({
   showSuccessMessage: boolean;
   setShowSuccessMessage: (show: boolean) => void;
 }) {
-  const { open } = useMiniCartModal();
+  const { open } = useMiniCartContext();
   return (
     <>
       <CartLineItemAdded>
