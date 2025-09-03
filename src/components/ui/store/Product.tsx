@@ -1060,13 +1060,6 @@ export const ProductVariantStock = React.forwardRef<
     <ProductPrimitive.ProductVariant.Stock
       {...props}
       ref={ref}
-      labels={{
-        inStock: 'In Stock',
-        limitedStock: 'In Stock',
-        outOfStock: 'Out of Stock',
-        preOrder: 'Available for Pre-order',
-        ...props.labels,
-      }}
       className={cn(
         'text-sm data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="can-pre-order"]:text-status-success',
         props.className
