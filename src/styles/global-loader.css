@@ -43,7 +43,3 @@
 @utility status-dot-danger {
   background-color: var(--theme-danger-500);
 }
-
-@utility status-dot-info {
-  background-color: var(--theme-info-500);
-}

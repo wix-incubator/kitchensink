@@ -1068,7 +1068,7 @@ export const ProductVariantStock = React.forwardRef<
         ...props.labels,
       }}
       className={cn(
-        'text-sm data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="pre-order"]:text-status-success',
+        'text-sm data-[state="out-of-stock"]:text-status-error data-[state="in-stock"]:text-status-success data-[state="limited-stock"]:text-status-success data-[state="can-pre-order"]:text-status-success',
         props.className
       )}
       asChild
