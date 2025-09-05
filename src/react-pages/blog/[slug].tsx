@@ -16,7 +16,7 @@ import {
 } from '@wix/headless-blog/services';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
 import { BlogPost, BlogFeed } from '@wix/headless-blog/react';
-import '../../styles/theme-1.css';
+import '../../styles/theme-dark.css';
 
 interface BlogPostPageProps {
   blogPostServiceConfig: BlogPostServiceConfig;

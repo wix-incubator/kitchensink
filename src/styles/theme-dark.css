@@ -291,6 +291,13 @@
   --theme-dropdown-arrow-color: #6b7280; /* Color for dropdown arrow icons */
 
   /* Gradient Colors */
+  /* Page Background */
+  --theme-gradient-page: linear-gradient(
+    to bottom right,
+    #1c398e,
+    #59168b,
+    #861043
+  );
   --theme-gradient-primary: linear-gradient(
     to right,
     #3b82f6,

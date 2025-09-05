@@ -1,13 +1,15 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
+
 # Color System Rules - STRICTLY ENFORCED
 
 ## 🚫 ABSOLUTE PROHIBITIONS
 
 ### NEVER use hardcoded colors in components:
+
 ```tsx
 // ❌ FORBIDDEN - Hardcoded colors
 className="bg-red-500 text-white border-gray-300"
@@ -20,6 +22,7 @@ className="bg-[var(--theme-background-card)]"
 ```
 
 ### NEVER use hardcoded hex/rgb colors:
+
 ```tsx
 // ❌ FORBIDDEN
 style={{ color: '#000000' }}
@@ -31,8 +34,9 @@ const color = "#ff0000";
 ## ✅ MANDATORY APPROACH
 
 ### 1. Use CSS variables for colors defined in theme files in the wix-vibe-plugins module
+
 **Location**: `node_modules/@wix/wix-vibe-plugins/plugins-theme.css` and `node_modules/@wix/wix-vibe-plugins/plugins-vars.css`
-If you must add a new color, add it to the `:root` section of the theme file - `theme-1.css`
+If you must add a new color, add it to the `:root` section of the theme file - `theme-dark.css`
 
 ```css
 /* ✅ REQUIRED - Define semantic color variables */
@@ -41,17 +45,18 @@ If you must add a new color, add it to the `:root` section of the theme file - `
   --theme-status-success: #10b981;
   --theme-status-danger: #ef4444;
   --theme-status-info: #3b82f6;
-  
+
   /* Background Colors with opacity */
   --theme-status-success-bg-light: rgba(16, 185, 129, 0.1);
   --theme-status-success-bg-medium: rgba(16, 185, 129, 0.2);
-  
+
   /* Border Colors */
   --theme-status-success-border: rgba(16, 185, 129, 0.3);
 }
 ```
 
 ### 2. Use semantic CSS classes defined in @wix/wix-vibe-plugins/plugins-theme.css
+
 **Location**: `node_modules/@wix/wix-vibe-plugins/plugins-theme.css`
 If you must define a new class - add it to `src/styles/global-loader.css`
 
@@ -59,19 +64,37 @@ If you must define a new class - add it to `src/styles/global-loader.css`
 /* ✅ REQUIRED - Create semantic classes that use theme variables */
 
 /* Content Text Colors */
-.text-content-primary { color: var(--theme-text-primary); }
-.text-content-secondary { color: var(--theme-text-secondary); }
-.text-content-muted { color: var(--theme-text-muted); }
+.text-content-primary {
+  color: var(--theme-text-primary);
+}
+.text-content-secondary {
+  color: var(--theme-text-secondary);
+}
+.text-content-muted {
+  color: var(--theme-text-muted);
+}
 
 /* Status Colors */
-.text-status-success { color: var(--theme-status-success); }
-.text-status-danger { color: var(--theme-status-danger); }
-.text-status-info { color: var(--theme-status-info); }
+.text-status-success {
+  color: var(--theme-status-success);
+}
+.text-status-danger {
+  color: var(--theme-status-danger);
+}
+.text-status-info {
+  color: var(--theme-status-info);
+}
 
 /* Background Colors */
-.bg-surface-primary { background-color: var(--theme-background-primary); }
-.bg-surface-card { background-color: var(--theme-background-card); }
-.bg-status-success-light { background-color: var(--theme-status-success-bg-light); }
+.bg-surface-primary {
+  background-color: var(--theme-background-primary);
+}
+.bg-surface-card {
+  background-color: var(--theme-background-card);
+}
+.bg-status-success-light {
+  background-color: var(--theme-status-success-bg-light);
+}
 
 /* Button Styles */
 .btn-primary {
@@ -84,11 +107,16 @@ If you must define a new class - add it to `src/styles/global-loader.css`
 }
 
 /* Border Colors */
-.border-surface-primary { border-color: var(--theme-border-primary); }
-.border-status-success { border-color: var(--theme-status-success-border); }
+.border-surface-primary {
+  border-color: var(--theme-border-primary);
+}
+.border-status-success {
+  border-color: var(--theme-status-success-border);
+}
 ```
 
 ### 3. Use ONLY semantic classes in components
+
 ```tsx
 // ✅ REQUIRED - Use semantic class names
 function ProductCard() {
@@ -108,19 +136,22 @@ function ProductCard() {
 ### Required naming pattern: `{purpose}-{variant}-{modifier}`
 
 #### Purpose Categories:
+
 - `text-` - Text colors
-- `bg-` - Background colors  
+- `bg-` - Background colors
 - `border-` - Border colors
 - `btn-` - Button styles
 - `status-` - Status indicators
 
 #### Variant Examples:
+
 - `content-` (primary, secondary, muted, subtle)
 - `brand-` (primary, secondary, light, dark)
 - `status-` (success, danger, info)
 - `surface-` (primary, secondary, card, overlay)
 
 #### Modifier Examples:
+
 - `light`, `medium`, `dark`
 - `hover`, `active`, `disabled`
 - `primary`, `secondary`
@@ -132,20 +163,25 @@ function ProductCard() {
 1. **First**: Choose the best semantic class name for the color you want to use.
 
 2. **Second**: Use class in component
+
 ```tsx
 <span className="text-status-accent bg-status-accent-light">Accent Text</span>
 ```
+
 If you must add a new class, add it to `src/styles/global-loader.css`
 
 ### 🎨 Multi-Theme Color Coordination:
+
 **CRITICAL**: When adding new color variables, you MUST add them to ALL theme files:
-- `theme-1.css` - Default theme
+
+- `theme-dark.css` - Default theme
 
 Each theme should use colors that harmonize with its existing palette while maintaining the same semantic meaning across all themes.
 
 ## 🚨 VIOLATION DETECTION
 
 ### Code Review Checklist:
+
 - [ ] No hardcoded colors (hex, rgb, hsl, named colors)
 - [ ] No direct CSS variable usage in className
 - [ ] No inline styles with color properties
@@ -154,6 +190,7 @@ Each theme should use colors that harmonize with its existing palette while main
 - [ ] Semantic classes created before component usage
 
 ### Automated Checks (Recommended):
+
 ```bash
 # Search for violations
 grep -r "className.*#[0-9a-fA-F]" src/
@@ -165,8 +202,9 @@ grep -r "bg-red-\|bg-blue-\|bg-green-\|bg-yellow-\|bg-orange-" src/
 ## 📚 EXAMPLES
 
 ### ✅ CORRECT Implementation:
+
 ```tsx
-// Theme variable defined in theme-1.css
+// Theme variable defined in theme-dark.css
 // --theme-product-price: #1f2937;
 // --theme-product-sale-price: #ef4444;
 
@@ -177,8 +215,14 @@ grep -r "bg-red-\|bg-blue-\|bg-green-\|bg-yellow-\|bg-orange-" src/
 function ProductPrice({ price, salePrice }) {
   return (
     <div>
-      {salePrice && <span className="text-product-sale-price">${salePrice}</span>}
-      <span className={salePrice ? "text-content-muted line-through" : "text-product-price"}>
+      {salePrice && (
+        <span className="text-product-sale-price">${salePrice}</span>
+      )}
+      <span
+        className={
+          salePrice ? 'text-content-muted line-through' : 'text-product-price'
+        }
+      >
         ${price}
       </span>
     </div>
@@ -187,6 +231,7 @@ function ProductPrice({ price, salePrice }) {
 ```
 
 ### ❌ VIOLATIONS to avoid:
+
 ```tsx
 // ❌ Hardcoded colors
 <span className="text-red-500">${salePrice}</span>
@@ -202,9 +247,10 @@ function ProductPrice({ price, salePrice }) {
 ## 🎯 ENFORCEMENT
 
 **This rule is NON-NEGOTIABLE.** All color-related code must follow this system:
+
 1. Colors defined in `@wix/wix-vibe-plugins/plugins-vars.css` and `@wix/wix-vibe-plugins/plugins-theme.css` as CSS variables
 2. Semantic classes created in `src/styles/global-loader.css`, they should be later merged into `@wix/wix-vibe-plugins/plugins-theme.css`
 3. Components use only semantic class names
 4. Zero tolerance for hardcoded colors or direct CSS variable usage
 
-**Rationale**: This system ensures maintainable theming, consistent design, better performance, and easier debugging across the entire application. 
+**Rationale**: This system ensures maintainable theming, consistent design, better performance, and easier debugging across the entire application.

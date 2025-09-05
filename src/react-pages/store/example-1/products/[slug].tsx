@@ -3,7 +3,7 @@ import { CurrentCartService } from '@wix/ecom/services';
 import { ProductService } from '@wix/stores/services';
 import { KitchensinkLayout } from '../../../../layouts/KitchensinkLayout';
 import { StoreLayout } from '../../../../layouts/StoreLayout';
-import '../../../../styles/theme-1.css';
+import '../../../../styles/theme-dark.css';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
 
 import ProductDetailsPage from '../../main-components/productDetailsPage';

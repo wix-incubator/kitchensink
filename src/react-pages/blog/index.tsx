@@ -18,7 +18,7 @@ import {
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import React, { useState } from 'react';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
-import '../../styles/theme-1.css';
+import '../../styles/theme-dark.css';
 
 interface BlogFeedPageProps {
   pathname: string;
