@@ -301,6 +301,12 @@ export const CartSummary = React.forwardRef<
       {...props}
       ref={ref}
       className={cn('text-content-secondary', props.className)}
+      labels={{
+        subtotal: 'Subtotal ({totalItems} items)',
+        total: 'Total',
+        calculating: 'Calculating...',
+        ...props.labels,
+      }}
     >
       {props.children}
     </CartPrimitive.Summary>
