@@ -420,6 +420,11 @@ export const CartClear = React.forwardRef<
         'text-status-error hover:text-status-error/80 text-sm font-medium transition-colors duration-200 disabled:opacity-50',
         props.className
       )}
+      labels={{
+        clearing: 'Clearing...',
+        clear: 'Clear Cart ({totalItems})',
+        ...props.labels,
+      }}
     >
       {props.children}
     </CartPrimitive.Clear>
