@@ -223,7 +223,14 @@ export default function ProductDetails({
               {/* Add to Cart */}
               <div className="space-y-4">
                 <ProductActionButtons showBuyNow={true} />
-                <ProductVariantStock />
+                <ProductVariantStock
+                  labels={{
+                    inStock: 'In Stock',
+                    limitedStock: 'Limited Stock',
+                    outOfStock: 'Out of Stock',
+                    preOrder: 'Available for Pre-order',
+                  }}
+                />
               </div>
 
               {/* Product Details */}
