@@ -402,9 +402,13 @@ CartLineItemRepeater.displayName = 'CartLineItemRepeater';
  * <Cart>
  *   <div className="flex justify-between items-center mb-4">
  *     <h2>Shopping Cart</h2>
- *     <CartClear className="text-red-600 hover:text-red-700">
- *       Clear Cart
- *     </CartClear>
+ *     <CartClear
+ *       className="text-red-600 hover:text-red-700"
+ *       labels={{
+ *         clearing: 'Clearing cart...',
+ *         clear: 'Clear all {totalItems} items'
+ *       }}
+ *     />
  *   </div>
  *   <CartLineItems>
  *     <CartLineItemRepeater>
