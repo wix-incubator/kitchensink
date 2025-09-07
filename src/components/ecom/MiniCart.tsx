@@ -155,7 +155,7 @@ export function MiniCartIcon({
     <>
       {/* Cart Icon */}
       <div className={className}>
-        <CartSummary>
+        <CartSummary asChild>
           {({ totalItems }) => (
             <Button
               data-testid="mini-cart-icon"
