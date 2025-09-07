@@ -301,6 +301,12 @@ export const CartSummary = React.forwardRef<
       {...props}
       ref={ref}
       className={cn('text-content-secondary', props.className)}
+      labels={{
+        subtotal: 'Subtotal ({totalItems} items)',
+        total: 'Total',
+        calculating: 'Calculating...',
+        ...props.labels,
+      }}
     >
       {props.children}
     </CartPrimitive.Summary>
@@ -396,9 +402,13 @@ CartLineItemRepeater.displayName = 'CartLineItemRepeater';
  * <Cart>
  *   <div className="flex justify-between items-center mb-4">
  *     <h2>Shopping Cart</h2>
- *     <CartClear className="text-red-600 hover:text-red-700">
- *       Clear Cart
- *     </CartClear>
+ *     <CartClear
+ *       className="text-red-600 hover:text-red-700"
+ *       labels={{
+ *         clearing: 'Clearing cart...',
+ *         clear: 'Clear all {totalItems} items'
+ *       }}
+ *     />
  *   </div>
  *   <CartLineItems>
  *     <CartLineItemRepeater>
@@ -420,6 +430,11 @@ export const CartClear = React.forwardRef<
         'text-status-error hover:text-status-error/80 text-sm font-medium transition-colors duration-200 disabled:opacity-50',
         props.className
       )}
+      labels={{
+        clearing: 'Clearing...',
+        clear: 'Clear Cart ({totalItems})',
+        ...props.labels,
+      }}
     >
       {props.children}
     </CartPrimitive.Clear>

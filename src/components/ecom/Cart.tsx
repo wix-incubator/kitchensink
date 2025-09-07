@@ -68,7 +68,7 @@ export default function CartContent() {
                 <h2 className="text-2xl font-bold text-content-primary">
                   Cart Items
                 </h2>
-                <CartClear>Clear all items</CartClear>
+                <CartClear />
               </div>
 
               <div className="space-y-6">
