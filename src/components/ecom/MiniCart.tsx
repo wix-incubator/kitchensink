@@ -37,7 +37,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useMiniCartContext } from '../MiniCartContextProvider';
+import {
+  useMiniCartContext,
+  MINI_CART_PORTAL_ID,
+} from '../MiniCartContextProvider';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
@@ -205,10 +208,10 @@ export function MiniCartContent() {
 
   // Create portal target if it doesn't exist
   const getPortalTarget = () => {
-    let portalTarget = document.getElementById('mini-cart-portal');
+    let portalTarget = document.getElementById(MINI_CART_PORTAL_ID);
     if (!portalTarget) {
       portalTarget = document.createElement('div');
-      portalTarget.id = 'mini-cart-portal';
+      portalTarget.id = MINI_CART_PORTAL_ID;
       document.body.appendChild(portalTarget);
     }
     return portalTarget;

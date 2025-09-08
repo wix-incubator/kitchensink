@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from 'react';
 
+export const MINI_CART_PORTAL_ID = 'mini-cart-portal';
+
 interface MiniCartModalContextValue {
   isOpen: boolean;
   open: () => void;
@@ -83,7 +85,7 @@ export function MiniCartContextProvider({
   useEffect(() => {
     return () => {
       if (typeof document !== 'undefined') {
-        const portalTarget = document.getElementById('mini-cart-portal');
+        const portalTarget = document.getElementById(MINI_CART_PORTAL_ID);
         if (portalTarget) {
           portalTarget.remove();
         }
