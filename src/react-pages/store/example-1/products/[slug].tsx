@@ -52,7 +52,10 @@ export default function ProductDetailPage({
                 </a>
               </div>
 
-              <ProductDetailsPage productServiceConfig={productServiceConfig} />
+              <ProductDetailsPage
+                productServiceConfig={productServiceConfig}
+                currentCartServiceConfig={currentCartServiceConfig}
+              />
             </div>
           </div>
         </StoreLayout>

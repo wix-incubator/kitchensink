@@ -16,6 +16,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   return (
     <div className="flex gap-3 w-full">
       <ProductActionAddToCart
+        className="add-to-cart-button"
         label="Add to Cart"
         loadingState={
           <>
@@ -47,6 +48,7 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
       {showBuyNow && (
         <ProductActionBuyNow
           label="Buy Now"
+          className="buy-now-button"
           loadingState={
             <span className="flex items-center justify-center gap-2">
               <svg

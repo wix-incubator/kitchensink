@@ -45,6 +45,7 @@ export default function StoreCollectionPage({
             categoriesListConfig={categoriesListConfig}
             productsListConfig={productsListConfig}
             currentCategorySlug={currentCategorySlug}
+            currentCartServiceConfig={currentCartServiceConfig}
             productPageRoute="/store/example-1"
           />
         </div>

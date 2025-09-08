@@ -638,9 +638,14 @@ export const CartCouponRaw = CartPrimitive.Coupon.Raw;
 CartCouponRaw.displayName = 'CartCouponRaw';
 
 // Cart Errors Component
+export interface CartErrorsProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
 export const CartErrors = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Errors>,
-  React.ComponentPropsWithoutRef<typeof CartPrimitive.Errors>
+  CartErrorsProps
 >((props, ref) => {
   return (
     <CartPrimitive.Errors

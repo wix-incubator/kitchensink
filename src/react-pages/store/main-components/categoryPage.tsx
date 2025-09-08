@@ -1,4 +1,5 @@
 import ProductList from '@/components/store/ProductList';
+import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
 
 import {
   type CategoriesListServiceConfig,
@@ -8,6 +9,7 @@ import {
 interface StoreCollectionPageProps {
   productsListConfig: ProductsListServiceConfig;
   categoriesListConfig: CategoriesListServiceConfig;
+  currentCartServiceConfig: CurrentCartServiceConfig;
   currentCategorySlug: string;
   productPageRoute: string;
 }
@@ -15,6 +17,7 @@ interface StoreCollectionPageProps {
 function CategoryPage({
   productsListConfig,
   categoriesListConfig,
+  currentCartServiceConfig,
   currentCategorySlug,
   productPageRoute,
 }: StoreCollectionPageProps) {
@@ -24,6 +27,7 @@ function CategoryPage({
       productsListConfig={productsListConfig}
       categoriesListConfig={categoriesListConfig}
       currentCategorySlug={currentCategorySlug}
+      currentCartServiceConfig={currentCartServiceConfig}
     />
   );
 }

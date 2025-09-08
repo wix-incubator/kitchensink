@@ -5,7 +5,10 @@ import ProductDetails from './ProductDetails';
 import { useNavigation } from '../NavigationContext';
 
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
-import type { LineItem } from '@wix/headless-ecom/services';
+import type {
+  CurrentCartServiceConfig,
+  LineItem,
+} from '@wix/headless-ecom/services';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;
@@ -13,6 +16,7 @@ interface QuickViewModalProps {
   isLoading: boolean;
   onClose: () => void;
   productPageRoute: string;
+  currentCartServiceConfig: CurrentCartServiceConfig;
 }
 
 export default function QuickViewModal({
@@ -21,6 +25,7 @@ export default function QuickViewModal({
   isLoading,
   onClose,
   productPageRoute,
+  currentCartServiceConfig,
 }: QuickViewModalProps) {
   const Navigation = useNavigation();
 
@@ -136,7 +141,11 @@ export default function QuickViewModal({
             </div>
           ) : (
             <>
-              <ProductDetails isQuickView={true} product={product!} />
+              <ProductDetails
+                isQuickView={true}
+                product={product!}
+                currentCartServiceConfig={currentCartServiceConfig}
+              />
 
               {/* View Full Product Page Link */}
               <div className="mt-6 pt-6 border-t border-brand-subtle">

@@ -1170,7 +1170,10 @@ export const ProductRibbon = React.forwardRef<
     <ProductPrimitive.Ribbon
       {...props}
       ref={ref}
-      className={cn('absolute top-2 z-10 px-3 py-1 left-2', props.className)}
+      className={cn(
+        'absolute top-2 z-10 px-3 py-1 left-2 product-ribbon',
+        props.className
+      )}
       asChild
     >
       <Badge variant="secondary" />
