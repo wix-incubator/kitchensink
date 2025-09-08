@@ -1,0 +1,44 @@
+---
+import {
+  loadBlogCategoriesServiceConfig,
+  loadBlogFeedServiceConfig,
+} from '@wix/headless-blog/services';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogFeedPage from '../../../react-pages/blog/feed-page';
+
+// import '../../../styles/theme-light.css';
+import '../../../styles/theme-dark.css';
+
+const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
+  loadBlogFeedServiceConfig({
+    pageSize: 10,
+    sort: [
+      {
+        fieldName: 'firstPublishedDate',
+        order: 'DESC',
+      },
+    ],
+  }),
+  loadBlogCategoriesServiceConfig(),
+]);
+---
+
+<BaseLayout>
+  <title>Blog | Wix Headless Components</title>
+  <meta
+    name="description"
+    content="Explore our blog featuring the latest insights on headless components, web development, and modern architecture."
+  />
+
+  <BlogFeedPage
+    client:load
+    pathname={Astro.url.pathname}
+    blogFeedServiceConfig={blogFeedServiceConfig}
+    blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+    feedPageHref="/blog/example-1"
+    postPageBaseUrl="/blog/example-1/"
+    categoryPageBaseUrl="/blog/example-1/category/"
+    dateLocale="en-US"
+    slot="body"
+  />
+</BaseLayout>

@@ -1,37 +1,34 @@
 ---
-import {
-  loadBlogCategoriesServiceConfig,
-  loadBlogFeedServiceConfig,
-} from '@wix/headless-blog/services';
+import { SEO } from '@wix/headless-seo/react';
+import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BlogFeedPage from '../../react-pages/blog/index';
+import BlogIntroPage from '../../react-pages/blog/intro-page';
 
-const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
-  loadBlogFeedServiceConfig({
-    pageSize: 3,
-    sort: [
-      {
-        fieldName: 'firstPublishedDate',
-        order: 'DESC',
-      },
-    ],
-  }),
-  loadBlogCategoriesServiceConfig(),
-]);
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: {
+    pageName: 'Wix Blog',
+    seoData: {
+      tags: [
+        {
+          type: 'title',
+          children: 'Wix Blog - Complete Blogging Platform',
+        },
+        {
+          type: 'meta',
+          props: {
+            name: 'description',
+            content:
+              'Explore Wix Blog functionality with multiple implementation examples. Create and manage blog posts, categories, and engage with readers through comments and social sharing.',
+          },
+        },
+      ],
+    },
+  },
+});
 ---
 
 <BaseLayout>
-  <title>Blog | Wix Headless Components</title>
-  <meta
-    name="description"
-    content="Explore our blog featuring the latest insights on headless components, web development, and modern architecture."
-  />
-
-  <BlogFeedPage
-    client:load
-    pathname={Astro.url.pathname}
-    blogFeedServiceConfig={blogFeedServiceConfig}
-    blogCategoriesServiceConfig={blogCategoriesServiceConfig}
-    slot="body"
-  />
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
+  <BlogIntroPage client:load slot="body" />
 </BaseLayout>

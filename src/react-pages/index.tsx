@@ -644,6 +644,59 @@ export default function HomePage(_props: HomePageProps) {
             </div>
           </a>
 
+          {/* Wix Blog */}
+          <a
+            href="/blog"
+            className="group block transform transition-all duration-300 hover:scale-105"
+          >
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500/50 to-indigo-500/50 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <div className="px-3 py-1 bg-green-500/20 backdrop-blur-sm rounded-full border border-green-400/30">
+                  <span className="text-green-300 text-sm font-medium">
+                    Available
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Wix Blog</h3>
+              <p className="text-white/70 text-base leading-relaxed mb-4">
+                Complete blogging platform with content creation, rich media
+                support, categories, tags, and community engagement features.
+                Multiple implementation examples and routing patterns.
+              </p>
+              <div className="flex items-center text-blue-300 font-semibold group-hover:text-blue-200 transition-colors duration-300">
+                <span>Explore Now</span>
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
           {/* Events - Coming Soon */}
           <div className="group block transform transition-all duration-300 hover:scale-105">
             <div className="bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 p-8 h-full hover:bg-white/10 transition-all duration-300 opacity-75">

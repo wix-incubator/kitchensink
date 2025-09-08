@@ -108,33 +108,6 @@ export default function BlogIntroPage() {
                 </p>
               </div>
 
-              {/* Community Engagement */}
-              <div className="bg-white/5 rounded-2xl p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Community Engagement
-                </h3>
-                <p className="text-white/70 text-sm">
-                  Build a community around your content with comments, social
-                  sharing, and interactive features that encourage reader
-                  participation.
-                </p>
-              </div>
-
               {/* SEO & Discovery */}
               <div className="bg-white/5 rounded-2xl p-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-4">
@@ -186,33 +159,6 @@ export default function BlogIntroPage() {
                   Enhance your posts with images, videos, galleries, and other
                   media types to create visually engaging and interactive
                   content.
-                </p>
-              </div>
-
-              {/* Analytics & Insights */}
-              <div className="bg-white/5 rounded-2xl p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  Analytics & Insights
-                </h3>
-                <p className="text-white/70 text-sm">
-                  Track reader engagement, popular content, and performance
-                  metrics to understand your audience and improve your content
-                  strategy.
                 </p>
               </div>
             </div>

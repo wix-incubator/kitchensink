@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReactRouterBlogApp from '../../react-pages/react-router-blog/[...path]';
+import '../../styles/theme-wix-vibe-config.css';
+import '@wix/wix-vibe-plugins/plugins-vars.css';
+---
+
+<BaseLayout>
+  <title>React Router Blog</title>
+  <meta
+    name="description"
+    content="A single-page blog application with client-side routing"
+  />
+  <div class="mx-auto max-w-7xl react-router-blog">
+    <ReactRouterBlogApp client:only="react" slot="body">
+      <!-- Loading fallback -->
+      <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div class="text-center">
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+          >
+          </div>
+          <p class="text-gray-600 text-lg">Loading React Router Blog...</p>
+        </div>
+      </div>
+    </ReactRouterBlogApp>
+  </div>
+</BaseLayout>

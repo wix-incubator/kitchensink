@@ -3,13 +3,16 @@ import {
   loadBlogFeedServiceConfig,
   loadBlogCategoriesServiceConfig,
 } from '@wix/headless-blog/services';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import BlogFeedPage from '../../../react-pages/blog/index';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BlogFeedPage from '../../../../react-pages/blog/feed-page';
 import {
   loadSEOTagsServiceConfig,
   type SEOTagsServiceConfig,
 } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
+
+// import '../../../../styles/theme-light.css';
+import '../../../../styles/theme-dark.css';
 
 const { slug } = Astro.params;
 export const prerender = false;
@@ -27,7 +30,7 @@ try {
   [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
     loadBlogFeedServiceConfig({
       categorySlug: slug,
-      pageSize: 3,
+      pageSize: 10,
       sort: [
         {
           fieldName: 'firstPublishedDate',
@@ -63,6 +66,10 @@ try {
     pathname={Astro.url.pathname}
     blogFeedServiceConfig={blogFeedServiceConfig}
     blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+    feedPageHref="/blog/example-1"
+    postPageBaseUrl="/blog/example-1/"
+    categoryPageBaseUrl="/blog/example-1/category/"
+    dateLocale="en-US"
     slot="body"
   />
 </BaseLayout>
