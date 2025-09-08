@@ -146,8 +146,6 @@ function StoreLayoutContent({
 
       {/* Main Content */}
       {children}
-
-      <MiniCartContent />
     </>
   );
 }
