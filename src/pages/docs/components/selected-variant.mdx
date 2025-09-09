@@ -343,7 +343,7 @@ import type {
   SKURenderProps,
   DetailsProps,
   DetailsRenderProps,
-} from ''@wix/stores/components';
+} from '@wix/stores/components';
 ```
 
 ## Testing
@@ -351,8 +351,8 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from '@testing-library/components';
-import { SelectedVariant } from ''@wix/stores/components';
+import { render } from '@testing-library/react';
+import { SelectedVariant } from '@wix/stores/components';
 
 test('SelectedVariant.Price renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);
