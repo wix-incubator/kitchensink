@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   QuantityDecrement,
   QuantityInput,
@@ -36,7 +37,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useMiniCartContext } from '../MiniCartContextProvider';
+import {
+  useMiniCartContext,
+  MINI_CART_PORTAL_ID,
+} from '../MiniCartContextProvider';
 
 // Mini coupon form for the cart sidebar
 const CouponFormMini = ({
@@ -180,15 +184,43 @@ export function MiniCartIcon({
 
 export function MiniCartContent() {
   const { close, isOpen } = useMiniCartContext();
+
   // Lock body scroll when modal is open
-  if (typeof document !== 'undefined') {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'unset';
+      }
     }
-  }
-  return isOpen ? (
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'unset';
+      }
+    };
+  }, [isOpen]);
+
+  // Don't render anything if not open
+  if (!isOpen) return null;
+
+  // Create portal target if it doesn't exist
+  const getPortalTarget = () => {
+    let portalTarget = document.getElementById(MINI_CART_PORTAL_ID);
+    if (!portalTarget) {
+      portalTarget = document.createElement('div');
+      portalTarget.id = MINI_CART_PORTAL_ID;
+      document.body.appendChild(portalTarget);
+    }
+    return portalTarget;
+  };
+
+  // Only render portal on client side
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
       className="fixed inset-0 z-50 bg-surface-overlay backdrop-blur-sm"
       onClick={close}
@@ -347,6 +379,7 @@ export function MiniCartContent() {
           </CommerceActionsCheckout>
         </div>
       </div>
-    </div>
-  ) : null;
+    </div>,
+    getPortalTarget()
+  );
 }

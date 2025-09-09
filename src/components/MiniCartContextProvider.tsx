@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from 'react';
+
+export const MINI_CART_PORTAL_ID = 'mini-cart-portal';
 
 interface MiniCartModalContextValue {
   isOpen: boolean;
@@ -72,6 +80,20 @@ export function MiniCartContextProvider({
 
   const open = () => setIsOpened(true);
   const close = () => setIsOpened(false);
+
+  // Cleanup portal element when provider unmounts
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        const portalTarget = document.getElementById(MINI_CART_PORTAL_ID);
+        if (portalTarget) {
+          portalTarget.remove();
+        }
+        // Restore body scroll
+        document.body.style.overflow = 'unset';
+      }
+    };
+  }, []);
 
   const value: MiniCartModalContextValue = {
     isOpen,
