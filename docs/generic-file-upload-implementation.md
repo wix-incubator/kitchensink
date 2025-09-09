@@ -15,7 +15,7 @@ We have successfully extracted a generic file upload service and headless compon
 
 ### Updated Files
 
-1. **`src/components/PhotoUploadDialog.tsx`** - Updated to use generic components
+1. **Photo Upload Components** - Use generic headless components directly
 2. **`src/react-pages/members/index.tsx`** - Updated to use generic service
 
 ## Architecture Benefits

@@ -7,7 +7,7 @@ import CategoryPage from '../main-components/categoryPage';
 import {
   type CategoriesListServiceConfig,
   type ProductsListServiceConfig,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 
 interface StoreCollectionPageProps {
   categoriesListConfig: CategoriesListServiceConfig;

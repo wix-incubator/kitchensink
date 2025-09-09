@@ -1,5 +1,5 @@
 import React from 'react';
-import { MediaGallery as MediaGalleryPrimitive } from '@wix/headless-media/react';
+import { MediaGallery as MediaGalleryPrimitive } from '@wix/media/components';
 import { cn } from '@/lib/utils';
 
 export const Root: React.FC<

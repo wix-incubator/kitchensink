@@ -151,16 +151,10 @@ Member statistics use multiple headless components for reactive data:
 Dialogs use their own service providers for isolated functionality:
 
 ```tsx
-// Photo Upload Dialog
+// Photo Upload Dialog - removed PhotoUploadDialog component
+// Use PhotoUpload headless components directly in your UI
 {
   showPhotoDialog && (
-    <PhotoUploadDialog onClose={() => setShowPhotoDialog(false)} />
-  );
-}
-
-// The dialog internally uses PhotoUpload headless components
-function PhotoUploadDialog() {
-  return (
     <div className="modal">
       <FileSelector>
         {({ handleDrop, dragOver }) => (

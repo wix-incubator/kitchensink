@@ -433,11 +433,11 @@ export async function loadPhotoUploadServiceConfig(): Promise<
 Since actions are non-serializable, they must be imported and added to the config in the React component that renders the `ServicesManagerProvider`:
 
 ```typescript
-// In your React component (e.g., PhotoUploadDialog.tsx)
+// In your React component (e.g., photo upload component)
 import { photoUploadAstroActions } from "../headless/members/photo-upload-service-actions";
 import { loadPhotoUploadServiceConfig } from "../headless/members/photo-upload-service";
 
-export default function PhotoUploadDialog({ photoUploadConfig }) {
+export default function PhotoUploadComponent({ photoUploadConfig }) {
   // Combine serializable config from server with non-serializable actions
   const fullConfig = {
     ...photoUploadConfig,
@@ -470,7 +470,7 @@ import { loadPhotoUploadServiceConfig } from '../headless/members/photo-upload-s
 const photoUploadConfig = await loadPhotoUploadServiceConfig();
 ---
 
-<PhotoUploadDialog client:load photoUploadConfig={photoUploadConfig} />
+    <PhotoUploadComponent client:load photoUploadConfig={photoUploadConfig} />
 ```
 
 ### Benefits of This Pattern

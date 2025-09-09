@@ -5,7 +5,7 @@ import ProductDetails from './ProductDetails';
 import { useNavigation } from '../NavigationContext';
 
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
-import type { LineItem } from '@wix/headless-ecom/services';
+import type { LineItem } from '@wix/ecom/services';
 
 interface QuickViewModalProps {
   product: productsV3.V3Product;

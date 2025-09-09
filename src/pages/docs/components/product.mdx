@@ -290,8 +290,8 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from '@testing-library/react';
-import { Product } from ''@wix/headless-stores/react';
+import { render } from '@testing-library/components';
+import { Product } from ''@wix/stores/components';
 
 test('Product.Name renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

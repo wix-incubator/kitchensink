@@ -9,7 +9,7 @@ The `CurrentCart` namespace contains headless components for managing shopping c
 ## Overview
 
 ```tsx
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { CurrentCart } from '@wix/ecom/components';
 
 // All available components
 const {
@@ -751,7 +751,7 @@ import {
 import {
   CurrentCartServiceDefinition,
   CurrentCartService,
-} from '@wix/headless-ecom/services';
+} from '@wix/ecom/services';
 
 <ServicesManagerProvider
   servicesManager={
@@ -781,7 +781,7 @@ import type {
   OpenTriggerProps,
   OpenTriggerRenderProps,
   // ... other interfaces
-} from '@wix/headless-ecom/react';
+} from '@wix/ecom/components';
 ```
 
 ## Testing
@@ -789,8 +789,8 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from '@testing-library/react';
-import { CurrentCart } from '@wix/headless-ecom/react';
+import { render } from '@testing-library/components';
+import { CurrentCart } from '@wix/ecom/components';
 
 test('OpenTrigger renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

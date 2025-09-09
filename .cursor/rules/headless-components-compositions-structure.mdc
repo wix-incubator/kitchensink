@@ -110,8 +110,8 @@ Store functionality uses **Wix headless primitives directly** wrapped in UI comp
 
 ```tsx
 // UI Components wrap primitives
-import { Product as ProductPrimitive } from '@wix/headless-stores/react';
-import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
+import { Product as ProductPrimitive } from '@wix/stores/components';
+import { Cart as CartPrimitive } from '@wix/ecom/components';
 
 export const Product = ProductPrimitive.Root;
 export const Cart = CartPrimitive.Root;

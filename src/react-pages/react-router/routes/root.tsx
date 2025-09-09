@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import { useEffect, useState, type ReactNode } from 'react';
 
-import { loadCurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import { loadCurrentCartServiceConfig } from '@wix/ecom/services';
 import { MiniCartContent, MiniCartIcon } from '@/components/ecom/MiniCart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';

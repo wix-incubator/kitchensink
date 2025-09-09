@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { SelectedOption as SelectedOptionPrimitive } from '@wix/headless-ecom/react';
+import { SelectedOption as SelectedOptionPrimitive } from '@wix/ecom/components';
 
 /**
  * Root component for displaying a selected product option in cart line items.

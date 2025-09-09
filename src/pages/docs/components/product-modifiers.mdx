@@ -452,7 +452,7 @@ import type {
   FreeTextRenderProps,
   ToggleFreeTextProps,
   ToggleFreeTextRenderProps,
-} from ''@wix/headless-stores/react';
+} from ''@wix/stores/components';
 ```
 
 ## Testing
@@ -460,8 +460,8 @@ import type {
 These headless components are easy to test by providing mock render functions:
 
 ```tsx
-import { render } from '@testing-library/react';
-import { ProductModifiers } from ''@wix/headless-stores/react';
+import { render } from '@testing-library/components';
+import { ProductModifiers } from ''@wix/stores/components';
 
 test('ProductModifiers.Modifiers renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

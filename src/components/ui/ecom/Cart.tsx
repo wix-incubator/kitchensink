@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
+import { Cart as CartPrimitive } from '@wix/ecom/components';
 
 /**
  * Root component for shopping cart functionality.

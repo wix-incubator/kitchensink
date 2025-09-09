@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { MiniCartContent, MiniCartIcon } from '@/components/ecom/MiniCart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
-import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import type { CurrentCartServiceConfig } from '@wix/ecom/services';
 import {
   MiniCartContextProvider,
   useMiniCartContext,

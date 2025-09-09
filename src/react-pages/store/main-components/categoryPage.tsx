@@ -3,7 +3,7 @@ import ProductList from '@/components/store/ProductList';
 import {
   type CategoriesListServiceConfig,
   type ProductsListServiceConfig,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 
 interface StoreCollectionPageProps {
   productsListConfig: ProductsListServiceConfig;
