@@ -120,7 +120,7 @@ export const Cart = CartPrimitive.Root;
 ### **No Custom Store Services**
 
 - **No** `ProductService`, `CollectionService`, or `SelectedVariantService`
-- Uses Wix SDK directly: `@wix/stores`, `@wix/headless-stores/react`
+- Uses Wix SDK directly: `@wix/stores`, `@wix/stores/components`
 - Business logic handled by Wix primitives, not custom services
 
 ## Component Composition Patterns
