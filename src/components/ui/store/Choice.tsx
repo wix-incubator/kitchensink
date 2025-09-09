@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Choice as ChoicePrimitive } from '@wix/headless-stores/react';
+import { Choice as ChoicePrimitive } from '@wix/stores/components';
 
 /**
  * Root component for product variant choices (text, color, or free text).

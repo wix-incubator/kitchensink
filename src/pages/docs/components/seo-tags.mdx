@@ -9,8 +9,8 @@ The `SEO` namespace provides headless components for rendering and updating SEO-
 ## Overview
 
 ```tsx
-import { SEO } from '@wix/headless-seo/react';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import { SEO } from '@wix/seo/components';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 import { seoTags } from '@wix/seo';
 ```
 
@@ -28,8 +28,8 @@ Renders SEO tags (title, meta, link, script) in the document head using a provid
 
 ```astro
 ---
-import { SEO } from '@wix/headless-seo/react';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import { SEO } from '@wix/seo/components';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   pageUrl: Astro.url.href,
@@ -62,8 +62,8 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
 
 ```astro
 ---
-import { SEO } from '@wix/headless-seo/react';
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import { SEO } from '@wix/seo/components';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 import { seoTags } from '@wix/seo';
 const { slug } = Astro.params;
 const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
@@ -91,7 +91,7 @@ Handles updating SEO tags dynamically on the client side, without a full page re
 #### Example
 
 ```tsx
-import { SEO } from '@wix/headless-seo/react';
+import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
 
 <SEO.UpdateTagsTrigger seoTagsServiceConfig={seoTagsServiceConfig}>
@@ -114,7 +114,7 @@ import { seoTags } from '@wix/seo';
 These components depend on a `SEOTagsServiceConfig` object, which can be loaded using `loadSEOTagsServiceConfig`:
 
 ```ts
-import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 import { seoTags } from '@wix/seo';
 
 // For static pages
@@ -139,7 +139,7 @@ const config = await loadSEOTagsServiceConfig({
 All components export comprehensive TypeScript interfaces:
 
 ```ts
-import type { SEOTagsServiceConfig } from '@wix/headless-seo/services';
+import type { SEOTagsServiceConfig } from '@wix/seo/services';
 import type { seoTags } from '@wix/seo';
 ```
 
@@ -157,7 +157,7 @@ You can test SEO tag updates by triggering `updateSeoTags` and asserting changes
 
 ```tsx
 import { render } from '@testing-library/react';
-import { SEO } from '@wix/headless-seo/react';
+import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
 
 test('updates SEO tags on trigger', async () => {

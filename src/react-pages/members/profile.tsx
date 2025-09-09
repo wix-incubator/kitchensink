@@ -14,7 +14,6 @@ import { MailIcon } from '@/components/icons/MailIcon';
 import { PencilIcon } from '@/components/icons/PencilIcon';
 import { SignOutIcon } from '@/components/icons/SignOutIcon';
 import { UserIcon } from '@/components/icons/UserIcon';
-import PhotoUploadDialog from '@/components/PhotoUploadDialog';
 import UpdateProfileDialog from '@/components/UpdateProfileDialog';
 import {
   CurrentMemberService,
@@ -276,12 +275,6 @@ export function ProfilePage({
         <UpdateProfileDialog
           isOpen={showUpdateDialog}
           onClose={() => setShowUpdateDialog(false)}
-        />
-
-        {/* Photo Upload Dialog */}
-        <PhotoUploadDialog
-          isOpen={showPhotoDialog}
-          onClose={() => setShowPhotoDialog(false)}
         />
       </KitchensinkLayout>
     </ServicesManagerProvider>

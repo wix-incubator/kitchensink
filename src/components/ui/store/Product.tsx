@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Product as ProductPrimitive } from '@wix/headless-stores/react';
+import { Product as ProductPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
 import { Badge } from '../badge';
 

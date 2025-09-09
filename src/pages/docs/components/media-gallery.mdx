@@ -9,7 +9,7 @@ The `MediaGallery` namespace contains headless components for managing product i
 ## Overview
 
 ```tsx
-import { MediaGallery } from '@wix/headless-media/react';
+import { MediaGallery } from '@wix/media/components';
 
 // All available components
 const {
@@ -465,7 +465,7 @@ These headless components are easy to test by providing mock render functions:
 
 ```tsx
 import { render } from '@testing-library/react';
-import { MediaGallery } from '@wix/headless-media/react';
+import { MediaGallery } from '@wix/media/components';
 
 test('Viewport renders correctly', () => {
   const mockRenderProp = jest.fn().mockReturnValue(<div>Test</div>);

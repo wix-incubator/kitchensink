@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Option as OptionPrimitive } from '@wix/headless-stores/react';
+import { Option as OptionPrimitive } from '@wix/stores/components';
 
 /**
  * Root component for product options (variants or modifiers).

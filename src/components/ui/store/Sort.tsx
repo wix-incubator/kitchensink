@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sort as SortPrimitive } from '@wix/headless-components/react';
-import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import {
   Select,
   SelectContent,

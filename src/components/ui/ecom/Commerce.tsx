@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Commerce as CommercePrimitive } from '@wix/headless-ecom/react';
+import { Commerce as CommercePrimitive } from '@wix/ecom/components';
 
 /**
  * Root commerce provider that enables e-commerce functionality.

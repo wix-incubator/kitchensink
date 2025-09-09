@@ -1,4 +1,4 @@
-import { CurrentCart as CurrentCartPrimitive } from '@wix/headless-ecom/react';
+import { CurrentCart as CurrentCartPrimitive } from '@wix/ecom/components';
 
 /**
  * Provider component that manages the current user's cart state.
