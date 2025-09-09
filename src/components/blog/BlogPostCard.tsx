@@ -1,6 +1,7 @@
-import { BlogFeed } from '@wix/headless-blog/react';
+import { Blog } from '@wix/headless-blog/react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import PostCategories from './PostCategories';
 
 interface BlogPostCardProps {
   className?: string;
@@ -19,31 +20,7 @@ interface BlogPostCardProps {
   showExcerpt?: boolean | 'auto';
 }
 
-function BlogFeedPostCategories({
-  categoryPageBaseUrl,
-}: Pick<BlogPostCardProps, 'categoryPageBaseUrl'>) {
-  const CategoryLinkOrLabel = categoryPageBaseUrl
-    ? BlogFeed.PostCategoryLink
-    : BlogFeed.PostCategoryLabel;
-
-  return (
-    <BlogFeed.PostCategories className="flex flex-wrap gap-2 mb-4">
-      <BlogFeed.PostCategoryRepeater>
-        <CategoryLinkOrLabel
-          baseUrl={categoryPageBaseUrl}
-          className={cn(
-            'border border-surface-strong text-foreground leading-tight px-3 py-1 rounded-full text-sm font-medium',
-            {
-              'hover:scale-105 transition-all': !!categoryPageBaseUrl,
-            }
-          )}
-        />
-      </BlogFeed.PostCategoryRepeater>
-    </BlogFeed.PostCategories>
-  );
-}
-
-export function BlogFeedPostCardSideBySide({
+export function BlogPostCardSideBySide({
   className,
   postPageBaseUrl,
   categoryPageBaseUrl,
@@ -57,7 +34,7 @@ export function BlogFeedPostCardSideBySide({
   showExcerpt: showExcerptProp = 'auto',
   showReadingTime = false,
 }: BlogPostCardProps) {
-  const { post } = BlogFeed.useFeedPostRepeaterContext();
+  const { post } = Blog.Feed.useFeedPostRepeaterContext();
   const showExcerpt =
     showExcerptProp === 'auto'
       ? !post.resolvedFields.coverImageUrl
@@ -67,26 +44,23 @@ export function BlogFeedPostCardSideBySide({
     <article
       className={cn(
         'grid grid-flow-col auto-cols-fr rounded-xl text-foreground bg-surface-card overflow-hidden  *:box-border',
-        className
+        className,
       )}
     >
       {showCoverImage && (
-        <BlogFeed.PostCoverImage className="w-full h-full aspect-video object-cover  mb-6" />
+        <Blog.Post.CoverImage className="w-full h-full aspect-video object-cover  mb-6" />
       )}
       <div className="flex flex-col grow p-8">
         {showCategories && (
-          <BlogFeedPostCategories categoryPageBaseUrl={categoryPageBaseUrl} />
+          <PostCategories className="mb-4" baseUrl={categoryPageBaseUrl} />
         )}
 
-        <BlogFeed.PostLink
-          baseUrl={postPageBaseUrl}
-          className="block -mt-1 mb-3 "
-        >
-          <BlogFeed.PostTitle className="text-3xl font-semibold text-content-primary" />
-        </BlogFeed.PostLink>
+        <Blog.Post.Link baseUrl={postPageBaseUrl} className="block -mt-1 mb-3 ">
+          <Blog.Post.Title className="text-3xl font-semibold text-content-primary" />
+        </Blog.Post.Link>
 
         {showExcerpt && (
-          <BlogFeed.PostExcerpt className="text-content-secondary mb-4 line-clamp-3 flex-grow" />
+          <Blog.Post.Excerpt className="text-content-secondary mb-4 line-clamp-3 flex-grow" />
         )}
 
         {(showAuthorAvatar || showAuthorName || showPublishDate) && (
@@ -94,19 +68,17 @@ export function BlogFeedPostCardSideBySide({
             {showAuthorName || showAuthorAvatar ? (
               <div className="flex items-center gap-3">
                 {showAuthorAvatar && (
-                  <BlogFeed.PostAuthorAvatar className="w-8 h-8 text-xs rounded-full flex items-center justify-center" />
+                  <Blog.Post.AuthorAvatar className="w-8 h-8 text-xs rounded-full flex items-center justify-center" />
                 )}
-                {showAuthorName && <BlogFeed.PostAuthorName />}
+                {showAuthorName && <Blog.Post.AuthorName />}
               </div>
             ) : null}
 
-            {showPublishDate && (
-              <BlogFeed.PostPublishDate locale={dateLocale} />
-            )}
+            {showPublishDate && <Blog.Post.PublishDate locale={dateLocale} />}
             {showReadingTime && (
-              <BlogFeed.PostReadingTime asChild>
+              <Blog.Post.ReadingTime asChild>
                 {({ readingTime }) => <span>{readingTime} min read</span>}
-              </BlogFeed.PostReadingTime>
+              </Blog.Post.ReadingTime>
             )}
           </div>
         )}
@@ -115,7 +87,7 @@ export function BlogFeedPostCardSideBySide({
 
         {readMoreText && (
           <Button className="w-fit gap-1 mt-4 flex items-center" asChild>
-            <BlogFeed.PostLink baseUrl={postPageBaseUrl}>
+            <Blog.Post.Link baseUrl={postPageBaseUrl}>
               {readMoreText}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +103,7 @@ export function BlogFeedPostCardSideBySide({
                   d="M13.5 6.5 19 12m0 0-5.5 5.5"
                 />
               </svg>
-            </BlogFeed.PostLink>
+            </Blog.Post.Link>
           </Button>
         )}
       </div>
@@ -139,7 +111,7 @@ export function BlogFeedPostCardSideBySide({
   );
 }
 
-export function BlogFeedPostCardEditorial({
+export function BlogPostCardEditorial({
   className,
   postPageBaseUrl,
   categoryPageBaseUrl,
@@ -153,7 +125,7 @@ export function BlogFeedPostCardEditorial({
   showReadingTime = false,
   showExcerpt: showExcerptProp = 'auto',
 }: BlogPostCardProps) {
-  const { post } = BlogFeed.useFeedPostRepeaterContext();
+  const { post } = Blog.Feed.useFeedPostRepeaterContext();
 
   const showExcerpt =
     showExcerptProp === 'auto'
@@ -165,21 +137,18 @@ export function BlogFeedPostCardEditorial({
       className={cn('flex flex-col rounded-xl text-foreground', className)}
     >
       {showCoverImage && (
-        <BlogFeed.PostCoverImage className="w-full aspect-[250/200] object-cover rounded-xl mb-6" />
+        <Blog.Post.CoverImage className="w-full aspect-[250/200] object-cover rounded-xl mb-6" />
       )}
       {showCategories && (
-        <BlogFeedPostCategories categoryPageBaseUrl={categoryPageBaseUrl} />
+        <PostCategories className="mb-4" baseUrl={categoryPageBaseUrl} />
       )}
 
-      <BlogFeed.PostLink
-        baseUrl={postPageBaseUrl}
-        className="block -mt-1 mb-3 "
-      >
-        <BlogFeed.PostTitle className="text-3xl font-semibold text-content-primary" />
-      </BlogFeed.PostLink>
+      <Blog.Post.Link baseUrl={postPageBaseUrl} className="block -mt-1 mb-3 ">
+        <Blog.Post.Title className="text-3xl font-semibold text-content-primary" />
+      </Blog.Post.Link>
 
       {showExcerpt && (
-        <BlogFeed.PostExcerpt className="text-content-secondary mb-4 line-clamp-3 flex-grow" />
+        <Blog.Post.Excerpt className="text-content-secondary mb-4 line-clamp-3 flex-grow" />
       )}
 
       <div className="mt-auto mb-0"></div>
@@ -187,22 +156,22 @@ export function BlogFeedPostCardEditorial({
       {(showAuthorAvatar || showAuthorName || showPublishDate) && (
         <div className="flex items-center text-sm gap-3 text-content-muted">
           {showAuthorAvatar && (
-            <BlogFeed.PostAuthorAvatar className="w-8 h-8 text-xs rounded-full flex items-center justify-center" />
+            <Blog.Post.AuthorAvatar className="w-8 h-8 text-xs rounded-full flex items-center justify-center" />
           )}
-          {showAuthorName && <BlogFeed.PostAuthorName />}
+          {showAuthorName && <Blog.Post.AuthorName />}
 
-          {showPublishDate && <BlogFeed.PostPublishDate locale={dateLocale} />}
+          {showPublishDate && <Blog.Post.PublishDate locale={dateLocale} />}
           {showReadingTime && (
-            <BlogFeed.PostReadingTime asChild>
+            <Blog.Post.ReadingTime asChild>
               {({ readingTime }) => <span>{readingTime} min read</span>}
-            </BlogFeed.PostReadingTime>
+            </Blog.Post.ReadingTime>
           )}
         </div>
       )}
 
       {readMoreText && (
         <Button className="w-fit gap-1 mt-4 flex items-center" asChild>
-          <BlogFeed.PostLink baseUrl={postPageBaseUrl}>
+          <Blog.Post.Link baseUrl={postPageBaseUrl}>
             {readMoreText}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +187,7 @@ export function BlogFeedPostCardEditorial({
                 d="M13.5 6.5 19 12m0 0-5.5 5.5"
               />
             </svg>
-          </BlogFeed.PostLink>
+          </Blog.Post.Link>
         </Button>
       )}
     </article>

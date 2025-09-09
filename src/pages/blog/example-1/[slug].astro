@@ -5,11 +5,12 @@ import {
 } from '@wix/headless-blog/services';
 import { SEO } from '@wix/headless-seo/react';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import BlogPostPage from '../../../react-pages/blog/post-page';
 
-// import '../../../styles/theme-light.css';
-import '../../../styles/theme-dark.css';
+import '../../../styles/theme-light.css';
+// import '../../../styles/theme-dark.css';
 
 const { slug } = Astro.params;
 export const prerender = false;
@@ -49,15 +50,16 @@ const [recentPostsServiceConfig, seoTagsServiceConfig] = await Promise.all([
 <BaseLayout>
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
-  <BlogPostPage
-    client:load
-    blogPostServiceConfig={blogPostServiceConfig}
-    recentPostsServiceConfig={recentPostsServiceConfig}
-    href={Astro.url.href}
-    feedPageHref="/blog/example-1"
-    postPageBaseUrl="/blog/example-1/"
-    categoryPageBaseUrl="/blog/example-1/category/"
-    dateLocale="en-US"
-    slot="body"
-  />
+  <KitchensinkLayout>
+    <BlogPostPage
+      client:load
+      blogPostServiceConfig={blogPostServiceConfig}
+      recentPostsServiceConfig={recentPostsServiceConfig}
+      href={Astro.url.href}
+      feedPageHref="/blog/example-1"
+      postPageBaseUrl="/blog/example-1/"
+      categoryPageBaseUrl="/blog/example-1/category/"
+      dateLocale="en-US"
+    />
+  </KitchensinkLayout>
 </BaseLayout>

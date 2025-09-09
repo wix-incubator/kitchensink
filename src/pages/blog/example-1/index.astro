@@ -6,8 +6,9 @@ import {
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogFeedPage from '../../../react-pages/blog/feed-page';
 
-// import '../../../styles/theme-light.css';
-import '../../../styles/theme-dark.css';
+import '../../../styles/theme-light.css';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
+// import '../../../styles/theme-dark.css';
 
 const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   loadBlogFeedServiceConfig({
@@ -30,15 +31,16 @@ const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
     content="Explore our blog featuring the latest insights on headless components, web development, and modern architecture."
   />
 
-  <BlogFeedPage
-    client:load
-    pathname={Astro.url.pathname}
-    blogFeedServiceConfig={blogFeedServiceConfig}
-    blogCategoriesServiceConfig={blogCategoriesServiceConfig}
-    feedPageHref="/blog/example-1"
-    postPageBaseUrl="/blog/example-1/"
-    categoryPageBaseUrl="/blog/example-1/category/"
-    dateLocale="en-US"
-    slot="body"
-  />
+  <KitchensinkLayout>
+    <BlogFeedPage
+      client:load
+      pathname={Astro.url.pathname}
+      blogFeedServiceConfig={blogFeedServiceConfig}
+      blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+      feedPageHref="/blog/example-1"
+      postPageBaseUrl="/blog/example-1/"
+      categoryPageBaseUrl="/blog/example-1/category/"
+      dateLocale="en-US"
+    />
+  </KitchensinkLayout>
 </BaseLayout>

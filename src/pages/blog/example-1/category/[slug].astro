@@ -11,8 +11,9 @@ import {
 } from '@wix/headless-seo/services';
 import { SEO } from '@wix/headless-seo/react';
 
-// import '../../../../styles/theme-light.css';
-import '../../../../styles/theme-dark.css';
+import '../../../../styles/theme-light.css';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
+// import '../../../../styles/theme-dark.css';
 
 const { slug } = Astro.params;
 export const prerender = false;
@@ -61,15 +62,16 @@ try {
 <BaseLayout>
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
-  <BlogFeedPage
-    client:load
-    pathname={Astro.url.pathname}
-    blogFeedServiceConfig={blogFeedServiceConfig}
-    blogCategoriesServiceConfig={blogCategoriesServiceConfig}
-    feedPageHref="/blog/example-1"
-    postPageBaseUrl="/blog/example-1/"
-    categoryPageBaseUrl="/blog/example-1/category/"
-    dateLocale="en-US"
-    slot="body"
-  />
+  <KitchensinkLayout>
+    <BlogFeedPage
+      client:load
+      pathname={Astro.url.pathname}
+      blogFeedServiceConfig={blogFeedServiceConfig}
+      blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+      feedPageHref="/blog/example-1"
+      postPageBaseUrl="/blog/example-1/"
+      categoryPageBaseUrl="/blog/example-1/category/"
+      dateLocale="en-US"
+    />
+  </KitchensinkLayout>
 </BaseLayout>
