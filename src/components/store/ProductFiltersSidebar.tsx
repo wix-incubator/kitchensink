@@ -13,13 +13,13 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="w-full lg:w-80 lg:flex-shrink-0">
+    <div className="filters-sidebar w-full lg:w-80 lg:flex-shrink-0">
       <div className="lg:sticky lg:top-6">
         <div className="relative">
           <div
             className={`bg-surface-primary backdrop-blur-sm rounded-xl p-6 border border-brand-subtle ${className}`}
           >
-            <ProductList.Filter.Root>
+            <ProductList.Filter.Root className="product-list-filter flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-content-primary flex items-center gap-2">
@@ -71,7 +71,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                 className={`space-y-6 ${isExpanded ? 'block' : 'hidden lg:block'}`}
               >
                 <Filter.FilterOptions>
-                  <Filter.FilterOptionRepeater>
+                  <Filter.FilterOptionRepeater className="filter-option-repeater flex flex-col">
                     <Filter.FilterOption.Label />
                     <Filter.FilterOption.MultiFilter />
                     <Filter.FilterOption.RangeFilter />

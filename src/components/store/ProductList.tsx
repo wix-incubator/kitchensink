@@ -138,7 +138,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
             </Card>
 
             {/* Filters Section */}
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <div className="product-list-body flex flex-row lg:flex-row gap-6 lg:gap-8">
               {/* Filters Sidebar */}
               <ProductFiltersSidebar />
 
