@@ -6,9 +6,8 @@ import {
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogFeedPage from '../../../react-pages/blog/feed-page';
 
-import '../../../styles/theme-light.css';
+import './theme.css';
 import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
-// import '../../../styles/theme-dark.css';
 
 const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   loadBlogFeedServiceConfig({

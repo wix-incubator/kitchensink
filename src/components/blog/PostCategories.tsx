@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Blog } from '@wix/headless-blog/react';
+import { Chip } from '../ui/blog/Chip';
 
 interface PostCategoriesProps {
   className?: string;
@@ -14,12 +15,9 @@ function PostCategories({ baseUrl, className }: PostCategoriesProps) {
   return (
     <Blog.Post.CategoryItems className={cn('flex flex-wrap gap-2', className)}>
       <Blog.Categories.CategoryItemRepeater>
-        <CategoryLinkOrLabel
-          baseUrl={baseUrl}
-          className={cn(
-            'border border-surface-strong text-foreground leading-tight px-3 py-1 rounded-full text-sm font-medium',
-          )}
-        />
+        <Chip variant="secondary" asChild>
+          <CategoryLinkOrLabel baseUrl={baseUrl} />
+        </Chip>
       </Blog.Categories.CategoryItemRepeater>
     </Blog.Post.CategoryItems>
   );
