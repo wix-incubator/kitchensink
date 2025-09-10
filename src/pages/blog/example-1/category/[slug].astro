@@ -1,18 +1,18 @@
 ---
+import FeedPage from '@/components/blog/FeedPage';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 import {
-  loadBlogFeedServiceConfig,
   loadBlogCategoriesServiceConfig,
+  loadBlogFeedServiceConfig,
 } from '@wix/headless-blog/services';
-import BaseLayout from '../../../../layouts/BaseLayout.astro';
-import BlogFeedPage from '../../../../react-pages/blog/feed-page';
+import { SEO } from '@wix/headless-seo/react';
 import {
   loadSEOTagsServiceConfig,
   type SEOTagsServiceConfig,
 } from '@wix/headless-seo/services';
-import { SEO } from '@wix/headless-seo/react';
 
 import '../theme.css';
-import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 
 const { slug } = Astro.params;
 export const prerender = false;
@@ -62,7 +62,7 @@ try {
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
   <KitchensinkLayout>
-    <BlogFeedPage
+    <FeedPage
       client:load
       pathname={Astro.url.pathname}
       blogFeedServiceConfig={blogFeedServiceConfig}

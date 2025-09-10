@@ -1,14 +1,3 @@
-import { BlogFeedCardEditorial } from '@/components/blog/BlogFeedCard';
-import PostCategories from '@/components/blog/PostCategories';
-import SharePostActions from '@/components/blog/SharePostActions';
-import { useNavigation } from '@/components/NavigationContext';
-import { Chip } from '@/components/ui/blog/Chip';
-import { EmptyState } from '@/components/ui/blog/EmptyState';
-import { PostContent } from '@/components/ui/blog/PostContent';
-import { PostMeta } from '@/components/ui/blog/PostMeta';
-import { PostTitle } from '@/components/ui/blog/PostTitle';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { Blog } from '@wix/headless-blog/react';
 import {
@@ -25,20 +14,38 @@ import {
 } from '@wix/services-manager';
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import { useState } from 'react';
+import { useNavigation } from '../NavigationContext';
+import { Chip } from '../ui/blog/Chip';
+import { EmptyState } from '../ui/blog/EmptyState';
+import { PostContent } from '../ui/blog/PostContent';
+import { PostMeta } from '../ui/blog/PostMeta';
+import { PostTitle } from '../ui/blog/PostTitle';
+import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
+import { BlogFeedCardEditorial } from './BlogFeedCard';
+import PostCategories from './PostCategories';
+import SharePostActions from './SharePostActions';
 
 import '@wix/headless-blog/react/styles.css';
 
-interface BlogPostPageProps {
+interface PostPageProps {
+  /** Loaded result of `loadBlogPostServiceConfig` */
   blogPostServiceConfig: BlogPostServiceConfig;
+  /** Loaded result of `loadBlogFeedServiceConfig`, to be used for the recent posts section */
   recentPostsServiceConfig: BlogFeedServiceConfig;
+  /** Full href of the post page, used for social sharing */
   href: string;
+  /** The href of the feed page, used for the "Back to Blog" link */
   feedPageHref: string;
+  /** The base url of the post page, commonly end with trailing slash, e.g. "/post/" */
   postPageBaseUrl: string;
+  /** The base url of the category page, commonly end with trailing slash, e.g. "/category/" */
   categoryPageBaseUrl: string;
+  /** The date locale to use for the dates */
   dateLocale: string;
 }
 
-export default function BlogPostPage({
+export default function PostPage({
   blogPostServiceConfig,
   recentPostsServiceConfig,
   href,
@@ -46,7 +53,7 @@ export default function BlogPostPage({
   postPageBaseUrl,
   categoryPageBaseUrl,
   dateLocale,
-}: BlogPostPageProps) {
+}: PostPageProps) {
   const Navigation = useNavigation();
   const [servicesManager] = useState(() =>
     createServicesManager(
@@ -104,7 +111,6 @@ export default function BlogPostPage({
                     </Chip>
                   </Blog.Post.TagItemRepeater>
                 </Blog.Post.TagItems>
-                {/* Social Sharing */}
                 <section>
                   <SharePostActions href={href} />
                 </section>

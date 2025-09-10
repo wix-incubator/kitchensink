@@ -1,11 +1,3 @@
-import {
-  BlogFeedCardEditorial,
-  BlogFeedCardSideBySide,
-} from '@/components/blog/BlogFeedCard';
-import BlogFeedCategoriesSection from '@/components/blog/BlogFeedCategoriesSection';
-import { EmptyState } from '@/components/ui/blog/EmptyState';
-import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Blog } from '@wix/headless-blog/react';
 import {
   BlogCategoriesService,
@@ -20,19 +12,31 @@ import {
   createServicesMap,
 } from '@wix/services-manager';
 import { ServicesManagerProvider } from '@wix/services-manager-react';
+import { Loader2Icon } from 'lucide-react';
 import { useState } from 'react';
+import { EmptyState } from '../ui/blog/EmptyState';
+import { Button } from '../ui/button';
+import { BlogFeedCardEditorial, BlogFeedCardSideBySide } from './BlogFeedCard';
+import BlogFeedCategoriesSection from './BlogFeedCategoriesSection';
 
-interface BlogFeedPageProps {
+interface FeedPageProps {
+  /** The pathname of the current page */
   pathname: string;
+  /** Loaded result of `loadBlogFeedServiceConfig` */
   blogFeedServiceConfig: BlogFeedServiceConfig;
+  /** Loaded result of `loadBlogCategoriesServiceConfig` */
   blogCategoriesServiceConfig: BlogCategoriesServiceConfig;
+  /** The href of the feed page, used for the "All posts" link */
   feedPageHref: string;
+  /** The base url of the post page, commonly end with trailing slash, e.g. "/post/" */
   postPageBaseUrl: string;
+  /** The base url of the category page, commonly end with trailing slash, e.g. "/category/" */
   categoryPageBaseUrl: string;
+  /** The date locale to use for the dates */
   dateLocale: string;
 }
 
-export default function BlogFeedPage({
+export default function FeedPage({
   pathname,
   blogFeedServiceConfig,
   blogCategoriesServiceConfig,
@@ -40,7 +44,7 @@ export default function BlogFeedPage({
   postPageBaseUrl,
   categoryPageBaseUrl,
   dateLocale,
-}: BlogFeedPageProps) {
+}: FeedPageProps) {
   const [servicesManager] = useState(() =>
     createServicesManager(
       createServicesMap()
@@ -107,12 +111,10 @@ export default function BlogFeedPage({
                 <Blog.Feed.LoadMore
                   asChild
                   loading={
-                    <LoadingSpinner
-                      className="min-h-auto"
-                      innerClassName="space-x-3"
-                      spinnerClassName="w-4 h-4"
-                      messageClassName="text-sm"
-                    />
+                    <>
+                      <Loader2Icon className="animate-spin" />
+                      Loading...
+                    </>
                   }
                 >
                   <Button variant="outline">Load More Posts</Button>

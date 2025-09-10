@@ -5,6 +5,7 @@ import { PostMeta } from '../ui/blog/PostMeta';
 import { cn } from '@/lib/utils';
 import PostCategories from './PostCategories';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { useNavigation } from '../NavigationContext';
 
 interface BlogFeedCardProps {
   className?: string;
@@ -37,6 +38,7 @@ export function BlogFeedCardSideBySide({
   showExcerpt: showExcerptProp = 'auto',
   showReadingTime = false,
 }: BlogFeedCardProps) {
+  const Navigation = useNavigation();
   const { post } = Blog.Feed.useFeedPostRepeaterContext();
   const showExcerpt =
     showExcerptProp === 'auto'
@@ -58,8 +60,16 @@ export function BlogFeedCardSideBySide({
           <PostCategories className="mb-4" baseUrl={categoryPageBaseUrl} />
         )}
 
-        <Blog.Post.Link baseUrl={postPageBaseUrl} className="block -mt-1 mb-3 ">
-          <PostTitle variant="lg" />
+        <Blog.Post.Link
+          baseUrl={postPageBaseUrl}
+          className="block -mt-1 mb-3 "
+          asChild
+        >
+          {({ href }) => (
+            <Navigation route={href}>
+              <PostTitle variant="lg" />
+            </Navigation>
+          )}
         </Blog.Post.Link>
 
         {showExcerpt && (
@@ -84,9 +94,13 @@ export function BlogFeedCardSideBySide({
 
         {readMoreText && (
           <Button className="w-fit mt-4" asChild>
-            <Blog.Post.Link baseUrl={postPageBaseUrl}>
-              {readMoreText}
-              <ChevronRightIcon strokeWidth={2} className="w-4 h-4" />
+            <Blog.Post.Link baseUrl={postPageBaseUrl} asChild>
+              {({ href }) => (
+                <Navigation route={href}>
+                  {readMoreText}
+                  <ChevronRightIcon strokeWidth={2} className="w-4 h-4" />
+                </Navigation>
+              )}
             </Blog.Post.Link>
           </Button>
         )}
@@ -110,7 +124,7 @@ export function BlogFeedCardEditorial({
   showExcerpt: showExcerptProp = 'auto',
 }: BlogFeedCardProps) {
   const { post } = Blog.Feed.useFeedPostRepeaterContext();
-
+  const Navigation = useNavigation();
   const showExcerpt =
     showExcerptProp === 'auto'
       ? !post.resolvedFields.coverImageUrl
@@ -125,8 +139,16 @@ export function BlogFeedCardEditorial({
         <PostCategories className="mb-4" baseUrl={categoryPageBaseUrl} />
       )}
 
-      <Blog.Post.Link baseUrl={postPageBaseUrl} className="block -mt-1 mb-3 ">
-        <PostTitle variant="lg" />
+      <Blog.Post.Link
+        baseUrl={postPageBaseUrl}
+        className="block -mt-1 mb-3 "
+        asChild
+      >
+        {({ href }) => (
+          <Navigation route={href}>
+            <PostTitle variant="lg" />
+          </Navigation>
+        )}
       </Blog.Post.Link>
 
       {showExcerpt && (
@@ -151,9 +173,13 @@ export function BlogFeedCardEditorial({
 
       {readMoreText && (
         <Button className="w-fit mt-4" asChild>
-          <Blog.Post.Link baseUrl={postPageBaseUrl}>
-            {readMoreText}
-            <ChevronRightIcon strokeWidth={2} className="w-4 h-4" />
+          <Blog.Post.Link baseUrl={postPageBaseUrl} asChild>
+            {({ href }) => (
+              <Navigation route={href}>
+                {readMoreText}
+                <ChevronRightIcon strokeWidth={2} className="w-4 h-4" />
+              </Navigation>
+            )}
           </Blog.Post.Link>
         </Button>
       )}

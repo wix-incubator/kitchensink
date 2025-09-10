@@ -5,7 +5,7 @@ import {
 import React from 'react';
 
 import { useLoaderData, useLocation } from 'react-router-dom';
-import BlogPostPage from '../../../react-pages/blog/post-page';
+import PostPage from '@/components/blog/PostPage';
 
 // Main Route Component
 export function BlogPostRoute() {
@@ -15,7 +15,7 @@ export function BlogPostRoute() {
 
   return (
     <React.Suspense fallback={<div>Loading blog post...</div>}>
-      <BlogPostPage
+      <PostPage
         blogPostServiceConfig={blogPostServiceConfig}
         recentPostsServiceConfig={recentPostsServiceConfig}
         href={location.pathname}

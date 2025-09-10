@@ -1,13 +1,13 @@
 ---
+import FeedPage from '@/components/blog/FeedPage';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 import {
   loadBlogCategoriesServiceConfig,
   loadBlogFeedServiceConfig,
 } from '@wix/headless-blog/services';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import BlogFeedPage from '../../../react-pages/blog/feed-page';
 
 import './theme.css';
-import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 
 const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   loadBlogFeedServiceConfig({
@@ -31,7 +31,7 @@ const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   />
 
   <KitchensinkLayout>
-    <BlogFeedPage
+    <FeedPage
       client:load
       pathname={Astro.url.pathname}
       blogFeedServiceConfig={blogFeedServiceConfig}

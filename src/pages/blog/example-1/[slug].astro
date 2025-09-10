@@ -1,13 +1,13 @@
 ---
+import PostPage from '@/components/blog/PostPage';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 import {
   loadBlogFeedServiceConfig,
   loadBlogPostServiceConfig,
 } from '@wix/headless-blog/services';
 import { SEO } from '@wix/headless-seo/react';
 import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
-import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import BlogPostPage from '../../../react-pages/blog/post-page';
 
 import './theme.css';
 
@@ -50,7 +50,7 @@ const [recentPostsServiceConfig, seoTagsServiceConfig] = await Promise.all([
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
   <KitchensinkLayout>
-    <BlogPostPage
+    <PostPage
       client:load
       blogPostServiceConfig={blogPostServiceConfig}
       recentPostsServiceConfig={recentPostsServiceConfig}

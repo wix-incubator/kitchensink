@@ -1,11 +1,10 @@
+import FeedPage from '@/components/blog/FeedPage';
 import {
   loadBlogCategoriesServiceConfig,
   loadBlogFeedServiceConfig,
 } from '@wix/headless-blog/services';
 import React from 'react';
-
 import { useLoaderData, useLocation } from 'react-router-dom';
-import BlogFeedPage from '../../blog/feed-page';
 
 // Main Route Component
 export function BlogIndexRoute() {
@@ -15,7 +14,7 @@ export function BlogIndexRoute() {
 
   return (
     <React.Suspense fallback={<div>Loading blog...</div>}>
-      <BlogFeedPage
+      <FeedPage
         pathname={location.pathname}
         blogFeedServiceConfig={blogFeedServiceConfig}
         blogCategoriesServiceConfig={blogCategoriesServiceConfig}
