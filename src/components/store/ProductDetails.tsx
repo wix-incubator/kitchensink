@@ -52,11 +52,7 @@ export default function ProductDetails({
 
   return (
     <Product product={product}>
-      <StyledMediaGallery.Root
-        mediaGalleryServiceConfig={{
-          media: product.media?.itemsInfo?.items ?? [],
-        }}
-      >
+    
         <>
           <div
             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
@@ -300,7 +296,6 @@ export default function ProductDetails({
             </div>
           )}
         </>
-      </StyledMediaGallery.Root>
     </Product>
   );
 }
