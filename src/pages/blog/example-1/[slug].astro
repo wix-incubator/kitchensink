@@ -1,5 +1,6 @@
 ---
 import PostPage from '@/components/blog/PostPage';
+import RecentPostsSection from '@/components/blog/RecentPostsSection';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
 import {
@@ -50,15 +51,26 @@ const [recentPostsServiceConfig, seoTagsServiceConfig] = await Promise.all([
   <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
 
   <KitchensinkLayout>
-    <PostPage
-      client:load
-      blogPostServiceConfig={blogPostServiceConfig}
-      recentPostsServiceConfig={recentPostsServiceConfig}
-      href={Astro.url.href}
-      feedPageHref="/blog/example-1"
-      postPageBaseUrl="/blog/example-1/"
-      categoryPageBaseUrl="/blog/example-1/category/"
-      dateLocale="en-US"
-    />
+    <div class="min-h-screen bg-background">
+      <div class="px-6 py-12 space-y-14">
+        <div class="max-w-3xl mx-auto">
+          <PostPage
+            client:load
+            blogPostServiceConfig={blogPostServiceConfig}
+            href={Astro.url.href}
+            feedPageHref="/blog/example-1"
+            categoryPageBaseUrl="/blog/example-1/category/"
+            dateLocale="en-US"
+          />
+        </div>
+        <RecentPostsSection
+          client:load
+          recentPostsServiceConfig={recentPostsServiceConfig}
+          postPageBaseUrl="/blog/example-1/"
+          categoryPageBaseUrl="/blog/example-1/category/"
+          dateLocale="en-US"
+        />
+      </div>
+    </div>
   </KitchensinkLayout>
 </BaseLayout>

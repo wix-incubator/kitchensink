@@ -6,6 +6,7 @@ import React from 'react';
 
 import { useLoaderData, useLocation } from 'react-router-dom';
 import PostPage from '@/components/blog/PostPage';
+import RecentPostsSection from '@/components/blog/RecentPostsSection';
 
 // Main Route Component
 export function BlogPostRoute() {
@@ -15,15 +16,25 @@ export function BlogPostRoute() {
 
   return (
     <React.Suspense fallback={<div>Loading blog post...</div>}>
-      <PostPage
-        blogPostServiceConfig={blogPostServiceConfig}
-        recentPostsServiceConfig={recentPostsServiceConfig}
-        href={location.pathname}
-        feedPageHref="/react-router-blog"
-        postPageBaseUrl="/react-router-blog/"
-        categoryPageBaseUrl="/react-router-blog/category/"
-        dateLocale="en-US"
-      />
+      <div className="min-h-screen bg-background">
+        <div className="px-6 py-12 space-y-14">
+          <div className="max-w-3xl mx-auto">
+            <PostPage
+              blogPostServiceConfig={blogPostServiceConfig}
+              href={location.pathname}
+              feedPageHref="/react-router-blog"
+              categoryPageBaseUrl="/react-router-blog/category/"
+              dateLocale="en-US"
+            />
+          </div>
+          <RecentPostsSection
+            recentPostsServiceConfig={recentPostsServiceConfig}
+            postPageBaseUrl="/react-router-blog/"
+            categoryPageBaseUrl="/react-router-blog/category/"
+            dateLocale="en-US"
+          />
+        </div>
+      </div>
     </React.Suspense>
   );
 }
