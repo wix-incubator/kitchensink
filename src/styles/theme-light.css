@@ -1,0 +1,396 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Light theme colors - for light appearance */
+  --color-primary: var(--color-slate-900);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #8b5cf6;
+  --color-secondary-foreground: #ffffff;
+  --color-background: #ffffff;
+  --color-foreground: #1e293b;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-input: #ffffff;
+  --color-ring: #3b82f6;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+}
+
+:root {
+  /* Primary Theme Colors */
+  --theme-primary-500: #3b82f6; /* Primary brand color used for main UI elements like filter status bars and icons */
+  --theme-primary-600: #2563eb; /* Darker variant of primary color used for hover states and emphasis */
+  --theme-secondary-500: #8b5cf6; /* Secondary accent color used in gradients alongside primary color */
+  --theme-secondary-600: #7c3aed; /* Darker variant of secondary color used for hover state gradients */
+  --theme-secondary-700: #6d28d9; /* Darkest variant of secondary color used for intense hover states */
+
+  --theme-info-500: #3b82f6; /* Info/blue color for informational elements */
+  --theme-info-600: #2563eb; /* Darker info color for hover states */
+  --theme-info-400: #60a5fa; /* Lighter info color for text */
+
+  --theme-danger-500: #ef4444; /* Danger/red color for error states */
+  --theme-danger-600: #dc2626; /* Darker danger color for hover states */
+  --theme-danger-400: #f87171; /* Lighter danger color for text */
+  --theme-danger-300: #fca5a5; /* Light danger color for text */
+
+  --theme-success-500: #10b981; /* Success/green color for positive states */
+  --theme-success-600: #059669; /* Darker success color for hover states */
+  --theme-success-400: #34d399; /* Lighter success color for text */
+
+  /* Social Sharing Colors */
+  --theme-social-x: #ffffff; /* X white */
+  --theme-social-x-hover: #e5e7eb; /* X light grey hover */
+  --theme-social-facebook: #1877f2; /* Facebook blue */
+  --theme-social-facebook-hover: #166fe5; /* Facebook blue hover */
+  --theme-social-linkedin: #0077b5; /* LinkedIn blue */
+  --theme-social-linkedin-hover: #005885; /* LinkedIn blue hover */
+  --theme-social-link: #14b8a6; /* Link/copy teal */
+  --theme-social-link-hover: #0d9488; /* Link/copy teal hover */
+
+  /* Background Colors with Opacity */
+  --theme-bg-primary-10: rgba(
+    59,
+    130,
+    246,
+    0.1
+  ); /* Semi-transparent primary color used for filter status bar backgrounds */
+  --theme-bg-primary-20: rgba(
+    59,
+    130,
+    246,
+    0.2
+  ); /* Semi-transparent primary color with higher opacity for emphasized backgrounds */
+  --theme-bg-options: rgba(
+    59,
+    130,
+    246,
+    0.08
+  ); /* Background color for product option tags and choice buttons on light backgrounds */
+  --theme-bg-modal: rgba(
+    255,
+    255,
+    255,
+    0.95
+  ); /* Light modal content background for light theme */
+  --theme-bg-loading: rgba(
+    226,
+    232,
+    240,
+    0.6
+  ); /* Background color for loading skeleton elements */
+  --theme-bg-card: rgba(
+    248,
+    250,
+    252,
+    0.8
+  ); /* Light background for cards and product items */
+  --theme-bg-error: rgba(
+    254,
+    226,
+    226,
+    0.8
+  ); /* Light red background for error messages */
+  --theme-bg-tooltip: rgba(
+    30,
+    41,
+    59,
+    0.9
+  ); /* Dark background for tooltips and overlays */
+
+  --theme-bg-info-10: rgba(59, 130, 246, 0.1); /* Light info background */
+  --theme-bg-info-20: rgba(59, 130, 246, 0.2); /* Medium info background */
+  --theme-bg-success-10: rgba(16, 185, 129, 0.1); /* Light success background */
+  --theme-bg-success-20: rgba(
+    16,
+    185,
+    129,
+    0.2
+  ); /* Medium success background */
+  --theme-bg-danger-10: rgba(239, 68, 68, 0.1); /* Light danger background */
+  --theme-bg-danger-20: rgba(239, 68, 68, 0.2); /* Medium danger background */
+  --theme-bg-accent-20: rgba(20, 184, 166, 0.2);
+  /* Social Sharing Background Colors */
+  --theme-bg-social-button: rgba(
+    241,
+    245,
+    249,
+    0.8
+  ); /* Social button background */
+  --theme-bg-social-x: rgba(0, 0, 0, 0.1);
+  --theme-bg-social-facebook: rgba(
+    24,
+    119,
+    242,
+    0.1
+  ); /* Facebook hover background */
+  --theme-bg-social-linkedin: rgba(
+    0,
+    119,
+    181,
+    0.1
+  ); /* LinkedIn hover background */
+  --theme-bg-social-link: rgba(
+    20,
+    184,
+    166,
+    0.1
+  ); /* Link/copy hover background */
+
+  /* Border Colors */
+  --theme-border-primary-10: rgba(
+    59,
+    130,
+    246,
+    0.2
+  ); /* Subtle primary-colored border for filter status bars */
+  --theme-border-primary-20: rgba(
+    59,
+    130,
+    246,
+    0.4
+  ); /* More visible primary-colored border for emphasized elements */
+  --theme-border-primary-30: rgba(
+    59,
+    130,
+    246,
+    0.6
+  ); /* Strong primary-colored border used for product option tags */
+  --theme-border-card: rgba(
+    226,
+    232,
+    240,
+    0.8
+  ); /* Light border for cards and product items */
+  --theme-border-card-hover: rgba(
+    148,
+    163,
+    184,
+    0.6
+  ); /* Medium border for card hover states */
+  --theme-border-error: rgba(
+    248,
+    113,
+    113,
+    0.4
+  ); /* Red border for error messages */
+
+  --theme-border-info-20: rgba(59, 130, 246, 0.2); /* Info border */
+  --theme-border-info-30: rgba(59, 130, 246, 0.3); /* Stronger info border */
+  --theme-border-success-20: rgba(16, 185, 129, 0.2); /* Success border */
+  --theme-border-success-30: rgba(
+    16,
+    185,
+    129,
+    0.3
+  ); /* Stronger success border */
+  --theme-border-danger-20: rgba(239, 68, 68, 0.2); /* Danger border */
+  --theme-border-danger-30: rgba(239, 68, 68, 0.3); /* Stronger danger border */
+
+  /* Social Sharing Border Colors */
+  --theme-border-social-subtle: rgba(
+    226,
+    232,
+    240,
+    0.6
+  ); /* Subtle border for social sharing container */
+  --theme-border-accent-20: rgba(20, 184, 166, 0.2); /* Accent border */
+  --theme-border-accent-30: rgba(
+    20,
+    184,
+    166,
+    0.3
+  ); /* Stronger accent border */
+
+  /* Text Colors */
+  --theme-text-primary-300: #3b82f6; /* Primary color used for filter status text and active filter labels */
+  --theme-text-primary-400: #2563eb; /* Darker primary color used for filter icons and interactive text elements */
+  --theme-text-content: #1e293b; /* Main content text color used for headings, product titles, and button labels */
+  --theme-text-content-30: rgba(
+    30,
+    41,
+    59,
+    0.3
+  ); /* Very faded content text used for disabled text elements */
+  --theme-text-content-40: rgba(
+    30,
+    41,
+    59,
+    0.4
+  ); /* Very dim content text used for placeholder icons and subtle elements */
+  --theme-text-content-50: rgba(
+    30,
+    41,
+    59,
+    0.5
+  ); /* Dim content text used for strikethrough sale prices */
+  --theme-text-content-60: rgba(
+    30,
+    41,
+    59,
+    0.6
+  ); /* Muted content text used for descriptions, counts, and secondary information */
+  --theme-text-content-70: rgba(
+    30,
+    41,
+    59,
+    0.7
+  ); /* Semi-muted content text used for subtitles and intro paragraphs */
+  --theme-text-content-80: rgba(
+    30,
+    41,
+    59,
+    0.8
+  ); /* Clear content text used for option labels and form text */
+  --theme-text-content-90: rgba(
+    30,
+    41,
+    59,
+    0.9
+  ); /* Almost full opacity content text used for emphasized secondary text */
+  --theme-text-success: #059669; /* Green color used for "In Stock" status indicators */
+  --theme-text-error: #dc2626; /* Red color used for "Out of Stock" status and error messages */
+
+  /* Status Text Colors */
+  --theme-text-info: #2563eb; /* Info text color */
+  --theme-text-danger: #dc2626; /* Danger text color */
+  --theme-text-accent: #0d9488; /* Accent text color */
+
+  /* Social Sharing Theme Variables */
+  --theme-text-social-muted: rgba(
+    30,
+    41,
+    59,
+    0.6
+  ); /* Muted text for social sharing labels */
+  --theme-text-social-x: var(--theme-text-content); /* X text color */
+  --theme-text-social-facebook: var(
+    --theme-social-facebook
+  ); /* Facebook text color */
+  --theme-text-social-linkedin: var(
+    --theme-social-linkedin
+  ); /* LinkedIn text color */
+  --theme-text-social-link: var(--theme-social-link); /* Link/copy text color */
+
+  /* Color Picker Border Colors */
+  --theme-color-border-40: rgba(
+    93,
+    164,
+    214,
+    0.4
+  ); /* Default border color for product color option circles */
+  --theme-color-border-80: rgba(
+    93,
+    164,
+    214,
+    0.8
+  ); /* Hover border color for product color option circles */
+
+  /* Fallback Colors */
+  --theme-fallback-color: #64748b; /* Fallback color for elements that need a default color */
+  --theme-dropdown-arrow-color: #94a3b8; /* Color for dropdown arrow icons */
+
+  /* Gradient Colors */
+  /* Page Background */
+  --theme-gradient-page: linear-gradient(
+    to bottom right,
+    #dbeafe,
+    #ede9fe,
+    #fce7f3
+  );
+  --theme-gradient-primary: linear-gradient(
+    to right,
+    #dbeafe,
+    #ede9fe
+  ); /* Main brand gradient used for primary buttons and CTAs */
+  --theme-gradient-ribbon: linear-gradient(
+    to right,
+    #dbeafe,
+    #ede9fe
+  ); /* Gradient used for product ribbon/badge backgrounds */
+  --theme-gradient-success: linear-gradient(
+    to right,
+    #d1fae5,
+    #a7f3d0
+  ); /* Success gradient */
+  --theme-gradient-info: linear-gradient(
+    to right,
+    #dbeafe,
+    #bfdbfe
+  ); /* Info gradient */
+  --theme-gradient-accent: linear-gradient(
+    to right,
+    #ccfbf1,
+    #a7f3d0
+  ); /* Accent gradient */
+
+  /* Button Gradients */
+  --theme-btn-primary: linear-gradient(
+    to right,
+    #3b82f6,
+    #8b5cf6
+  ); /* Primary button background gradient for main actions */
+  --theme-btn-primary-hover: linear-gradient(
+    to right,
+    #2563eb,
+    #7c3aed
+  ); /* Primary button hover state gradient */
+  --theme-btn-primary-text: #ffffff; /* Primary button text color */
+  --theme-btn-primary-border: transparent; /* Primary button border color */
+  --theme-btn-secondary: linear-gradient(
+    to right,
+    #f1f5f9,
+    #e2e8f0
+  ); /* Secondary button background gradient */
+  --theme-btn-secondary-hover: linear-gradient(
+    to right,
+    #e2e8f0,
+    #cbd5e1
+  ); /* Secondary button hover state gradient */
+  --theme-btn-secondary-text: #1e293b; /* Secondary button text color */
+  --theme-btn-secondary-border: #cbd5e1; /* Secondary button border color */
+  --theme-btn-success: linear-gradient(
+    to right,
+    #10b981,
+    #059669
+  ); /* Success button gradient */
+  --theme-btn-info: linear-gradient(
+    to right,
+    #3b82f6,
+    #2563eb
+  ); /* Info button gradient */
+  --theme-btn-danger: linear-gradient(
+    to right,
+    #ef4444,
+    #dc2626
+  ); /* Danger button gradient */
+  --theme-btn-accent: linear-gradient(
+    to right,
+    #14b8a6,
+    #0d9488
+  ); /* Accent button gradient */
+
+  /* Hero Section Gradients */
+  --theme-hero-text-gradient: linear-gradient(
+    to right,
+    #1e293b,
+    #475569
+  ); /* Text gradient used for hero section main headlines */
+  --theme-hero-card-gradient: linear-gradient(
+    to right,
+    rgba(59, 130, 246, 0.05),
+    rgba(139, 92, 246, 0.05)
+  ); /* Background gradient for hero feature cards */
+  --theme-hero-feature-gradient: linear-gradient(
+    to bottom right,
+    #dbeafe,
+    #ede9fe
+  ); /* Background gradient for hero feature icons */
+
+  /* Typography */
+  --theme-font-family: inherit; /* Font family for all themed text elements */
+  --theme-font-weight-normal: 400; /* Normal font weight for body text */
+  --theme-font-weight-medium: 500; /* Medium font weight for emphasized text */
+  --theme-font-weight-semibold: 600; /* Semi-bold font weight for headings and labels */
+  --theme-font-weight-bold: 700; /* Bold font weight for titles and strong emphasis */
+}

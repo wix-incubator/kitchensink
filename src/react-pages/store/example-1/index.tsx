@@ -1,6 +1,6 @@
 import { PageDocsRegistration } from '@/components/DocsMode';
 import { StoreLayout } from '../../../layouts/StoreLayout';
-import '../../../styles/theme-1.css';
+import '../../../styles/theme-dark.css';
 import { KitchensinkLayout } from '../../../layouts/KitchensinkLayout';
 import CategoryPage from '../main-components/categoryPage';
 

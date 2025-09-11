@@ -2,16 +2,76 @@
 @import 'tailwindcss';
 @import '@wix/wix-vibe-plugins/plugins-theme.css';
 
-/* Semantic theme classes used in data attribute patterns - converted to Tailwind utilities 
- * These classes are wrapped as @utility so Tailwind can recognize them and generate 
+/* Semantic theme classes used in data attribute patterns - converted to Tailwind utilities
+ * These classes are wrapped as @utility so Tailwind can recognize them and generate
  * data attribute modifiers like data-[selected='true']:text-content-primary.
  * Without @utility, Tailwind wouldn't know about these custom classes and couldn't
  * create the data-* variants needed for interactive state styling.
  */
+
+/* Content Text Colors */
 @utility text-content-primary {
   color: var(--theme-text-content);
 }
 
+@utility text-content-muted {
+  color: var(--theme-text-content-60);
+}
+
+@utility text-content-subtle {
+  color: var(--theme-text-content-40);
+}
+
+@utility text-content-secondary {
+  color: var(--theme-text-content-80);
+}
+
+@utility text-content-light {
+  color: var(--theme-text-content-70);
+}
+
+@utility text-content-faded {
+  color: var(--theme-text-content-50);
+}
+
+@utility text-content-30 {
+  color: var(--theme-text-content-30);
+}
+
+@utility text-content-90 {
+  color: var(--theme-text-content-90);
+}
+
+@utility text-primary-300 {
+  color: var(--theme-text-primary-300);
+}
+
+@utility text-primary-400 {
+  color: var(--theme-text-primary-400);
+}
+
+@utility text-foreground {
+  color: var(--wix-theme-foreground);
+}
+
+@utility text-primary-foreground {
+  color: var(--wix-theme-primary-foreground);
+}
+
+@utility text-secondary-foreground {
+  color: var(--wix-theme-secondary-foreground);
+}
+
+/* Brand Text Colors */
+@utility text-brand-primary {
+  color: var(--theme-text-primary-400);
+}
+
+@utility text-brand-light {
+  color: var(--theme-text-primary-300);
+}
+
+/* Status Text Colors */
 @utility text-status-success {
   color: var(--theme-text-success);
 }
@@ -20,8 +80,169 @@
   color: var(--theme-text-error);
 }
 
+@utility text-status-info {
+  color: var(--theme-text-info);
+}
+
+@utility text-status-danger {
+  color: var(--theme-text-danger);
+}
+
+@utility text-accent {
+  color: var(--theme-text-accent);
+}
+
+/* Social Sharing Colors */
+@utility text-social-muted {
+  color: var(--theme-text-social-muted);
+}
+
+@utility text-social-x {
+  color: var(--theme-text-social-x);
+}
+
+@utility text-social-facebook {
+  color: var(--theme-text-social-facebook);
+}
+
+@utility text-social-linkedin {
+  color: var(--theme-text-social-linkedin);
+}
+
+@utility text-social-link {
+  color: var(--theme-text-social-link);
+}
+
+/* Background Colors */
 @utility bg-surface-primary {
   background-color: var(--theme-bg-options);
+}
+
+@utility bg-surface-card {
+  background-color: var(--theme-bg-card);
+}
+
+@utility bg-surface-loading {
+  background-color: var(--theme-bg-loading);
+}
+
+@utility bg-surface-tooltip {
+  background-color: var(--theme-bg-tooltip);
+}
+
+@utility bg-surface-error {
+  background-color: var(--theme-bg-error);
+}
+
+@utility bg-surface-overlay {
+  background-color: color-mix(
+    in srgb,
+    var(--theme-bg-overlay) 80%,
+    transparent 20%
+  );
+}
+
+@utility bg-surface-modal {
+  background-color: var(--theme-bg-modal);
+}
+
+@utility bg-surface-interactive {
+  background-color: var(--theme-bg-loading);
+}
+
+@utility bg-surface-interactive-hover {
+  background-color: var(--theme-bg-primary-20);
+}
+
+/* Status Backgrounds */
+@utility bg-status-success-light {
+  background-color: var(--theme-bg-success-10);
+}
+
+@utility bg-status-success-medium {
+  background-color: var(--theme-bg-success-20);
+}
+
+@utility bg-status-danger-light {
+  background-color: var(--theme-bg-danger-10);
+}
+
+@utility bg-status-danger-medium {
+  background-color: var(--theme-bg-danger-20);
+}
+
+@utility bg-status-info-light {
+  background-color: var(--theme-bg-info-10);
+}
+
+@utility bg-status-info-medium {
+  background-color: var(--theme-bg-info-20);
+}
+
+@utility bg-accent-medium {
+  background-color: var(--theme-bg-accent-20);
+}
+
+/* Social Sharing Backgrounds */
+@utility bg-social-button {
+  background-color: var(--theme-bg-social-button);
+}
+
+@utility bg-social-link-hover {
+  background-color: var(--theme-bg-social-link);
+}
+
+/* Border Colors */
+@utility border-surface-primary {
+  border-color: var(--theme-border-card);
+}
+
+@utility border-surface-hover {
+  border-color: var(--theme-border-card-hover);
+}
+
+@utility border-surface-subtle {
+  border-color: var(--theme-border-primary-10);
+}
+
+@utility border-surface-interactive {
+  border-color: var(--theme-border-primary-20);
+}
+
+@utility border-surface-strong {
+  border-color: var(--theme-border-primary-30);
+}
+
+@utility border-status-error {
+  border-color: var(--theme-border-error);
+}
+
+@utility border-status-success {
+  border-color: var(--theme-border-success-20);
+}
+
+@utility border-status-success-strong {
+  border-color: var(--theme-border-success-30);
+}
+
+@utility border-status-danger {
+  border-color: var(--theme-border-danger-20);
+}
+
+@utility border-status-danger-strong {
+  border-color: var(--theme-border-danger-30);
+}
+
+@utility border-status-info {
+  border-color: var(--theme-border-info-20);
+}
+
+@utility border-status-info-strong {
+  border-color: var(--theme-border-info-30);
+}
+
+@utility border-accent {
+  border-color: var(--theme-border-accent-20);
 }
 
 @utility border-accent-strong {
@@ -36,10 +257,219 @@
   border-color: var(--theme-color-border-80);
 }
 
+/* Brand Border Colors */
+@utility border-brand-subtle {
+  border-color: var(--theme-border-primary-10);
+}
+
+@utility border-brand-light {
+  border-color: var(--theme-border-primary-20);
+}
+
+/* Social Sharing Borders */
+@utility border-social-subtle {
+  border-color: var(--theme-border-social-subtle);
+}
+
+/* Button Styles */
+@utility btn-primary {
+  background: var(--theme-btn-primary);
+  color: var(--theme-btn-primary-text);
+  border-color: var(--theme-btn-primary-border);
+}
+
+@utility btn-primary-hover {
+  background: var(--theme-btn-primary-hover);
+}
+
+@utility btn-secondary {
+  background: var(--theme-btn-secondary);
+  color: var(--theme-btn-secondary-text);
+  border-color: var(--theme-btn-secondary-border);
+}
+
+@utility btn-secondary-hover {
+  background: var(--theme-btn-secondary-hover);
+}
+
+@utility btn-success {
+  background: var(--theme-btn-success);
+  color: var(--theme-text-success);
+  border-color: transparent;
+}
+
+@utility btn-info {
+  background: var(--theme-btn-info);
+  color: var(--theme-text-info);
+  border-color: transparent;
+}
+
+@utility btn-danger {
+  background: var(--theme-btn-danger);
+  color: var(--theme-text-danger);
+  border-color: transparent;
+}
+
+@utility btn-accent {
+  background: var(--theme-btn-accent);
+  color: var(--theme-text-accent);
+  border-color: transparent;
+}
+
+/* Navigation Button Styles */
+@utility btn-nav {
+  background: var(--theme-btn-secondary);
+  color: var(--theme-text-content);
+}
+
+/* Status Indicators */
 @utility status-dot-success {
   background-color: var(--theme-success-500);
 }
 
 @utility status-dot-danger {
   background-color: var(--theme-danger-500);
+}
+
+@utility status-dot-info {
+  background-color: var(--theme-info-500);
+}
+
+/* Gradient Backgrounds */
+@utility bg-gradient-primary {
+  background: var(--theme-gradient-primary);
+}
+
+@utility bg-gradient-success {
+  background: var(--theme-gradient-success);
+}
+
+@utility bg-gradient-info {
+  background: var(--theme-gradient-info);
+}
+
+@utility bg-gradient-accent {
+  background: var(--theme-gradient-accent);
+}
+
+@utility bg-gradient-ribbon {
+  background: var(--theme-gradient-ribbon);
+}
+
+/* Filter Status */
+@utility filter-status-bar {
+  background-color: var(--theme-bg-primary-10);
+  border-color: var(--theme-border-primary-20);
+  color: var(--theme-text-primary-300);
+}
+
+/* Legacy Theme Classes */
+@utility theme-bg-primary-10 {
+  background-color: var(--theme-bg-primary-10);
+}
+
+@utility theme-bg-primary-20 {
+  background-color: var(--theme-bg-primary-20);
+}
+
+@utility theme-border-primary-10 {
+  border-color: var(--theme-border-primary-10);
+}
+
+@utility theme-border-primary-20 {
+  border-color: var(--theme-border-primary-20);
+}
+
+@utility theme-border-primary-30 {
+  border-color: var(--theme-border-primary-30);
+}
+
+@utility theme-color-border-40 {
+  border-color: var(--theme-color-border-40);
+}
+
+@utility theme-color-border-80 {
+  border-color: var(--theme-color-border-80);
+}
+
+@utility theme-text-primary-300 {
+  color: var(--theme-text-primary-300);
+}
+
+@utility theme-text-primary-400 {
+  color: var(--theme-text-primary-400);
+}
+
+@utility theme-gradient-primary {
+  background: var(--theme-gradient-primary);
+}
+
+@utility theme-gradient-ribbon {
+  background: var(--theme-gradient-ribbon);
+}
+
+@utility theme-bg-options {
+  background-color: var(--theme-bg-options);
+}
+
+@utility theme-hero-text-gradient {
+  background: var(--theme-hero-text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility theme-hero-card-gradient {
+  background: var(--theme-hero-card-gradient);
+}
+
+@utility theme-hero-feature-gradient {
+  background: var(--theme-hero-feature-gradient);
+}
+
+@utility theme-text-content {
+  color: var(--theme-text-content);
+}
+
+@utility theme-text-content-40 {
+  color: var(--theme-text-content-40);
+}
+
+@utility theme-text-content-50 {
+  color: var(--theme-text-content-50);
+}
+
+@utility theme-text-content-60 {
+  color: var(--theme-text-content-60);
+}
+
+@utility theme-text-content-70 {
+  color: var(--theme-text-content-70);
+}
+
+@utility theme-text-content-80 {
+  color: var(--theme-text-content-80);
+}
+
+@utility theme-text-content-90 {
+  color: var(--theme-text-content-90);
+}
+
+@utility theme-text-success {
+  color: var(--theme-text-success);
+}
+
+@utility theme-text-error {
+  color: var(--theme-text-error);
+}
+
+/* Navigation Text for dark backgrounds */
+@utility text-nav {
+  background: var(--theme-btn-secondary);
+  color: var(--theme-text-nav);
+}
+
+/* Quick View button hover effects */
+@utility bg-surface-hover {
+  background-color: var(--theme-bg-primary-10);
 }

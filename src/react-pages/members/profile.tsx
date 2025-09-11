@@ -1,4 +1,4 @@
-import '../../styles/theme-1.css';
+import '../../styles/theme-dark.css';
 import {
   createServicesManager,
   createServicesMap,

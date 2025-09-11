@@ -1,4 +1,4 @@
-import '../styles/theme-1.css';
+import '../styles/theme-dark.css';
 import { KitchensinkLayout } from '../layouts/KitchensinkLayout';
 import CartContent from '@/components/ecom/Cart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';

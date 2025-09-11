@@ -1,0 +1,76 @@
+---
+import PostPage from '@/components/blog/PostPage';
+import RecentPostsSection from '@/components/blog/RecentPostsSection';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { KitchensinkLayout } from '@/layouts/KitchensinkLayout';
+import {
+  loadBlogFeedServiceConfig,
+  loadBlogPostServiceConfig,
+} from '@wix/headless-blog/services';
+import { SEO } from '@wix/headless-seo/react';
+import { loadSEOTagsServiceConfig } from '@wix/headless-seo/services';
+
+import './theme.css';
+
+const { slug } = Astro.params;
+export const prerender = false;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+const blogPostServiceConfigResult = await loadBlogPostServiceConfig({
+  postSlug: slug,
+});
+
+if (blogPostServiceConfigResult.type === 'notFound') {
+  return Astro.rewrite('/404');
+}
+
+const blogPostServiceConfig = blogPostServiceConfigResult.config;
+
+const [recentPostsServiceConfig, seoTagsServiceConfig] = await Promise.all([
+  loadBlogFeedServiceConfig({
+    pageSize: 3,
+    sort: [{ fieldName: 'firstPublishedDate', order: 'DESC' }],
+    postIds: blogPostServiceConfig.post.relatedPostIds,
+    excludePostIds: [blogPostServiceConfig.post._id],
+  }),
+  loadSEOTagsServiceConfig({
+    pageUrl: Astro.url.href,
+    itemData: {
+      slug,
+      pageName: 'Post',
+      seoData: blogPostServiceConfig.post.seoData,
+    },
+  }),
+]);
+---
+
+<BaseLayout>
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
+
+  <KitchensinkLayout>
+    <div class="min-h-screen bg-background">
+      <div class="px-6 py-12 space-y-14">
+        <div class="max-w-3xl mx-auto">
+          <PostPage
+            client:load
+            blogPostServiceConfig={blogPostServiceConfig}
+            href={Astro.url.href}
+            feedPageHref="/blog/example-1"
+            categoryPageBaseUrl="/blog/example-1/category/"
+            dateLocale="en-US"
+          />
+        </div>
+        <RecentPostsSection
+          client:load
+          recentPostsServiceConfig={recentPostsServiceConfig}
+          postPageBaseUrl="/blog/example-1/"
+          categoryPageBaseUrl="/blog/example-1/category/"
+          dateLocale="en-US"
+        />
+      </div>
+    </div>
+  </KitchensinkLayout>
+</BaseLayout>

@@ -1,6 +1,6 @@
 import { PageDocsRegistration } from '@/components/DocsMode';
 import { KitchensinkLayout } from '../../layouts/KitchensinkLayout';
-import '../../styles/theme-1.css';
+import '../../styles/theme-dark.css';
 
 export function MembersPage() {
   return (
