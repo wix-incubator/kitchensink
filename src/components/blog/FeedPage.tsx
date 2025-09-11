@@ -1,3 +1,5 @@
+import { EmptyState } from '@/components/ui/blog/EmptyState';
+import { Button } from '@/components/ui/button';
 import { Blog } from '@wix/headless-blog/react';
 import {
   BlogCategoriesService,
@@ -14,8 +16,6 @@ import {
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import { Loader2Icon } from 'lucide-react';
 import { useState } from 'react';
-import { EmptyState } from '../ui/blog/EmptyState';
-import { Button } from '../ui/button';
 import { BlogFeedCardEditorial, BlogFeedCardSideBySide } from './BlogFeedCard';
 import BlogFeedCategoriesSection from './BlogFeedCategoriesSection';
 

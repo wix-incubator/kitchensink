@@ -1,7 +1,7 @@
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Blog, createCustomCategory } from '@wix/headless-blog/react';
-import { useNavigation } from '../NavigationContext';
+import { useNavigation } from '@/components/NavigationContext';
 
 interface BlogFeedCategoriesSectionProps {
   pathname: string;

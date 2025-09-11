@@ -1,11 +1,11 @@
-import { Blog } from '@wix/headless-blog/react';
-import { Button } from '../ui/button';
-import { PostTitle } from '../ui/blog/PostTitle';
-import { PostMeta } from '../ui/blog/PostMeta';
+import { useNavigation } from '@/components/NavigationContext';
+import { PostMeta } from '@/components/ui/blog/PostMeta';
+import { PostTitle } from '@/components/ui/blog/PostTitle';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import PostCategories from './PostCategories';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useNavigation } from '../NavigationContext';
+import { Blog } from '@wix/headless-blog/react';
+import PostCategories from './PostCategories';
 
 interface BlogFeedCardProps {
   className?: string;

@@ -1,9 +1,15 @@
+import { useNavigation } from '@/components/NavigationContext';
+import { Chip } from '@/components/ui/blog/Chip';
+import { EmptyState } from '@/components/ui/blog/EmptyState';
+import { PostContent } from '@/components/ui/blog/PostContent';
+import { PostMeta } from '@/components/ui/blog/PostMeta';
+import { PostTitle } from '@/components/ui/blog/PostTitle';
+import { Button } from '@/components/ui/button';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { Blog } from '@wix/headless-blog/react';
 import {
   BlogPostService,
   BlogPostServiceDefinition,
-  type BlogFeedServiceConfig,
   type BlogPostServiceConfig,
 } from '@wix/headless-blog/services';
 import {
@@ -12,13 +18,6 @@ import {
 } from '@wix/services-manager';
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import { useState } from 'react';
-import { useNavigation } from '../NavigationContext';
-import { Chip } from '../ui/blog/Chip';
-import { EmptyState } from '../ui/blog/EmptyState';
-import { PostContent } from '../ui/blog/PostContent';
-import { PostMeta } from '../ui/blog/PostMeta';
-import { PostTitle } from '../ui/blog/PostTitle';
-import { Button } from '../ui/button';
 import PostCategories from './PostCategories';
 import SharePostActions from './SharePostActions';
 

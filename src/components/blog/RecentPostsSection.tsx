@@ -1,3 +1,5 @@
+import { Separator } from '@/components/ui/separator';
+import { Blog } from '@wix/headless-blog/react';
 import {
   BlogFeedService,
   BlogFeedServiceDefinition,
@@ -9,9 +11,7 @@ import {
 } from '@wix/services-manager';
 import { ServicesManagerProvider } from '@wix/services-manager-react';
 import { useState } from 'react';
-import { Blog } from '@wix/headless-blog/react';
 import { BlogFeedCardEditorial } from './BlogFeedCard';
-import { Separator } from '../ui/separator';
 
 import '@wix/headless-blog/react/styles.css';
 

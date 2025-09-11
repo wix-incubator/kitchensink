@@ -1,6 +1,6 @@
+import { Chip } from '@/components/ui/blog/Chip';
 import { cn } from '@/lib/utils';
 import { Blog } from '@wix/headless-blog/react';
-import { Chip } from '../ui/blog/Chip';
 
 interface PostCategoriesProps {
   className?: string;
