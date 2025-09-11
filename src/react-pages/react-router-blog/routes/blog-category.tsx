@@ -19,19 +19,19 @@ export function BlogCategoryRoute() {
         <div className="max-w-6xl mx-auto px-6 py-12">
           <BlogCategoriesSection
             pathname={location.pathname}
-            categoryPageBaseUrl="/react-router-blog/category/"
+            categoryPageBaseUrl="/category/"
             blogCategoriesServiceConfig={blogCategoriesServiceConfig}
             allPostsConfig={{
               label: 'All posts',
-              href: '/react-router-blog',
+              href: '/',
               description:
                 'Discover the latest insights, tutorials, and best practices for building modern web applications with headless components.',
             }}
           />
           <FeedPage
             blogFeedServiceConfig={blogFeedServiceConfig}
-            postPageBaseUrl="/react-router-blog/"
-            categoryPageBaseUrl="/react-router-blog/category/"
+            postPageBaseUrl="/"
+            categoryPageBaseUrl="/category/"
             dateLocale="en-US"
           />
         </div>
