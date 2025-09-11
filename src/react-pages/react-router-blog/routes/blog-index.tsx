@@ -1,4 +1,5 @@
 import FeedPage from '@/components/blog/FeedPage';
+import BlogCategoriesSection from '@/components/blog/BlogCategoriesSection';
 import {
   loadBlogCategoriesServiceConfig,
   loadBlogFeedServiceConfig,
@@ -14,15 +15,27 @@ export function BlogIndexRoute() {
 
   return (
     <React.Suspense fallback={<div>Loading blog...</div>}>
-      <FeedPage
-        pathname={location.pathname}
-        blogFeedServiceConfig={blogFeedServiceConfig}
-        blogCategoriesServiceConfig={blogCategoriesServiceConfig}
-        feedPageHref="/react-router-blog"
-        postPageBaseUrl="/react-router-blog/"
-        categoryPageBaseUrl="/react-router-blog/category/"
-        dateLocale="en-US"
-      />
+      <div className="min-h-screen bg-background">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <BlogCategoriesSection
+            pathname={location.pathname}
+            categoryPageBaseUrl="/react-router-blog/category/"
+            blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+            allPostsConfig={{
+              label: 'All posts',
+              href: '/react-router-blog',
+              description:
+                'Discover the latest insights, tutorials, and best practices for building modern web applications with headless components.',
+            }}
+          />
+          <FeedPage
+            blogFeedServiceConfig={blogFeedServiceConfig}
+            postPageBaseUrl="/react-router-blog/"
+            categoryPageBaseUrl="/react-router-blog/category/"
+            dateLocale="en-US"
+          />
+        </div>
+      </div>
     </React.Suspense>
   );
 }

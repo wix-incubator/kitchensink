@@ -8,6 +8,7 @@ import {
 } from '@wix/headless-blog/services';
 
 import './theme.css';
+import BlogCategoriesSection from '@/components/blog/BlogCategoriesSection';
 
 const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   loadBlogFeedServiceConfig({
@@ -31,15 +32,27 @@ const [blogFeedServiceConfig, blogCategoriesServiceConfig] = await Promise.all([
   />
 
   <KitchensinkLayout>
-    <FeedPage
-      client:load
-      pathname={Astro.url.pathname}
-      blogFeedServiceConfig={blogFeedServiceConfig}
-      blogCategoriesServiceConfig={blogCategoriesServiceConfig}
-      feedPageHref="/blog/example-1"
-      postPageBaseUrl="/blog/example-1/"
-      categoryPageBaseUrl="/blog/example-1/category/"
-      dateLocale="en-US"
-    />
+    <div class="min-h-screen bg-background">
+      <div class="max-w-6xl mx-auto px-6 py-12">
+        <BlogCategoriesSection
+          pathname={Astro.url.pathname}
+          categoryPageBaseUrl="/blog/example-1/category/"
+          blogCategoriesServiceConfig={blogCategoriesServiceConfig}
+          allPostsConfig={{
+            label: 'All posts',
+            href: '/blog/example-1',
+            description:
+              'Discover the latest insights, tutorials, and best practices for building modern web applications with headless components.',
+          }}
+        />
+        <FeedPage
+          client:load
+          blogFeedServiceConfig={blogFeedServiceConfig}
+          postPageBaseUrl="/blog/example-1/"
+          categoryPageBaseUrl="/blog/example-1/category/"
+          dateLocale="en-US"
+        />
+      </div>
+    </div>
   </KitchensinkLayout>
 </BaseLayout>
