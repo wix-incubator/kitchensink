@@ -1,0 +1,29 @@
+{
+  "entry": [
+    "src/components/store/ProductDetails.tsx",
+    "src/components/store/ProductList.tsx",
+    "src/components/store/StoreLayout.tsx"
+  ],
+  "extensions": [".ts", ".js", "tsx", "jsx"],
+  "ignoreUnimported": [
+    "src/components/store/ProductDetails.tsx",
+    "src/components/store/ProductList.tsx",
+    "src/components/store/StoreLayout.tsx"
+  ],
+  "ignorePatterns": ["**/node_modules/**"],
+  "respectGitignore": true,
+  "rootDir": "./",
+  "aliases": {
+    "@/*": ["./src/*"],
+    "@/components/*": ["./src/components/*"],
+    "@/layouts/*": ["./src/layouts/*"],
+    "@/pages/*": ["./src/pages/*"],
+    "@/react-pages/*": ["./src/react-pages/*"],
+    "@/styles/*": ["./src/styles/*"],
+    "@/lib/*": ["./src/lib/*"],
+    "@/hooks/*": ["./src/hooks/*"],
+    "@/headless/*": ["./src/headless/*"],
+    "@/actions/*": ["./src/actions/*"],
+    "@/wix/*": ["./src/wix/*"]
+  }
+}

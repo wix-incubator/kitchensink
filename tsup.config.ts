@@ -7,6 +7,7 @@ export default defineConfig({
     'components/store/ProductList': 'src/components/store/ProductList.tsx',
     'components/store/ProductDetails':
       'src/components/store/ProductDetails.tsx',
+    'layouts/StoreLayout': 'src/layouts/StoreLayout.tsx',
   },
   format: ['esm'],
   dts: true,
@@ -71,7 +72,6 @@ export default defineConfig({
           content: [
             'src/components/store/ProductList.tsx',
             'src/components/store/ProductActionButtons.tsx',
-            'src/components/store/QuickViewModal.tsx',
             'src/components/store/SortDropdown.tsx',
             'src/components/store/CategoryPicker.tsx',
             'src/components/store/ProductFilters.tsx',
