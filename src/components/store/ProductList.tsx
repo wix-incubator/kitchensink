@@ -2,11 +2,11 @@ import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import {
   type CategoriesListServiceConfig,
   type ProductsListServiceConfig,
-} from '@wix/headless-stores/services';
+} from '@wix/stores/services';
 
 import React from 'react';
 import { useNavigation } from '../NavigationContext';
