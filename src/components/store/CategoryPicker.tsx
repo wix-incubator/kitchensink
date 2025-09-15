@@ -1,12 +1,12 @@
-import { CategoryList, Category } from '@wix/headless-stores/react';
-import type { CategoriesListServiceConfig } from '@wix/headless-stores/services';
+import { CategoryList, Category } from '@wix/stores/components';
+import type { CategoriesListServiceConfig } from '@wix/stores/services';
 import { Label } from '@/components/ui/label';
 
 interface CategoryPickerProps {
   categoriesListConfig: CategoriesListServiceConfig;
 }
 
-export function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
+function CategoryPicker({ categoriesListConfig }: CategoryPickerProps) {
   return (
     <CategoryList.Root categoriesListConfig={categoriesListConfig}>
       <div>

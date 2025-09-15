@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProductList } from '@wix/headless-stores/react';
+import { ProductList } from '@wix/stores/components';
 import * as Filter from '@/components/ui/store/Filter';
 
 interface ProductFiltersSidebarProps {
@@ -7,7 +7,7 @@ interface ProductFiltersSidebarProps {
 }
 
 // Enhanced Filter components integrated with real ProductList filtering
-export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
+const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
   className = '',
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);

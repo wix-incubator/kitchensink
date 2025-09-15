@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
+import { Cart as CartPrimitive } from '@wix/ecom/components';
 
 /**
  * Root component for shopping cart functionality.
@@ -27,7 +27,7 @@ import { Cart as CartPrimitive } from '@wix/headless-ecom/react';
  * </Cart>
  * ```
  */
-export const Cart = CartPrimitive.Root;
+const Cart = CartPrimitive.Root;
 
 // Cart Totals Components
 const cartTotalVariants = cva('flex justify-between', {
@@ -52,7 +52,7 @@ const cartTotalVariants = cva('flex justify-between', {
   },
 });
 
-export interface CartTotalProps
+interface CartTotalProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Price>,
     VariantProps<typeof cartTotalVariants> {}
 
@@ -98,7 +98,7 @@ export const CartTotalsPrice = React.forwardRef<
 
 CartTotalsPrice.displayName = 'CartTotalsPrice';
 
-export interface CartTotalDiscountProps
+interface CartTotalDiscountProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Discount>,
     VariantProps<typeof cartTotalVariants> {}
 
@@ -157,7 +157,7 @@ CartTotalsDiscount.displayName = 'CartTotalsDiscount';
  * </Cart>
  * ```
  */
-export interface CartTotalShippingProps
+interface CartTotalShippingProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Shipping>,
     VariantProps<typeof cartTotalVariants> {}
 
@@ -198,7 +198,7 @@ CartTotalsShipping.displayName = 'CartTotalsShipping';
  * </Cart>
  * ```
  */
-export interface CartTotalTaxProps
+interface CartTotalTaxProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Tax>,
     VariantProps<typeof cartTotalVariants> {}
 
@@ -239,7 +239,7 @@ CartTotalsTax.displayName = 'CartTotalsTax';
  * </Cart>
  * ```
  */
-export interface CartTotalTotalProps
+interface CartTotalTotalProps
   extends React.ComponentPropsWithoutRef<typeof CartPrimitive.Totals.Total>,
     VariantProps<typeof cartTotalVariants> {}
 
@@ -408,7 +408,7 @@ CartLineItemRepeater.displayName = 'CartLineItemRepeater';
  * </Cart>
  * ```
  */
-export const CartClear = React.forwardRef<
+const CartClear = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Clear>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Clear>
 >((props, ref) => {
@@ -512,7 +512,7 @@ CartCoupon.displayName = 'CartCoupon';
  * </Cart>
  * ```
  */
-export const CartCouponInput = React.forwardRef<
+const CartCouponInput = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Input>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Input>
 >((props, ref) => {
@@ -552,7 +552,7 @@ CartCouponInput.displayName = 'CartCouponInput';
  * </CartCoupon>
  * ```
  */
-export const CartCouponTrigger = React.forwardRef<
+const CartCouponTrigger = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Trigger>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Trigger>
 >((props, ref) => {
@@ -592,7 +592,7 @@ CartCouponTrigger.displayName = 'CartCouponTrigger';
  * </CartCoupon>
  * ```
  */
-export const CartCouponClear = React.forwardRef<
+const CartCouponClear = React.forwardRef<
   React.ElementRef<typeof CartPrimitive.Coupon.Clear>,
   React.ComponentPropsWithoutRef<typeof CartPrimitive.Coupon.Clear>
 >((props, ref) => {
@@ -638,7 +638,7 @@ export const CartCouponRaw = CartPrimitive.Coupon.Raw;
 CartCouponRaw.displayName = 'CartCouponRaw';
 
 // Cart Errors Component
-export interface CartErrorsProps {
+interface CartErrorsProps {
   className?: string;
   children?: React.ReactNode;
 }

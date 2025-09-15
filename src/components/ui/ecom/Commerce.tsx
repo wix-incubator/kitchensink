@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Commerce as CommercePrimitive } from '@wix/headless-ecom/react';
+import { Commerce as CommercePrimitive } from '@wix/ecom/components';
 
 /**
  * Root commerce provider that enables e-commerce functionality.
@@ -59,7 +59,7 @@ const commerceCheckoutVariants = cva(
   }
 );
 
-export interface CommerceCheckoutProps
+interface CommerceCheckoutProps
   extends React.ComponentPropsWithoutRef<
       typeof CommercePrimitive.Actions.Checkout
     >,
@@ -112,6 +112,6 @@ export const CommerceActionsCheckout = React.forwardRef<
 CommerceActionsCheckout.displayName = 'CommerceActionsCheckout';
 
 // Commerce Actions namespace for better organization
-export const CommerceActions = {
+const CommerceActions = {
   Checkout: CommerceActionsCheckout,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sort as SortPrimitive } from '@wix/headless-components/react';
-import { ProductList as ProductListPrimitive } from '@wix/headless-stores/react';
+import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import {
   Select,
   SelectContent,
@@ -17,21 +17,20 @@ import type {
   SortOption,
 } from '@wix/headless-components/react';
 
-// Re-export types from primitive
-export type { SortType as SortObject };
+// Re-export types from primitive;
 
 // Styled component props (same as primitive for consistency)
-export interface SortRootProps extends PrimitiveSortRootProps {
+interface SortRootProps extends PrimitiveSortRootProps {
   /** Additional CSS classes */
   className?: string;
 }
 
-export interface SortOptionProps extends PrimitiveSortOptionProps {
+interface SortOptionProps extends PrimitiveSortOptionProps {
   /** Additional CSS classes */
   className?: string;
 }
 
-export interface StyledProductListSortProps {
+interface StyledProductListSortProps {
   /** Additional CSS classes */
   className?: string;
 }
@@ -52,7 +51,7 @@ export const StyledProductListSort = (props: StyledProductListSortProps) => {
 };
 
 // Styled Root component - pure styling wrapper, no logic
-export const Root: React.FC<SortRootProps> = props => {
+const Root: React.FC<SortRootProps> = props => {
   const toValueString = (option: SortOption) => {
     const fieldName = 'fieldName' in option ? option.fieldName : '';
     const order = 'order' in option ? option.order : '';
@@ -102,7 +101,7 @@ export const Root: React.FC<SortRootProps> = props => {
 };
 
 // Styled Option component - pure styling wrapper, no logic
-export const Option: React.FC<SortOptionProps> = props => (
+const Option: React.FC<SortOptionProps> = props => (
   <SortPrimitive.Option
     {...props}
     className={cn(
@@ -119,7 +118,5 @@ const SortComponents = {
 };
 
 // Export as Sort namespace
-export { SortComponents as Sort };
-
 // Also export as StyledSort for backward compatibility
-export const StyledSort = SortComponents;
+const StyledSort = SortComponents;

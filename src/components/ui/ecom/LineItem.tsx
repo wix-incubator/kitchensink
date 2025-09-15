@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { LineItem as LineItemPrimitive } from '@wix/headless-ecom/react';
+import { LineItem as LineItemPrimitive } from '@wix/ecom/components';
 
 /**
  * Root component for cart line items.
@@ -43,7 +43,7 @@ import { LineItem as LineItemPrimitive } from '@wix/headless-ecom/react';
  * </CartLineItems>
  * ```
  */
-export const LineItem = LineItemPrimitive.Root;
+const LineItem = LineItemPrimitive.Root;
 
 // LineItem Image Component
 const lineItemImageVariants = cva('rounded-lg object-cover', {
@@ -60,7 +60,7 @@ const lineItemImageVariants = cva('rounded-lg object-cover', {
   },
 });
 
-export interface LineItemImageProps
+interface LineItemImageProps
   extends React.ComponentPropsWithoutRef<typeof LineItemPrimitive.Image>,
     VariantProps<typeof lineItemImageVariants> {}
 
@@ -123,7 +123,7 @@ const lineItemTitleVariants = cva('font-semibold text-content-primary', {
   },
 });
 
-export interface LineItemTitleProps
+interface LineItemTitleProps
   extends React.ComponentPropsWithoutRef<typeof LineItemPrimitive.Title>,
     VariantProps<typeof lineItemTitleVariants> {}
 

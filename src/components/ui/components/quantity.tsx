@@ -23,7 +23,7 @@ import { Quantity as QuantityPrimitive } from '@wix/headless-components/react';
  * </Quantity>
  * ```
  */
-export const Quantity = QuantityPrimitive.Root;
+const Quantity = QuantityPrimitive.Root;
 
 // Quantity Decrement Component
 const quantityDecrementVariants = cva(
@@ -47,7 +47,7 @@ const quantityDecrementVariants = cva(
   }
 );
 
-export interface QuantityDecrementProps
+interface QuantityDecrementProps
   extends VariantProps<typeof quantityDecrementVariants> {
   className?: string;
   children?: React.ReactNode;
@@ -111,7 +111,7 @@ const quantityInputVariants = cva(
   }
 );
 
-export interface QuantityInputProps
+interface QuantityInputProps
   extends VariantProps<typeof quantityInputVariants> {
   className?: string;
   [key: string]: any;
@@ -169,7 +169,7 @@ const quantityIncrementVariants = cva(
   }
 );
 
-export interface QuantityIncrementProps
+interface QuantityIncrementProps
   extends VariantProps<typeof quantityIncrementVariants> {
   className?: string;
   children?: React.ReactNode;
@@ -232,7 +232,7 @@ const quantityResetVariants = cva(
   }
 );
 
-export interface QuantityResetProps
+interface QuantityResetProps
   extends VariantProps<typeof quantityResetVariants> {
   className?: string;
   children?: React.ReactNode;

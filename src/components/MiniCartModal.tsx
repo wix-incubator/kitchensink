@@ -24,7 +24,7 @@ interface MiniCartModalProviderProps {
   children: ReactNode;
 }
 
-export function MiniCartModalProvider({
+function MiniCartModalProvider({
   children,
 }: MiniCartModalProviderProps) {
   const [isOpen, setIsOpened] = useState(false);

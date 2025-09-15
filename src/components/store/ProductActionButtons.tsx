@@ -108,4 +108,3 @@ export const ProductActionButtons: React.FC<ProductActionButtonsProps> = ({
   );
 };
 
-export default ProductActionButtons;

@@ -1,12 +1,12 @@
 import React, { createContext, useContext, type ReactNode } from 'react';
 
-export interface NavigationProps {
+interface NavigationProps {
   route: string;
   children: ReactNode;
   [key: string]: any;
 }
 
-export type NavigationComponent = React.ComponentType<NavigationProps>;
+type NavigationComponent = React.ComponentType<NavigationProps>;
 
 const NavigationContext = createContext<NavigationComponent | null>(null);
 
@@ -22,12 +22,12 @@ const DefaultNavigationComponent: NavigationComponent = ({
   );
 };
 
-export interface NavigationProviderProps {
+interface NavigationProviderProps {
   children: ReactNode;
   navigationComponent?: NavigationComponent;
 }
 
-export const NavigationProvider: React.FC<NavigationProviderProps> = ({
+const NavigationProvider: React.FC<NavigationProviderProps> = ({
   children,
   navigationComponent = DefaultNavigationComponent,
 }) => {

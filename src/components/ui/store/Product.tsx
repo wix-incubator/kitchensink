@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Product as ProductPrimitive } from '@wix/headless-stores/react';
+import { Product as ProductPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
 import { Badge } from '../badge';
 
@@ -45,7 +45,7 @@ const productNameVariants = cva('font-theme-heading', {
   },
 });
 
-export interface ProductNameProps
+interface ProductNameProps
   extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Name>,
     VariantProps<typeof productNameVariants> {}
 
@@ -253,7 +253,7 @@ ProductSlug.displayName = 'ProductSlug';
  * </Product>
  * ```
  */
-export const ProductRaw = React.forwardRef<
+const ProductRaw = React.forwardRef<
   React.ElementRef<typeof ProductPrimitive.Raw>,
   React.ComponentPropsWithoutRef<typeof ProductPrimitive.Raw>
 >((props, ref) => {
@@ -751,7 +751,7 @@ const productQuantityVariants = cva('', {
   },
 });
 
-export interface ProductQuantityRootProps
+interface ProductQuantityRootProps
   extends React.ComponentPropsWithoutRef<typeof ProductPrimitive.Quantity.Root>,
     VariantProps<typeof productQuantityVariants> {}
 
@@ -788,7 +788,7 @@ export const ProductQuantityRoot = React.forwardRef<
 
 ProductQuantityRoot.displayName = 'ProductQuantityRoot';
 
-export interface ProductQuantityDecrementProps
+interface ProductQuantityDecrementProps
   extends React.ComponentPropsWithoutRef<
       typeof ProductPrimitive.Quantity.Decrement
     >,
@@ -825,7 +825,7 @@ export const ProductQuantityDecrement = React.forwardRef<
 
 ProductQuantityDecrement.displayName = 'ProductQuantityDecrement';
 
-export interface ProductQuantityInputProps
+interface ProductQuantityInputProps
   extends React.ComponentPropsWithoutRef<
       typeof ProductPrimitive.Quantity.Input
     >,
@@ -860,7 +860,7 @@ export const ProductQuantityInput = React.forwardRef<
 
 ProductQuantityInput.displayName = 'ProductQuantityInput';
 
-export interface ProductQuantityIncrementProps
+interface ProductQuantityIncrementProps
   extends React.ComponentPropsWithoutRef<
       typeof ProductPrimitive.Quantity.Increment
     >,

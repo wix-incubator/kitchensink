@@ -198,3 +198,4 @@ The script will:
 // Run the analysis
 analyzePackageLock();
 
+

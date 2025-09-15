@@ -216,3 +216,4 @@ Auto-detection:
 // Run the script
 applyResolutions();
 
+

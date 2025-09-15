@@ -7,7 +7,7 @@ export default defineConfig({
     'components/store/ProductList': 'src/components/store/ProductList.tsx',
     'components/store/ProductDetails':
       'src/components/store/ProductDetails.tsx',
-    'layouts/StoreLayout': 'src/layouts/StoreLayout.tsx',
+    'components/store/StoreLayout': 'src/components/store/StoreLayout.tsx',
   },
   format: ['esm'],
   dts: true,

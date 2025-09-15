@@ -2,11 +2,11 @@ import React from 'react';
 import { Filter as FilterPrimitive } from '@wix/headless-components/react';
 import { cn } from '@/lib/utils';
 
-export const Root: React.FC<
+const Root: React.FC<
   React.ComponentProps<typeof FilterPrimitive.Root>
 > = props => <FilterPrimitive.Root {...props} />;
 
-export const Filtered: React.FC<
+const Filtered: React.FC<
   React.ComponentProps<typeof FilterPrimitive.Filtered>
 > = ({ className, children, ...props }) => (
   <FilterPrimitive.Filtered
@@ -174,11 +174,3 @@ FilterOption.MultiFilter.displayName = 'Filter.FilterOption.MultiFilter';
 FilterOption.RangeFilter.displayName = 'Filter.FilterOption.RangeFilter';
 
 // Export default to support namespace imports
-export default {
-  Root,
-  Filtered,
-  FilterOptions,
-  FilterOptionRepeater,
-  Action,
-  FilterOption,
-};

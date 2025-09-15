@@ -1,7 +1,7 @@
 import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { SelectedOption as SelectedOptionPrimitive } from '@wix/headless-ecom/react';
+import { SelectedOption as SelectedOptionPrimitive } from '@wix/ecom/components';
 
 /**
  * Root component for displaying a selected product option in cart line items.
@@ -22,7 +22,7 @@ import { SelectedOption as SelectedOptionPrimitive } from '@wix/headless-ecom/re
  * </LineItemSelectedOptions>
  * ```
  */
-export const SelectedOption = SelectedOptionPrimitive.Root;
+const SelectedOption = SelectedOptionPrimitive.Root;
 
 // SelectedOption Text Component
 const selectedOptionTextVariants = cva('text-content-secondary', {
@@ -40,7 +40,7 @@ const selectedOptionTextVariants = cva('text-content-secondary', {
   },
 });
 
-export interface SelectedOptionTextProps
+interface SelectedOptionTextProps
   extends React.ComponentPropsWithoutRef<typeof SelectedOptionPrimitive.Text>,
     VariantProps<typeof selectedOptionTextVariants> {}
 
@@ -99,7 +99,7 @@ const selectedOptionColorVariants = cva(
   }
 );
 
-export interface SelectedOptionColorProps
+interface SelectedOptionColorProps
   extends React.ComponentPropsWithoutRef<typeof SelectedOptionPrimitive.Color>,
     VariantProps<typeof selectedOptionColorVariants> {}
 

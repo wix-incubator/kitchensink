@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Option as OptionPrimitive } from '@wix/headless-stores/react';
+import { Option as OptionPrimitive } from '@wix/stores/components';
 
 /**
  * Root component for product options (variants or modifiers).
@@ -22,7 +22,7 @@ import { Option as OptionPrimitive } from '@wix/headless-stores/react';
  * </Option>
  * ```
  */
-export const Option = OptionPrimitive.Root;
+const Option = OptionPrimitive.Root;
 
 /**
  * Displays the name/title of a product option.

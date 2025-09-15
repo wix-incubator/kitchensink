@@ -93,7 +93,7 @@ export const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = ({
   );
 };
 
-export const CopyLinkButton = ({
+const CopyLinkButton = ({
   handleCopyLink,
   copySuccess,
 }: {
@@ -139,4 +139,3 @@ export const CopyLinkButton = ({
   );
 };
 
-export default SocialSharingButtons;

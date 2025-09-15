@@ -43,8 +43,8 @@ import {
 } from '@/components/ui/store/Option';
 import { ChoiceColor, ChoiceText } from '@/components/ui/store/Choice';
 import { cn } from '@/lib/utils';
-import { CurrentCart } from '@wix/headless-ecom/react';
-import type { CurrentCartServiceConfig } from '@wix/headless-ecom/services';
+import { CurrentCart } from '@wix/ecom/components';
+import type { CurrentCartServiceConfig } from '@wix/ecom/services';
 
 interface ProductListProps {
   id?: string;
