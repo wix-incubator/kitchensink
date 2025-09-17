@@ -65,7 +65,7 @@
     "@wix/essentials": "^0.1.24",
     "@wix/headless-components": "^0.0.13",
     "@wix/image": "^1.392.0",
-    "@wix/media": "^1.0.184",
+    "@wix/media": "^1.0.189",
     "@wix/members": "^1.0.298",
     "@wix/redirects": "^1.0.83",
     "@wix/sdk": "^1.15.23",
