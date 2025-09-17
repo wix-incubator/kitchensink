@@ -54,35 +54,38 @@ export const Products = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   return (
-    <ProductListPrimitive.Products
-      emptyState={
-        <div className="text-center py-12 sm:py-16">
-          <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
-            <svg
-              className="w-8 h-8 sm:w-12 sm:h-12 text-content-muted"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
-          </div>
-        </div>
-      }
-      {...props}
+    <div
       ref={ref}
       className={cn(
         'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
         className
       )}
+      {...props}
     >
-      {props.children}
-    </ProductListPrimitive.Products>
+      <ProductListPrimitive.Products
+        emptyState={
+          <div className="text-center py-12 sm:py-16">
+            <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
+              <svg
+                className="w-8 h-8 sm:w-12 sm:h-12 text-content-muted"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
+              </svg>
+            </div>
+          </div>
+        }
+      >
+        {props.children}
+      </ProductListPrimitive.Products>
+    </div>
   );
 });
 Products.displayName = 'Products';
@@ -206,8 +209,8 @@ export const ProductTotalsDisplayed = React.forwardRef<
     className={className}
     asChild
   >
-    {({ displayedProducts }) => (
-      <span>{label.replace('{length}', displayedProducts.toString())}</span>
+    {({ displayedItems }) => (
+      <span>{label.replace('{length}', displayedItems.toString())}</span>
     )}
   </ProductListPrimitive.TotalsDisplayed>
 ));
