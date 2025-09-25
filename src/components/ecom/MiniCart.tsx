@@ -147,7 +147,7 @@ const DefaultMiniCartIcon = () => (
 
 export function MiniCartIcon({
   Icon = DefaultMiniCartIcon,
-  className = 'fixed top-6 right-6 z-50',
+  className,
 }: { Icon?: React.ComponentType; className?: string } = {}) {
   const { open } = useMiniCartContext();
   return (

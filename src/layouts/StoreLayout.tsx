@@ -89,7 +89,7 @@ function StoreLayoutContent({
         </div>
       )}
 
-      <MiniCartIcon />
+      <MiniCartIcon className="fixed top-6 right-6 z-50" />
 
       {/* Main Content */}
       {children}
