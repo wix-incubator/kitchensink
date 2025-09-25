@@ -133,9 +133,8 @@ const CouponFormMini = ({
 };
 
 const DefaultMiniCartIcon = () => (
-  <div className="p-2 text-content-primary ">
+  <div className="text-content-primary ">
     <svg
-      className="w-6 h-6"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -242,10 +241,9 @@ export function MiniCartContent() {
             onClick={close}
             variant="ghost"
             size="icon"
-            className="p-2 text-content-primary hover:text-brand-light transition-colors"
+            className="text-content-primary hover:text-brand-light transition-colors"
           >
             <svg
-              className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
