@@ -134,11 +134,7 @@ const CouponFormMini = ({
 
 const DefaultMiniCartIcon = () => (
   <div className="text-content-primary ">
-    <svg
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -243,11 +239,7 @@ export function MiniCartContent() {
             size="icon"
             className="text-content-primary hover:text-brand-light transition-colors"
           >
-            <svg
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
