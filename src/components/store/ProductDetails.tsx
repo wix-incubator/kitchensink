@@ -52,7 +52,6 @@ export default function ProductDetails({
 
   return (
     <Product product={product}>
-      <>
         <div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8"
           data-testid="product-details"
@@ -291,7 +290,6 @@ export default function ProductDetails({
             </CartSummary>
           </div>
         )}
-      </>
     </Product>
   );
 }
