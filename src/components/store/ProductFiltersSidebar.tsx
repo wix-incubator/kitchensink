@@ -24,6 +24,7 @@ export const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-content-primary flex items-center gap-2">
                   <svg
+                    style={{ maxWidth: '24px', maxHeight: '24px' }}
                     className="w-5 h-5"
                     fill="none"
                     viewBox="0 0 24 24"
