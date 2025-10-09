@@ -177,24 +177,33 @@ export function StoreCollectionRoute({
 
   return (
     <div className="wix-verticals-container">
-      {/* Collection/products load with skeleton using React Router's Await */}
-      <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await
-          resolve={productListConfig ?? productListConfigPromise}
-          errorElement={<CollectionError />}
-        >
-          {resolvedProductListConfig => {
-            return (
-              <CategoryPage
-                categoriesListConfig={categoriesListConfig}
-                productsListConfig={resolvedProductListConfig}
-                currentCategorySlug={currentCategorySlug}
-                productPageRoute={productPageRoute}
-              />
-            );
-          }}
-        </Await>
-      </React.Suspense>
+      {productListConfig ? (
+        <CategoryPage
+        categoriesListConfig={categoriesListConfig}
+        productsListConfig={productListConfig}
+        currentCategorySlug={currentCategorySlug}
+        productPageRoute={productPageRoute}
+      />
+      ) : (
+        <React.Suspense fallback={<CollectionSkeleton />}>
+          <Await
+            resolve={productListConfigPromise}
+            errorElement={<CollectionError />}
+          >
+            {resolvedProductListConfig => {
+              return (
+                <CategoryPage
+                  categoriesListConfig={categoriesListConfig}
+                  productsListConfig={resolvedProductListConfig}
+                  currentCategorySlug={currentCategorySlug}
+                  productPageRoute={productPageRoute}
+                />
+              );
+            }}
+          </Await>
+        </React.Suspense>
+      )}
+      
     </div>
   );
 }
