@@ -4,6 +4,11 @@ import {
   createBrowserRouter,
   Outlet,
 } from 'react-router-dom';
+import {
+  type StaticHandlerContext,
+  createStaticRouter,
+  StaticRouterProvider,
+} from 'react-router';
 
 // Import route components and loaders
 import { MiniCart, rootRouteLoader, WixServicesProvider } from './routes/root';
@@ -18,52 +23,67 @@ import {
 import { defaultStoreCollectionRouteRedirectLoader } from './routes/store-redirect';
 import { Cart } from './routes/cart';
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: <Navigate to="/store" />,
-    },
-    {
-      element: (
-        <WixServicesProvider>
-          <MiniCart
-            // cartIcon={... optionally use your own mini cart icon...}
-            cartIconClassName="fixed top-2 right-2 z-50"
-          />
-          <Outlet />
-        </WixServicesProvider>
-      ),
-      loader: rootRouteLoader,
-      children: [
-        {
-          path: '/products/:slug',
-          element: <ProductDetailsRoute />,
-          loader: productRouteLoader,
-        },
-        {
-          path: '/store',
-          element: <></>,
-          loader: defaultStoreCollectionRouteRedirectLoader,
-          index: true,
-        },
-        {
-          path: '/store/:categorySlug',
-          element: <StoreCollectionRoute productPageRoute="/products" />,
-          loader: storeCollectionRouteLoader,
-        },
-        {
-          path: '/cart',
-          element: <Cart />,
-        },
-      ],
-    },
-  ],
+export const routes = [
   {
-    basename: '/react-router',
-  }
-);
+    path: '/',
+    element: <Navigate to="/store" />,
+  },
+  {
+    element: (
+      <WixServicesProvider>
+        <MiniCart
+          // cartIcon={... optionally use your own mini cart icon...}
+          cartIconClassName="fixed top-2 right-2 z-50"
+        />
+        <Outlet />
+      </WixServicesProvider>
+    ),
+    loader: rootRouteLoader,
+    children: [
+      {
+        path: '/products/:slug',
+        element: <ProductDetailsRoute />,
+        loader: productRouteLoader,
+      },
+      {
+        path: '/store',
+        element: <></>,
+        loader: defaultStoreCollectionRouteRedirectLoader,
+        index: true,
+      },
+      {
+        path: '/store/:categorySlug',
+        element: <StoreCollectionRoute productPageRoute="/products" />,
+        loader: storeCollectionRouteLoader,
+      },
+      {
+        path: '/cart',
+        element: <Cart />,
+      },
+    ],
+  },
+];
 
-export default function ReactRouterApp() {
-  return <RouterProvider router={router} />;
+export default function ReactRouterApp({
+  context,
+  basename,
+}: {
+  context: StaticHandlerContext;
+  basename: string;
+}) {
+  if (import.meta.env.SSR) {
+    return (
+      <StaticRouterProvider
+        router={createStaticRouter(routes, context)}
+        context={context}
+      />
+    );
+  }
+  return (
+    <RouterProvider
+      router={createBrowserRouter(routes, {
+        basename,
+      })}
+    />
+  );
 }

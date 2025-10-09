@@ -1,8 +1,20 @@
 ---
+export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ReactRouterApp from '../../react-pages/react-router/[...path]';
+import ReactRouterApp, {
+  routes,
+} from '../../react-pages/react-router/[...path]';
 import '../../styles/theme-wix-vibe-config.css';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
+import { createStaticHandler } from 'react-router';
+
+const basename = '/react-router';
+const handler = createStaticHandler(routes, { basename });
+const context = await handler.query(Astro.request);
+// Let redirects/errors bubble straight out
+if (context instanceof Response) {
+  return context;
+}
 ---
 
 <BaseLayout>
@@ -12,17 +24,11 @@ import '@wix/wix-vibe-plugins/plugins-vars.css';
     content="A single-page store application with client-side routing"
   />
   <div class="mx-auto max-w-7xl react-router">
-    <ReactRouterApp client:only="react" slot="body">
-      <!-- Loading fallback -->
-      <div class="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div class="text-center">
-          <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
-          >
-          </div>
-          <p class="text-gray-600 text-lg">Loading React Router Store...</p>
-        </div>
-      </div>
-    </ReactRouterApp>
+    <ReactRouterApp
+      client:load
+      context={context}
+      basename={basename}
+      slot="body"
+    />
   </div>
 </BaseLayout>
