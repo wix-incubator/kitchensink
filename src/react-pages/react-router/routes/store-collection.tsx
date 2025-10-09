@@ -179,11 +179,11 @@ export function StoreCollectionRoute({
     <div className="wix-verticals-container">
       {productListConfig ? (
         <CategoryPage
-        categoriesListConfig={categoriesListConfig}
-        productsListConfig={productListConfig}
-        currentCategorySlug={currentCategorySlug}
-        productPageRoute={productPageRoute}
-      />
+          categoriesListConfig={categoriesListConfig}
+          productsListConfig={productListConfig}
+          currentCategorySlug={currentCategorySlug}
+          productPageRoute={productPageRoute}
+        />
       ) : (
         <React.Suspense fallback={<CollectionSkeleton />}>
           <Await
@@ -203,7 +203,6 @@ export function StoreCollectionRoute({
           </Await>
         </React.Suspense>
       )}
-      
     </div>
   );
 }
