@@ -1,9 +1,11 @@
 import {
   Navigate,
-  RouterProvider,
   createBrowserRouter,
   Outlet,
 } from 'react-router-dom';
+import {
+  RouterProvider,
+} from 'react-router/dom';
 import {
   type StaticHandlerContext,
   createStaticRouter,
@@ -71,19 +73,16 @@ export default function ReactRouterApp({
   context: StaticHandlerContext;
   basename: string;
 }) {
-  if (import.meta.env.SSR) {
-    return (
-      <StaticRouterProvider
-        router={createStaticRouter(routes, context)}
-        context={context}
-      />
-    );
-  }
   return (
-    <RouterProvider
-      router={createBrowserRouter(routes, {
-        basename,
-      })}
-    />
+    <div id="react-router-root">
+      {import.meta.env.SSR ? (
+        <StaticRouterProvider
+          router={createStaticRouter(routes, context)}
+          context={context}
+        />
+      ) : (
+        <RouterProvider router={createBrowserRouter(routes, { basename })} />
+      )}
+    </div>
   );
 }
