@@ -67,16 +67,12 @@ export default function ReactRouterApp({
   context: StaticHandlerContext;
   basename: string;
 }) {
-  return (
-    <div id="react-router-root">
-      {import.meta.env.SSR ? (
-        <StaticRouterProvider
-          router={createStaticRouter(routes, context)}
-          context={context}
-        />
-      ) : (
-        <RouterProvider router={createBrowserRouter(routes, { basename })} />
-      )}
-    </div>
+  return import.meta.env.SSR ? (
+    <StaticRouterProvider
+      router={createStaticRouter(routes, context)}
+      context={context}
+    />
+  ) : (
+    <RouterProvider router={createBrowserRouter(routes, { basename })} />
   );
 }
