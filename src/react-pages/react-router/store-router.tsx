@@ -70,7 +70,7 @@ export default function ReactRouterApp({
 }) {
   // Check if we're running on server at runtime, not build time
   const isSSR = typeof window === 'undefined';
-  
+
   // Memoize router creation to prevent recreating on every render
   // This prevents hydration mismatches between SSR and CSR
   const router = useMemo(() => {
