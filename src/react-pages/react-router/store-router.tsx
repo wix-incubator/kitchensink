@@ -5,6 +5,7 @@ import {
   createStaticRouter,
   StaticRouterProvider,
 } from 'react-router';
+import { useMemo } from 'react';
 
 // Import route components and loaders
 import { MiniCart, rootRouteLoader, WixServicesProvider } from './routes/root';
@@ -67,12 +68,21 @@ export default function ReactRouterApp({
   context: StaticHandlerContext;
   basename: string;
 }) {
-  return import.meta.env.SSR ? (
-    <StaticRouterProvider
-      router={createStaticRouter(routes, context)}
-      context={context}
-    />
-  ) : (
-    <RouterProvider router={createBrowserRouter(routes, { basename })} />
-  );
+  // Check if we're running on server at runtime, not build time
+  const isSSR = typeof window === 'undefined';
+  
+  // Memoize router creation to prevent recreating on every render
+  // This prevents hydration mismatches between SSR and CSR
+  const router = useMemo(() => {
+    if (isSSR) {
+      return createStaticRouter(routes, context);
+    }
+    return createBrowserRouter(routes, { basename });
+  }, [isSSR, context, basename]);
+
+  if (isSSR) {
+    return <StaticRouterProvider router={router} context={context} />;
+  }
+
+  return <RouterProvider router={router} />;
 }
