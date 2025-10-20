@@ -106,8 +106,10 @@ function CollectionError() {
 
 export async function storeCollectionRouteLoader({
   params,
+  request,
 }: {
   params: { categorySlug?: string };
+  request: Request;
 }) {
   // Load categories first so we can pass them to parseUrlForProductsListSearch
   const categoriesListConfig = await loadCategoriesListServiceConfig();
@@ -133,7 +135,7 @@ export async function storeCollectionRouteLoader({
     .find();
 
   const parsedSearchOptions = await parseUrlToSearchOptions(
-    window.location.href,
+    request.url,
     categoriesListConfig.categories,
     customizations,
     {
@@ -147,16 +149,16 @@ export async function storeCollectionRouteLoader({
       },
     }
   );
-
-  // Start collection data load but don't await it,
-  // It will be awaited in the route component for the skeleton to be rendered
-  const notAwaitedData = Promise.all([
-    loadProductsListServiceConfig(parsedSearchOptions),
-  ]);
+  const productListConfigPromise =
+    loadProductsListServiceConfig(parsedSearchOptions);
+  const productListConfig = import.meta.env.SSR
+    ? await productListConfigPromise
+    : undefined;
 
   return {
+    productListConfigPromise,
+    productListConfig,
     categoriesListConfig,
-    notAwaitedData,
     currentCategorySlug: params.categorySlug,
   };
 }
@@ -166,21 +168,26 @@ export function StoreCollectionRoute({
 }: {
   productPageRoute: string;
 }) {
-  const { categoriesListConfig, notAwaitedData, currentCategorySlug } =
-    useLoaderData<typeof storeCollectionRouteLoader>();
+  const {
+    categoriesListConfig,
+    productListConfigPromise,
+    productListConfig,
+    currentCategorySlug,
+  } = useLoaderData<typeof storeCollectionRouteLoader>();
 
   return (
     <div className="wix-verticals-container">
       {/* Collection/products load with skeleton using React Router's Await */}
       <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await resolve={notAwaitedData} errorElement={<CollectionError />}>
-          {data => {
-            const [productsListConfig] = data;
-
+        <Await
+          resolve={productListConfig ?? productListConfigPromise}
+          errorElement={<CollectionError />}
+        >
+          {resolvedProductListConfig => {
             return (
               <CategoryPage
                 categoriesListConfig={categoriesListConfig}
-                productsListConfig={productsListConfig}
+                productsListConfig={resolvedProductListConfig}
                 currentCategorySlug={currentCategorySlug}
                 productPageRoute={productPageRoute}
               />

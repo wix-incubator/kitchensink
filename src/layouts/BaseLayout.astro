@@ -1,6 +1,13 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global-loader.css';
+
+interface Props {
+  useClientRouter?: boolean;
+  bodyProps?: Record<string, any>;
+}
+
+const { useClientRouter = true } = Astro.props;
 ---
 
 <html lang="en">
@@ -8,7 +15,7 @@ import '../styles/global-loader.css';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <slot name="seo-tags" />
-    <ClientRouter />
+    {useClientRouter && <ClientRouter />}
     <slot />
   </head>
   <body>
