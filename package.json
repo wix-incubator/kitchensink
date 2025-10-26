@@ -20,6 +20,7 @@
     "lint": "npm run format:check && astro check"
   },
   "dependencies": {
+    "@wix/fast-gallery-ui": "https://cdn.dev.wixpress.com/@wix/fast-gallery-ui/bc8e8ff30d74cb84c44f0645340a62d1b68cf813e3cd44f104e98282.tar.gz",
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
     "@astrojs/sitemap": "^3.4.1",
@@ -112,5 +113,6 @@
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.7",
     "tw-animate-css": "^1.3.6"
-  }
+  },
+  "packageManager": "yarn@3.6.4+sha512.e70835d4d6d62c07be76b3c1529cb640c7443f0fe434ef4b6478a5a399218cbaf1511b396b3c56eb03bc86424cff2320f6167ad2fde273aa0df6e60b7754029f"
 }
