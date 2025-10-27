@@ -2,8 +2,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
-import type { LayoutType } from '@wix/fast-gallery-ui';
-import '@wix/fast-gallery-ui/styles.css';
 
 /**
  * Root component for product list functionality.
@@ -33,90 +31,59 @@ export const ProductList = ProductListPrimitive.Root;
 /**
  * Container for the actual product grid/list display.
  * Handles empty states and provides responsive grid layout.
- * Now supports gallery layout variants via the variant prop.
  *
  * @component
  * @example
  * ```tsx
  * <ProductList>
- *   <Products variant="grid">
+ *   <Products className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  *     <ProductRepeater>
- *       <div className="border rounded-lg p-4">
- *         <ProductName className="font-semibold" />
- *         <ProductPrice className="text-lg" />
- *       </div>
+ *       <Product>
+ *         <div className="border rounded-lg p-4">
+ *           <ProductName className="font-semibold" />
+ *           <ProductPrice className="text-lg" />
+ *         </div>
+ *       </Product>
  *     </ProductRepeater>
  *   </Products>
  * </ProductList>
- *
- * // Or use alternating layout
- * <Products variant="alternating">
- *   <ProductRepeater>...</ProductRepeater>
- * </Products>
  * ```
  */
 export const Products = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    /**
-     * Gallery layout variant
-     * - grid: Standard responsive grid (default)
-     * - alternating: 3-2-3-2 alternating pattern
-     * - slider: Horizontal scrolling
-     * - waterfall: Masonry/Pinterest-style columns
-     * @default 'grid'
-     */
-    variant?: LayoutType;
-    /**
-     * Custom empty state to display when no products
-     */
-    emptyState?: React.ReactNode;
-  }
->(({ className, variant = 'grid', emptyState, children, ...props }, ref) => {
-  const defaultEmptyState = (
-    <div className="text-center py-12 sm:py-16">
-      <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
-        <svg
-          className="w-8 h-8 sm:w-12 sm:h-12 text-content-muted"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-
-  // Create a wrapper with gallery variant classes
-  const galleryClasses = React.useMemo(() => {
-    const variantMap = {
-      grid: 'gallery-grid',
-      alternating: 'gallery-alternating',
-      slider: 'gallery-slider',
-      waterfall: 'gallery-waterfall',
-    };
-    return `w-full gallery-layout ${variantMap[variant]}`;
-  }, [variant]);
-
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   return (
     <div
       ref={ref}
-      className={cn(galleryClasses, className)}
-      data-gallery-variant={variant}
+      className={cn(
+        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
+        className
+      )}
       {...props}
     >
       <ProductListPrimitive.Products
-        emptyState={emptyState || defaultEmptyState}
+        emptyState={
+          <div className="text-center py-12 sm:py-16">
+            <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-primary rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm border border-surface-subtle">
+              <svg
+                className="w-8 h-8 sm:w-12 sm:h-12 text-content-muted"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
+              </svg>
+            </div>
+          </div>
+        }
       >
-        <div className="scroller">
-          <div className="container">{children}</div>
-        </div>
+        {props.children}
       </ProductListPrimitive.Products>
     </div>
   );
@@ -125,36 +92,25 @@ Products.displayName = 'Products';
 
 /**
  * Repeater component that renders each product in the list.
- * Automatically iterates through all products using the Wix ProductRepeater.
- * Wraps each product with proper gallery item styling for layout compatibility.
+ * Automatically iterates through all products in the current list.
  *
  * @component
  * @example
  * ```tsx
- * <Products variant="alternating">
+ * <Products>
  *   <ProductRepeater>
- *     <div className="product-card">
- *       <ProductName />
- *       <ProductPrice />
- *       <ProductDescription className="text-sm text-gray-600" />
- *     </div>
+ *     <Product>
+ *       <div className="product-card">
+ *         <ProductName />
+ *         <ProductPrice />
+ *         <ProductDescription className="text-sm text-gray-600" />
+ *       </div>
+ *     </Product>
  *   </ProductRepeater>
  * </Products>
  * ```
  */
-export const ProductRepeater = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
-  return (
-    <ProductListPrimitive.ProductRepeater>
-      <div ref={ref} className={cn('item', className)} {...props}>
-        {children}
-      </div>
-    </ProductListPrimitive.ProductRepeater>
-  );
-});
-ProductRepeater.displayName = 'ProductRepeater';
+export const ProductRepeater = ProductListPrimitive.ProductRepeater;
 
 /**
  * Load more trigger component that displays a button to load additional products.
@@ -260,6 +216,3 @@ export const ProductTotalsDisplayed = React.forwardRef<
 ));
 
 ProductTotalsDisplayed.displayName = 'ProductTotalsDisplayed';
-
-// Export gallery types for convenience
-export type { LayoutType as ProductGalleryVariant };
