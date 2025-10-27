@@ -99,7 +99,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <ProductList productsListConfig={productsListConfig}>
+      <ProductList productsListConfig={productsListConfig} variant="list">
         <div className="min-h-screen">
           {/* Header Controls */}
           <Card className="border-surface-subtle mb-6 bg-surface-card">
@@ -163,7 +163,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                 </ProductListPrimitive.FilterResetTrigger>
 
                 {/* Products Grid */}
-                <Products variant="alternating">
+                <Products>
                   <ProductRepeater>
                     <Card className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between">
                       {/* Product Ribbon */}
