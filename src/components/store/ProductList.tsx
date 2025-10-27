@@ -163,7 +163,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                 </ProductListPrimitive.FilterResetTrigger>
 
                 {/* Products Grid */}
-                <Products>
+                <Products variant="alternating">
                   <ProductRepeater>
                     <Card className="relative hover:shadow-lg transition-all duration-200 hover:scale-105 group h-full flex flex-col bg-surface-card border-surface-subtle justify-between">
                       {/* Product Ribbon */}
