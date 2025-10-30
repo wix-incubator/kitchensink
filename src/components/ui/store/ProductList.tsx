@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
-import { ShadCNGalleryRepeater as GalleryWrapper } from '@wix/fast-gallery-ui';
+// import { ShadCNGalleryRepeater as GalleryWrapper } from '@wix/fast-gallery-ui';
 
 /**
  * Root component for product list functionality.
@@ -117,7 +117,7 @@ export const ProductRepeater = React.forwardRef<
 >((props, ref) => {
   return (
     <ProductListPrimitive.ProductRepeater {...props} ref={ref}>
-      <GalleryWrapper>{props.children}</GalleryWrapper>
+      {props.children}
     </ProductListPrimitive.ProductRepeater>
   );
 });

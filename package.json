@@ -20,7 +20,7 @@
     "lint": "npm run format:check && astro check"
   },
   "dependencies": {
-    "@wix/fast-gallery-ui": "https://cdn.dev.wixpress.com/@wix/fast-gallery-ui/bc8e8ff30d74cb84c44f0645340a62d1b68cf813e3cd44f104e98282.tar.gz",
+    "@wix/fast-gallery-ui": "https://cdn.dev.wixpress.com/@wix/fast-gallery-ui/52da315d51f3d551dd47b342c08d8c5785183ce3b51d6a6ff3ee2ada.tar.gz",
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
     "@astrojs/sitemap": "^3.4.1",
