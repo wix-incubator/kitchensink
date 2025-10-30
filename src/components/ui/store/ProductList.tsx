@@ -2,6 +2,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
+import type { BaseItem, LayoutType } from '@wix/fast-gallery-ui';
+import { GalleryWrapper } from '@wix/fast-gallery-ui';
 
 /**
  * Root component for product list functionality.
@@ -110,7 +112,28 @@ Products.displayName = 'Products';
  * </Products>
  * ```
  */
-export const ProductRepeater = ProductListPrimitive.ProductRepeater;
+export const ProductRepeater = React.forwardRef<
+  React.ElementRef<typeof ProductListPrimitive.ProductRepeater>,
+  React.ComponentPropsWithoutRef<typeof ProductListPrimitive.ProductRepeater>
+>((props, ref) => {
+  return (
+    <ProductListPrimitive.ProductRepeater {...props} ref={ref} asChild>
+      {({ items, variant, itemRenderer }) => {
+        return (
+          <GalleryWrapper
+            items={items as BaseItem[]}
+            variant={variant as LayoutType}
+            itemRenderer={(item: BaseItem, index: number) => {
+              const originalItem = items[index];
+              return itemRenderer(originalItem, index, props.children);
+            }}
+          />
+        );
+      }}
+    </ProductListPrimitive.ProductRepeater>
+  );
+});
+ProductRepeater.displayName = 'ProductRepeater';
 
 /**
  * Load more trigger component that displays a button to load additional products.
