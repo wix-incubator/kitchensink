@@ -1,7 +1,7 @@
 /* using tailwindcss as a base for styles */
 @import 'tailwindcss';
 @import '@wix/wix-vibe-plugins/plugins-theme.css';
-@import '@wix/fast-gallery-ui/styles.css';
+@import '@wix/fast-gallery-vibe/styles.css';
 
 /* Semantic theme classes used in data attribute patterns - converted to Tailwind utilities 
  * These classes are wrapped as @utility so Tailwind can recognize them and generate 

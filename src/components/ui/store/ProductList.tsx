@@ -2,8 +2,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
-import type { BaseItem, LayoutType } from '@wix/fast-gallery-ui';
-import { GalleryWrapper } from '@wix/fast-gallery-ui';
+import type { BaseItem, LayoutType } from '@wix/fast-gallery-vibe';
+import { GalleryWrapper } from '@wix/fast-gallery-vibe';
 
 /**
  * Root component for product list functionality.
@@ -118,18 +118,16 @@ export const ProductRepeater = React.forwardRef<
 >((props, ref) => {
   return (
     <ProductListPrimitive.ProductRepeater {...props} ref={ref} asChild>
-      {({ items, variant, itemRenderer }) => {
-        return (
-          <GalleryWrapper
-            items={items as BaseItem[]}
-            variant={variant as LayoutType}
-            itemRenderer={(item: BaseItem, index: number) => {
-              const originalItem = items[index];
-              return itemRenderer(originalItem, index, props.children);
-            }}
-          />
-        );
-      }}
+      {React.forwardRef(({ items, variant, itemWrapper }, ref) => (
+        <GalleryWrapper
+          ref={ref as React.RefObject<HTMLDivElement>}
+          items={items as BaseItem[]}
+          variant={variant as LayoutType}
+          itemRenderer={(item: BaseItem, index: number) =>
+            itemWrapper({ item, index, children: props.children })
+          }
+        />
+      )))}
     </ProductListPrimitive.ProductRepeater>
   );
 });
