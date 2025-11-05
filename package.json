@@ -20,7 +20,7 @@
     "lint": "npm run format:check && astro check"
   },
   "dependencies": {
-    "@wix/fast-gallery-vibe": "https://cdn.dev.wixpress.com/@wix/fast-gallery-vibe/2223325cd89895336072e2e63d5133128ec64f265e105827a5de3a4e.tar.gz",
+    "@wix/fast-gallery-vibe": "^1.0.1",
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
     "@astrojs/sitemap": "^3.4.1",
@@ -62,9 +62,9 @@
     "@wix/dashboard": "^1.3.39",
     "@wix/ecom": "^1.0.1376",
     "@wix/seo": "^1.0.27",
-    "@wix/stores": "^1.0.532",
+    "@wix/stores": "https://cdn.dev.wixpress.com/@wix/stores/b88414415609d824e055de69fb16c74757ae64ecb383ad9f53a48b2b.tar.gz",
     "@wix/essentials": "^0.1.24",
-    "@wix/headless-components": "^0.0.15",
+    "@wix/headless-components": "^0.0.18",
     "@wix/image": "^1.392.0",
     "@wix/media": "^1.0.189",
     "@wix/members": "^1.0.298",
@@ -113,5 +113,6 @@
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.7",
     "tw-animate-css": "^1.3.6"
-  }
+  },
+  "packageManager": "yarn@3.6.4+sha512.e70835d4d6d62c07be76b3c1529cb640c7443f0fe434ef4b6478a5a399218cbaf1511b396b3c56eb03bc86424cff2320f6167ad2fde273aa0df6e60b7754029f"
 }
