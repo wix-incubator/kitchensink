@@ -99,7 +99,7 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
 
   return (
     <TooltipProvider>
-      <ProductList productsListConfig={productsListConfig} variant="list">
+      <ProductList productsListConfig={productsListConfig} variant="grid">
         <div className="min-h-screen">
           {/* Header Controls */}
           <Card className="border-surface-subtle mb-6 bg-surface-card">

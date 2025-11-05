@@ -2,6 +2,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { ProductList as ProductListPrimitive } from '@wix/stores/components';
 import { Button } from '@/components/ui/button';
+import type { BaseItem, LayoutType } from '@wix/fast-gallery-vibe';
+import { GalleryWrapper } from '@wix/fast-gallery-vibe';
 
 /**
  * Root component for product list functionality.
@@ -54,14 +56,7 @@ export const Products = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   return (
-    <div
-      ref={ref}
-      className={cn(
-        'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6',
-        className
-      )}
-      {...props}
-    >
+    <div ref={ref} className={cn(className)} {...props}>
       <ProductListPrimitive.Products
         emptyState={
           <div className="text-center py-12 sm:py-16">
@@ -110,7 +105,25 @@ Products.displayName = 'Products';
  * </Products>
  * ```
  */
-export const ProductRepeater = ProductListPrimitive.ProductRepeater;
+export const ProductRepeater = React.forwardRef<
+  React.ElementRef<typeof ProductListPrimitive.ProductRepeater>,
+  React.ComponentPropsWithoutRef<typeof ProductListPrimitive.ProductRepeater>
+>((props, ref) => {
+  return (
+    <ProductListPrimitive.ProductRepeater {...props} ref={ref} asChild>
+      {({ items, variant, itemWrapper }) => (
+        <GalleryWrapper
+          items={items as BaseItem[]}
+          variant={variant as LayoutType}
+          itemRenderer={(item: BaseItem, index: number) =>
+            itemWrapper({ item, index, children: props.children })
+          }
+        />
+      )}
+    </ProductListPrimitive.ProductRepeater>
+  );
+});
+ProductRepeater.displayName = 'ProductRepeater';
 
 /**
  * Load more trigger component that displays a button to load additional products.
