@@ -5,6 +5,8 @@ import {
   type ProductsListServiceConfig,
 } from '@wix/stores/services';
 
+// dummy change for testing
+
 interface StoreCollectionPageProps {
   productsListConfig: ProductsListServiceConfig;
   categoriesListConfig: CategoriesListServiceConfig;
