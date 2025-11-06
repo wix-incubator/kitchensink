@@ -116,7 +116,11 @@ export const ProductRepeater = React.forwardRef<
           items={items as BaseItem[]}
           variant={variant as LayoutType}
           itemRenderer={(item: BaseItem, index: number) =>
-            itemWrapper({ item, index, children: props.children })
+            itemWrapper({
+              item,
+              index,
+              children: props.children as React.ReactNode,
+            })
           }
         />
       )}
