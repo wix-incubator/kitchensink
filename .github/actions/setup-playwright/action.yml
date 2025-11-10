@@ -6,7 +6,7 @@ runs:
     - name: Store Playwright's Version
       id: store-playwright-version
       run: |
-        PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+        PLAYWRIGHT_VERSION=$(npm ls @playwright/test --depth=0 2>/dev/null | grep @playwright | sed 's/.*@//' || node -p "require('./package.json').devDependencies['@playwright/test']")
         echo "Playwright's Version: $PLAYWRIGHT_VERSION"
         echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
       shell: bash
