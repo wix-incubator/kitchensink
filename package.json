@@ -20,7 +20,7 @@
     "lint": "npm run format:check && astro check"
   },
   "dependencies": {
-    "@wix/fast-gallery-vibe": "^1.0.1",
+    "@wix/fast-gallery-vibe": "^1.4.0",
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
     "@astrojs/sitemap": "^3.4.1",
