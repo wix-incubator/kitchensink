@@ -6,7 +6,7 @@ runs:
     - name: Store Playwright's Version
       id: store-playwright-version
       run: |
-        PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//' | awk '{print $1}' | head -n1)
+        PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']" | sed 's/[\^~]//g')
         echo "Playwright's Version: $PLAYWRIGHT_VERSION"
         echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
       shell: bash
@@ -18,5 +18,5 @@ runs:
         key: playwright-chromium-${{ steps.store-playwright-version.outputs.PLAYWRIGHT_VERSION }}
     - name: Setup Playwright
       if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
-      run: yarn playwright install chromium --with-deps
+      run: npx playwright install chromium --with-deps
       shell: bash
