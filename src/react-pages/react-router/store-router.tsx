@@ -1,5 +1,5 @@
-import { 
-  Navigate, 
+import {
+  Navigate,
   Outlet,
   createBrowserRouter,
   RouterProvider,
