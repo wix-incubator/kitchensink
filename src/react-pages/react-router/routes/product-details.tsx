@@ -41,6 +41,7 @@ export function ProductDetailsRoute() {
         useEffect(() => {
           if (slug) {
             updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug });
+            console.log('slug', slug);
           }
         }, [slug, location.pathname, updateSeoTags]);
 

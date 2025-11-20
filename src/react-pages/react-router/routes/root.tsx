@@ -47,7 +47,8 @@ export async function rootRouteLoader({ request }: { request: Request }) {
 }
 
 export function WixServicesProvider(props: { children: React.ReactNode }) {
-  const { currentCartServiceConfig, seoTagsServiceConfig } = useLoaderData<typeof rootRouteLoader>();
+  const { currentCartServiceConfig, seoTagsServiceConfig } =
+    useLoaderData<typeof rootRouteLoader>();
 
   return (
     <div data-testid="main-container">
