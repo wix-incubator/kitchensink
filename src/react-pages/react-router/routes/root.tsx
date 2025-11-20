@@ -2,6 +2,7 @@ import { useLoaderData } from 'react-router';
 import { useEffect, useState, type ReactNode } from 'react';
 
 import { loadCurrentCartServiceConfig } from '@wix/ecom/services';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 import { MiniCartContent, MiniCartIcon } from '@/components/ecom/MiniCart';
 import { CurrentCart } from '@/components/ui/ecom/CurrentCart';
 import { CartLineItemAdded } from '@/components/ui/ecom/Cart';
@@ -16,6 +17,7 @@ import {
   useMiniCartContext,
 } from '@/components/MiniCartContextProvider';
 import { Commerce } from '@/components/ui/ecom/Commerce';
+import { SEO } from '@wix/seo/components';
 
 const ReactRouterNavigationComponent: NavigationComponent = ({
   route,
@@ -29,32 +31,40 @@ const ReactRouterNavigationComponent: NavigationComponent = ({
   );
 };
 
-export async function rootRouteLoader() {
-  const [currentCartServiceConfig] = await Promise.all([
+export async function rootRouteLoader({ request }: { request: Request }) {
+  const [currentCartServiceConfig, seoTagsServiceConfig] = await Promise.all([
     loadCurrentCartServiceConfig(),
+    loadSEOTagsServiceConfig({
+      pageUrl: request.url,
+      itemData: { pageName: 'Home' },
+    }),
   ]);
 
   return {
     currentCartServiceConfig,
+    seoTagsServiceConfig,
   };
 }
 
 export function WixServicesProvider(props: { children: React.ReactNode }) {
-  const { currentCartServiceConfig } = useLoaderData<typeof rootRouteLoader>();
+  const { currentCartServiceConfig, seoTagsServiceConfig } =
+    useLoaderData<typeof rootRouteLoader>();
 
   return (
     <div data-testid="main-container">
-      <MiniCartContextProvider>
-        <Commerce.Root checkoutServiceConfig={{}}>
-          <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
-            <NavigationProvider
-              navigationComponent={ReactRouterNavigationComponent}
-            >
-              {props.children}
-            </NavigationProvider>
-          </CurrentCart>
-        </Commerce.Root>
-      </MiniCartContextProvider>
+      <SEO.Root seoTagsServiceConfig={seoTagsServiceConfig}>
+        <MiniCartContextProvider>
+          <Commerce.Root checkoutServiceConfig={{}}>
+            <CurrentCart currentCartServiceConfig={currentCartServiceConfig}>
+              <NavigationProvider
+                navigationComponent={ReactRouterNavigationComponent}
+              >
+                {props.children}
+              </NavigationProvider>
+            </CurrentCart>
+          </Commerce.Root>
+        </MiniCartContextProvider>
+      </SEO.Root>
     </div>
   );
 }
