@@ -137,11 +137,12 @@ async function getPageTitle(page: Page): Promise<string> {
 }
 
 /**
- * Helper function to get meta description
+ * Helper function to check if title tag has wix-seo-tags attribute
  */
-async function getMetaDescription(page: Page): Promise<string | null> {
-  const element = page.locator('meta[name="description"]').first();
-  return await element.getAttribute('content').catch(() => null);
+async function hasTitleWixSeoTag(page: Page): Promise<boolean> {
+  const titleElement = page.locator('title[wix-seo-tags="true"]');
+  const count = await titleElement.count();
+  return count > 0;
 }
 
 /**
@@ -217,6 +218,10 @@ test.describe('React Router SEO Tags', () => {
     const collectionTitle = await getPageTitle(page);
     expect(collectionTitle).toBeTruthy();
 
+    // Verify title has wix-seo-tags attribute on collection page
+    const hasWixTagOnCollection = await hasTitleWixSeoTag(page);
+    expect(hasWixTagOnCollection).toBe(true);
+
     // Navigate to product details
     const viewProductButton = firstProductCard.getByTestId(
       'view-product-button'
@@ -233,5 +238,9 @@ test.describe('React Router SEO Tags', () => {
     const productTitle = await getPageTitle(page);
     expect(productTitle).toBeTruthy();
     expect(productTitle).not.toBe(collectionTitle);
+
+    // Verify title has wix-seo-tags attribute on product page
+    const hasWixTagOnProduct = await hasTitleWixSeoTag(page);
+    expect(hasWixTagOnProduct).toBe(true);
   });
 });
