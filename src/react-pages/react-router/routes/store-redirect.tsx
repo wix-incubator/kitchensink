@@ -1,4 +1,4 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from 'react-router';
 import { loadCategoriesListServiceConfig } from '@wix/stores/services';
 
 export async function defaultStoreCollectionRouteRedirectLoader() {
