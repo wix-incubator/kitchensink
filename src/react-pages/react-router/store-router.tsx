@@ -1,6 +1,8 @@
-import { Navigate, createBrowserRouter, Outlet } from 'react-router-dom';
-import { RouterProvider } from 'react-router/dom';
 import {
+  Navigate,
+  Outlet,
+  createBrowserRouter,
+  RouterProvider,
   type StaticHandlerContext,
   createStaticRouter,
   StaticRouterProvider,

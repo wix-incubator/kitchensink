@@ -1,4 +1,4 @@
-import { useLoaderData, redirect, Await } from 'react-router-dom';
+import { useLoaderData, redirect, Await } from 'react-router';
 import React from 'react';
 import {
   loadCategoriesListServiceConfig,
