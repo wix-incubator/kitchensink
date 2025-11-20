@@ -14,7 +14,8 @@ import { loadProductsListServiceConfig } from '@wix/stores/services';
 import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '@/components/store/ProductList';
 import { Card, CardContent } from '@/components/ui/card';
-import { customizationsV3, categories } from '@wix/stores';
+import { customizationsV3 } from '@wix/stores';
+import { Category } from '@wix/stores';
 import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
 // Skeleton component for product collection loading
@@ -186,7 +187,7 @@ export function StoreCollectionRoute({
   const { categorySlug } = useParams();
 
   const category = categoriesListConfig.categories.find(
-    (cat: categories.Category) => cat.slug === currentCategorySlug
+    (category: Category) => category.slug === currentCategorySlug
   );
   const categoryName = category?.name || '';
 
