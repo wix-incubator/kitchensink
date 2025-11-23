@@ -1,4 +1,4 @@
-import { useLoaderData, useParams, useLocation } from 'react-router';
+import { useLoaderData, useParams } from 'react-router';
 import { loadProductServiceConfig, ProductService } from '@wix/stores/services';
 import type { ServiceFactoryConfig } from '@wix/services-definitions';
 import ProductDetailPage from '../../store/main-components/productDetailsPage';
@@ -33,7 +33,6 @@ export async function productRouteLoader({
 export function ProductDetailsRoute() {
   const { productServiceConfig } = useLoaderData<typeof productRouteLoader>();
   const { slug } = useParams();
-  const location = useLocation();
 
   return (
     <SEO.UpdateTagsTrigger>
@@ -42,7 +41,7 @@ export function ProductDetailsRoute() {
           if (slug) {
             updateSeoTags(seoTags.ItemType.STORES_PRODUCT, { slug });
           }
-        }, [slug, location.pathname, updateSeoTags]);
+        }, [slug, updateSeoTags]);
 
         return (
           <div className="wix-verticals-container">

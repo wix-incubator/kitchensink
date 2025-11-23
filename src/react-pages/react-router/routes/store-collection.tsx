@@ -1,10 +1,4 @@
-import {
-  useLoaderData,
-  redirect,
-  Await,
-  useLocation,
-  useParams,
-} from 'react-router';
+import { useLoaderData, redirect, Await, useParams } from 'react-router';
 import React, { useEffect } from 'react';
 import {
   loadCategoriesListServiceConfig,
@@ -182,7 +176,6 @@ export function StoreCollectionRoute({
     productListConfig,
     currentCategorySlug,
   } = useLoaderData<typeof storeCollectionRouteLoader>();
-  const location = useLocation();
   const { categorySlug } = useParams();
 
   const category = categoriesListConfig.categories.find(
@@ -215,7 +208,7 @@ export function StoreCollectionRoute({
               },
             });
           }
-        }, [categorySlug, location.pathname, updateSeoTags]);
+        }, [categorySlug, updateSeoTags]);
 
         return (
           <div className="wix-verticals-container">
