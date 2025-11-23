@@ -7,7 +7,8 @@ import ReactRouterApp, {
 import '../../styles/theme-wix-vibe-config.css';
 import '@wix/wix-vibe-plugins/plugins-vars.css';
 import { createStaticHandler } from 'react-router';
-
+import { SEO } from '@wix/seo/components';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 const basename = '/react-router';
 const handler = createStaticHandler(routes, { basename });
 const context = await handler.query(Astro.request);
@@ -15,14 +16,17 @@ const context = await handler.query(Astro.request);
 if (context instanceof Response) {
   return context;
 }
+
+const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+  pageUrl: Astro.url.href,
+  itemData: {
+    pageName: 'Home',
+  },
+});
 ---
 
 <BaseLayout useClientRouter={false}>
-  <title>React Router Store</title>
-  <meta
-    name="description"
-    content="A single-page store application with client-side routing"
-  />
+  <SEO.Tags seoTagsServiceConfig={seoTagsServiceConfig} slot="seo-tags" />
   <div class="mx-auto max-w-7xl react-router" id="root">
     <ReactRouterApp
       client:load

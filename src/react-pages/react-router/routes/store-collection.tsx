@@ -1,5 +1,5 @@
-import { useLoaderData, redirect, Await } from 'react-router';
-import React from 'react';
+import { useLoaderData, redirect, Await, useParams } from 'react-router';
+import React, { useEffect } from 'react';
 import {
   loadCategoriesListServiceConfig,
   parseUrlToSearchOptions,
@@ -9,6 +9,8 @@ import CategoryPage from '../../store/main-components/categoryPage';
 import { ProductListSkeleton } from '@/components/store/ProductList';
 import { Card, CardContent } from '@/components/ui/card';
 import { customizationsV3 } from '@wix/stores';
+import { SEO } from '@wix/seo/components';
+import { seoTags } from '@wix/seo';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
@@ -174,27 +176,63 @@ export function StoreCollectionRoute({
     productListConfig,
     currentCategorySlug,
   } = useLoaderData<typeof storeCollectionRouteLoader>();
+  const { categorySlug } = useParams();
+
+  const category = categoriesListConfig.categories.find(
+    category => category.slug === currentCategorySlug
+  );
+  const categoryName = category?.name || '';
 
   return (
-    <div className="wix-verticals-container">
-      {/* Collection/products load with skeleton using React Router's Await */}
-      <React.Suspense fallback={<CollectionSkeleton />}>
-        <Await
-          resolve={productListConfig ?? productListConfigPromise}
-          errorElement={<CollectionError />}
-        >
-          {resolvedProductListConfig => {
-            return (
-              <CategoryPage
-                categoriesListConfig={categoriesListConfig}
-                productsListConfig={resolvedProductListConfig}
-                currentCategorySlug={currentCategorySlug}
-                productPageRoute={productPageRoute}
-              />
-            );
-          }}
-        </Await>
-      </React.Suspense>
-    </div>
+    <SEO.UpdateTagsTrigger>
+      {({ updateSeoTags }) => {
+        useEffect(() => {
+          if (categorySlug) {
+            updateSeoTags(seoTags.ItemType.STORES_CATEGORY, {
+              pageName: categoryName,
+              slug: categorySlug,
+              seoData: {
+                tags: [
+                  {
+                    type: 'title',
+                    children: `${categoryName} - Store`,
+                  },
+                  {
+                    type: 'meta',
+                    props: {
+                      content: `Browse our ${categoryName} products`,
+                      name: 'description',
+                    },
+                  },
+                ],
+              },
+            });
+          }
+        }, [categorySlug, updateSeoTags]);
+
+        return (
+          <div className="wix-verticals-container">
+            {/* Collection/products load with skeleton using React Router's Await */}
+            <React.Suspense fallback={<CollectionSkeleton />}>
+              <Await
+                resolve={productListConfig ?? productListConfigPromise}
+                errorElement={<CollectionError />}
+              >
+                {resolvedProductListConfig => {
+                  return (
+                    <CategoryPage
+                      categoriesListConfig={categoriesListConfig}
+                      productsListConfig={resolvedProductListConfig}
+                      currentCategorySlug={currentCategorySlug}
+                      productPageRoute={productPageRoute}
+                    />
+                  );
+                }}
+              </Await>
+            </React.Suspense>
+          </div>
+        );
+      }}
+    </SEO.UpdateTagsTrigger>
   );
 }

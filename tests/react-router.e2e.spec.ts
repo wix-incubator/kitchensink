@@ -129,6 +129,38 @@ async function navigateToFirstAvailableProduct(
 //   return await navigateToFirstProduct(_page, false);
 // }
 
+/**
+ * Helper function to get the page title
+ */
+async function getPageTitle(page: Page): Promise<string> {
+  return await page.title();
+}
+
+/**
+ * Helper function to check if title tag has wix-seo-tags attribute
+ */
+async function hasTitleWixSeoTag(page: Page): Promise<boolean> {
+  const titleElement = page.locator('title[wix-seo-tags="true"]');
+  const count = await titleElement.count();
+  return count > 0;
+}
+
+/**
+ * Navigate to first product from store collection
+ */
+async function navigateToFirstProductFromStore(page: Page) {
+  await page.waitForLoadState('networkidle');
+
+  const firstProductCard = page
+    .locator('[data-testid="product-list-item"]')
+    .first();
+  await expect(firstProductCard).toBeVisible({ timeout: 10000 });
+
+  const viewProductButton = firstProductCard.getByTestId('view-product-button');
+  await viewProductButton.click();
+  await page.waitForLoadState('networkidle');
+}
+
 test.describe('React Router e2e Flow', () => {
   test('should load the product page properly', async ({ page }) => {
     const productDetails = await navigateToFirstAvailableProduct(page);
@@ -165,5 +197,50 @@ test.describe('React Router e2e Flow', () => {
     await expect(page).toHaveURL(/\/checkout\?checkoutId=.*$/, {
       timeout: 10000,
     });
+  });
+});
+
+test.describe('React Router SEO Tags', () => {
+  test('should update title when navigating between collection and product', async ({
+    page,
+  }) => {
+    // Go to collection page
+    await page.goto('/react-router');
+    await page.waitForLoadState('networkidle');
+
+    const firstProductCard = page
+      .locator('[data-testid="product-list-item"]')
+      .first();
+    await expect(firstProductCard).toBeVisible({ timeout: 10000 });
+    await page.waitForTimeout(500);
+
+    // Get collection page title
+    const collectionTitle = await getPageTitle(page);
+    expect(collectionTitle).toBeTruthy();
+
+    // Verify title has wix-seo-tags attribute on collection page
+    const hasWixTagOnCollection = await hasTitleWixSeoTag(page);
+    expect(hasWixTagOnCollection).toBe(true);
+
+    // Navigate to product details
+    const viewProductButton = firstProductCard.getByTestId(
+      'view-product-button'
+    );
+    await viewProductButton.click();
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.getByTestId('product-details')).toBeVisible({
+      timeout: 10000,
+    });
+    await page.waitForTimeout(500);
+
+    // Get product page title - should be different (SEO tags updated!)
+    const productTitle = await getPageTitle(page);
+    expect(productTitle).toBeTruthy();
+    expect(productTitle).not.toBe(collectionTitle);
+
+    // Verify title has wix-seo-tags attribute on product page
+    const hasWixTagOnProduct = await hasTitleWixSeoTag(page);
+    expect(hasWixTagOnProduct).toBe(true);
   });
 });
