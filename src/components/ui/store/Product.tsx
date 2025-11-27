@@ -74,6 +74,7 @@ export const ProductName = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(productNameVariants({ variant }), className)}
+      data-item-field="name"
     >
       {props.children}
     </ProductPrimitive.Name>
