@@ -198,6 +198,7 @@ export const ProductCompareAtPrice = React.forwardRef<
         'text-lg font-medium text-content-faded line-through',
         props.className
       )}
+      data-item-field="variantsInfo.variants[0].price.compareAtPrice.amount"
     >
       {props.children}
     </ProductPrimitive.CompareAtPrice>
