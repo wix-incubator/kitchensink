@@ -100,6 +100,7 @@ export default function ProductDetails({
                     {
                       <p
                         className="text-content-secondary leading-relaxed"
+                        data-item-field="description"
                         dangerouslySetInnerHTML={{
                           __html: description,
                         }}

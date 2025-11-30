@@ -74,6 +74,7 @@ export const ProductName = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(productNameVariants({ variant }), className)}
+      data-item-field="name"
     >
       {props.children}
     </ProductPrimitive.Name>
@@ -161,6 +162,7 @@ export const ProductPrice = React.forwardRef<
         'text-3xl font-bold text-content-primary font-theme-heading',
         props.className
       )}
+      data-item-field="variantsInfo.variants[0].price.actualPrice.amount"
     >
       {props.children}
     </ProductPrimitive.Price>
@@ -969,6 +971,7 @@ export const ProductVariantSKU = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(props.className)}
+      data-item-field="variantsInfo.variants[0].sku"
     >
       {props.children}
     </ProductPrimitive.ProductVariant.SKU>
@@ -1009,6 +1012,7 @@ export const ProductVariantWeight = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(props.className)}
+      data-item-field="variantsInfo.variants[0].physicalProperties.weight"
     >
       {props.children}
     </ProductPrimitive.ProductVariant.Weight>
@@ -1172,6 +1176,7 @@ export const ProductRibbon = React.forwardRef<
       ref={ref}
       className={cn('absolute top-2 z-10 px-3 py-1 left-2', props.className)}
       asChild
+      data-item-field="ribbon.name"
     >
       <Badge variant="secondary" />
     </ProductPrimitive.Ribbon>
