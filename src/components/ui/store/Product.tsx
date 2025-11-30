@@ -971,6 +971,7 @@ export const ProductVariantSKU = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(props.className)}
+      data-item-field="variantsInfo.variants[0].sku"
     >
       {props.children}
     </ProductPrimitive.ProductVariant.SKU>
@@ -1011,6 +1012,7 @@ export const ProductVariantWeight = React.forwardRef<
       {...props}
       ref={ref}
       className={cn(props.className)}
+      data-item-field="variantsInfo.variants[0].physicalProperties.weight"
     >
       {props.children}
     </ProductPrimitive.ProductVariant.Weight>
