@@ -162,6 +162,7 @@ export const ProductPrice = React.forwardRef<
         'text-3xl font-bold text-content-primary font-theme-heading',
         props.className
       )}
+      data-item-field="variantsInfo.variants[0].price.actualPrice.amount"
     >
       {props.children}
     </ProductPrimitive.Price>
@@ -1173,6 +1174,7 @@ export const ProductRibbon = React.forwardRef<
       ref={ref}
       className={cn('absolute top-2 z-10 px-3 py-1 left-2', props.className)}
       asChild
+      data-item-field="ribbon.name"
     >
       <Badge variant="secondary" />
     </ProductPrimitive.Ribbon>
