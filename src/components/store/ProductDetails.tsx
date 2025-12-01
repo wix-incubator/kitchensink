@@ -89,7 +89,7 @@ export default function ProductDetails({
           </div>
 
           {/* Product Description */}
-          <ProductDescription as="html" asChild>
+          <ProductDescription as="plain" asChild>
             {({ description }) => (
               <>
                 {description && !isQuickView && (

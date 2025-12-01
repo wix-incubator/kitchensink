@@ -1177,9 +1177,8 @@ export const ProductRibbon = React.forwardRef<
       ref={ref}
       className={cn('absolute top-2 z-10 px-3 py-1 left-2', props.className)}
       asChild
-      data-item-field="ribbon.name"
     >
-      <Badge variant="secondary" />
+      <Badge variant="secondary" data-item-field="ribbon.name" />
     </ProductPrimitive.Ribbon>
   );
 });
