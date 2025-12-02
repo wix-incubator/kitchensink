@@ -20,9 +20,9 @@ if (context instanceof Response) {
 }
 
 // Find the most specific route (last match) that provides SEO config
-const routeWithSeoConfig = [...context.matches]
-  .reverse()
-  .find(match => context.loaderData[match.route.id]?.seoTagsServiceConfig);
+const routeWithSeoConfig = context.matches.findLast(
+  match => context.loaderData[match.route.id]?.seoTagsServiceConfig
+);
 
 const seoTagsServiceConfig = routeWithSeoConfig
   ? context.loaderData[routeWithSeoConfig.route.id].seoTagsServiceConfig
