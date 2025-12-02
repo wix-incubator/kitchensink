@@ -12,6 +12,29 @@ import { customizationsV3 } from '@wix/stores';
 import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
 import { loadSEOTagsServiceConfig } from '@wix/seo/services';
+
+// Helper function to create SEO configuration for store categories
+function createCategorySeoConfig(categoryName: string, categorySlug?: string) {
+  return {
+    pageName: categoryName,
+    slug: categorySlug,
+    seoData: {
+      tags: [
+        {
+          type: 'title' as const,
+          children: `${categoryName} - Store`,
+        },
+        {
+          type: 'meta' as const,
+          props: {
+            content: `Browse our ${categoryName} products`,
+            name: 'description',
+          },
+        },
+      ],
+    },
+  };
+}
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
@@ -163,25 +186,7 @@ export async function storeCollectionRouteLoader({
   const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
     pageUrl: request.url,
     itemType: seoTags.ItemType.STORES_CATEGORY,
-    itemData: {
-      pageName: categoryName,
-      slug: params.categorySlug,
-      seoData: {
-        tags: [
-          {
-            type: 'title',
-            children: `${categoryName} - Store`,
-          },
-          {
-            type: 'meta',
-            props: {
-              content: `Browse our ${categoryName} products`,
-              name: 'description',
-            },
-          },
-        ],
-      },
-    },
+    itemData: createCategorySeoConfig(categoryName, params.categorySlug),
   });
 
   return {
@@ -219,25 +224,10 @@ export function StoreCollectionRoute({
         // This is for client-side navigation only; SSR handles initial load
         useEffect(() => {
           if (categorySlug && typeof window !== 'undefined') {
-            updateSeoTags(seoTags.ItemType.STORES_CATEGORY, {
-              pageName: categoryName,
-              slug: categorySlug,
-              seoData: {
-                tags: [
-                  {
-                    type: 'title',
-                    children: `${categoryName} - Store`,
-                  },
-                  {
-                    type: 'meta',
-                    props: {
-                      content: `Browse our ${categoryName} products`,
-                      name: 'description',
-                    },
-                  },
-                ],
-              },
-            });
+            updateSeoTags(
+              seoTags.ItemType.STORES_CATEGORY,
+              createCategorySeoConfig(categoryName, categorySlug)
+            );
           }
         }, [categorySlug, updateSeoTags, categoryName]);
 
