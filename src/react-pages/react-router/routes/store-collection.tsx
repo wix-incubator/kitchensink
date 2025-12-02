@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { customizationsV3 } from '@wix/stores';
 import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
+import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 // Skeleton component for product collection loading
 function CollectionSkeleton() {
   return (
@@ -157,11 +158,38 @@ export async function storeCollectionRouteLoader({
     ? await productListConfigPromise
     : undefined;
 
+  // Load SEO tags for the category
+  const categoryName = selectedCategory.name || '';
+  const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
+    pageUrl: request.url,
+    itemType: seoTags.ItemType.STORES_CATEGORY,
+    itemData: {
+      pageName: categoryName,
+      slug: params.categorySlug,
+      seoData: {
+        tags: [
+          {
+            type: 'title',
+            children: `${categoryName} - Store`,
+          },
+          {
+            type: 'meta',
+            props: {
+              content: `Browse our ${categoryName} products`,
+              name: 'description',
+            },
+          },
+        ],
+      },
+    },
+  });
+
   return {
     productListConfigPromise,
     productListConfig,
     categoriesListConfig,
     currentCategorySlug: params.categorySlug,
+    seoTagsServiceConfig,
   };
 }
 
@@ -175,6 +203,7 @@ export function StoreCollectionRoute({
     productListConfigPromise,
     productListConfig,
     currentCategorySlug,
+    seoTagsServiceConfig,
   } = useLoaderData<typeof storeCollectionRouteLoader>();
   const { categorySlug } = useParams();
 
@@ -186,8 +215,10 @@ export function StoreCollectionRoute({
   return (
     <SEO.UpdateTagsTrigger>
       {({ updateSeoTags }) => {
+        // Update SEO tags on client-side navigation (SPA transitions)
+        // This is for client-side navigation only; SSR handles initial load
         useEffect(() => {
-          if (categorySlug) {
+          if (categorySlug && typeof window !== 'undefined') {
             updateSeoTags(seoTags.ItemType.STORES_CATEGORY, {
               pageName: categoryName,
               slug: categorySlug,
@@ -208,7 +239,7 @@ export function StoreCollectionRoute({
               },
             });
           }
-        }, [categorySlug, updateSeoTags]);
+        }, [categorySlug, updateSeoTags, categoryName]);
 
         return (
           <div className="wix-verticals-container">
