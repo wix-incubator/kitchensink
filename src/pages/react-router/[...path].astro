@@ -19,34 +19,19 @@ if (context instanceof Response) {
   return context;
 }
 
-// Extract SEO config from the matched route's loader data
-// React Router's context.loaderData contains the data from all matched routes
-// We need to find the deepest (most specific) route that has seoTagsServiceConfig
-let seoTagsServiceConfig;
+// Find the most specific route (last match) that provides SEO config
+const routeWithSeoConfig = [...context.matches]
+  .reverse()
+  .find(match => context.loaderData[match.route.id]?.seoTagsServiceConfig);
 
-// Check if we have matches and loaderData
-if (context.matches && context.loaderData) {
-  // Iterate through matches in reverse order (most specific route first)
-  for (let i = context.matches.length - 1; i >= 0; i--) {
-    const match = context.matches[i];
-    const loaderData = context.loaderData[match.route.id];
-    
-    if (loaderData && typeof loaderData === 'object' && 'seoTagsServiceConfig' in loaderData) {
-      seoTagsServiceConfig = loaderData.seoTagsServiceConfig;
-      break;
-    }
-  }
-}
-
-// Fallback to default SEO config if no route provided one
-if (!seoTagsServiceConfig) {
-  seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-    pageUrl: Astro.url.href,
-    itemData: {
-      pageName: 'Store',
-    },
-  });
-}
+const seoTagsServiceConfig = routeWithSeoConfig
+  ? context.loaderData[routeWithSeoConfig.route.id].seoTagsServiceConfig
+  : await loadSEOTagsServiceConfig({
+      pageUrl: Astro.url.href,
+      itemData: {
+        pageName: 'Store',
+      },
+    });
 ---
 
 <BaseLayout useClientRouter={false}>
