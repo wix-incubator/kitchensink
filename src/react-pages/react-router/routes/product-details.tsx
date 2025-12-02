@@ -4,7 +4,7 @@ import type { ServiceFactoryConfig } from '@wix/services-definitions';
 import ProductDetailPage from '../../store/main-components/productDetailsPage';
 import { SEO } from '@wix/seo/components';
 import { seoTags } from '@wix/seo';
-import { loadSEOTagsServiceConfig } from '@wix/seo/services';
+import { loadSEOTagsServiceConfig, SEOTagsService } from '@wix/seo/services';
 import { useEffect } from 'react';
 
 export async function productRouteLoader({
@@ -15,7 +15,7 @@ export async function productRouteLoader({
   request: Request;
 }): Promise<{
   productServiceConfig: ServiceFactoryConfig<typeof ProductService>;
-  seoTagsServiceConfig: any;
+  seoTagsServiceConfig: ServiceFactoryConfig<typeof SEOTagsService>;
 }> {
   if (!params.slug) {
     throw new Error('Product slug is required');
@@ -43,7 +43,7 @@ export async function productRouteLoader({
 }
 
 export function ProductDetailsRoute() {
-  const { productServiceConfig, seoTagsServiceConfig } = useLoaderData<typeof productRouteLoader>();
+  const { productServiceConfig } = useLoaderData<typeof productRouteLoader>();
   const { slug } = useParams();
 
   return (
