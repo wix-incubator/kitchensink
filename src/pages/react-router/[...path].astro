@@ -9,20 +9,29 @@ import '@wix/wix-vibe-plugins/plugins-vars.css';
 import { createStaticHandler } from 'react-router';
 import { SEO } from '@wix/seo/components';
 import { loadSEOTagsServiceConfig } from '@wix/seo/services';
+
 const basename = '/react-router';
 const handler = createStaticHandler(routes, { basename });
 const context = await handler.query(Astro.request);
+
 // Let redirects/errors bubble straight out
 if (context instanceof Response) {
   return context;
 }
 
-const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
-  pageUrl: Astro.url.href,
-  itemData: {
-    pageName: 'Home',
-  },
-});
+// Find the most specific route (last match) that provides SEO config
+const routeWithSeoConfig = context.matches.findLast(
+  match => context.loaderData[match.route.id]?.seoTagsServiceConfig
+);
+
+const seoTagsServiceConfig = routeWithSeoConfig
+  ? context.loaderData[routeWithSeoConfig.route.id].seoTagsServiceConfig
+  : await loadSEOTagsServiceConfig({
+      pageUrl: Astro.url.href,
+      itemData: {
+        pageName: 'Store',
+      },
+    });
 ---
 
 <BaseLayout useClientRouter={false}>
