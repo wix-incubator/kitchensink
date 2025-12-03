@@ -208,7 +208,6 @@ export function StoreCollectionRoute({
     productListConfigPromise,
     productListConfig,
     currentCategorySlug,
-    seoTagsServiceConfig,
   } = useLoaderData<typeof storeCollectionRouteLoader>();
   const { categorySlug } = useParams();
 
