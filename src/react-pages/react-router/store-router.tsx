@@ -43,6 +43,13 @@ export const routes = [
         path: '/products/:slug',
         element: <ProductDetailsRoute />,
         loader: productRouteLoader,
+        routeMetadata: {
+          appDefId: "1380b703-ce81-ff05-f115-39571d94dfcd",
+          pageIdentifier: "wix.stores.sub_pages.product",
+          identifiers: {
+            slug: "STORES.PRODUCT.SLUG"
+          }
+        },
       },
       {
         path: '/store',
@@ -54,6 +61,13 @@ export const routes = [
         path: '/store/:categorySlug',
         element: <StoreCollectionRoute productPageRoute="/products" />,
         loader: storeCollectionRouteLoader,
+        routeMetadata: {
+          appDefId: "1380b703-ce81-ff05-f115-39571d94dfcd",
+          pageIdentifier: "wix.stores.sub_pages.category",
+          identifiers: {
+            categorySlug: "STORES.CATEGORY.SLUG"
+          }
+        }
       },
       {
         path: '/cart',
