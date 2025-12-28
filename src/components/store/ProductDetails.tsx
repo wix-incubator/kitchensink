@@ -51,13 +51,13 @@ export default function ProductDetails({
   const Navigation = useNavigation();
 
   return (
-    <Product product={product}           
-      data-product-id={product._id}
-      data-product-available={true}
-      data-item-id={product._id}>
+    <Product product={product}>
       <div
         className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         data-testid="product-details"
+        data-product-id={product._id}
+        data-product-available={true}
+        data-item-id={product._id}
       >
         {/* Product Images */}
         <div className="space-y-4">
