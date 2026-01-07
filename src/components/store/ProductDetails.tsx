@@ -38,6 +38,9 @@ import { productsV3 } from '@wix/stores';
 
 import { SocialSharingButtons } from '../social/SocialSharingButtons';
 import { useNavigation } from '../NavigationContext';
+import { useService } from '@wix/services-manager-react';
+import { ProductServiceDefinition } from '@wix/stores/services';
+import { useEffect } from 'react';
 
 import * as StyledMediaGallery from '@/components/ui/media/MediaGallery';
 
@@ -49,6 +52,12 @@ export default function ProductDetails({
   product: productsV3.V3Product;
 }) {
   const Navigation = useNavigation();
+  const productService = useService(ProductServiceDefinition);
+
+  // Report view content track event when product details page loads
+  useEffect(() => {
+    productService.reportViewContentTrackEvent();
+  }, [productService]);
 
   return (
     <Product product={product}>
