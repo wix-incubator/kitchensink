@@ -24,6 +24,7 @@ import {
   ProductVariantOptions,
   ProductVariants,
   ProductVariantSelectorReset,
+  ProductLink,
 } from '@/components/ui/store/Product';
 import {
   ProductLoadMoreTrigger,
@@ -179,14 +180,20 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
                         {/* Product Title */}
                         <ProductSlug asChild>
                           {({ slug }) => (
-                            <Navigation
-                              data-testid="title-navigation"
-                              route={`${productPageRoute}/${slug}`}
+                            <ProductLink
+                              asChild
+                              list="Product Gallery"
+                              origin="product-list"
                             >
-                              <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
-                                <ProductName variant="paragraph" />
-                              </CardTitle>
-                            </Navigation>
+                              <Navigation
+                                data-testid="title-navigation"
+                                route={`${productPageRoute}/${slug}`}
+                              >
+                                <CardTitle className="text-primary mb-2 line-clamp-2 hover:text-brand-primary transition-colors">
+                                  <ProductName variant="paragraph" />
+                                </CardTitle>
+                              </Navigation>
+                            </ProductLink>
                           )}
                         </ProductSlug>
                         {/* Enhanced Product Variants */}
@@ -244,32 +251,38 @@ export const ProductListWrapper: React.FC<ProductListProps> = ({
 
                         <ProductSlug asChild>
                           {({ slug }) => (
-                            <Navigation
-                              data-testid="view-product-button"
-                              route={`${productPageRoute}/${slug}`}
-                              className="w-full"
+                            <ProductLink
+                              asChild
+                              list="Product Gallery"
+                              origin="view-product-button"
                             >
-                              <Button
-                                variant="secondary"
-                                size="lg"
+                              <Navigation
+                                data-testid="view-product-button"
+                                route={`${productPageRoute}/${slug}`}
                                 className="w-full"
                               >
-                                View Product
-                                <svg
-                                  className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
+                                <Button
+                                  variant="secondary"
+                                  size="lg"
+                                  className="w-full"
                                 >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M9 5l7 7-7 7"
-                                  />
-                                </svg>
-                              </Button>
-                            </Navigation>
+                                  View Product
+                                  <svg
+                                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M9 5l7 7-7 7"
+                                    />
+                                  </svg>
+                                </Button>
+                              </Navigation>
+                            </ProductLink>
                           )}
                         </ProductSlug>
                       </CardFooter>

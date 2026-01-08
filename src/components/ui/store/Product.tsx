@@ -1184,3 +1184,25 @@ export const ProductRibbon = React.forwardRef<
 });
 
 ProductRibbon.displayName = 'ProductRibbon';
+
+/**
+ * Link component that automatically tracks product click events.
+ * Wraps a link to the product page and fires analytics when clicked.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Product product={productData}>
+ *   <ProductLink className="btn-secondary" list="Category: T-Shirts" position="3">
+ *     View Product
+ *   </ProductLink>
+ *
+ *   <ProductLink asChild list="Search Results" position="5">
+ *     <a href="/custom-url" className="custom-link">
+ *       <ProductName />
+ *     </a>
+ *   </ProductLink>
+ * </Product>
+ * ```
+ */
+export const ProductLink = ProductPrimitive.Link;

@@ -62,7 +62,7 @@
     "@wix/dashboard": "^1.3.39",
     "@wix/ecom": "^1.0.1473",
     "@wix/seo": "^1.0.28",
-    "@wix/stores": "v1.0.558",
+    "@wix/stores": "^1.0.625",
     "@wix/essentials": "^0.1.24",
     "@wix/headless-components": "^0.0.29",
     "@wix/image": "^1.392.0",
